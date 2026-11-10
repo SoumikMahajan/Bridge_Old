@@ -1,0 +1,413 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    @*<base href='/' />*@
+    <script src="~/Scripts/jquery-1.12.0.js"></script>
+    @*<script src="https://code.jquery.com/jquery-1.12.0.js"></script>*@
+    <script src="~/design/js/bootstrap.min.js"></script>
+    @*<script src="~/Scripts/jquery-1.7.1.js"></script>*@
+    <script src="~/Scripts/MenuJS.js"></script>
+    <link rel="icon" href="~/Images/favicon-tcg.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="~/Images/favicon-tcg.ico" type="image/x-icon" />
+    @*<link href="~/css/menu_style.css" rel="stylesheet" />
+    <script src="~/Scripts/menu_script.js"></script>*@
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,800italic,800,700italic,700,600italic,600,400italic,300italic,300" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" href="~/design/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/design/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="~/design/css/owl.carousel.css">
+    <link rel="stylesheet" type="text/css" href="~/design/css/owl.theme.css">
+    <link rel="stylesheet" type="text/css" href="~/design/css/theme.css">
+    <link href="~/css/build.css" rel="stylesheet" />
+    <script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+
+    @*<script src="~/Scripts/editor_plugin.js"></script>*@
+    <script src="~/Scripts/tinymce/js/tinymce/plugins/textcolor/plugin.min.js"></script>
+    <style>
+        .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+    border: 1px solid #7d97ac !important;
+    background: none !important;
+    font-weight: bold !important;
+    color: #7d97ac !important;
+}
+        select {
+            color: #526779 !important;
+            font-weight: bold;
+        }
+        .ui-widget-header {
+            background: #7d97ac !important;
+            border: 1px solid #52677f !important;
+        }
+        .ui-multiselect {
+            color: #526779 !important;
+            border-radius: 0px !important;
+            background: white !important;
+            border: 1px solid #728ca1 !important;
+            width: 100% !important;
+            height: 25px !important;
+            margin-top: 0px !important;
+        }
+        .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
+            border: 1px solid #728ca1 !important;
+            background: none !important;
+            font-weight: 500 !important;
+            color: #526779 !important;
+        }
+        .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+            background:#7792a8 !important;
+            color : #ffffff !important;
+        }
+    </style>
+    <style> 
+        .mobonly {
+            display: none;
+        }
+    </style>
+    <script>
+        var LOCALORSERVERNEW = 'LOCAL';
+    </script>
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover();
+            $('[data-toggle="tooltip"]').tooltip();
+            var LOCALORSERVERNEW = 'LOCAL';
+            var url = '';
+            var url1 = "~/Home/Login";
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'https://www.thebridgebytcg.com/Logout/Logout?url=';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = '/Logout/Logout?url=';
+            }
+            $('#master_logout').attr('href', url + url1);
+            $('#master_logout_mobonly').attr('href', url + url1);
+            var html = '';
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Home/GetUserName';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Home/GetUserName';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                data: {},
+                async: false,
+                success: function (str) {
+                    var url1 = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url1 = '/Home/MySettings';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url1 = '/Home/MySettings';
+                    }
+                    var html = '';
+                    var urlt = '';
+                    var url1t = "~/Home/Login";
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        urlt = '/Logout/Logout?url=';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        urlt = 'Logout/Logout?url=';
+                    }
+                    $('#smallmenulogout').attr('href', urlt + url1t);
+                    urlt = '';
+                    var url1t = "~/Home/Login";
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        urlt = '/Home/MySettings';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        urlt = 'Home/MySettings';
+                    }
+                    $('#smallmenupassword').attr('href', urlt);
+                    //$('#master_logout_mobonly').attr('href', url + url1);
+                    //$("#formobileview").html('<a href="' + url1 + '">' + '<i class="fa fa-user mrg5R"></i>' + str.split('^')[0] + '</a>');
+                    //$("#formobileview").append();
+                    $('#master_username').html('<a href="' + url1 + '">' + '<i class="fa fa-user mrg5R"></i>' + str.split('^')[0] + '</a>');
+                    $('#master_username').append(html);
+                    $('#master_username_mobonly').html('<a href="' + url1 + '">' + str.split('^')[0] + '</a>');
+                    $('#master_username_mobonly').append(html);
+                    if (str.split('^')[1].trim() != '') {
+                        html = '<i class="fa fa-phone-square"></i> ';
+                        $('#master_phone').text(str.split('^')[1]);
+                    }
+                    if (str.split('^')[2].trim() != '') {
+                        html = 'mailto:webmaster@example.com';
+                        $('#master_email').text(str.split('^')[2]);
+                        $('#master_email_mail').attr('href', 'mailto:' + str.split('^')[2]);
+                    }
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        });
+        function master_gotourl(obj) {
+            var url = $(obj).attr('data-hrefurl');
+            if ($(window).width() > 975) {
+                window.location.href = url;
+            }
+        }
+    </script>
+    <style>
+        #master_footer {
+            margin-top: 4%;
+            position: relative;
+            height: auto;
+            text-align: center;
+            margin-bottom: 0px !important;
+            color: white;
+        }
+        #master_content {
+            position: relative;
+            min-height: 80%;
+            margin: 10px;
+        }
+        #master_header {
+            position: relative;
+            min-height: 15%;
+        }
+        #master_wrapper {
+            height: 100%;
+            position: absolute;
+            width: 100%;
+        }
+        .up-menu-hide {
+            font-size: x-large;
+            margin-top: 14px;
+            position: absolute;
+            margin-left: 6px;
+            color: #EEFFFF;
+            cursor: pointer;
+        }
+        .up-menu-show {
+            font-size: x-large;
+            margin-top: 14px;
+            position: absolute;
+            margin-left: 6px;
+            color: #EEFFFF;
+            cursor: pointer;
+        }
+        .pageloader {
+            background: rgba(0, 0, 0, 0.77);
+            position: fixed;
+            width: 4999px;
+            height: 4999px;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <input type="hidden" id="hdn_tokn_session_valid" value="@Convert.ToString(Session["TokenForCheck"])" />
+
+    
+    <input type="hidden" id="hdn_maxfilesize" />
+     <input type="hidden" name="hdn_UserType" id="hdn_UserType" value="@Session["UserType"].ToString()" />
+
+    <div id="master_wrapper">
+        <div id="master_header">
+            <!--Header Top Section-->
+            <div class="container-fluid " style="padding-bottom:5px; padding-top:5px;    zoom: 0.85;">
+                <div class="">
+                    <div class="row">
+                        <div class="col-sm-3 desktoponly">
+                            <a href="~/Home/Dashboard" class="">
+                                <img src="~/Images/logo.png" class="img-responsive mrg0T mrg0B" width="353" alt="" />
+                            </a>
+                        </div>
+                       
+                        <div class="col-sm-9 desktoponly">
+                            <div class="header-top-list displaynone">
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li>
+                                        <a href="javascript:void(0);"><i class="fa fa-phone-square mrg5R"></i>
+                                            <span id="master_phone"></span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" id="master_email_mail"><i class="fa fa-envelope mrg5R"></i>
+                                            <span id="master_email"></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="header-top-list" style="margin-top:50px;">
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li>
+                                        <a href="#">
+                                            <span id="master_username"></span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/Logout/Logout?url=~/Home/Login" id="master_logout"><i class="fa fa-sign-out mrg5R"></i>
+                                            <span>Log Out</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mobonly">
+                            <div class="col-xs-6">
+                                <span id="master_username_mobonly"></span>
+                            </div>
+                            <div class="col-xs-6">
+                                <a href="/Logout/Logout?url=~/Home/Login" id="master_logout_mobonly"><i class="fa fa-sign-out mrg5R"></i>
+                                    <span>Log Out</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Navbar Start -->
+            <div class="container-fluid">
+                <div class="row">
+                    <nav class="navbar navbar-inverse navbar-theme" id="navbar2">
+                        <div class="navbar-header">
+                            @*<i class="fa fa-angle-double-up up-menu-hide"></i>
+                        <i class="fa fa-angle-double-down up-menu-show displaynone"></i>*@
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <span class="navbar-brand">
+                                <a href="javascript:void(0);" title="Change Password" id="smallmenupassword">
+                                    <i class="fa fa-cog" style="color: white;"></i>
+                                </a>
+                            </span>
+                            <span class="navbar-brand">
+                                <a href="javascript:void(0);" title="Log Out" id="smallmenulogout">
+                                    <i class="fa fa-sign-out" style="color: white;"></i><i style="color: white;">Log Out</i>
+                                </a>
+                            </span>
+                            @*<a class="navbar-brand" href="#">Bootstrap theme</a>*@
+                        </div>
+                        @*<div id="navbar" class="navbar-collapse collapse">
+                    </div>*@
+                        <div>
+                        <div id="navbar" class="navbar-collapse collapse scrollabletoppos">
+                        </div>
+                            </div>
+                    </nav>
+                </div>
+            </div>
+            <!--Breadcrumb-->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12 text-uppercase" id="breadcrumb">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="master_content" class="displaynone">
+            <div class="container-fluid pad40B">
+                @RenderBody()
+            </div>
+            <!--Float Panel-->
+            @*<div class="float-panel-container">
+                <ul>
+                <li><a href="#"><i class="fa fa-save mrg5R" title="kjakakakkf"  data-toggle="tooltip"></i><span class="tooltip-toggle">assasaasa</span></a></li>
+                <li><a href="#"><i class="fa fa-plus-square"></i></a></li>
+                <li><a href="#"><i class="fa fa-remove"></i></a></li>
+                <li><a href="#"><i class="fa fa-database"></i></a></li>
+                <li><a href="#"><i class="fa fa-trash-o"></i></a></li>
+                </ul>
+                </div>*@
+        </div>
+        <div id="master_footer">
+            <div class="container-fluid bg-footer pad10T pad0B">
+                <div class="row">
+                    <div class="col-sm-12 footer-text">
+                        <p>
+                            <span style="color: black;">© @DateTime.Now.Year.ToString() The Cardy Group | Version 1.10.000 | </span><a style="color: white;" target="_blank" href="~/About/accessiblecustomerserviceplan">ACCESSIBLE CUSTOMER SERVICE PLAN</a> <span style="color: black;">|</span>
+                            <a style="color: white;" target="_blank" href="~/About/privacypolicy">PRIVACY POLICY</a> | 
+                    <a style="color: white;" target="_blank" href="#" onclick="javascript: $(window).scrollTop(0);" data-toggle="modal" data-target="#myModal">FEEDBACK</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">FEEDBACK FORM</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>What type of feedback?</label>
+                            <select id="subforfeedbackmail" class="form-control">
+                                <option value="General Site Feedback">General Site Feedback</option>
+                                <option value="Report a Bug">Report a Bug</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 mrg10T">
+                            <label>Message</label>
+                            <textarea rows="20" class="form-control no-resize" id="vendormailapp" style="min-height: 200px;"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="sendmailtosupport();">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery.DB_PROC.js"></script>
+    <script>
+        function sendmailtosupport() {
+            var body = $('#vendormailapp').val();
+            var page = window.location.href;
+            var sub = $('#subforfeedbackmail').val();
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/SystemAdmin/sendfeedbackmail';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'SystemAdmin/sendfeedbackmail';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                contentType: "application/json; charset=utf-8",
+                data: "{ \"body\" : \"" + escape(body) + "\",\"page\" : \"" + page + "\",\"sub\": \"" + sub + "\"}",
+                async: false,
+                success: function (str) {
+                    if (str == 'SUCCESS') {
+                        notify("Thank you for your feedback!", 'green');
+                        $('#myModal').modal('hide');
+                    }
+                },
+                error: function () { notify('Error sending mail'); }
+            });
+        }
+        $(document).ready(function () {
+            var obj = new Object();
+            obj.Mode = 'GET';
+            
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_MaxFileSize_Proc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o1 = DBSP.call_DB_Procedure();
+            o1 = o1.data;
+            $('#hdn_maxfilesize').val(o1[0].Filesize);
+
+        });
+    </script>
+    <script>
+        $(function () {
+            $('#master_content').removeClass('displaynone');
+        });
+    </script>
+</body>
+</html>

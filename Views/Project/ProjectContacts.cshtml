@@ -1,0 +1,338 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Add Project Contacts</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">     
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+   
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />   
+
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+   
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    
+    <script src="~/Scripts/jquery.autosize.js"></script>
+
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <script src="~/Scripts/AddUser.js"></script>
+    <script src="~/Scripts/Project.js"></script>
+
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script> 
+
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+
+           
+
+       <script type="text/javascript">
+
+        $(document).ready(function () {         
+            $('textarea').autosize();
+        });
+
+        function gotoproject() {
+            var pid = $('#Hdn_ProjectID').val();
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/editproject/' + pid;
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = '/Project/editproject/' + pid;
+            }
+
+            irrrrr = 0;
+
+            window.location = url1;
+        }
+
+     </script>
+
+
+    <style type="text/css">
+        /** { margin: 0; padding: 0; }
+        body { font: 14px/1.4 Georgia, serif; }
+        #page-wrap { width: 600px; margin: 15px auto; }
+        p { margin: 0 0 15px 0; }
+        p:first-child { background: #fffcde; padding: 10px; }
+        #sidebar ul { background: #eee; padding: 10px; }
+        li { margin: 0 0 0 20px; }
+        #main { width: 390px; float: left; }*/
+        /*#sidebar { width: 190px; float: right; }*/
+        #sidebar {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+            z-index:9999;
+        }
+        /*#sidebar ul { background: #eee; padding: 10px; }*/
+        /*li { margin: 0 0 0 20px; }*/
+    </style>
+
+
+    <style>
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        #popupforvendorlist .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 6px 0px;
+            width: 96%;
+            height: 20px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+
+        .nav-tabs > li > a {
+            background-color: rgba(238, 238, 238, 0.43);
+            border-color: #eee #eee #ddd;
+            text-transform: uppercase;
+        }
+
+            .nav-tabs > li > a:hover {
+                background-color: #ddd;
+            }
+
+        #txt_HotelAddr, #txt_OwnerAddr, #txt_InvAddr {
+            height: 70px !important;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+
+        label {
+            color: #333333;
+            font-weight: 500;
+            margin-bottom: 1px;
+        }
+
+        .section-header {
+            padding: 2px 4px;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .nav > li > a {
+            position: relative !important;
+            display: block !important;
+            padding: 4px 15px !important;
+        }
+
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+            color: rgb(246, 251, 252) !important;
+            cursor: default;
+            background-color: #7792a8;
+            border: 1px solid #ddd;
+            border-bottom-color: transparent;
+            color: #7792a8;
+            font-size: 16.5px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container-fluid" id="angulardiv" ng-app="Project" ng-controller="Project" style="zoom:0.95;">
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="col-sm-12">
+                    <h3 class="section-header">Add Project Contacts</h3>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <button style="margin-left:-5px; height:25px;padding:2px;"  type="button" class="btn btn-poms" onclick="gotoproject();">Go to Project Page</button>
+                    </div>
+                    </div>
+
+                <div class="col-sm-4 req">
+                    <label>Contact Type</label>
+                    <select id="Ddl_ProjectContactType" tabindex=1 class="form-control">
+                        <option value="0">--Select ContactType--</option>
+                        @Html.Raw(ViewData["getAllContactTypes"])
+                    </select>
+                </div>
+                <div class="col-sm-4 req">
+                    <label>Contact Name</label>
+                    <input type="text" id="txt_ProjectContactName" class="form-control" />
+                </div>
+
+                <div class="col-sm-4">
+                    <label>Email Address</label>
+                    <input type="text" id="txt_Email" class="form-control" />
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea style="height:70px;" id="txt_ProjectAddress" class="no-resize form-control" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" id="txt_ProjectCity" class="form-control" />
+                    </div>
+
+
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Country</label>
+                        <select id="ddlCrntry" name="Ddl_ProjectState" onchange="GetCtryIDForProject(this);" class="form-control">
+                            @Html.Raw(ViewData["GetAllCountry"])
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>State</label>
+                        <select id="Ddl_ProjectState" class="form-control">
+                            <option value=0>--Select State--</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Postal/Zip Code</label>
+                        <input type="text" id="zipcode" class="form-control" />
+                    </div>
+
+                </div>
+
+                <div class="col-sm-3">
+                    <label>Phone</label>
+                    <input type="text" id="txt_ProjectTelephone" class="form-control" />
+                </div>
+
+                <div class="col-sm-3">
+                    <label>Phone Extension</label>
+                    <input type="text" id="txt_Extension" class="form-control" />
+                </div>
+
+                <div class="col-sm-3">
+                    <label>Mobile</label>
+                    <input type="text" id="txt_ProjectMobile" class="form-control" />
+                </div>
+
+                <div class="col-sm-3">
+                    <label>Fax</label>
+                    <input type="text" id="txt_ProjectFax" class="form-control" />
+                </div>
+
+
+
+                </div>
+        </div>
+
+     
+      
+     
+
+
+        <input type="hidden" value="" id="btn_ProjectID"  />  @*@ViewBag.ProjectID*@
+
+        <input type="hidden" value="@ViewBag.ProjectID" id="Hdn_ProjectID" />
+
+        
+     
+
+    </div>  
+
+      <div class="float-panel-container">
+        <ul>
+            <li id="btn_CreatePrjtContact"><a href="javascript:void(0);"><i class="fa fa-save mrg5R" title="Save Contact" data-toggle="tooltip"></i><span class="tooltip-toggle">Save Contact</span></a></li>
+          
+        </ul>
+    </div>
+
+
+    
+        
+</body>
+</html>
+
+
+

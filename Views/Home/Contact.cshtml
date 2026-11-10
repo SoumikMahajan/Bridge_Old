@@ -1,0 +1,124 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Contact";
+}
+
+<script src="https://code.jquery.com/jquery-1.12.2.js"></script>
+<script src="~/Scripts/jquery.DB_PROC.js"></script>
+<script>
+    $(document).ready(function () {
+        var obj = new Object();
+        obj.ApprovalID = 1;       
+       
+
+        var DBSP = new DB_SP_CONNECT();
+        DBSP.ProcedureName = "poms_deleteitemapprovals";
+        DBSP.obj = obj;
+        DBSP.isasync = false;
+        //console.log(DBSP);
+        
+        
+        var o = DBSP.call_DB_Procedure();
+        $('#tarea').val(o.data[0].Comment);
+
+        //var o = call_DB_Procedure(obj, "poms_deleteitemapprovals");
+        //$('#tarea').val(o.data[0].Comment);
+    });
+
+   
+
+
+
+    function call_DB_Procedure(obj, ProcedureName, encodemode) {
+        //console.log(isasync);
+        var data = "";
+      
+        var obj = JSON.stringify(obj);
+        if (arguments.length == 2) {
+            data = "{\"data\": \"" + escape(obj) + "\", \"ProcedureName\":\"" + ProcedureName + "\"}";
+        }
+        else if (arguments.length == 3) {
+            data = "{\"data\": \"" + escape(obj) + "\", \"ProcedureName\":\"" + ProcedureName + "\",\"encodemode\":\"" + encodemode + "\"}";
+
+        }
+        else {
+            return;
+        }
+        var datret = "";
+        
+        var url = '';
+       
+            url = '/Home/SP_Call';
+      
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            contentType: "application/json; charset=utf-8",
+            async: isasync,
+            data: data,
+            success: function (data) {
+                datret = JSON.parse(data);
+                ////$('#popupforItemApproval').modal('hide');
+                //$(o).remove();
+
+            },
+            failed: function () {
+
+            }
+
+        });
+
+        return datret;
+
+    }
+
+
+</script>
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>@ViewBag.Message</h2>
+</hgroup>
+
+<section class="contact">
+    <header>
+        <h3>Phone</h3>
+    </header>
+    <p>
+        <span class="label">Main:</span>
+        <span>425.555.0100</span>
+    </p>
+    <p>
+        <span class="label">After Hours:</span>
+        <span>425.555.0199</span>
+    </p>
+</section>
+
+<section class="contact">
+    <header>
+        <h3>Email</h3>
+    </header>
+    <p>
+        <span class="label">Support:</span>
+        <span><a href="mailto:Support@example.com">Support@example.com</a></span>
+    </p>
+    <p>
+        <span class="label">Marketing:</span>
+        <span><a href="mailto:Marketing@example.com">Marketing@example.com</a></span>
+    </p>
+    <p>
+        <span class="label">General:</span>
+        <span><a href="mailto:General@example.com">General@example.com</a></span>
+    </p>
+</section>
+
+<section class="contact">
+    <header>
+        <h3>Address</h3>
+    </header>
+    <p>
+        One Microsoft Way<br />
+        Redmond, WA 98052-6399
+    </p>
+    <textarea id="tarea"></textarea>
+</section>

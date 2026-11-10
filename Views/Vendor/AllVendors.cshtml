@@ -1,0 +1,333 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Vendor List</title>
+
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+
+
+    <script src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
+
+    <script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+    @*<script src="~/Scripts/editor_plugin.js"></script>*@
+    <script src="~/Scripts/tinymce/js/tinymce/plugins/textcolor/plugin.min.js"></script>
+
+    <style>
+        table.fixedHeader-floating
+        {
+            top: 53px !important;
+            position: fixed !important;
+            background-color: white;
+            zoom: 0.95;
+        }
+
+            table.fixedHeader-floating.no-footer
+            {
+                border-bottom-width: 0;
+            }
+
+        table.fixedHeader-locked
+        {
+            position: absolute !important;
+            background-color: white;
+        }
+
+
+        .leftaligned
+        {
+            text-align: left;
+        }
+
+        .widercolumn
+        {
+            width: 110px !important;
+        }
+    </style>
+
+    <style>
+        .form-control
+        {
+            height: 25px;
+        }
+
+        select
+        {
+            padding: 0px !important;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9
+        {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+        .float-panel-container ul li a
+        {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+            .float-panel-container ul li a i
+            {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .container-fluid
+        {
+            padding-right: 22px;
+        }
+
+        .ui-multiselect
+        {
+            width: 100% !important;
+            /*color: rgb(195, 16, 1) !important;*/
+            height: 25px !important;
+            margin-top: 0px !important;
+        }
+
+        label
+        {
+            color: #333333;
+            font-weight: 500;
+        }
+
+        #txt_VendorName, #txt_CurrencyCode, #txt_VendorCO
+        {
+            height: 25px;
+            padding: 2px;
+        }
+    </style>
+
+    <style type="text/css">
+        .display_none
+        {
+            display: none;
+        }
+
+        #example .re_activate_new
+        {
+            width: auto;
+            height: auto;
+            float: left;
+            color: #FFF;
+            background: #000000;
+            padding: 8px 18px;
+            margin-top: 6px;
+            border: 0;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 12px;
+            margin-bottom: 44px;
+        }
+    </style>
+
+    <script>
+
+        $(document).ready(function () {
+            var obj = new Object();
+
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "poms_AllVendorsget";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            data = o;
+            console.log(o);
+            var vendors = new Array();
+
+            for (var t = 0; t < data.length; t++) {
+                vendors[t] = new Array();
+                vendors[t][0] = data[t].ParentVendorName;
+                vendors[t][1] = data[t].LegalName;
+                vendors[t][2] = data[t].Classifications;
+                vendors[t][3] = data[t].City;
+                vendors[t][4] = data[t].Country;
+                vendors[t][5] = data[t].ParentVendor_ID;
+
+            }
+            console.log(vendors);
+
+            $('#vendors').dataTable({
+                "processing": true,
+                "data": vendors,
+                "destroy": true,
+
+                "columns":
+                  [
+                    { "title": "Common Name", "class": "leftposition" },
+                    { "title": "Legal Name", "class": "leftposition" },
+                    { "title": "Classification", "class": "leftposition" },
+                  { "title": "City", "class": "leftposition" },
+                  { "title": "Country", "class": "leftposition" },
+                  { "title": "Country", "class": "displaynone" }
+
+
+                  ],
+                "order": [[0, "asc"]],
+                "initComplete": function () {
+
+
+                    $('#vendors tbody tr').each(function () {
+
+                        var ob = $(this);
+                        $(ob).css('cursor', 'pointer');
+                        $(ob).find('td:eq(0)').attr('onclick', 'gotoV(this);');
+
+                        $(ob).find('td:eq(1)').attr('onclick', 'gotoV(this);');
+                        $(ob).find('td:eq(2)').attr('onclick', 'gotoV(this);');
+                        $(ob).find('td:eq(3)').attr('onclick', 'gotoV(this);');
+
+                    });
+
+                    var html = "<tr>"
+            //+ "<th class='Resetth' rowspan='1' colspan='1'>"
+            //+ "<a><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px;' /></a></th>"
+
+
+            + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='0' type='text'></th>"
+            + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+            + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'></th>"
+            + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='3' type='text'></th>"
+            + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='4' type='text'></th>"
+
+            + "</tr>";
+
+                    if ($('#vendors thead').find('tr').length == 1) {
+                        $('#vendors thead').append(html);
+                    }
+                    else {
+                        $('#vendors thead').find('tr:eq(1)').remove();
+                        $('#vendors thead').append(html);
+
+                    }
+
+                    $('.srch').on('keyup change', function () {
+                        var indx = $(this).attr('data-indx');
+                        var txt = this.value;
+
+                        var table = $('#vendors').DataTable();
+                        table
+                               .column(indx)
+                               .search(txt)
+                               .draw();
+
+
+
+
+                    });
+
+
+
+
+                }
+            });
+
+        });
+        $(document).ready(function () {
+            $('#vendors').on('draw.dt', function () {
+                console.log('111111');
+
+                $('#vendors tbody tr').each(function () {
+
+                    var ob = $(this);
+                    $(ob).css('cursor', 'pointer');
+                    $(ob).find('td:eq(0)').attr('onclick', 'gotoV(this);');
+
+                    $(ob).find('td:eq(1)').attr('onclick', 'gotoV(this);');
+                    $(ob).find('td:eq(2)').attr('onclick', 'gotoV(this);');
+                    $(ob).find('td:eq(3)').attr('onclick', 'gotoV(this);');
+
+                });
+            });
+
+        });
+
+        function gotoV(obj) {
+            var vendorid = $(obj).parent().find('td:eq(5)').html();
+            console.log(vendorid);
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Vendor/EditVendor/';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Vendor/EditVendor/';
+            }
+            url += vendorid;
+            window.open(url);
+
+        }
+    </script>
+</head>
+<body>
+
+
+
+
+
+
+    <div class="container-fluid" id="angulardiv" style="zoom: 0.95;">
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header">Vendors</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <table cellpadding="0" cellspacing="0" border="0" class="display" id="vendors" style="text-align: center;">
+                    <thead>
+                        <tr>
+                            <th class='leftposition'>Common Name</th>
+                            <th class='leftposition'>Legal Name</th>
+                            <th class='leftposition'>Classification</th>
+                            <th class='leftposition'>City</th>
+                            <th class='leftposition'>Country</th>
+                            <th class='leftposition'>ID</th>
+
+
+                        </tr>
+                    </thead>
+
+                </table>
+
+
+            </div>
+        </div>
+
+
+    </div>
+</body>
+
+
+
+</html>

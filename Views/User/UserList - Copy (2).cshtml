@@ -1,0 +1,993 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UserList</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    @*<link href="http://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">*@
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+  
+
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    @*<script src="http://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js" type="text/javascript"></script>*@
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/angular.min.js"></script>   
+    
+    @*<script src="~/Scripts/GlobalJS.js"></script>*@
+    <script src="~/Scripts/User.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    @*<script src="~/Scripts/MenuJS.js"></script>*@
+
+    <script type="text/javascript">
+        $(function () {
+
+            
+            //$('.menu-wrap').remove();
+            //$('#breadcrumb').remove();
+            //$('#navbar').remove();
+            ////console.log('jjj' + $('#breadcrumb').next('a').attr('href'));
+            //setTimeout(function () {
+            //    $('#breadcrumb').next('a').remove();
+            //},100);
+        });
+        //var LOCALORSERVERNEW = "SERVER"; //  "LOCAL"; // 
+
+       // $(function () {
+       //     var url = '';
+       //     if (LOCALORSERVER == 'LOCAL') {
+       //         url = '/Scripts/MenuJS.js';
+       //     }
+       //     else if (LOCALORSERVER == 'SERVER') {
+       //         url = '../Scripts/MenuJS.js';
+       //     }
+       //     $.getScript(url, function () {
+       //         // Use anything defined in the loaded script...
+       //     });
+        // });
+
+        //$(function () {
+            
+        //    $('.MddleAlgnment').removeClass('sorting_asc');
+            
+        //});
+    </script>
+
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    
+    <style type="text/css">
+        .MddleAlgnment {
+            text-align: center;
+        }
+        table.dataTable thead th, table.dataTable thead td {
+            padding: 8px !important;
+        }
+           
+    </style>
+</head>
+<body>
+    <div class="container-fluid" id="angulardiv" style="zoom:0.95;" ng-app="customer" ng-controller="customer">
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header">User List</h3>
+            </div>
+        </div>
+        
+    
+
+<!-- Modal -->
+<div id="popupEditUser" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Update Account Information</h4>
+      </div>
+      <div class="modal-body">
+        
+
+          <div class="row">
+
+
+                <div ng-if="User.UserTypeID == '4' || User.UserTypeID == '5'">
+                      <div class="col-sm-6">
+                   <label>Company Name</label>
+                        <input type="text" id="txt_CompanyName" ng-model="User.CompanyName" class="form-control" />
+              </div>
+
+                      <div class="col-sm-6">
+                   <label>Title</label>
+                        <input type="text" id="txt_CompanyTitle" ng-model="User.CompanyTitle" class="form-control" />
+              </div>
+
+                    </div>
+
+
+              <div class="col-sm-6">
+                   <label>First Name</label>
+                        <input type="text" id="txt_FName" ng-model="User.Firstname" class="form-control text-uppercase" />
+              </div>
+
+               <div class="col-sm-6">
+                    <label>Last Name</label>
+                        <input type="text" id="txt_LName" ng-model="User.Lastname" class="form-control text-uppercase"/>
+              </div>
+
+               <div class="col-sm-6 displaynone">
+              <label>User Name</label>
+                        <input type="text" id="txt_UName" ng-model="User.Username" class="form-control"/>
+                   </div>
+
+                <div class="col-sm-12">
+               <label>Email address</label>
+                        <input type="text" id="txt_Email" ng-model="User.Email"  class="form-control"/>
+                  </div>
+
+             
+                <div class="col-sm-12 displaynone">
+               <input type="checkbox" id="chk_ChngPasswrd" onclick="enabledisablepasswrdfld(this);" class="mrg10T mrg5R" />Do you want to change the password ?
+                    </div>
+
+              <div class="col-sm-6 displaynone">
+               <label>Password</label>
+                        <input type="password" id="txt_Password" ng-model="User.UserPassword" disabled="disabled" class="form-control"/>
+                  </div>
+
+               <div class="col-sm-6 displaynone">
+              <label>Confirm password</label>
+                        <input type="password" id="txt_ConfrmPswrd" ng-model="User.ConfrmPswrd" disabled="disabled" class="form-control"/>
+                   </div>
+
+            
+              <div class="col-sm-12">
+               <label>Address</label>
+                       
+                        <textarea id="txt_Address" ng-model="User.Address" class="form-control no-resize"></textarea>
+                  </div>
+
+              
+               <div ng-if="User.UserTypeID == '4' || User.UserTypeID == '5'">
+
+
+                    <div class="col-sm-6">
+
+                             <label>Country</label>
+                <select id="Ddl_Country" onchange="GetCtryID(this);" class="form-control" ng-model="User.Country">
+                    @Html.Raw(ViewData["GetAllCountry"])
+                </select>
+                        </div>
+
+                    <div class="col-sm-6">
+         <label>State/Prov</label>
+                <select id="Ddl_State" onchange="GetStateID(this);"   ng-model="User.State" class="form-control">
+                    <option value="0" name="ddlState_0">--Select State/Prov--</option>
+                </select>
+                        </div>
+
+                    <div class="col-sm-6">
+                         <label>City</label>
+         <input type="text" id="txt_City" ng-model="User.City"  class="form-control"/> 
+                        </div>
+
+                    <div class="col-sm-6">
+                        <label>Postal/Zip Code</label>
+         <input type="text" id="txt_PostalCode" class="postalcode form-control" ng-model="User.PostalCode" /> 
+                        </div>
+                        
+
+
+
+                   </div>
+
+
+               <div id="UsrPhn">
+                      
+                    
+                         <div class="col-sm-6">
+            <label>Phone</label>
+            <input type="text"  id="txt_Phone" ng-model="User.Phone" class="form-control"/>
+                 </div>
+                          <div class="col-sm-6">
+                 <label>Phone Extension</label>
+             <input type="text" id="txt_Extension" ng-model="User.Extension" class="form-control"/>
+                 </div>
+
+                    </div>
+
+
+              <div class="col-sm-6">
+              <label>User Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="enableUserTypeEdit(this);">Edit Usertype</a></label>
+                      
+                        <input type="text" id="txt_UserType" ng-model="User.Usertype" disabled="disabled" class="displaynone form-control"/>
+
+                   <select id="Ddl_UserType" disabled class="form-control" ng-model="UserTypeSelected" ng-options="opt.label for opt in UserTypes" name="IsByr">
+                         
+                        </select>
+                  
+
+                  </div>
+
+
+
+             
+             <div class="security-detail col-sm-12 mrg15T">
+
+                 
+                   <button type="button" class="btn btn-poms mrg5B uncheckallbtn hidden" data-uncheckclass="chkScrty">Uncheck All</button>
+                                <button type="button" class="btn btn-poms mrg5B checkallbtn hidden" data-checkclass="chkScrty">Check All</button>
+
+                                <table border="1" class="logo_container_table" style="width:100%;"  id="priority_checkbox">
+                                 
+                                </table>
+                            </div>
+                 
+
+              <div class="col-sm-12" id="IsByrPanel">
+
+                        <label>Is this user a buyer?</label>
+                        <select id="Ddl_IsByr" class="form-control" ng-model="IsBuyerSelected" ng-options="opt.label for opt in IsBuyeroptions" ng-change="GetDefaultBuyer(this);" name="IsByr">
+                         
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12" id="IsDfltByrPanel">
+                        <label>Default Buyer</label>
+                        <select class="form-control" ng-options="c.Firstname for c in DefaultBuyer" ng-model="selectedDefaultBuyer" name="paysId" id="Ddl_DefltByr">
+                            <option>select</option>
+                        </select>
+                    </div>
+
+              <div class="col-sm-12">
+                        <label><input type="checkbox" id="chk_Mailcredential" class="mrg10T mrg5R" />Send Login credential to User</label>
+                       
+                    </div>
+                   
+
+
+          </div>
+
+
+
+      </div>
+      <div class="modal-footer">
+           <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="btn_EdtUsr">Save Changes</button>
+       
+            <img id="loader_edituser" style="display: none;" src="~/Images/load.gif" />
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+        <div style="width:100%; overflow-x:auto;">
+
+
+        <table id="example" class="display" cellspacing="0" width="100%">
+            <thead>
+                
+                <tr>
+                    <th style="width:8%;">ActivateDeActivate</th>
+                    <th style="width:10%;">FldID</th>
+                    <th style="width:7%;">First Name</th>
+                    <th style="width:15%;">Last Name</th>
+                    <th style="width:15%;">User Name</th>
+                    <th style="width:15%;">User Type</th>
+                    <th style="width:15%;">Buyer</th>
+                    <th style="width:15%;">Isactive</th>
+                    <th>Action</th>
+                    <th>SelectAction</th>
+                </tr>
+            </thead>
+
+
+        </table>
+
+            </div>
+
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.pop-close').click(function () {
+
+                $('.popup_container').fadeOut(40);
+
+
+
+            });
+
+
+           
+
+        });
+    </script>
+    
+
+    <script type="text/javascript">
+
+        angular.module("customer", [])
+            .controller("customer", function ($http, $scope) {
+
+
+
+                $scope.IsBuyeroptions = [
+               { label: 'YES', value: 1 },
+               { label: 'NO', value: 0 }
+                ];
+
+                $scope.UserTypes = [
+              { label: 'Administrator', value: 2 },
+              { label: 'Buyer', value: 3 },
+              { label: 'Client/Operator', value: 4 },
+              { label: 'Consultant', value: 5 },
+              { label: 'Accountant', value: 8 }
+                ];
+
+                $scope.IsBuyerSelected = $scope.IsBuyeroptions[1];
+                $scope.UserTypeSelected = $scope.IsBuyeroptions[0]
+                
+                console.log("************&&&&&&&&&&&&&&&");
+                console.log($scope);
+
+                //switch ($scope.User.UserTypeID) {
+                //    case '2':
+                //        $scope.UserTypeSelected = $scope.IsBuyeroptions[0];
+                //        break;
+                //}
+
+
+
+                $scope.GetDefaultBuyer = function (obj) {
+                    if ($scope.IsBuyerSelected.value == 1) {
+                        
+                        var urldflt = 'User/DefaultBuyerFORMEBYUID';
+                        // urldflt = 'DefaultBuyerFORMEBYUID';                       
+
+                        if (LOCALORSERVER == 'LOCAL') {
+                            urldflt = 'DefaultBuyerFORMEBYUID';
+                        }
+                        else if (LOCALORSERVER == 'SERVER') {
+                            // urldflt = 'getAllUserList';
+                            urldflt = 'DefaultBuyerFORMEBYUID';
+                        }
+
+
+
+                        $http.get(urldflt + "?FldID=" + $scope.User.FldID)
+                   .success(function (response) {
+                       $scope.DefaultBuyer = response;
+                       console.log(response);
+                       if ($scope.DefaultBuyer.length != 0) {
+                           $scope.selectedDefaultBuyer = $scope.DefaultBuyer[0];
+                       }
+                       else {
+                           $scope.selectedDefaultBuyer =
+                               { Fldid: 0 }
+                       }
+                   });
+                    }
+                    else {
+                        var urlDfltByr = 'User/DefaultBuyerBYUID';
+
+                        if (LOCALORSERVER == 'LOCAL') {
+                            urlDfltByr = 'DefaultBuyerBYUID';
+                        }
+                        else if (LOCALORSERVER == 'SERVER') {
+                            urlDfltByr = 'DefaultBuyerBYUID';
+                        }
+
+
+
+
+                        $http.get(urlDfltByr + "?FldID=" + $scope.User.FldID)
+                   .success(function (response) {
+                       $scope.DefaultBuyer = response;
+
+                       if ($scope.DefaultBuyer.length != 0) {
+                           $scope.selectedDefaultBuyer = $scope.DefaultBuyer[0];
+                       }
+                       else {
+                           $scope.selectedDefaultBuyer =
+                               { Fldid: 0 }
+                       }
+                   });
+                    }
+
+                }
+
+                $scope.setUser = function (obj) {
+
+
+                   
+
+
+                    $('#chk_Mailcredential').attr('checked', false);
+
+                    for (i = 0 ; i < usdata.length; i++) {
+                        if (usdata[i].FldID == obj) {
+                            $scope.User = $.extend(true, {}, usdata[i]);
+                            break;
+                        }
+                    }
+
+                    if ($scope.UserTypes.length != 0) {
+                        for (i = 0 ; i < $scope.UserTypes.length; i++) {
+                            if ($scope.UserTypes[i].value == $scope.User.UserTypeID) {
+                                $scope.UserTypeSelected = $scope.UserTypes[i];
+                                console.log($scope.UserTypeSelected.value);
+                            }
+                        }
+                    }
+
+
+                    //switch ($scope.User.UserTypeID) {
+                    //    case '2':
+                    //        $scope.UserTypeSelected = $scope.IsBuyeroptions[0];
+                    //        break;
+                    //}
+
+                    GetCtryIDByID($scope.User.Country, $scope.User.State);
+                    
+
+                    $scope.User.UserPassword = "";
+                    if ($scope.User.Isbuyer == 0) {
+                        $scope.IsBuyerSelected = $scope.IsBuyeroptions[1];
+                    }
+                    else {
+                        $scope.IsBuyerSelected = $scope.IsBuyeroptions[0];
+                    }
+
+
+                    // alert($scope.User.DefaultbuyerID);
+
+                    if ($scope.IsBuyerSelected.value == 1) {
+                        var urldflt = 'User/DefaultBuyerFORMEBYUID';
+                        if (LOCALORSERVER == 'LOCAL') {
+                            urldflt = 'DefaultBuyerFORMEBYUID';
+                        }
+                        else if (LOCALORSERVER == 'SERVER') {
+                            urldflt = 'DefaultBuyerFORMEBYUID';
+                        }
+
+                        
+
+                        $http.get(urldflt + "?FldID=" + $scope.User.FldID)
+                   .success(function (response) {
+                       $scope.DefaultBuyer = response;
+                       if ($scope.DefaultBuyer.length != 0) {
+                           for (i = 0 ; i < $scope.DefaultBuyer.length; i++) {
+                               if ($scope.DefaultBuyer[i].Fldid == $scope.User.DefaultbuyerID) {
+                                   $scope.selectedDefaultBuyer = $scope.DefaultBuyer[i];
+                               }
+                           }
+                }
+                       else {
+                           $scope.selectedDefaultBuyer =
+                               { Fldid: 0 }
+                       }
+                   });
+                    }
+                    else {
+                        var urlDfltByr = 'User/DefaultBuyerBYUID';
+                        //urlDfltByr = 'DefaultBuyerBYUID';
+
+
+                        if (LOCALORSERVER == 'LOCAL') {
+                            urlDfltByr = 'DefaultBuyerBYUID';
+                        }
+                        else if (LOCALORSERVER == 'SERVER') {
+                            urlDfltByr = 'DefaultBuyerBYUID';
+                        }
+
+
+           $http.get(urlDfltByr + "?FldID=" + $scope.User.FldID)
+                   .success(function (response) {
+                       $scope.DefaultBuyer = response;
+
+                       if ($scope.DefaultBuyer.length != 0) {
+
+                           for (i = 0 ; i < $scope.DefaultBuyer.length; i++) {
+
+                               if ($scope.DefaultBuyer[i].Fldid == $scope.User.DefaultbuyerID) {
+
+                                   $scope.selectedDefaultBuyer = $scope.DefaultBuyer[i];
+                               }
+                           }
+                       }
+                       else {
+                           $scope.selectedDefaultBuyer =
+                               { Fldid: 0 }
+                       }
+                   });
+                    }
+
+
+                    var selectedid = $scope.User.FldID;
+
+                    var urlscrtdt = 'User/GetUserSecurityData';
+                    //urlscrtdt = 'GetUserSecurityData';
+
+                    if (LOCALORSERVER == 'LOCAL') {
+                        urlscrtdt = '/User/GetUserSecurityData_new';
+                    }
+                    else if (LOCALORSERVER == 'SERVER') {
+                        // urlscrtdt = 'getAllUserList';
+                        urlscrtdt = 'GetUserSecurityData_new';
+                    }
+
+                    $('.showHide').show();
+                    debugger;
+                    $http.get(urlscrtdt + "?userid=" + selectedid)
+                    .success(function (response) {
+                        //$scope.prioritylist = response;
+                        //// $("input[type=checkbox]").switchButton();
+                        var assignedPermission = response.permission;
+
+                        if (assignedPermission == "1") {
+                            $('.uncheckallbtn,.checkallbtn').removeClass('hidden').show();
+                            $('#UserTypeSecurityDiv').css('display', 'block');
+                            var grouptype = "";
+                            var currg = "";
+                            var html = "<tr>"
+                                + "<th>Security Item</th>"
+                                + "<th>Assigned</th>"
+                                + "</tr>";
+                            console.log(response);
+                            var plist = response.data;
+                            var html = "";
+                            for (var i = 0; i < plist.length; i++) {
+                                var usertypeid = $scope.UserTypeSelected.value;
+                                console.log(usertypeid + "       " + plist[i].security_id);
+                                
+                                    currg = plist[i].GroupType;
+                                    if (currg == grouptype) {
+                                    }
+                                    else {
+                                        grouptype = currg;
+                                        html += "<tr><td style='color:white;background:black;' colspan='2'>" + grouptype + "</td></tr>";
+                                    }
+                                    //if (usertypeid != '2' && plist[i].security_id != '3') {
+                                if (plist[i].security_id != '3') {
+                                        html += "<tr><td><label style='padding:0px;width:100%;' for='prioritychk_" + plist[i].security_id + "'>" + plist[i].priority_name + "</label></td>";
+
+
+
+
+
+
+                                        if (plist[i].is_selected == "1") {
+                                            html += '<td><input  type="checkbox" class="chkScrty" value="1" id="prioritychk_' + plist[i].security_id + '" checked></td></tr>';
+                                        }
+                                        else {
+                                            html += '<td><input type="checkbox" class="chkScrty" value="0" id="prioritychk_' + plist[i].security_id + '"></td></tr>';
+                                        }
+
+                                    }
+                                
+                            }
+                            $('#priority_checkbox').html(html);
+
+
+                            var tableobj = $('#priority_checkbox');
+
+                            rebuiltPriorityintoDivs(tableobj);
+                        }
+
+                        
+                        if ($scope.User.Usertype == 'Client/Operator') {
+
+                            $('#IsByrPanel').css('display', 'none');
+                            $('#IsDfltByrPanel').css('display', 'none');
+
+                            $('#UsrAddress').css('display', 'block');
+                            
+                            $('#UsrPhn').css('display', 'block');
+                        }
+                        else {
+                            $('#IsByrPanel').css('display', 'block');
+                            $('#IsDfltByrPanel').css('display', 'block');
+
+                            $('#UsrAddress').css('display', 'none');
+                            
+                            $('#UsrPhn').css('display', 'none');
+                        }
+
+                    });
+
+                    
+
+                    $scope.$apply();
+
+                    
+
+                }
+
+
+
+                //=====================================================================================================================
+
+                // $scope.getPriority = function () {
+
+                //}
+
+
+                $scope.EditUser = function () {
+
+
+                    var priorities = "";
+
+                    $('.chkScrty').each(function () {
+
+                        if ($(this).is(":checked")) {
+
+                            if (priorities == "")
+                            { priorities += $(this).attr('id').split('prioritychk_')[1]; }
+                            else {
+                                priorities += "," + $(this).attr('id').split('prioritychk_')[1];
+                            }
+                        }
+                    });
+
+
+                    if ($('#chk_ChngPasswrd').is(":checked") == false) {
+                        $scope.User.UserPassword = "";
+
+                    }
+
+                    var defaultbuyerfldidnew = '0';
+
+                    if ($scope.selectedDefaultBuyer == undefined || $scope.selectedDefaultBuyer == 'undefined') {
+                        defaultbuyerfldidnew = '0';
+                    }
+                    else {
+                        defaultbuyerfldidnew = $scope.selectedDefaultBuyer.Fldid
+                    }
+
+                    
+                    $scope.User.DefaultbuyerID = defaultbuyerfldidnew;
+
+
+                    $scope.User.UserTypeID = $scope.UserTypeSelected.value;
+                    $scope.User.priorities_on_list = priorities;
+
+                    $scope.User.Isbuyer = $scope.IsBuyerSelected.value;
+
+
+                    if ($('#chk_Mailcredential').is(':checked')) {
+                        $scope.User.send_mail = "1";
+                    }
+                    else {
+                        $scope.User.send_mail = "0";
+                    }
+
+                    $('#loader_edituser').show();
+                    $('#btn_EdtUsr').hide();
+
+                    var obj = JSON.stringify($scope.User);
+
+                    var urledtusr = 'User/EditUser';
+                    //urledtusr = 'EditUser';
+                    
+                    if (LOCALORSERVER == 'LOCAL') {
+                        urledtusr = 'EditUser';
+                    }
+                    else if (LOCALORSERVER == 'SERVER') {
+                        // urlscrtdt = 'getAllUserList';
+                        urledtusr = 'EditUser';
+                    }
+
+
+
+                    $.ajax({
+                        url: urledtusr,
+                        type: "POST",
+                        dataType: "text",
+                        contentType: "application/json; charset=utf-8",
+                        data: obj,
+                        error: function () {
+                            alert("failed");
+                            $('#loader_edituser').hide();
+                            $('#btn_EdtUsr').show();
+                        },
+                        success: function (data) {
+
+                            $('#loader_edituser').hide();
+                            $('#btn_EdtUsr').show();
+                           
+                            if (data != "SUCCESS") {
+                                if (data.split('^')[1] == 'EMAIL') {
+                                    alert('Please enter a unique Email id.');
+                                    $('#txt_Email').val('');
+                                    errorfunc('txt_Email', 'Please enter valid Email');
+                                }
+                                else if (data.split('^')[1] == 'USERNAME') {
+                                    alert('Please enter a unique User name.');
+                                    errorfunc('txt_UName', 'Please enter Valid User name');
+                                }
+                                else if (data.split('^')[1] == 'ISBUYER') {
+                                    alert('Can not update is buyer to NO');
+                                    //errorfunc('txt_UName', 'Please enter Valid User name');
+                                }
+                            }
+
+                            else {
+                                irrrrr = 0;
+                                if ($('#chk_Mailcredential').is(':checked')) {
+                                    notify("Successfully updated user data and sent credentials via Email", "green");
+                                }
+                                else {
+                                    notify("Successfully updated user data", "green");
+
+                                }
+                                window.setTimeout(function () {
+                                    window.location.reload();
+                                }, 3000);
+                                return;
+                               
+                                var url1 = '/User/getAllUserList';
+
+                                if (LOCALORSERVER == 'LOCAL') {
+                                    url1 = '/User/getAllUserList';
+                                }
+                                else if (LOCALORSERVER == 'SERVER') {
+                                    // url1 = 'getAllUserList';
+                                    url1 = 'User/getAllUserList';
+                                }
+
+                                $.get(url1)
+           .success(function (response) {
+
+               usdata = JSON.parse(response).data;
+              
+
+           });
+
+                                return;
+                                $('#example tbody tr').each(function () {
+
+
+                                    var fid = $(this).find("td:eq(2)").html();
+
+                                    if (fid == $scope.User.FldID) {
+
+                                        var fn = $scope.User.Firstname;
+
+
+                                        var table = $('#example').DataTable();
+                                        var dt = new Array();
+
+                                        dt.push("");
+                                        dt.push("");
+                                        dt.push(fid);
+                                        dt.push(fn);
+                                        dt.push($scope.User.Lastname);
+                                        dt.push($scope.User.Email);
+                                        dt.push($scope.User.Usertype);
+                                        dt.push($scope.User.Isbuyer == 1 ? 'Yes' : 'No');
+                                        dt.push($scope.User.Isactive);
+
+
+                                        table
+                                            .row(this)
+                                            .data(dt)
+                                            .draw();
+                                        $(this).find("td:eq(0)").html('<i class="fa fa-hand-o-right" style="cursor:pointer;" onclick="EditPOPUP(\'' + fid + '\')"></i>');
+
+                                       
+                                        if ($scope.User.Isactive == 1) {
+                                            $(this).find("td:eq(9)").html('<input class="de_activate btn_activate" type="button" value="Deactivate" id="deactivate_' + fid + '"><input class="re_activate btn_activate" type="button" value="Activate" id="reactivate_' + fid + '">');
+                                        }
+                                        else {
+                                            $(this).find("td:eq(9)").html('<input class="de_activate btn_activate" style="display:none" type="button" value="Deactivate" id="deactivate_' + fid + '"><input style="display:block" class="re_activate btn_activate" type="button" value="Activate" id="reactivate_' + fid + '">');
+                                        }
+
+                                        if ($scope.User.Isactive == 1) {
+                                            $(this).find("td:eq(1)").html('<input class="de_activate btn_activate" type="button" value="Deactivate" id="deactivate_' + fid + '"><input class="re_activate btn_activate" type="button" value="Activate" id="reactivate_' + fid + '">');
+                                            // $(this).find("td:eq(1)").html('<i class="fa fa-times-circle re_activate1 btn_activate" id="reactivate_' + fid + '" style="display:block;cursor:pointer;font-size:20px;"></i>');
+                                        }
+                                        else {
+                                            $(this).find("td:eq(1)").html('<input class="de_activate btn_activate" style="display:none" type="button" value="Deactivate" id="deactivate_' + fid + '"><input style="display:block" class="re_activate btn_activate" type="button" value="Activate" id="reactivate_' + fid + '">');
+                                            // $(this).find("td:eq(1)").html('<i class="fa fa-check-circle re_activate1 btn_activate" id="reactivate_' + fid + '" style="display:block;cursor:pointer;font-size:20px;"></i>');
+                                        }
+
+                                        $('.toggle .de_activate').on('click', function () {
+                                            $(this).hide();
+                                            $(this).next('.re_activate').show();
+                                            var deactivate = $(this).attr('id');
+                                            var deactivemode = deactivate.split('_')[0];
+                                            var deactiveUID = deactivate.split('_')[1];
+                                            activatedeactivateUser(deactivemode, deactiveUID);
+                                        });
+                                        $('.toggle .re_activate').on('click', function () {
+                                            $(this).hide();
+                                            $(this).prev('.de_activate').show();
+                                            var reactivate = $(this).attr('id');
+                                            var reactivemode = reactivate.split('_')[0];
+                                            var reactiveUID = reactivate.split('_')[1];
+                                            activatedeactivateUser(reactivemode, reactiveUID);
+                                        });
+                                       
+                                        $('.pop-close').click();
+
+                                        
+                                        $('#chk_ChngPasswrd').attr("checked", false);
+                                       
+
+                                        $('#txt_Password').attr('disabled', true);
+                                        $('#txt_ConfrmPswrd').attr('disabled', true);
+                                       
+                                        $('#txt_Password').val('');
+                                        $('#txt_ConfrmPswrd').val('');
+                                        
+                                        return;
+
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+
+
+        function EditPOPUP(obj) {
+            // alert(obj);
+            angular.element($("#angulardiv")).scope().setUser(obj);
+            //$('#txt_Address').trigger('keyup');
+            //window.setTimeout(function () {
+            //    $('#txt_Address').trigger('keyup');
+            //}, 40);
+            $('#popupEditUser').modal('show');
+            //$('#popupEditUser').fadeIn(40);
+        }
+    </script>
+
+
+    <script>
+
+        function rebuiltPriorityintoDivs(obj) {
+
+            $('.newappendeddivforpermissions').remove();
+
+            var ttt = 0;
+            var outerhtml = "<div class='row mrg10T newappendeddivforpermissions'>";
+
+            $(obj).find('tbody tr').each(function () {
+
+
+                if ($(this).find('td').length == 1) {
+                    if (ttt == 0) {
+                        outerhtml += '<div class="col-sm-4" style="min-height: 220px;">';
+                    }
+                    else {
+                        outerhtml += '</div><div class="col-sm-4" style="min-height: 220px;">';
+                    }
+                    outerhtml += '<h3 class="section-header">' + $(this).find('td:eq(0)').html() + '</h3>';
+
+                    //console.log('yyy ' + $);
+                }
+
+                else {
+                    outerhtml += '<div class="col-sm-9">';
+                    outerhtml += '<span>' + $(this).find('td:eq(0)').html() + '</span></div>';
+                    outerhtml += '<div class="col-sm-3">' + $(this).find('td:eq(1)').html() + '</div>';
+
+                }
+
+                ttt = 1;
+
+
+            });
+
+            outerhtml += "</div>";
+            //console.log(outerhtml);
+
+            $(obj).after(outerhtml);
+
+            $(obj).html('');
+
+        }
+    </script>
+
+    <script>
+
+        function rebuiltPriorityintoDivs(obj) {
+
+            $('.newappendeddivforpermissions').remove();
+
+            var ttt = 0;
+            var cnt = -1;
+            var outerhtml = "<div class='row newappendeddivforpermissions'>";
+
+            $(obj).find('tbody tr').each(function () {
+
+
+
+                if ($(this).find('td').length == 1) {
+
+                    cnt++;
+
+                    if (ttt == 0) {
+
+
+                        outerhtml += '<div class="row" style="margin-left:0px;margin-right:0px;">';
+
+                        outerhtml += '<div class="col-sm-3">';
+                    }
+                    else {
+
+
+
+
+                        if (cnt % 4 == 0) {
+                            outerhtml += '</div></div><div class="row"  style="margin-left:0px;margin-right:0px;"><div class="col-sm-3">';
+
+                        }
+                        else {
+                            outerhtml += '</div><div class="col-sm-3">';
+                        }
+                    }
+
+                    outerhtml += '<div class="col-sm-12 section-header"><span style="float: left;width: 87.9%;text-align: left;">' + $(this).find('td:eq(0)').html() + '</span>'
+               + '<input style="float:left;margin-left:2px;    margin-top: 10px;" type="checkbox" onclick="Checkallinner(this);" /></div> ';
+
+
+
+                  //  outerhtml += '<h3 class="section-header">' + $(this).find('td:eq(0)').html() + '</h3>';
+
+                    //console.log('yyy ' + $);
+                }
+
+                else {
+                    outerhtml += '<div class="col-sm-9">';
+                    outerhtml += '<span>' + $(this).find('td:eq(0)').html() + '</span></div>';
+                    outerhtml += '<div class="col-sm-3">' + $(this).find('td:eq(1)').html() + '</div>';
+
+                }
+
+                ttt = 1;
+
+
+            });
+
+            outerhtml += "</div>";
+            //console.log(outerhtml);
+
+            $(obj).after(outerhtml);
+
+            $(obj).html('');
+
+        }
+
+        function Checkallinner(obj) {
+
+            var pdiv = $(obj).parent().parent();
+            if ($(obj).is(':checked')) {
+                $(pdiv).find('.chkScrty').prop('checked', true);
+            }
+            else {
+                $(pdiv).find('.chkScrty').prop('checked', false);
+
+            }
+        }
+    </script>
+
+
+</body>
+</html>

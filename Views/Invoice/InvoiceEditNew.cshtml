@@ -1,0 +1,3081 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>InvoiceEdit</title>
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    @* <script src="~/Scripts/angular.min.js"></script>*@
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    @*<script src="~/Scripts/AddUser.js"></script>*@
+    <script src="~/Scripts/Project.js"></script>
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/swfupload.js"></script>
+    <script src="~/Scripts/jquery.swfupload.js"></script>
+    <link href="~/css/stylesForFileUpload.css" rel="stylesheet" />
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+    <style>
+
+
+        .tottaxpaid {
+            position: relative;
+            width: 100%;
+            height: 40px;
+            float: left; 
+        }
+
+
+        .tottaxpaid p{
+            margin-top: 12px;
+            left: -23px;
+            position: relative;
+            font-size: 1em;
+            color: #208093;
+        }
+
+
+            .noselect td {
+            opacity: 0.4 !important;
+            background-color: #eee !important;
+        }
+
+
+        .selectedrow {
+            background-color: rgb(239, 255, 144);
+        }
+
+        .selectedrowforinvoice {
+            background-color: rgb(239, 255, 144);
+        }
+
+       
+        
+        
+         .singledown {
+            background: url('https://www.thebridgebytcg.com/Images/Arrow-Down-s.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+        }
+
+        .doubledown {
+            background: url('https://www.thebridgebytcg.com/Images/Arrow-Down-d.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+        }
+
+        .singleup {
+            margin-left:20px;
+            background: url('https://www.thebridgebytcg.com/Images/Arrow-Down-s.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+            -webkit-transform: rotate(180deg);
+        }
+
+        .doubleup {
+            background: url('https://www.thebridgebytcg.com/Images/Arrow-Down-d.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+            -webkit-transform: rotate(180deg);
+        }
+        
+    </style>
+
+    <style type="text/css">
+        /** { margin: 0; padding: 0; }
+        body { font: 14px/1.4 Georgia, serif; }
+        #page-wrap { width: 600px; margin: 15px auto; }
+        p { margin: 0 0 15px 0; }
+        p:first-child { background: #fffcde; padding: 10px; }
+        #sidebar ul { background: #eee; padding: 10px; }
+        li { margin: 0 0 0 20px; }
+        #main { width: 390px; float: left; }*/
+        /*#sidebar { width: 190px; float: right; }*/
+        #sidebar {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+        }
+        /*#sidebar ul { background: #eee; padding: 10px; }*/
+        /*li { margin: 0 0 0 20px; }*/
+    </style>
+
+    <style type="text/css">
+        a.tooltip {
+            outline: none;
+        }
+
+            a.tooltip strong {
+                line-height: 30px;
+            }
+
+            a.tooltip:hover {
+                text-decoration: none;
+            }
+
+            a.tooltip span {
+                z-index: 10;
+                display: none;
+                padding: 14px 20px;
+                margin-top: -30px;
+                margin-left: 28px;
+                width: 300px;
+                line-height: 16px;
+            }
+
+            a.tooltip:hover span {
+                display: inline;
+                position: absolute;
+                color: #111;
+                border: 1px solid #DCA;
+                background: #fffAF0;
+            }
+
+        .callout {
+            z-index: 20;
+            position: absolute;
+            top: 30px;
+            border: 0;
+            left: -12px;
+        }
+
+        /*CSS3 extras*/
+        a.tooltip span {
+            border-radius: 4px;
+            box-shadow: 5px 5px 8px #CCC;
+        }
+    </style>
+
+    <script type="text/javascript">
+        $(function () {
+
+
+           
+
+            var table = $('#tblPOItemSelector').DataTable();
+
+            table
+                .clear()
+                .draw();
+            $('#tblPOItemSelector_filter').hide();
+            $('#tblPOItemSelector_length').hide();
+
+            
+
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            $('.ui-multiselect-menu').css('width', '84%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+
+
+            var date = new Date();
+            var currentMonth = date.getMonth();
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+
+            $('#txt_InvoiceDate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                //dateFormat: 'MM dd yy'
+                dateFormat: 'yy/mm/dd'
+                //,minDate: new Date(currentYear, currentMonth, currentDate)
+            });
+            $('#txt_InvoiceDate').datepicker("setDate", date);
+        });
+    </script>
+
+    <script>
+        var POSelector = new Array();
+        var POLineItemSelector = new Array();
+
+        function selectpo(POID, ProjectID) {
+
+            $('#POIdEdit').html('<a href="javascript:void(0);">PO #<span></span></a>');
+
+            $('#tblInvoiceItems tbody').html('');
+
+            var table = $('#tblPOItemSelector').DataTable();
+
+            table
+                .clear()
+                .draw();
+            $('#tblPOItemSelector_filter').hide();
+            $('#tblPOItemSelector_length').hide();
+
+            //var poid = POID;//$(obj).find('td:eq(0)').text();
+
+            // alert(POID);
+
+            var rspnsurl = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                rspnsurl = '/PurchaseOrder/POEdit/' + POID;
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                rspnsurl = 'PurchaseOrder/POEdit/' + POID;
+            }
+
+            $('#POIdEdit').html('<a href="' + rspnsurl + '" target="_blank" class="tooltip" data-id="' + POID + '" > PO # <span></span></a>');
+
+            $('#Hdn_ProjectID').val(ProjectID);
+
+
+            //$('#Hdn_TotalPOValue').val($(obj).find('td:eq(3)').text());
+            //$('#Hdn_TotalPOTaxes').val($(obj).find('td:eq(5)').text());
+            //ForToolTip();
+
+            getProjectAccount(ProjectID);
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getPOLineItemSelectorBasedOnPOEdit';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getPOLineItemSelectorBasedOnPOEdit';
+            }
+
+            url += "?POID=" + POID;
+
+
+
+            $.get(url)
+            .success(function (response) {
+
+
+                totdata = JSON.parse(response);
+                totdata = totdata.data;
+
+
+                // //console.log(totdata);
+                if (totdata.length == 0) {
+                    var table = $('#tblPOItemSelector').DataTable();
+                    table
+                        .clear()
+                        .draw();
+                    return;
+                };
+
+                POLineItemSelector = [];
+
+
+                for (i = 0; i < totdata.length ; i++) {
+                    POLineItemSelector[i] = new Array();
+
+                    POLineItemSelector[i][0] = totdata[i].POLineItemID;
+
+                    POLineItemSelector[i][1] = "<input type='button' value='Select' />";
+
+                    POLineItemSelector[i][2] = totdata[i].TotalID;
+                    POLineItemSelector[i][3] = totdata[i].SpecNum;
+                    POLineItemSelector[i][4] = totdata[i].ItemDescription;
+                    POLineItemSelector[i][5] = formatNumber(totdata[i].Quantity);
+                   
+                    POLineItemSelector[i][6] = formatNumber(totdata[i].Amount);
+                    POLineItemSelector[i][7] = formatNumber(totdata[i].AmountRemaining);
+                    POLineItemSelector[i][8] = (i + 1);
+                    //POLineItemSelector[i][9] = totdata[i].Amount;
+                    POLineItemSelector[i][9] = totdata[i].AmountRemaining;
+
+
+
+                }
+
+
+                $('#tblPOItemSelector').dataTable().fnDestroy();
+
+                $('#tblPOItemSelector').dataTable({
+                    "processing": true,
+                    "data": POLineItemSelector,
+                    "columns": [
+                        { "title": "POLineItemID", "class": "displaynone" },
+                        { "title": "Action", "class": "displaynone" },
+                        { "title": "Item #", "class": "selectpo" },
+                        { "title": "Spec" },
+                        { "title": "Description" },
+                        { "title": "QTY" },
+                        { "title": "Amount" },
+                        { "title": "Remaining" },
+                        { "title": "RowIndex", "class": "displaynone" },
+                        { "title": "Total", "class": "displaynone" }
+
+                    ],
+                    paging: false,
+                    "initComplete": function () {
+                        $('#tblPOItemSelector_filter').hide();
+                        AddtableTdTextAlign('#tblPOItemSelector', '5^6^7', 'right', false);
+
+
+                    },
+                    "order": [[2, "asc"]],
+                    "aoColumnDefs": [
+                       // { 'bSortable': false, 'aTargets': [0, 1, 2, 3, 4, 5,6,7] }
+                    ]
+                });
+
+                var i = 1;
+                $('#tblPOItemSelector tbody tr').each(function () {
+                    $(this).find("td:eq(8)").html(i++);
+                });
+
+
+
+            });
+
+
+
+        }
+
+
+        function selectpofirst(POID, ProjectID)
+        {
+            var invoiceid = $('#Hdn_InvoiceNumber').val();
+
+            $('#POIdEdit').html('<a href="javascript:void(0);">PO #<span></span></a>');
+            $('#tblInvoiceItems tbody').html('');
+            var table = $('#tblPOItemSelector').DataTable();
+            table
+                .clear()
+                .draw();
+            $('#tblPOItemSelector_filter').hide();
+            $('#tblPOItemSelector_length').hide();
+
+            var rspnsurl = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                rspnsurl = '/PurchaseOrder/POEdit/' + POID;
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                rspnsurl = 'PurchaseOrder/POEdit/' + POID;
+            }
+
+            $('#POIdEdit').html('<a href="' + rspnsurl + '" target="_blank" class="tooltip" data-id="' + POID + '" > PO # <span></span></a>');
+
+            $('#Hdn_ProjectID').val(ProjectID);
+            getProjectAccount(ProjectID);
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getPOLineItemSelectorBasedOnPOEditNew';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getPOLineItemSelectorBasedOnPOEditNew';
+            }
+
+            url += "?InvoiceNumber=" + invoiceid;
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async : false,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: {},
+                success: function (response) {
+
+
+                    totdata = JSON.parse(response);
+                    totdata = totdata.data;
+
+
+                    // //console.log(totdata);
+                    if (totdata.length == 0) {
+                        var table = $('#tblPOItemSelector').DataTable();
+                        table
+                            .clear()
+                            .draw();
+                        return;
+                    };
+
+                    POLineItemSelector = [];
+
+
+                    for (i = 0; i < totdata.length ; i++) {
+                        POLineItemSelector[i] = new Array();
+
+                        POLineItemSelector[i][0] = totdata[i].POLineItemID;
+
+                        POLineItemSelector[i][1] = "<input type='button' value='Select' />";
+
+                        POLineItemSelector[i][2] = totdata[i].TotalID;
+                        POLineItemSelector[i][3] = totdata[i].SpecNum;
+                        POLineItemSelector[i][4] = totdata[i].ItemDescription;
+                        POLineItemSelector[i][5] = formatNumber(totdata[i].Quantity);
+                        POLineItemSelector[i][6] = formatNumber(totdata[i].Amount);
+                        //console.log(totdata[i].Amount);
+                        
+                        POLineItemSelector[i][7] = formatNumber(totdata[i].AmountRemaining);
+                        POLineItemSelector[i][8] = (i + 1);
+                        //POLineItemSelector[i][9] = totdata[i].Amount;
+                        POLineItemSelector[i][9] = totdata[i].AmountRemaining;
+
+
+
+                    }
+
+
+                    $('#tblPOItemSelector').dataTable().fnDestroy();
+
+                    $('#tblPOItemSelector').dataTable({
+                        "processing": true,
+                        "data": POLineItemSelector,
+                        "columns": [
+                            { "title": "POLineItemID", "class": "displaynone" },
+                            { "title": "Action", "class": "displaynone" },
+                            { "title": "Item #", "class": "selectpo" },
+                            { "title": "Spec" },
+                            { "title": "Description" },
+                            { "title": "QTY" },
+                            { "title": "Amount" },
+                            { "title": "Remaining" },
+                            { "title": "RowIndex", "class": "displaynone" },
+                            { "title": "Total", "class": "displaynone" }
+
+                        ],
+                        paging: false,
+                        "initComplete": function () {
+                            $('#tblPOItemSelector_filter').hide();
+                            AddtableTdTextAlign('#tblPOItemSelector', '5^6^7', 'right', false);
+
+
+                        },
+                        "order": [[2, "asc"]],
+                        "aoColumnDefs": [
+                           // { 'bSortable': false, 'aTargets': [0, 1, 2, 3, 4, 5,6,7] }
+                        ]
+                    });
+
+                    var i = 1;
+                    $('#tblPOItemSelector tbody tr').each(function () {
+                        $(this).find("td:eq(8)").html(i++);
+                    });
+
+
+
+                }
+
+            });
+
+           
+
+
+
+        }
+
+    </script>
+
+    <script>
+
+        $(function () {
+
+            $('#tblPOItemSelector').on('draw.dt', function () {
+                cancelselections();
+                var i = 1;
+                $('#tblPOItemSelector tbody tr').each(function () {
+                    $(this).find("td:eq(8)").html(i++);
+                });
+
+            });
+
+            $('#tblPOItemSelector tr').live('click', function (event) {
+
+                if ($(this).hasClass('theader')) {
+                    return;
+                }
+                var clickedrowindex = $(this).find("td:eq(8)").html();
+
+                if (!event.ctrlKey && !event.shiftKey) {
+                    var ln = $('.selectedrow').length;
+                    var hclass = false;
+                    hclass = $(this).hasClass('selectedrow');
+                    cancelselections();
+
+                    if (!hclass || ln > 1 || ln == 0) {
+                        $(this).addClass('selectedrow');
+                    }
+                    else if (ln == 1) {
+                        $(this).removeClass('selectedrow');
+                    }
+                }
+
+                else if (event.ctrlKey) {
+
+                    var hclass = false;
+                    hclass = $(this).hasClass('selectedrow');
+
+                    if (!hclass) {
+                        $(this).addClass('selectedrow');
+                    }
+                    else {
+                        $(this).removeClass('selectedrow');
+                    }
+
+                }
+
+                else if (event.shiftKey) {
+
+                    var closestrow = 99999999;
+                    var closestrowindex = 0;
+
+                    $('.selectedrow').each(function () {
+
+                        if ($(this).hasClass('selectedrow')) {
+                            var id = $(this).find("td:eq(8)").html();
+
+                            var diff = id - clickedrowindex;
+
+
+                            diff = diff < 0 ? 0 - diff : diff;
+                            if (closestrow > diff) {
+                                closestrow = diff;
+                                closestrowindex = id;
+                            }
+
+                        }
+
+                    });
+
+
+
+
+
+                    var startpoint = 0;
+                    var endpoint = 0;
+                    startpoint = clickedrowindex > closestrowindex ? closestrowindex : clickedrowindex;
+                    endpoint = clickedrowindex > closestrowindex ? clickedrowindex : closestrowindex;
+                    cancelselections();
+
+                    $('#tblPOItemSelector tbody tr').each(function () {
+
+                        var currrowindex = $(this).find("td:eq(8)").html();
+                        if (currrowindex >= startpoint && currrowindex <= endpoint) {
+                            $(this).addClass('selectedrow');
+                        }
+
+                    });
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                $('#tblPOItemSelector tbody tr').each(function () {
+
+                    if ($(this).hasClass('selectedrow')) {
+
+                        $(this).find('td').css('background-color', 'rgb(201, 240, 249)');
+                    }
+                    else {
+                        if ($(this).hasClass('odd')) {
+                            $(this).find('td').css('background-color', '#f9f9f9');
+                        }
+                        else {
+                            $(this).find('td').css('background-color', '#fff');
+
+                        }
+                    }
+
+
+                });
+
+
+
+
+            });
+
+
+            $('#tblInvoiceItems tr .selectable').live('click', function (event) {
+
+
+                var obj = $(this).parent().parent();
+
+
+                if ($(obj).hasClass('theader')) {
+                    return;
+                }
+                var clickedrowindex = $(obj).attr('data-rowindex');
+
+                if (!event.ctrlKey && !event.shiftKey) {
+                    var ln = $('.selectedrowforinvoice').length;
+                    var hclass = false;
+                    hclass = $(obj).hasClass('selectedrowforinvoice');
+                    cancelselectionsinvoice();
+
+                    if (!hclass || ln > 1 || ln == 0) {
+                        $(obj).addClass('selectedrowforinvoice');
+                    }
+                    else if (ln == 1) {
+                        $(obj).removeClass('selectedrowforinvoice');
+                    }
+                }
+
+                else if (event.ctrlKey) {
+
+                    var hclass = false;
+                    hclass = $(obj).hasClass('selectedrowforinvoice');
+
+                    if (!hclass) {
+                        $(obj).addClass('selectedrowforinvoice');
+                    }
+                    else {
+                        $(obj).removeClass('selectedrowforinvoice');
+                    }
+
+                }
+
+                else if (event.shiftKey) {
+
+                    var closestrow = 99999999;
+                    var closestrowindex = 0;
+
+                    $('.selectedrowforinvoice').each(function () {
+
+                        if ($(this).hasClass('selectedrowforinvoice')) {
+                            var id = $(this).attr('data-rowindex');
+
+                            var diff = id - clickedrowindex;
+
+
+                            diff = diff < 0 ? 0 - diff : diff;
+                            if (closestrow > diff) {
+                                closestrow = diff;
+                                closestrowindex = id;
+                            }
+
+                        }
+
+                    });
+
+
+
+
+
+                    var startpoint = 0;
+                    var endpoint = 0;
+                    startpoint = clickedrowindex > closestrowindex ? closestrowindex : clickedrowindex;
+                    endpoint = clickedrowindex > closestrowindex ? clickedrowindex : closestrowindex;
+                    cancelselectionsinvoice();
+
+                    $('#tblInvoiceItems tbody tr').each(function () {
+
+                        var currrowindex = $(this).attr('data-rowindex');
+                        if (currrowindex >= startpoint && currrowindex <= endpoint) {
+                            $(this).addClass('selectedrowforinvoice');
+                        }
+
+                    });
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                $('#tblInvoiceItems tbody tr').each(function () {
+
+                    if ($(this).hasClass('selectedrowforinvoice')) {
+
+                        $(this).find('td').css('background-color', 'rgb(201, 240, 249)');
+                    }
+                    else {
+                        if ($(this).hasClass('odd')) {
+                            $(this).find('td').css('background-color', '#f9f9f9');
+                        }
+                        else {
+                            $(this).find('td').css('background-color', '#fff');
+
+                        }
+                    }
+
+
+                });
+
+
+
+
+            });
+
+
+        });
+
+
+        function cancelselections() {
+
+            //$('#lineitems tr').removeClass('selectedrow');
+
+            $('.selectedrow').each(function () {
+
+                $(this).removeClass('selectedrow');
+
+                if ($(this).hasClass('odd')) {
+                    $(this).find('td').css('background-color', '#f9f9f9');
+                }
+                else {
+                    $(this).find('td').css('background-color', '#fff');
+                }
+
+
+            });
+
+
+
+        }
+
+        function cancelselectionsinvoice() {
+
+            //$('#lineitems tr').removeClass('selectedrow');
+
+            $('.selectedrowforinvoice').each(function () {
+
+                $(this).removeClass('selectedrowforinvoice');
+
+                if ($(this).hasClass('odd')) {
+                    $(this).find('td').css('background-color', '#f9f9f9');
+                }
+                else {
+                    $(this).find('td').css('background-color', '#fff');
+                }
+
+
+            });
+
+
+
+        }
+
+        function fetch(obj) {
+
+
+            //cancelselectionsinvoice();
+
+
+            var percent = $('#percentage').val();
+            var poidall = '';
+
+
+            if (obj == "onlyselected") {
+
+                $('.selectedrow').each(function () {
+
+
+                    if (!$(this).hasClass('noselect')) {
+
+                        $(this).addClass('noselect');
+
+                        var poid = $(this).find('td:eq(0)').html();
+                        poidall += poidall == "" ? poid : "^" + poid;
+                    }
+
+
+                });
+
+            }
+            else {
+
+                $('#tblPOItemSelector tbody tr').each(function () {
+
+
+                    if (!$(this).hasClass('noselect')) {
+                        $(this).addClass('noselect');
+                        var poid = $(this).find('td:eq(0)').html();
+                        poidall += poidall == "" ? poid : "^" + poid;
+                    }
+
+                });
+            }
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getInvoiceDataAfterSelectingForEdit';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getInvoiceDataAfterSelectingForEdit';
+            }
+
+            cancelselections();
+
+           // alert(poidall);
+            var InvoiceID = $('#Hdn_InvoiceNumber').val();
+
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "{ \"PoidAll\" : \"" + poidall + "\", \"percent\" : \"" + percent + "\",\"InvoiceID\" : \"" + InvoiceID + "\"}",
+                async: false,
+                success: function (data) {
+                    data = JSON.parse(data).data;
+
+                    BuildInvoiceTable(data);
+                    CalculateOtherFields();
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+           
+        }
+
+
+        function CalculateOtherFields() {
+
+            var SubTotalInvoice = '';
+            var TotalTax1 = 0;
+            var TotalTax2 = 0;
+            var TotalTax3 = 0;
+            var TotalInvoice = 0;
+            var Amount = 0.00;
+
+            $('#tblInvoiceItems tbody tr').each(function () {
+
+
+                //alert($(this).attr('data-rowid'));
+
+                Amount += parseFloat($(this).find('td').eq(10).text().replace(',',''));
+
+                var TempTotalTax1 = $(this).find('td').eq(9).find('input[type="text"]').eq(0).val().replace(',', '');
+                var TempTotalTax2 = $(this).find('td').eq(9).find('input[type="text"]').eq(1).val().replace(',', '');
+                var TempTotalTax3 = $(this).find('td').eq(9).find('input[type="text"]').eq(2).val().replace(',', '');
+
+
+                TotalTax1 += isNaN(parseFloat(TempTotalTax1)) ? 0 : parseFloat(TempTotalTax1);
+                TotalTax2 += isNaN(parseFloat(TempTotalTax2)) ? 0 : parseFloat(TempTotalTax2);
+                TotalTax3 += isNaN(parseFloat(TempTotalTax3)) ? 0 : parseFloat(TempTotalTax3);
+
+            });
+
+
+            $('#txt_SubtotalInvoice').val(formatNumber(Amount));
+            $('#txt_TotalTax1').val(formatNumber(isNaN(TotalTax1) ? 0 : TotalTax1));
+            $('#txt_TotalTax2').val(formatNumber(isNaN(TotalTax2) ? 0 : TotalTax2));
+            $('#txt_TotalTax3').val(formatNumber(isNaN(TotalTax3) ? 0 : TotalTax3));
+            TotalInvoice = parseFloat(Amount) + TotalTax1 + TotalTax2 + TotalTax3;
+            $('#txt_TotalInvoice').val(formatNumber(TotalInvoice));
+
+        }
+
+        function fetchreverse(obj) {
+
+            cancelselections();
+
+            if (obj == "onlyselected") {
+
+
+                $('.selectedrowforinvoice').each(function () {
+                    $(this).remove();
+                    var poitemidinvoice = $(this).attr('data-rowid');
+
+                    $('#tblPOItemSelector tbody tr').each(function () {
+                        var poitemidselector = $(this).find("td:eq(0)").html();
+                        if (poitemidselector == poitemidinvoice) { $(this).removeClass('noselect'); }
+                    });
+
+                });
+
+
+
+            }
+            else {
+
+
+
+                $('#tblInvoiceItems tbody tr').each(function () {
+                    $(this).remove();
+
+                });
+
+                $('#tblPOItemSelector tbody tr').each(function () {
+                    $(this).removeClass('noselect');
+                });
+
+            }
+
+            SyncAll();
+
+
+        }
+
+        function BuildInvoiceTable(data) {
+
+
+
+            var percent = parseFloat($('#percentage').val());
+            var html = "";
+
+            var tax1name = '';
+            var tax2name = '';
+            var tax3name = '';
+
+            for (var i = 0; i < data.length; i++) {
+
+                var tmptot = parseFloat(data[i].Total * percent / 100);
+
+                var tottax1 = 0;
+                tottax1 = CalculateTaxes(data[i].Tax1Val, data[i].Tax1type, tmptot);
+                tottax1 = isNaN(parseFloat(tottax1)) ? 0 : parseFloat(tottax1);
+
+                var tottax2 = 0;
+                tottax2 = CalculateTaxes(data[i].Tax2Val, data[i].Tax2type, tmptot);
+                tottax2 = isNaN(parseFloat(tottax2)) ? 0 : parseFloat(tottax2);
+
+
+                var tottax3 = 0;
+                tottax3 = CalculateTaxes(data[i].Tax3Val, data[i].Tax3type, tmptot);
+                tottax3 = isNaN(parseFloat(tottax3)) ? 0 : parseFloat(tottax3);
+
+                if (tax1name == '' || tax2name == '' || tax3name == '') {
+
+                    tax1name = data[i].Tax1Name == '' ? '<p style="color:red">(Tax 1)</p>' : data[i].Tax1Name;
+                    tax2name = data[i].Tax2Name == '' ? '<p style="color:red">(Tax 2)</p>' : data[i].Tax2Name;
+                    tax3name = data[i].Tax3Name == '' ? '<p style="color:red">(Tax 3)</p>' : data[i].Tax3Name;
+
+                }
+
+
+                var tax1paid = data[i].TotalTax1Paid;
+                var tax2paid = data[i].TotalTax2Paid;
+                var tax3paid = data[i].TotalTax3Paid;
+
+                var innerhtml = "";
+
+                var total = parseFloat(tottax1) + parseFloat(tottax2) + parseFloat(tottax3) + (parseFloat(data[i].Total) * parseFloat(percent) / 100);
+                innerhtml = "<tr data-rowid='" + data[i].POLineItemID + "'"
+                          + " data-tax1='" + data[i].Tax1 + "'"
+                          + " data-tax2='" + data[i].Tax2 + "'"
+                          + " data-tax3='" + data[i].Tax3 + "'"
+
+                          + " data-Tax1Val='" + data[i].Tax1Val + "'"
+                          + " data-Tax1type='" + data[i].Tax1type + "'"
+                          + " data-Tax2Val='" + data[i].Tax2Val + "'"
+                          + " data-Tax2type='" + data[i].Tax2type + "'"
+                          + " data-Tax3Val='" + data[i].Tax3Val + "'"
+                          + " data-Tax3type='" + data[i].Tax3type + "'"
+
+
+                          + " data-total='" + data[i].Total + "'"
+                           + " data-rowindex='" + (i + 1) + "'"
+                          + ">"
+                          + "<td>" + "<i class='fa fa-hand-o-right selectable' style='cursor:pointer;'></i>" + "</td>"
+                          + "<td>" + "<input style='width: 30px;' type='text' value='" + percent + "' class='percentclass floatonly' onkeyup='calculatepercent(this);' />" + "</td>"
+                          + "<td>" + data[i].TotalPOID + "</td>"
+                          + "<td>" + data[i].TotalItemNumber + "</td>"
+                          + "<td>" + data[i].SpecNum + "</td>"
+                          + "<td>" + "<input type='text' value='" + data[i].ItemDescription + "' />" + "</td>"
+                          + "<td>" + "<input type='text' value='' placeholder='Add Notes' />" + "</td>"
+                          + "<td>" + "<input class='floatonly' type='text' value='" + formatNumber(data[i].Quantity) + "' placeholder='Add Qty' onkeyup='QtySet(this);' />" + "</td>"
+                          + "<td>" + formatNumber(data[i].Amount) + "</td>"
+                          //+ "<td>" + "<input onkeyup='Synctax();' type='text' value='" + parseFloat(parseFloat(data[i].Tax1) + parseFloat(data[i].Tax2) + parseFloat(data[i].Tax3)) + "' /></td>"
+
+                          + "<td>"
+                          + "<div class='tottaxpaid'>"
+                          + "<input class='floatonly'  style='width:30px;margin-left:4px;' class='tax1_" + [i] + "' onkeyup='Synctax();' type='text' value='" + formatNumber(parseFloat(tottax1)) + "' />"
+                          + "<p>(" + formatNumber(tax1paid) + ")</p>"
+                          + "</div>"
+
+                          + "<div class='tottaxpaid'>"
+                          + "<input class='floatonly'   style='width:30px;margin-left:4px;' class='tax2_" + [i] + "' onkeyup='Synctax();' type='text' value='" + formatNumber(parseFloat(tottax2)) + "' />"
+                          + "<p>(" + formatNumber(tax2paid) + ")</p>"
+                          + "</div>"
+
+                          + "<div class='tottaxpaid'>"
+                          + "<input class='floatonly'   style='width:30px;margin-left:4px;' class='tax3_" + [i] + "' onkeyup='Synctax();' type='text' value='" + formatNumber(parseFloat(tottax3)) + "' />"
+                          + "<p>(" + formatNumber(tax3paid) + ")</p>"
+                          + "</div>"
+
+                          + "</td>"
+
+
+                          + "<td>" + formatNumber(total) + "</td>"
+                          + "<td>" + "demo" + "</td>"
+                          + "</tr>";
+
+                html += innerhtml;
+            }
+
+            var tottaxcolname = tax1name + ' ' + tax2name + ' ' + tax3name;
+
+            $('#tblInvoiceItems thead tr').find('th:eq(9)').html(tottaxcolname);
+
+           
+            $('#tblInvoiceItems tbody').append(html);
+
+            $('#tblInvoiceItems tbody tr').each(function () {
+                var ddl = $('#Ddl_ProjectAccount').clone().removeAttr('id');
+                var selectedval = $('#Ddl_ProjectAccount').val();
+                $(ddl).val(selectedval);
+                $(this).find('td:eq(11)').html(ddl);
+            });
+
+            SyncAll();
+            AddtableTdTextAlign('#tblInvoiceItems', '8^10', 'right', false);
+
+
+        }
+
+        function CalculateTaxes(val, type, total) {
+            var t = 0;
+            if (type == '%') {
+                t = total * val / 100;
+            }
+            else {
+                t = val;
+            }
+           
+            t = isNaN(parseFloat(t)) ? 0 : t;
+            ////console.log(t);
+          
+            return t;
+
+        }
+        function calculatepercent(obj) {
+
+
+            if ($(obj).val() > 100) {
+                $(obj).val('100');
+            }
+            $('#tblInvoiceItems tbody').find('tr').each(function () {
+
+                var p = $(this).find('td:eq(1)').find('input').val();
+                var total = $(this).attr('data-total').replace(',', '');
+                var vl = parseFloat(total) * parseFloat(p) / 100;
+
+                var TaxVal = '';
+                var Taxtype = '';
+
+                var tottax1 = 0;
+                TaxVal = $(this).attr('data-Tax1Val');
+                Taxtype = $(this).attr('data-Tax1type');
+
+                tottax1 = CalculateTaxes(TaxVal, Taxtype, vl);
+
+                var tottax2 = 0;
+                TaxVal = $(this).attr('data-Tax2Val');
+                Taxtype = $(this).attr('data-Tax2type');
+
+                tottax2 = CalculateTaxes(TaxVal, Taxtype, vl);
+
+
+                var tottax3 = 0;
+                TaxVal = $(this).attr('data-Tax3Val');
+                Taxtype = $(this).attr('data-Tax3type');
+
+                tottax3 = CalculateTaxes(TaxVal, Taxtype, vl);
+
+
+                vl += parseFloat(tottax1) + parseFloat(tottax2) + parseFloat(tottax3);
+
+                $(this).find('td:eq(10)').html(isNaN(vl) ? 0 : formatNumber(vl));
+                $(this).find('td:eq(9)').find('input:eq(0)').val(formatNumber(tottax1));
+                $(this).find('td:eq(9)').find('input:eq(1)').val(formatNumber(tottax2));
+                $(this).find('td:eq(9)').find('input:eq(2)').val(formatNumber(tottax3));
+
+            });
+
+
+            SyncAll();
+
+
+        }
+
+        function Synctax() {
+
+
+            $('#tblInvoiceItems tbody').find('tr').each(function () {
+
+
+                var p = $(this).find('td:eq(1)').find('input').val();
+                var total = $(this).attr('data-total').replace(',', '');
+                var vl = parseFloat(total) * parseFloat(p) / 100;
+
+                var TaxVal = '';
+                var Taxtype = '';
+
+                var tottax1 = 0;
+                TaxVal = $(this).find('td:eq(9)').find('input:eq(0)').val();
+                Taxtype = $(this).attr('data-Tax1type');
+
+                tottax1 = isNaN(parseFloat(TaxVal)) ? 0 : TaxVal;//CalculateTaxes(TaxVal, Taxtype, vl);
+
+
+                var tottax2 = 0;
+                TaxVal = $(this).find('td:eq(9)').find('input:eq(1)').val();
+                Taxtype = $(this).attr('data-Tax2type');
+
+                tottax2 = isNaN(parseFloat(TaxVal)) ? 0 : TaxVal;//CalculateTaxes(TaxVal, Taxtype, vl);
+
+
+                var tottax3 = 0;
+                TaxVal = $(this).find('td:eq(9)').find('input:eq(2)').val();
+                Taxtype = $(this).attr('data-Tax3type');
+
+                tottax3 = isNaN(parseFloat(TaxVal)) ? 0 : TaxVal;//CalculateTaxes(TaxVal, Taxtype, vl);
+
+                ////console.log(parseFloat(tottax1) + ">>>" +  parseFloat(tottax2) + ">>>" + parseFloat(tottax3));
+
+                vl += parseFloat(tottax1) + parseFloat(tottax2) + parseFloat(tottax3);
+
+
+                $(this).find('td:eq(10)').html(isNaN(vl) ? 0 : formatNumber(vl));
+
+
+            });
+
+            CalculateOtherFields();
+        }
+        function SyncAll() {
+
+            $('#tblPOItemSelector tbody tr').each(function () {
+
+                var invoicedamount = 0;
+                var totamnt = $(this).find("td:eq(9)").html().replace(',','');
+                var poitemid = $(this).find("td:eq(0)").html().replace(',', '');
+
+
+                $('#tblInvoiceItems tbody').find('tr').each(function () {
+
+                    if ($(this).attr('data-rowid') == poitemid) {
+
+                        var p = $(this).find('td:eq(1)').find('input').val();
+                        var total = $(this).attr('data-total').replace(',','');
+                        var vl = parseFloat(total) * parseFloat(p) / 100;
+
+                        invoicedamount += vl;
+
+                    }
+
+                });
+
+
+
+                $(this).find("td:eq(7)").html(formatNumber(parseFloat(totamnt) - parseFloat(invoicedamount)));
+
+
+            });
+
+
+            CalculateOtherFields();
+
+
+        }
+
+        function QtySet(obj) {
+
+            var qty = isNaN(parseFloat($(obj).val())) ? 0 : parseFloat($(obj).val());
+
+            var rw = $(obj).parent().parent();
+
+
+            var p = '0';
+            if ($(rw).find('td:eq(1) span').length > 0) {
+                p = $(rw).find('td:eq(1) span').text().replace(',', '');
+            }
+            else {
+                p = $(rw).find('td:eq(1) input').val().replace(',', '');
+            }
+
+
+             
+            var cost = $(rw).find('td:eq(8)').html().replace(',', '');//8 - 
+            var t1 = $(rw).find('td:eq(9) input:eq(0)').val().replace(',','');
+            var t2 = $(rw).find('td:eq(9) input:eq(1)').val().replace(',','');
+            var t3 = $(rw).find('td:eq(9) input:eq(2)').val().replace(',','');
+
+           
+            var tot = $(rw).attr('data-total').replace(',', '');
+            var vl = cost * qty * p / 100;
+
+            //if (parseFloat(tot) < parseFloat(vl))
+            //{
+            //    notify('Amount exceeds remaining.');
+            //}
+
+
+
+            var tottax = parseFloat(t1) + parseFloat(t2) + parseFloat(t3);
+            vl += isNaN(tottax) ? 0 : tottax;
+
+            $(rw).find('td:eq(10)').html(vl);
+
+
+            SyncAll();
+        }
+
+        function SaveInvoice() {
+
+
+            var tmp = true;
+            var i = 0;
+
+            $('#tblInvoiceItems tbody tr').each(function () {
+
+                var total = $(this).attr('data-total').replace(',', '');
+
+
+
+                var t1 = $(this).find('td:eq(9)').find('input:eq(0)').val();
+
+                var t2 = $(this).find('td:eq(9)').find('input:eq(1)').val();
+                var t3 = $(this).find('td:eq(9)').find('input:eq(2)').val();
+
+                var vl = $(this).find('td:eq(10)').html();
+
+                var tottax = parseFloat(t1) + parseFloat(t2) + parseFloat(t3);
+
+
+                vl -= parseFloat(tottax);
+
+                alert(vl);
+                alert(total);
+                if (parseFloat(vl) > parseFloat(total)) {
+
+                    notify('Row number ' + (i + 1) + ' is exceeding total remaining value.');
+                    tmp = false;
+                    return;
+                }
+                i++;
+
+            });
+
+            if (!tmp) {
+                return;
+            }
+
+
+           
+            if ($('#Hdn_ProjectID').val() == '0') {
+
+                notify('Please Select POs.');
+                return;
+
+            }
+
+
+            if ($('#tblInvoiceItems tbody tr').length < 1) {
+                notify('Please Add items in Invoice first');
+                return;
+            }
+
+
+            var InvoiceID = '';
+            if ($('#txt_InvoiceDate').val().trim() == '') {
+                errorfunc('txt_InvoiceDate', 'Please insert Invoice Date.');
+                return;
+            }
+            var InvoiceDate = $('#txt_InvoiceDate').val();
+            if ($('#txt_Terms').val().trim() == '' || $('#txt_Terms').val().trim() == '0') {
+                errorfunc('txt_Terms', 'Please Select Terms.');
+                return;
+            }
+            var Terms = $('#txt_Terms').val();
+            if ($('#Ddl_ProjectAccount').val().trim() == '0') {
+                errorfunc('Ddl_ProjectAccount', 'Please Select Project Account.');
+                return;
+            }
+            var ProjectAccount = $('#Ddl_ProjectAccount').val();
+
+            if ($('#txt_InvoiceNumber').val().trim() == '') {
+                errorfunc('txt_InvoiceNumber', 'Please enter Invoice Number.');
+                return;
+            }
+            var InvoiceNumber = $('#txt_InvoiceNumber').val();
+
+            if ($('#txt_TotalInvoiceAmount').val().trim() == '0' || $('#txt_TotalInvoiceAmount').val().trim() == '') {
+                errorfunc('txt_TotalInvoiceAmount', 'Please enter Total Invoice Amount.');
+                return;
+            }
+            var TotalInvoiceAmount = $('#txt_TotalInvoiceAmount').val();
+
+            if ($('#txt_InvoiceMemo').val().trim() == '0') {
+                errorfunc('txt_InvoiceMemo', 'Please enter Invoice Memo.');
+                return;
+            }
+            var InvoiceMemo = $('#txt_InvoiceMemo').val();
+
+            var SubtotalInvoice = $('#txt_SubtotalInvoice').val();
+
+
+            var TotalTax1 = $('#txt_TotalTax1').val();
+            var TotalTax2 = $('#txt_TotalTax2').val();
+            var TotalTax3 = $('#txt_TotalTax3').val();
+
+
+            var TotalInvoice = $('#txt_TotalInvoice').val();
+
+            // alert(InvoiceDate + '^' + Terms + '^' + ProjectAccount + '^' + InvoiceNumber + '^' + TotalInvoiceAmount + '^' + InvoiceMemo + '^' + SubtotalInvoice + '^' + TotalTax1 + '^' + TotalTax2 + '^' + TotalTax3 + '^' + TotalInvoice);
+
+
+            //if (parseFloat(TotalInvoice) != parseFloat(TotalInvoiceAmount)) {
+            //    errorfunc('txt_TotalInvoiceAmount', '');
+            //    notify('The Total Invoice Amount should be same as the calculated Invoice Amount, revise the PO to reflect this change.');
+            //    return;
+
+            //}
+
+
+
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/SaveInvoice';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/SaveInvoice';
+            }
+
+            url += "?InvoiceDate=" + InvoiceDate;
+            url += "&Terms=" + Terms;
+            url += "&ProjectAccount=" + ProjectAccount;
+            url += "&InvoiceNumber=" + InvoiceNumber;
+            url += "&TotalInvoiceAmount=" + TotalInvoiceAmount;
+            url += "&InvoiceMemo=" + InvoiceMemo;
+            url += "&SubtotalInvoice=" + SubtotalInvoice;
+            url += "&TotalTax1=" + TotalTax1;
+            url += "&TotalTax2=" + TotalTax2;
+            url += "&TotalTax3=" + TotalTax3;
+            url += "&TotalInvoice=" + TotalInvoice;
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                async: false,
+                success: function (data) {
+                    InvoiceID = data;
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+
+
+            $('#tblInvoiceItems tbody tr').each(function () {
+
+
+                var total = $(this).attr('data-total').replace(',', '');
+
+                var tmp = 1;
+
+                var Percentage = $(this).find('td').eq(tmp + 0).find('.percentclass').val();
+                var PONumber = $(this).find('td').eq(tmp + 1).text();
+                var ItemNumber = $(this).find('td').eq(tmp + 2).text();
+                var Spec = $(this).find('td').eq(tmp + 3).text();
+                var Description = $(this).find('td').eq(tmp + 4).find('input[type="text"]').val();
+                var Note = $(this).find('td').eq(tmp + 5).find('input[type="text"]').val();
+                var Qty = $(this).find('td').eq(tmp + 6).find('input[type="text"]').val();
+                var Amount = $(this).find('td').eq(tmp + 7).text();
+                //var Taxes = $(this).find('td').eq(tmp + 8).find('input[type="text"]').val();
+
+                var Tax1 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(0).val();
+                var Tax2 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(1).val();
+                var Tax3 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(2).val();
+
+                var Taxes = parseFloat(Tax1) + parseFloat(Tax2) + parseFloat(Tax3);
+
+
+                var LineItemTotal = $(this).find('td').eq(tmp + 9).text();
+                var ProjectAccount = $(this).find('td').eq(tmp + 10).find('select').val();
+                var PurchaseOrderID = '';
+                var POLineItemID = $(this).attr('data-rowid');
+
+                // alert(Percentage + '^' + PONumber + '^' + ItemNumber + '^' + Spec + '^' + Description + '^' + Note + '^' + Qty + '^' + Amount + '^' + Taxes + '^' + LineItemTotal + '^' + ProjectAccount);
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/SaveInvoiceItems';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/SaveInvoiceItems';
+                }
+
+                url += "?Percentage=" + Percentage;
+                url += "&PONumber=" + PONumber;
+                url += "&ItemNumber=" + ItemNumber;
+                url += "&Spec=" + Spec;
+                url += "&Description=" + Description;
+                url += "&Note=" + Note;
+                url += "&Qty=" + Qty;
+                url += "&Amount=" + Amount;
+                url += "&Taxes=" + Taxes;
+                url += "&LineItemTotal=" + LineItemTotal;
+                url += "&ProjectAccount=" + ProjectAccount;
+                url += "&InvoiceID=" + InvoiceID;
+                url += "&PurchaseOrderID=" + PurchaseOrderID;
+                url += "&POLineItemID=" + POLineItemID;
+                url += "&Tax1=" + Tax1;
+                url += "&Tax2=" + Tax2;
+                url += "&Tax3=" + Tax3;
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    datatype: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: "",
+                    success: function (data) {
+
+                        window.location.reload();
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+
+
+
+
+            });
+
+        }
+
+        function getProjectAccount(ProjectID) {
+            //
+            // var ProjectID = $('#Hdn_ProjectID').val();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getProjectAccount';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getProjectAccount';
+            }
+            url += "?ProjectID=" + ProjectID;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                success: function (data) {
+                    var html = '<option value="0">--Select Project Account--</option>';
+                    html += data;
+                    $('#Ddl_ProjectAccount').html(html);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+        }
+
+        function SaveNewInvoice() {
+
+            
+            if ($('#Hdn_ProjectID').val() == '0') {
+
+                notify('Please Select POs.');
+                return;
+
+            }
+
+
+            if ($('#tblInvoiceItems tbody tr').length < 1) {
+                notify('Please Add items in Invoice first');
+                return;
+            }
+
+
+            var InvoiceID = '';
+            if ($('#txt_InvoiceDate').val().trim() == '') {
+                errorfunc('txt_InvoiceDate', 'Please insert Invoice Date.');
+                return;
+            }
+            var InvoiceDate = $('#txt_InvoiceDate').val();
+            if ($('#txt_Terms').val().trim() == '' || $('#txt_Terms').val().trim() == '0') {
+                errorfunc('txt_Terms', 'Please Select Terms.');
+                return;
+            }
+            var Terms = $('#txt_Terms').val();
+            if ($('#Ddl_ProjectAccount').val().trim() == '0') {
+                errorfunc('Ddl_ProjectAccount', 'Please Select Project Account.');
+                return;
+            }
+            var ProjectAccount = $('#Ddl_ProjectAccount').val();
+
+            if ($('#txt_InvoiceNumber').val().trim() == '') {
+                errorfunc('txt_InvoiceNumber', 'Please enter Invoice Number.');
+                return;
+            }
+            var InvoiceNumber = $('#txt_InvoiceNumber').val();
+
+            if ($('#txt_TotalInvoiceAmount').val().trim() == '0') {
+                errorfunc('txt_TotalInvoiceAmount', 'Please enter Total Invoice Amount.');
+                return;
+            }
+            var TotalInvoiceAmount = $('#txt_TotalInvoiceAmount').val();
+
+            if ($('#txt_InvoiceMemo').val().trim() == '0') {
+                errorfunc('txt_InvoiceMemo', 'Please enter Invoice Memo.');
+                return;
+            }
+            var InvoiceMemo = $('#txt_InvoiceMemo').val();
+
+            var SubtotalInvoice = $('#txt_SubtotalInvoice').val();
+
+
+            var TotalTax1 = $('#txt_TotalTax1').val();
+            var TotalTax2 = $('#txt_TotalTax2').val();
+            var TotalTax3 = $('#txt_TotalTax3').val();
+
+
+            var TotalInvoice = $('#txt_TotalInvoice').val();
+
+            // alert(InvoiceDate + '^' + Terms + '^' + ProjectAccount + '^' + InvoiceNumber + '^' + TotalInvoiceAmount + '^' + InvoiceMemo + '^' + SubtotalInvoice + '^' + TotalTax1 + '^' + TotalTax2 + '^' + TotalTax3 + '^' + TotalInvoice);
+
+
+            //if (parseFloat(TotalInvoice) != parseFloat(TotalInvoiceAmount)) {
+            //    errorfunc('txt_TotalInvoiceAmount', '');
+            //    notify('The Total Invoice Amount should be same as the calculated Invoice Amount, revise the PO to reflect this change.');
+            //    return;
+
+            //}
+
+
+
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/SaveInvoice';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/SaveInvoice';
+            }
+
+            url += "?InvoiceDate=" + InvoiceDate;
+            url += "&Terms=" + Terms;
+            url += "&ProjectAccount=" + ProjectAccount;
+            url += "&InvoiceNumber=" + InvoiceNumber;
+            url += "&TotalInvoiceAmount=" + TotalInvoiceAmount;
+            url += "&InvoiceMemo=" + InvoiceMemo;
+            url += "&SubtotalInvoice=" + SubtotalInvoice;
+            url += "&TotalTax1=" + TotalTax1;
+            url += "&TotalTax2=" + TotalTax2;
+            url += "&TotalTax3=" + TotalTax3;
+            url += "&TotalInvoice=" + TotalInvoice;
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                async: false,
+                success: function (data) {
+                    InvoiceID = data;
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+
+
+            $('#tblInvoiceItems tbody tr').each(function () {
+
+
+
+                var tmp = 1;
+
+                var Percentage = $(this).find('td').eq(tmp + 0).find('.percentclass').val();
+                var PONumber = $(this).find('td').eq(tmp + 1).text();
+                var ItemNumber = $(this).find('td').eq(tmp + 2).text();
+                var Spec = $(this).find('td').eq(tmp + 3).text();
+                var Description = $(this).find('td').eq(tmp + 4).find('input[type="text"]').val();
+                var Note = $(this).find('td').eq(tmp + 5).find('input[type="text"]').val();
+                var Qty = $(this).find('td').eq(tmp + 6).find('input[type="text"]').val();
+                var Amount = $(this).find('td').eq(tmp + 7).text();
+                //var Taxes = $(this).find('td').eq(tmp + 8).find('input[type="text"]').val();
+
+                var Tax1 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(0).val();
+                var Tax2 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(1).val();
+                var Tax3 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(2).val();
+
+                var Taxes = parseFloat(Tax1) + parseFloat(Tax2) + parseFloat(Tax3);
+
+
+                var LineItemTotal = $(this).find('td').eq(tmp + 9).text();
+                var ProjectAccount = $(this).find('td').eq(tmp + 10).find('select').val();
+                var PurchaseOrderID = '';
+                var POLineItemID = $(this).attr('data-rowid');
+
+                // alert(Percentage + '^' + PONumber + '^' + ItemNumber + '^' + Spec + '^' + Description + '^' + Note + '^' + Qty + '^' + Amount + '^' + Taxes + '^' + LineItemTotal + '^' + ProjectAccount);
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/SaveInvoiceItems';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/SaveInvoiceItems';
+                }
+
+                url += "?Percentage=" + Percentage;
+                url += "&PONumber=" + PONumber;
+                url += "&ItemNumber=" + ItemNumber;
+                url += "&Spec=" + Spec;
+                url += "&Description=" + Description;
+                url += "&Note=" + Note;
+                url += "&Qty=" + Qty;
+                url += "&Amount=" + Amount;
+                url += "&Taxes=" + Taxes;
+                url += "&LineItemTotal=" + LineItemTotal;
+                url += "&ProjectAccount=" + ProjectAccount;
+                url += "&InvoiceID=" + InvoiceID;
+                url += "&PurchaseOrderID=" + PurchaseOrderID;
+                url += "&POLineItemID=" + POLineItemID;
+                url += "&Tax1=" + Tax1;
+                url += "&Tax2=" + Tax2;
+                url += "&Tax3=" + Tax3;
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    datatype: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: "",
+                    success: function (data) {
+
+                        window.location.reload();
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+
+
+
+
+            });
+
+        }
+
+        function CancelInvoice() {
+            window.location.reload();
+        }
+
+        function formatNumber(number) {
+            number = parseFloat(number);
+            var number = number.toFixed(2) + '';
+            var x = number.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //alert(2);
+            ForToolTip();
+
+        });
+
+        function ForToolTip() {
+            $('.tooltip').mouseover(function () {
+
+                var obj = $(this);
+                $(obj).find("span").text('Loading .....');
+
+                var POID = $(this).attr('data-id');
+                
+
+                if (POID == '0' || POID == '' || POID == 'undefined') {
+                    return;
+                }
+                else {
+
+                    var html = "";
+                    html += "<div class='user_panel_container'>"
+                    html += "<div>" + "<b>Total PO Value : </b>" + $('#Hdn_TotalPOValue').val() + "</div>";
+                    html += "<div>" + "<b>Total PO Taxes : </b>" + $('#Hdn_TotalPOTaxes').val() + "</div>";
+                    html += "</div>";
+                    $(obj).find("span").html(html);
+                }
+            })
+            .mouseout(function () {
+                //alert(2);
+                // $(this).find("span").text( "mouse out " );
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            getInvoiceDetails($('#Hdn_InvoiceNumber').val());
+
+        });
+
+        //Worked For 3_11_2015
+
+        function getInvoiceDetails(InvoiceNumber) {
+            
+            var POID = '';
+            var ProjectID = '';
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/GetInvoice';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/GetInvoice';
+            }
+
+            url += "?InvoiceNumberVendor=" + InvoiceNumber;
+            // url += "&PONumber=" + PONumber;           
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                success: function (data) {
+                    //Added By Subhabrata Mondal 3_11_2015
+                    
+                    if (data == null || data == '') {
+                        notify('Invoice Number not exists!');
+                        return;
+                    }
+
+                    select_Invoive_Details(InvoiceNumber);
+                    
+
+                    POID = data.split('^')[0];
+                    ProjectID = data.split('^')[1];
+
+
+                    selectpofirst(POID, ProjectID);
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+
+        function select_Invoive_Details(InvoiceNumber) {
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/GetInvoiceDetails';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/GetInvoiceDetails';
+            }
+
+            url += "?InvoiceNumberVendor=" + InvoiceNumber;
+            $.ajax({
+                type: "POST",
+                url: url,
+               async : false,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                success: function (data) {
+                    //Added By Subhabrata Mondal 3_11_2015
+                    var invoice = JSON.parse(data);
+                    setInvoiceDetails(invoice);
+                    getProjectAccount1(invoice.ProjectAccount, $('#Ddl_ProjectAccount'));
+                    
+                    //ShowInvoiceTable(invoice);
+                    ShowInvoiceTableNew(InvoiceNumber);
+                },
+                error: function () {  notify('Something went wrong'); }
+            });
+        }
+
+        function setInvoiceDetails(invoice) {
+
+            //alert(invoice.TotalInvoice);
+            $("#txt_TotalInvoiceAmount").val(invoice.InvoiceAmount);
+            $("#txt_InvoiceNumber").val(invoice.InvoiceNumberVendorOP);
+            $("#txt_InvoiceMemo").val(invoice.Memo);
+            $("#txt_Terms").val(invoice.Terms);
+            $("#txt_SubtotalInvoice").val(invoice.Subtotal);
+            $("#txt_TotalTax1").val(invoice.Tax1);
+            $("#txt_TotalTax2").val(invoice.Tax2);
+            $("#txt_TotalTax3").val(invoice.Tax3);
+            $("#txt_TotalInvoice").val(invoice.TotalInvoice);
+            $('#txt_InvoiceDate').datepicker("setDate", new Date(invoice.InvoiceDate));
+
+        }
+
+        function getProjectAccount1(ProjectAccount, $Ddl_ProjectAccount) {
+            //
+            // var ProjectID = $('#Hdn_ProjectID').val();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/GetAllProjectAccount';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/GetAllProjectAccount';
+            }
+            url += "?ProjectAccount=" + ProjectAccount;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                success: function (data) {
+                    var html = '<option value="0">--Select Project Account--</option>';
+                    html += data;
+                    $('#Ddl_ProjectAccount').html(html);
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+        }
+
+        function ShowInvoiceTableNew(InvoiceNumber) {
+            var poidall = '';
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getInvoiceDataAfterSelectingEdit';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getInvoiceDataAfterSelectingEdit';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+               
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "{ \"InvoiceNumber\" : \"" + InvoiceNumber + "\"}",
+                success: function (data) {
+                    data = JSON.parse(data).data;
+
+                    BuildInvoiceTableEdit(data);
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+            CalculateOtherFields();
+        }
+
+        function BuildInvoiceTableEdit(data) {
+
+           
+
+            var percent = parseFloat($('#percentage').val());
+
+            var html = "";
+
+            var tax1name = '';
+            var tax2name = '';
+            var tax3name = '';
+
+            var percentlocal = percent;
+
+            for (var i = 0; i < data.length; i++) {
+
+
+                var totalamntc = parseFloat(data[i].Amount) * parseFloat(data[i].Quantity);
+                var totremainingc = data[i].Total.replace(',', '')
+                if ((totalamntc * percent / 100) > totremainingc) {
+                    percentlocal = totremainingc / totalamntc * 100;
+                }
+
+
+
+
+                var IsApplicableTax1 = data[i].Tax1;
+                var IsApplicableTax2 = data[i].Tax2;
+                var IsApplicableTax3 = data[i].Tax3;
+
+
+
+                var tmptot = parseFloat(data[i].Total * percentlocal / 100);
+
+                var tottax1 = 0;
+                if (IsApplicableTax1 != "0") {
+                    tottax1 = CalculateTaxes(data[i].Tax1Val, data[i].Tax1type, tmptot);
+                    tottax1 = isNaN(parseFloat(tottax1)) ? 0 : parseFloat(tottax1);
+                }
+
+                var tottax2 = 0;
+
+                if (IsApplicableTax2 != "0") {
+                    tottax2 = CalculateTaxes(data[i].Tax2Val, data[i].Tax2type, tmptot);
+                    tottax2 = isNaN(parseFloat(tottax2)) ? 0 : parseFloat(tottax2);
+                }
+
+
+                var tottax3 = 0;
+
+                if (IsApplicableTax3 != "0") {
+                    tottax3 = CalculateTaxes(data[i].Tax3Val, data[i].Tax3type, tmptot);
+                    tottax3 = isNaN(parseFloat(tottax3)) ? 0 : parseFloat(tottax3);
+                }
+
+                if (tax1name == '' || tax2name == '' || tax3name == '') {
+
+                    tax1name = data[i].Tax1Name == '' ? '<p style="color:red">(Tax 1)</p>' : data[i].Tax1Name;
+                    tax2name = data[i].Tax2Name == '' ? '<p style="color:red">(Tax 2)</p>' : data[i].Tax2Name;
+                    tax3name = data[i].Tax3Name == '' ? '<p style="color:red">(Tax 3)</p>' : data[i].Tax3Name;
+
+                }
+
+
+                var tax1paid = data[i].TotalTax1Paid;
+                var tax2paid = data[i].TotalTax2Paid;
+                var tax3paid = data[i].TotalTax3Paid;
+
+
+
+
+
+                var t1html = "";
+                var t2html = "";
+                var t3html = "";
+
+                if (IsApplicableTax1 != "0" && parseFloat(tottax1) != 0) {
+                    t1html = "<div class='col-sm-12'>"
+                          + "<input style='width:50%;float:left;' class='taxablefield mrg5T tax1_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + formatNumber(parseFloat(tottax1)) + "' />"
+                          + "</div>";
+                }
+                else {
+                    data[i].Tax1Val = "0";
+                    t1html = "<div class='col-sm-12'>"
+                         + "<input style='width:50%;float:left;' class='taxablefield mrg5T displaynone tax1_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + "0.00" + "' />"
+                         + "</div>";
+
+                }
+
+                if (IsApplicableTax2 != "0" && parseFloat(tottax2) != 0) {
+                    t2html = "<div class='col-sm-12'>"
+                          + "<input style='width:50%;float:left;' class='taxablefield mrg5T tax2_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + formatNumber(parseFloat(tottax2)) + "' />"
+                           + "</div>";
+                }
+                else {
+                    data[i].Tax2Val = "0";
+                    t2html = "<div class='col-sm-12'>"
+                          + "<input style='width:50%;float:left;' class='taxablefield mrg5T displaynone tax2_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + "0.00" + "' />"
+                           + "</div>";
+                }
+
+
+
+
+                if (IsApplicableTax3 != "0" && parseFloat(tottax3) != 0) {
+                    t3html = "<div class='col-sm-12'>"
+                          + "<input style='width:50%;float:left;' class='taxablefield mrg5T tax3_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + formatNumber(parseFloat(tottax3)) + "' />"
+                          + "</div>";
+                }
+                else {
+                    data[i].Tax3Val = "0";
+                    t3html = "<div class='col-sm-12'>"
+                          + "<input style='width:50%;float:left;' class='taxablefield mrg5T displaynone tax3_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + "0.00" + "' />"
+                          + "</div>";
+                }
+
+                var ddlproaccnt = "<select>" + getprojectaccounts(parseInt(data[i].TotalPOID.split('-')[0]) - 1000) + "</select>";
+
+                var innerhtml = "";
+
+                var total = parseFloat(parseFloat(tottax1) + parseFloat(tottax2) + parseFloat(tottax3));
+
+
+
+
+                total = parseFloat(parseFloat(tottax1.toFixed(2)) + parseFloat(tottax2.toFixed(2)) + parseFloat(tottax3.toFixed(2))) + (data[i].Amount * data[i].Quantity * percentlocal / 100);
+
+                //total = parseFloat(total) + parseFloat((parseFloat(data[i].Amount) * parseFloat(data[i].Quantity)) * parseFloat(percent) / 100);
+                //total = parseFloat(total).toFixed(2);
+
+
+                var totalamnt = parseFloat(data[i].Amount) * parseFloat(data[i].Quantity);
+
+                innerhtml = "<tr data-rowid='" + data[i].POLineItemID + "'"
+                          + " data-tax1='" + data[i].Tax1 + "'"
+                          + " data-tax2='" + data[i].Tax2 + "'"
+                          + " data-tax3='" + data[i].Tax3 + "'"
+
+                          + " data-Tax1Val='" + data[i].Tax1Val + "'"
+                          + " data-Tax1type='" + data[i].Tax1type + "'"
+                          + " data-Tax2Val='" + data[i].Tax2Val + "'"
+                          + " data-Tax2type='" + data[i].Tax2type + "'"
+                          + " data-Tax3Val='" + data[i].Tax3Val + "'"
+                          + " data-Tax3type='" + data[i].Tax3type + "'"
+
+
+                          + " data-total='" + totalamnt + "'"
+
+                          + " data-remaining='" + data[i].Total.replace(',', '') + "'"
+
+
+
+                           + " data-rowindex='" + (i + 1) + "'"
+                          + ">"
+                          + "<td>" + "<i class='fa fa-hand-o-right selectable' style='cursor:pointer;'></i>" + "</td>"
+                          + "<td>" + "<input style='width: 30px;' type='text' value='" + data[i].Percent + "' class='percentclass floatonly' onkeyup='calculatepercent(this);' />" + "</td>"
+                          + "<td>" + data[i].TotalPOID.split('-')[0] + '-' + data[i].TotalPOID.split('-')[2] + "</td>"
+                          + "<td>" + data[i].TotalItemNumber + "</td>"
+                          + "<td>" + data[i].SpecNum + "</td>"
+                          + "<td>" + data[i].ItemDescription + "</td>"
+                          + "<td class='displaynone'>" + "<input type='text' value='' placeholder='Add Notes' />" + "</td>"
+                          + "<td>" + "<input type='text' value='" + formatNumber(data[i].Quantity) + "' style='width: 70px;' placeholder='Add Qty' class='floatonly' onkeyup='QtySet(this);' />" + "</td>"
+                          + "<td>" + formatNumber(data[i].Amount) + "</td>"
+                          //+ "<td>" + "<input onkeyup='Synctax();' type='text' value='" + parseFloat(parseFloat(data[i].Tax1) + parseFloat(data[i].Tax2) + parseFloat(data[i].Tax3)) + "' /></td>"
+
+                          + "<td>"
+                          + "<div class='row'>"
+
+                          + t1html
+
+                          //+ "<div class='col-sm-6'>"
+                          //+ "<p>(" + formatNumber(tax1paid) + ")</p>"
+                          //+ "</div>"
+
+                          + "</div>"
+
+                          + "<div class='row'>"
+
+                          + t2html
+
+                          //+ "<div class='col-sm-6'>"
+                          //+ "<p>(" + formatNumber(tax2paid) + ")</p>"
+                          //+ "</div>"
+
+                          + "</div>"
+
+                          + "<div class='row'>"
+
+                          + t3html
+
+                          //+ "<div class='col-sm-6'>"
+                          //+ "<p>(" + formatNumber(tax3paid) + ")</p>"
+                          //+ "</div>"
+
+                          + "</div>"
+
+
+                          + "</td>"
+
+
+                          + "<td>" + formatNumber(total) + "</td>"
+                          + "<td>" + ddlproaccnt + "</td>"
+                          + "</tr>";
+
+                html += innerhtml;
+            }
+                        
+            var tottaxcolname = tax1name + ' ' + tax2name + ' ' + tax3name;
+
+            $('#tblInvoiceItems thead tr').find('th:eq(9)').html(tottaxcolname);
+
+            $('#tblInvoiceItems tbody').append(html);
+            AddtableTdTextAlign('#tblInvoiceItems', '8^10', 'right', false);      
+
+            $(function(){
+
+                $('#tblInvoiceItems tbody tr').each(function () {
+
+                    var ddl = $('#Ddl_ProjectAccount').clone().removeAttr('id');
+                    var selectedval = $(this).find('td:eq(11)').html();
+                    $(ddl).val(selectedval);
+                    $(this).find('td:eq(11)').html(ddl);
+                    
+                    var poitemidforInvoiceItems = $(this).attr('data-rowid');
+                    var totalitempaid = $(this).attr('data-total').replace(',', '');
+                    
+                    $('#tblPOItemSelector tbody tr').each(function () {
+                        var politemidforItemSelector = $(this).find('td:eq(0)').html();
+                        if (politemidforItemSelector == poitemidforInvoiceItems) {
+                            $(this).addClass('noselect');
+                            var prevremaining = $(this).find('td:eq(9)').html();
+                            var revised = parseFloat(prevremaining) + parseFloat(totalitempaid);
+                            $(this).find('td:eq(9)').html(revised);
+                        }
+                    });
+
+
+                });
+                //SyncAll();
+                taxablecalc();
+                //AddtableTdTextAlign("#tblInvoiceItems", '8^10', 'right', false);
+
+            });
+
+            
+
+
+        }
+
+        function removeaddtaxfield(obj, mode) {
+            if (mode == 'R') {
+                $(obj).prev('input').addClass('displaynone');
+                $(obj).prev('input').val("0.00");
+                $(obj).remove();
+            }
+            else {
+
+                var tr = $(obj).parent();
+
+                var tb1 = $(tr).find('input:eq(0)');
+                var tb2 = $(tr).find('input:eq(1)');
+                var tb3 = $(tr).find('input:eq(2)');
+
+                if ($(tb1).hasClass('displaynone')) {
+                    $(tb1).val('0.00');
+                    $(tb1).removeClass('displaynone');
+
+                }
+                else if ($(tb2).hasClass('displaynone')) {
+                    $(tb2).val('0.00');
+                    $(tb2).removeClass('displaynone');
+
+                }
+                else if ($(tb2).hasClass('displaynone')) {
+                    $(tb2).val('0.00');
+                    $(tb2).removeClass('displaynone');
+
+                }
+                else if ($(tb3).hasClass('displaynone')) {
+                    $(tb3).val('0.00');
+                    $(tb3).removeClass('displaynone');
+
+                }
+
+
+
+
+            }
+            taxablecalc();
+            SyncLowerTable();
+            SyncAll();
+
+        }
+
+        function taxablecalc() {
+
+            $('#tblInvoiceItems tbody').find('tr').each(function () {
+
+                var tr = $(this).find('td:eq(9)');
+
+                var tb1 = $(tr).find('input:eq(0)');
+                var tb2 = $(tr).find('input:eq(1)');
+                var tb3 = $(tr).find('input:eq(2)');
+
+
+                var cnt = 3;
+
+                if ($(tb1).hasClass('displaynone')) {
+                    cnt--;
+                }
+                else {
+                    if ($(tr).find('.txremove1').length == 0) {
+
+                        $(tb1).after('<i  onclick="removeaddtaxfield(this,\'R\');" style="color:red;float:left;" class="txremove1 mrg5L mrg10T fa fa-times"></i>');
+                    }
+                }
+
+                if ($(tb2).hasClass('displaynone')) {
+                    cnt--;
+                }
+
+                else {
+                    if ($(tr).find('.txremove2').length == 0) {
+                        $(tb2).after('<i  onclick="removeaddtaxfield(this,\'R\');" style="color:red;float:left;" class="txremove2 mrg5L mrg10T fa fa-times"></i>');
+                    }
+                }
+
+                if ($(tb3).hasClass('displaynone')) {
+                    cnt--;
+                }
+                else {
+                    if ($(tr).find('.txremove3').length == 0) {
+                        $(tb3).after('<i  onclick="removeaddtaxfield(this,\'R\');" style="color:red;float:left;" class="txremove3 mrg5L mrg10T fa fa-times"></i>');
+                    }
+                }
+
+
+
+                if (cnt != 3) {
+                    if ($(tr).find('.newaddtax').length == 0) {
+                        $(tr).append('<i class="mrg5T newaddtax fa fa-plus-square" style="color:#7792A8;float:left;" onclick="removeaddtaxfield(this,\'A\');"></i>');
+                    }
+                }
+                else {
+                    $(tr).find('.newaddtax').remove();
+                }
+
+            });
+
+        }
+
+
+        function getprojectaccounts(ProjectID) {
+            //
+            // var ProjectID = $('#Hdn_ProjectID').val();
+            var html = '<option value="0">--Select Project Account--</option>';
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getProjectAccount';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getProjectAccount';
+            }
+            url += "?ProjectID=" + ProjectID;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                success: function (data) {
+
+                    html += data;
+
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+            return html;
+        }
+
+
+        function ShowInvoiceTable(invoice) {
+            
+            var Ddlhtml = "<select>" + $('#Ddl_ProjectAccount').clone().html() + "<select>";
+            var html2 = '';
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/GetInvoiceItemDetails';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/GetInvoiceItemDetails';
+            }
+            url += "?InvoiveID=" + invoice.InvoiceNumber;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                success: function (data) {
+
+                    var invoice_items = JSON.parse(data);
+                    var html = "";
+                    $.each(invoice_items, function (index) {
+
+
+                        url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = '/Invoice/GetAllProjectAccount';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'Invoice/GetAllProjectAccount';
+                        }
+                        url += "?ProjectAccount=" + invoice.ProjectAccount;
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            datatype: "json",
+                            contentType: "application/json; charset=utf-8",
+                            data: "",
+                            async: false,
+                            success: function (data) {
+                                html2 = '<option value="0">--Select Project Account--</option>';
+
+                                html2 += data;
+
+
+                            },
+                            error: function () { notify('Something went wrong'); }
+                        });
+
+
+
+                        var innerhtml = "";
+                        //var total = parseFloat(data[i].Tax1) + parseFloat(data[i].Tax2) + parseFloat(data[i].Tax3) + parseFloat(data[i].Total);
+                        innerhtml = "<tr >"
+                                  + ">"
+                                  + "<td>" + "<input type='text' value='" + invoice_items[index].Percent + "' class='percentclass floatonly' onkeyup='calculatepercent(this);' />" + "</td>"
+                                  + "<td>" + invoice_items[index].PurchaseOrderNumber + "</td>"
+                                  + "<td>" + invoice_items[index].POLineItemNumber + "</td>"
+                                  + "<td>" + invoice_items[index].Spec + "</td>"
+                                  + "<td>" + "<input type='text' value='" + invoice_items[index].Description + "' />" + "</td>"
+                                  + "<td>" + invoice_items[index].Note + "</td>"
+                                  + "<td>" + invoice_items[index].Quantity + "</td>"
+                                  + "<td>" + invoice_items[index].Amount + "</td>"
+                                  + "<td>" + "Tax" + "</td>"
+                                  + "<td>" + invoice_items[index].LineItemTotal + "</td>"
+                                  //+ "<td>" + "Account" + "</td>"
+                                  //+ "<td>" + Ddlhtml + "</td>"
+                                    + "<td><select>" +
+                                    html2
+                               + "</select></td>"
+                                  + "</tr>";
+                        
+                        html += innerhtml;
+
+                    })
+                    $('#tblInvoiceItems').find("tr:gt(0)").remove();
+                    $('#tblInvoiceItems tbody').append(html);
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+            SyncAll();
+        }
+
+
+        function  UpdateInvoice() {
+
+
+
+
+            var tmp = true;
+            var i = 0;
+
+            $('#tblInvoiceItems tbody tr').each(function () {
+
+                var total = $(this).attr('data-total').replace(',', '');
+
+
+
+                var t1 = $(this).find('td:eq(9)').find('input:eq(0)').val();
+
+                var t2 = $(this).find('td:eq(9)').find('input:eq(1)').val();
+                var t3 = $(this).find('td:eq(9)').find('input:eq(2)').val();
+
+                var vl = $(this).find('td:eq(10)').html();
+
+                var tottax = parseFloat(t1) + parseFloat(t2) + parseFloat(t3);
+
+
+                vl -= parseFloat(tottax);
+
+               
+                if (parseFloat(vl) > parseFloat(total)) {
+
+                    notify('Row number ' + (i + 1) + ' is exceeding total remaining value.');
+                    tmp = false;
+                    return;
+                }
+                i++;
+
+            });
+
+            if (!tmp) {
+                return;
+            }
+
+
+
+
+            var InvoiceID = $('#Hdn_InvoiceNumber').val();
+            //if ($('#Hdn_ProjectID').val() == '0') {
+
+            //   // notify('Please Select POs.');
+            //    return;
+
+            //}
+
+
+            if ($('#tblInvoiceItems tbody tr').length < 1) {
+                notify('Please Add items in Invoice first');
+                return;
+            }
+
+
+           
+            if ($('#txt_InvoiceDate').val().trim() == '') {
+                errorfunc('txt_InvoiceDate', 'Please insert Invoice Date.');
+                return;
+            }
+            var InvoiceDate = $('#txt_InvoiceDate').val();
+
+            if ($('#txt_Terms').val().trim() == '' || $('#txt_Terms').val().trim() == '0') {
+                errorfunc('txt_Terms', 'Please Select Terms.');
+                return;
+            }
+            var Terms = $('#txt_Terms').val();
+            if ($('#Ddl_ProjectAccount').val().trim() == '0') {
+                errorfunc('Ddl_ProjectAccount', 'Please Select Project Account.');
+                return;
+            }
+            var ProjectAccount = $('#Ddl_ProjectAccount').val();
+
+            if ($('#txt_InvoiceNumber').val().trim() == '') {
+                errorfunc('txt_InvoiceNumber', 'Please enter Invoice Number.');
+                return;
+            }
+            var InvoiceNumber = $('#txt_InvoiceNumber').val();
+            
+
+            if ($('#txt_TotalInvoiceAmount').val().trim() == '0' || $('#txt_TotalInvoiceAmount').val().trim() == '') {
+                errorfunc('txt_TotalInvoiceAmount', 'Please enter Total Invoice Amount.');
+                return;
+            }
+            var TotalInvoiceAmount = $('#txt_TotalInvoiceAmount').val();
+
+            if ($('#txt_InvoiceMemo').val().trim() == '0') {
+                errorfunc('txt_InvoiceMemo', 'Please enter Invoice Memo.');
+                return;
+            }
+            var InvoiceMemo = $('#txt_InvoiceMemo').val();
+
+            var SubtotalInvoice = $('#txt_SubtotalInvoice').val();
+
+
+            var TotalTax1 = $('#txt_TotalTax1').val();
+            var TotalTax2 = $('#txt_TotalTax2').val();
+            var TotalTax3 = $('#txt_TotalTax3').val();
+
+
+            var TotalInvoice = $('#txt_TotalInvoice').val();
+
+            // alert(InvoiceDate + '^' + Terms + '^' + ProjectAccount + '^' + InvoiceNumber + '^' + TotalInvoiceAmount + '^' + InvoiceMemo + '^' + SubtotalInvoice + '^' + TotalTax1 + '^' + TotalTax2 + '^' + TotalTax3 + '^' + TotalInvoice);
+
+
+            //if (parseFloat(TotalInvoice) != parseFloat(TotalInvoiceAmount)) {
+            //    errorfunc('txt_TotalInvoiceAmount', '');
+            //    notify('The Total Invoice Amount should be same as the calculated Invoice Amount, revise the PO to reflect this change.');
+            //    return;
+
+            //}
+
+
+
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/UpdateInvoice';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/UpdateInvoice';
+            }
+
+            url += "?InvoiceDate=" + InvoiceDate;
+            url += "&Terms=" + Terms;
+            url += "&ProjectAccount=" + ProjectAccount;
+            url += "&InvoiceNumber=" + InvoiceNumber;
+            url += "&TotalInvoiceAmount=" + TotalInvoiceAmount;
+            url += "&InvoiceMemo=" + InvoiceMemo;
+            url += "&SubtotalInvoice=" + SubtotalInvoice;
+            url += "&TotalTax1=" + TotalTax1;
+            url += "&TotalTax2=" + TotalTax2;
+            url += "&TotalTax3=" + TotalTax3;
+            url += "&TotalInvoice=" + TotalInvoice;
+            url += "&InvoiceID=" + InvoiceID;
+            
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                async: false,
+                success: function (data) {
+                    InvoiceID = data;
+
+                   // alert(InvoiceID);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+
+
+            $('#tblInvoiceItems tbody tr').each(function () {
+
+
+
+                var tmp = 1;
+
+                var Percentage = $(this).find('td').eq(tmp + 0).find('.percentclass').val();
+                var PONumber = $(this).find('td').eq(tmp + 1).text();
+                var ItemNumber = $(this).find('td').eq(tmp + 2).text();
+                var Spec = $(this).find('td').eq(tmp + 3).text();
+                var Description = $(this).find('td').eq(tmp + 4).find('input[type="text"]').val();
+                var Note = $(this).find('td').eq(tmp + 5).find('input[type="text"]').val();
+                var Qty = $(this).find('td').eq(tmp + 6).find('input[type="text"]').val();
+               
+                var Amount = $(this).find('td').eq(tmp + 7).text();
+                //var Taxes = $(this).find('td').eq(tmp + 8).find('input[type="text"]').val();
+
+                var Tax1 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(0).val();
+                var Tax2 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(1).val();
+                var Tax3 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(2).val();
+
+                var Taxes = parseFloat(Tax1) + parseFloat(Tax2) + parseFloat(Tax3);
+
+
+                var LineItemTotal = $(this).find('td').eq(tmp + 9).text();
+                var ProjectAccount = $(this).find('td').eq(tmp + 10).find('select').val();
+                var PurchaseOrderID = '';
+                var POLineItemID = $(this).attr('data-rowid');
+
+                // alert(Percentage + '^' + PONumber + '^' + ItemNumber + '^' + Spec + '^' + Description + '^' + Note + '^' + Qty + '^' + Amount + '^' + Taxes + '^' + LineItemTotal + '^' + ProjectAccount);
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/SaveInvoiceItems';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/SaveInvoiceItems';
+                }
+
+                url += "?Percentage=" + Percentage;
+                url += "&PONumber=" + PONumber;
+                url += "&ItemNumber=" + ItemNumber;
+                url += "&Spec=" + Spec;
+                url += "&Description=" + Description;
+                url += "&Note=" + Note;
+                url += "&Qty=" + Qty;
+                url += "&Amount=" + Amount;
+                url += "&Taxes=" + Taxes;
+                url += "&LineItemTotal=" + LineItemTotal;
+                url += "&ProjectAccount=" + ProjectAccount;
+                url += "&InvoiceID=" + InvoiceID;
+                url += "&PurchaseOrderID=" + PurchaseOrderID;
+                url += "&POLineItemID=" + POLineItemID;
+                url += "&Tax1=" + Tax1;
+                url += "&Tax2=" + Tax2;
+                url += "&Tax3=" + Tax3;
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    datatype: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: "",
+                    success: function (data) {
+
+                        window.location.reload();
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+
+
+
+
+            });
+
+        }
+        //Worked For 3_11_2015
+
+    </script>
+
+    <script type="text/javascript">
+        function ReverseInvoice() {
+            var InvoiceID = $('#Hdn_InvoiceNumber').val();
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/ReverseInvoice';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/ReverseInvoice';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "{ \"InvoiceID\" : \"" + InvoiceID + "\"}",
+                async: false,
+                success: function (data) {
+                    notify("Invoice Reversed");
+                    window.location.reload();
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+
+            getPaymentInformation($('#Hdn_InvoiceNumber').val());
+
+        });
+        function getPaymentInformation(InvoiceNumber) {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getPaymentInformation';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getPaymentInformation';
+            }
+
+            url += "?InvoiceNumberVendor=" + InvoiceNumber;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                success: function (data) {
+                   
+                    if (data == null || data == '') {
+
+                    }
+                    else {
+                        if (data.split('^').length > 1) {
+
+                            $('#chk_IsPaid').prop('checked', data.split('^')[0] == "1" ? true : false);
+                            $('#txt_ChequeNumber').val(data.split('^')[1]);
+                            $('#txt_ChequeDate').datepicker("setDate", new Date(data.split('^')[2]));
+                            $('#txt_ChequeAmount').val(data.split('^')[3]);
+                            $('#txt_Tax1').val(data.split('^')[4]);
+                            $('#txt_Tax2').val(data.split('^')[5]);
+                            $('#txt_Tax3').val(data.split('^')[6]);                           
+                            $('#txt_OtherTax').val(data.split('^')[7]);
+
+                        }
+                    }
+
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+        $(function () {
+
+            var date = new Date();
+            var currentMonth = date.getMonth();
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+
+            $('#txt_ChequeDate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                //dateFormat: 'MM dd yy'
+                dateFormat: 'yy/mm/dd'
+                //,minDate: new Date(currentYear, currentMonth, currentDate)
+            });
+            $('#txt_ChequeDate').datepicker("setDate", date);
+
+        });
+        function SavePaymentInformation() {
+            var chk_IsPaid = '0';
+            var txt_ChequeNumber = '';
+            var txt_ChequeDate = '';
+            var txt_ChequeAmount = '0';
+            var txt_Tax1 = '0';
+            var txt_Tax2 = '0';
+            var txt_Tax3 = '0';
+            var txt_OtherTax = '0';
+
+
+
+            if ($('#chk_IsPaid').is(":checked") == true) {
+                chk_IsPaid = '1';
+            }
+            else {
+                chk_IsPaid = '0';
+            }
+
+
+
+            txt_ChequeNumber = $('#txt_ChequeNumber').val();
+            txt_ChequeDate = $('#txt_ChequeDate').val();
+            txt_ChequeAmount = $('#txt_ChequeAmount').val() == "" ? '0' : $('#txt_ChequeAmount').val();
+            txt_Tax1 = $('#txt_Tax1').val() == "" ? '0' : $('#txt_Tax1').val();
+            txt_Tax2 = $('#txt_Tax2').val() == "" ? '0' : $('#txt_Tax2').val();
+            txt_Tax3 = $('#txt_Tax3').val() == "" ? '0' : $('#txt_Tax3').val();
+            txt_OtherTax = $('#txt_OtherTax').val() == "" ? '0' : $('#txt_OtherTax').val();
+
+            
+            var InvoiceID = $('#Hdn_InvoiceNumber').val();
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/SavePaymentInformation';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/SavePaymentInformation';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "{\"InvoiceID\" : \"" + InvoiceID + "\",\"chk_IsPaid\" : \"" + chk_IsPaid + "\",\"txt_ChequeNumber\" : \"" + txt_ChequeNumber + "\",\"txt_ChequeDate\" : \"" + txt_ChequeDate + "\",\"txt_ChequeAmount\" : \"" + txt_ChequeAmount + "\",\"txt_Tax1\" : \"" + txt_Tax1 + "\",\"txt_Tax2\" : \"" + txt_Tax2 + "\",\"txt_Tax3\" : \"" + txt_Tax3 + "\",\"txt_OtherTax\" : \"" + txt_OtherTax + "\"}",
+                async: false,
+                success: function (data) {
+                    notify(data);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+        }
+    </script>
+
+</head>
+<body>
+    <input type="hidden" id="Hdn_ProjectID" />
+    <input type="hidden" id="Hdn_TotalPOValue" />
+    <input type="hidden" id="Hdn_TotalPOTaxes" />
+    <input type="hidden" id="Hdn_InvoiceNumber" value="@ViewBag.InvoiceNumber" />
+   
+
+    <div class="main_container" id="angulardiv">
+        
+        <div class="logo_container_heading">Invoice Edit</div>
+        <div class="edit_vendor_full">
+
+
+            <div class="edit_vendor_half">
+                <div class="user_panel_container">
+                    <label>PO Items</label>
+                    <fieldset style=" min-height:230px;">
+                        <legend>Items</legend>
+                        <div>
+                            <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblPOItemSelector" style="text-align: center;">
+                                <thead>
+                                    <tr class="theader">
+                                        <th class="displaynone">POLineItemID</th>
+                                        <th class="displaynone" style="width: 200px;">Action</th>
+                                        <th>Item #</th>
+                                        <th>Spec</th>
+                                        <th>Description</th>
+                                        <th>QTY</th>
+                                        <th>Amount</th>
+                                        <th>Remaining</th>
+                                        <th class="displaynone">RowIndex</th>
+                                        <th class="displaynone">Total</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="edit_vendor_half" style=" padding-top: 45px;">
+                
+                    <div style="position:relative;width:38%; float:left;">
+                        <div class="user_panel_container">
+                            <label style=" padding: 0px 0px;">Invoice Date</label>
+                            <input type="text" id="txt_InvoiceDate" />
+                        </div>
+                        <div class="user_panel_container">
+                            <label style=" padding: 0px 0px;">Invoice Number</label>
+                            <input type="text" id="txt_InvoiceNumber" />
+                        </div>
+                        <div class="user_panel_container">
+                            <label style=" padding: 0px 0px;">Total Invoice Amount</label>
+                            <input class="floatonly" type="text" id="txt_TotalInvoiceAmount" />
+                        </div>
+                    </div>
+                <div style="position: relative; width: 58%; float: left; margin-left:4%;">
+                    <div class="user_panel_container" style="width: 48%;">
+                        <label style=" padding: 0px 0px;">Terms</label>
+                        <select id="txt_Terms">
+                            <option value="0">--Select Terms--</option>
+                            @Html.Raw(ViewData["getAllTerms"])
+                        </select>
+                    </div>
+                    <div class="user_panel_container" style="width: 48%; margin-left:4%;">
+                        <label style=" padding: 0px 0px;">Project Account</label>
+                        @*<input type="text" id="txt_ProjectAccount" />*@
+                        <select id="Ddl_ProjectAccount">
+                            <option value="0">--Select Project Account--</option>
+                            @Html.Raw(ViewData["getProjectAccount"])
+                        </select>
+                    </div>
+                    <div class="user_panel_container">
+                        <label style=" padding: 0px 0px;">Invoice Memo</label>
+                        <textarea id="txt_InvoiceMemo" style="height: 97px;" ></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <label style="height: 25px;top: -7px;position: relative;">Apply %</label>
+        <input type="text" value="100" id="percentage" class="floatonly" style="height: 25px;top: -7px;position: relative;" />
+        <input type="button" class="singledown" onclick="fetch('onlyselected');" />
+        <input type="button" class="doubledown" onclick="fetch('all');" />
+
+        <input type="button" class="singleup" onclick="fetchreverse('onlyselected');" />
+        <input type="button" class="doubleup" onclick="fetchreverse('all');" />
+        
+
+
+        <div class="user_panel_container">
+           
+            <fieldset style="min-height:230px;">
+                <legend>Invoice</legend>
+                <div>
+                    <table cellpadding="0" cellspacing="0" border="0" class="display no-footer dataTable" id="tblInvoiceItems" style="text-align: center; font-size: 0.9em;">
+                        <thead>
+                            <tr class="theader">
+                                 <th></th>
+
+                                <th style="width: 20px;">%</th>
+                                <th id="POIdEdit" style="width:45px;">PO # </th>
+                                <th>Item #</th>
+                                <th>Spec</th>
+                                <th style="text-align:center;">Description</th>
+                                <th class="displaynone">Note</th>
+                                <th>Qty</th>
+                                <th>Amount</th>
+                                <th style="width: 110px;">Tax1 Tax2 Tax3</th>
+                                <th>Line Item Total</th>
+                                <th>Project Account</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                    
+                    </table>
+                </div>
+            </fieldset>
+        </div>
+
+                
+        <div class="edit_vendor_full displaynone">
+            <div class="edit-vendor-half" style="position:relative;width: 45%;float: left;">
+                <div class="user_panel_container">                    
+                    <input style="float: left; position: absolute;" onclick="ReverseInvoice();" type="button" value="Reverse" />
+                </div>
+                
+                 <div class="user_panel_container" style="margin-top: 30px;">
+                     <label style="float: left;left: 105px;">Is Paid<input type="checkbox" id="chk_IsPaid" /></label>
+                 </div>
+                <div class="user_panel_container">
+                    <label>Cheque Number</label>
+                    <input type="text" id="txt_ChequeNumber" />
+                </div>
+                <div class="user_panel_container">
+                    <label>Cheque Date</label>
+                    <input type="text" id="txt_ChequeDate" />
+                </div>
+                <div class="user_panel_container">
+                    <label>Cheque Amount</label>
+                    <input type="text" id="txt_ChequeAmount" />
+                </div>
+                <div class="user_panel_container">
+                    <label>Tax1</label>
+                    <input type="text" id="txt_Tax1" />
+                </div>
+                <div class="user_panel_container">
+                    <label>Tax2</label>
+                    <input type="text" id="txt_Tax2" />
+                </div>
+                <div class="user_panel_container">
+                    <label>Tax3</label>
+                    <input type="text" id="txt_Tax3" />
+                </div>
+                 <div class="user_panel_container">
+                    <label>OtherTax</label>
+                    <input type="text" id="txt_OtherTax" />
+                </div>
+                <div class="user_panel_container">
+                    
+                    <input type="button" id="btn_SavePaymentInformation" onclick="SavePaymentInformation();" value="Save Payment Information" />
+                </div>
+            </div>
+            <div class="edit-vendor-half" style="position: relative;width: 45%;float: left;margin-top: 12%;padding-left: 5%;">
+                <div class="user_panel_container">
+                    <label style="width:39%;">Subtotal Invoice</label>
+                    <input style="width:56%;" type="text" id="txt_SubtotalInvoice" disabled="disabled" />
+                </div>
+                <div class="user_panel_container">
+                    <label style="width:39%;">Total Tax 1</label>
+                    <input style="width:56%;" type="text" id="txt_TotalTax1" disabled="disabled" />
+                </div>
+                <div class="user_panel_container">
+                    <label style="width:39%;">Total Tax 2</label>
+                    <input style="width:56%;" type="text" id="txt_TotalTax2" disabled="disabled" />
+                </div>
+                <div class="user_panel_container">
+                    <label style="width:39%;">Total Tax 3</label>
+                    <input style="width:56%;" type="text" id="txt_TotalTax3" disabled="disabled" />
+                </div>                 
+                <div class="user_panel_container">
+                    <label style="width:39%;">Total Invoice</label>
+                    <input style="width:56%;" type="text" id="txt_TotalInvoice" disabled="disabled" />
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+
+    <div class="sidebar_btn">
+            <ul>
+                <li>
+                    <a href="javascript:void(0);" class="hvr-icon-save" title="Save" id="btn_Save" onclick="UpdateInvoice();"></a>
+                    <img id="loader_CreatePO" style="display: none;" src="~/Images/load.gif" />
+                </li>
+                <li>
+                    <a href="javascript:void(0);" class="hvr-icon-newadd" title="Save & New" id="btn_SaveNew" onclick="UpdateInvoice();"></a>
+                    <img id="loader_CreatePO1" style="display: none;" src="~/Images/load.gif" />
+                </li>
+                <li>
+                    <a href="javascript:void(0);" class="hvr-icon-cancel" title="Cancel" id="btn_Cancel" onclick="CancelInvoice();"></a>
+                    <img id="loader_CreatePO2" style="display: none;" src="~/Images/load.gif" />
+                </li>
+                <li>
+                    <a href="javascript:void(0);" class="hvr-icon-database" title="Post to Accounting" id="btn_PostToAccounting"></a>
+                    <img id="loader_CreatePO3" style="display: none;" src="~/Images/load.gif" />
+                </li>
+            </ul>
+        </div>
+    <script>
+
+
+        function SyncLowerTable(obj) {
+
+            $('#tblInvoiceItems tbody tr').each(function () {
+
+                var qty = isNaN(parseFloat($(this).find('td:eq(7)').find('input').val())) ? 0 : parseFloat($(this).find('td:eq(7)').find('input').val());
+
+                var rw = $(this);
+
+                var p = $(rw).find('td:eq(1) input').val().replace(',', '');
+                var cost = $(rw).find('td:eq(8)').html().replace(',', '');//8 - 
+                var t1 = $(rw).find('td:eq(9) input:eq(0)').val().replace(',', '');
+                var t2 = $(rw).find('td:eq(9) input:eq(1)').val().replace(',', '');
+                var t3 = $(rw).find('td:eq(9) input:eq(2)').val().replace(',', '');
+
+                ////console.log(cost +  "*" +  qty + "*" + p );
+                var tot = $(rw).attr('data-total').replace(',', '');
+                var vl = cost * qty * p / 100;
+
+                //if (parseFloat(tot) < parseFloat(vl))
+                //{
+                //    notify('Amount exceeds remaining.');
+                //}
+
+
+
+                var tottax = parseFloat(t1) + parseFloat(t2) + parseFloat(t3);
+                vl += isNaN(tottax) ? 0 : tottax;
+                vl = parseFloat(vl).toFixed(2);
+
+                $(rw).find('td:eq(10)').html(vl);
+
+            });
+
+
+            SyncAll();
+        }
+
+
+    </script>
+
+</body>
+</html>

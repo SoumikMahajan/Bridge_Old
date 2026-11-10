@@ -1,0 +1,1691 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddItemsToPO</title>
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+
+
+
+
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.DB_PROC.js"></script>
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+
+    @*<link href="~/css/jquery.spellchecker.css" rel="stylesheet" />*@
+    <style>
+        #Ddl_SelPro {
+            background-color: rgb(235, 235, 228);
+        }
+
+        .newdesDiv {
+            /*margin-left:120px;*/
+            float: right;
+            /*margin-right:30px;*/
+        }
+    </style>
+
+    <script type="text/javascript">
+        function getsections(pid) {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/getAllProjectSection';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/getAllProjectSection';
+            }
+            url1 += "?projectid=" + pid;
+
+            var totdata;
+            $.get(url1)
+               .success(function (response) {
+                   var html = "";
+                   totdata = response;
+                   totdata = JSON.parse(totdata).data;
+                   for (var a = 0; a < totdata.length; a++) {
+                       var id = totdata[a].id;
+                       var name = totdata[a].sectionname;
+                       var Sectionnumber = totdata[a].Sectionnumber;
+                       html += "<option value='" + id + "' data-sctnNmbr='" + Sectionnumber + "'>" + Sectionnumber + "-" + name + "</option>";
+                   }
+                   $('#Ddl_SelProSec').html(html);
+                   //var selectedID = getCookie("addItemsToPo_SectionID");
+
+                   var obj = new Object();
+                   obj.userID = '@Session["UserID"].ToString()';
+                   obj.projectID = pid;
+                   //obj.sectionID = selectedID;
+                   obj.mode = 'GetByUserAndProjectID';
+
+                   //obj.Portfolio_Category_ID = Portfolio_Category_ID;
+                   var DBSP = new DB_SP_CONNECT();
+                   DBSP.ProcedureName = "POMS_SP_ManageSectionID";
+                   DBSP.obj = obj;
+                   DBSP.isasync = false;
+                   var o = DBSP.call_DB_Procedure();
+                   console.log(o.data[0]);
+                   if (o.data.length != 0) {
+                       var val = o.data[0].SectionID;
+
+                       $('#Ddl_SelProSec').val(val);
+                   } else {
+                       //$('#Ddl_SelProSec').val(val);
+                       $("#Ddl_SelProSec").val($("#Ddl_SelProSec option:first").val());
+                   }
+                   if (html == "") {
+                       //call here
+                   }
+                   var sectionid = $('#Ddl_SelProSec').val();
+                   var ProjectID = $('#Hdn_ProjectID').val();
+
+                   var SectionNumber = $("#Ddl_SelProSec option:selected").attr('data-sctnNmbr');
+
+                   getLineitems(sectionid, ProjectID, SectionNumber);
+               });
+        }
+
+        function getCookie(name) {
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
+            if (parts.length == 2) return parts.pop().split(";").shift();
+        }
+
+        function setCookie(name, value, days) {
+            var expires = "";
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + value + expires + "; path=/";
+        }
+
+
+        $(function () {
+            $('#Ddl_SelPro').change(function () {
+
+                var pid = $("#Ddl_SelPro option:selected").attr('data-id');
+
+                if (pid == 0) {
+                    $('#Ddl_SelProSec').html("<option>---Select---</option>");
+
+                    return;
+                }
+                getsections(pid);
+
+            });
+
+            $('#Ddl_SelProSec').change(function () {
+
+                var sectionid = $('#Ddl_SelProSec').val();
+                setCookie("addItemsToPo_SectionID", sectionid, 30);
+                var pid = $("#Ddl_SelPro option:selected").attr('data-id');
+                var obj = new Object();
+                obj.userID = '@Session["UserID"].ToString()';
+                obj.projectID = pid;
+                obj.sectionID = sectionid;
+                obj.mode = 'update';
+
+                //obj.Portfolio_Category_ID = Portfolio_Category_ID;
+                var DBSP = new DB_SP_CONNECT();
+                DBSP.ProcedureName = "POMS_SP_ManageSectionID";
+                DBSP.obj = obj;
+                DBSP.isasync = false;
+                var o = DBSP.call_DB_Procedure();
+                //console.log(o.data[0].result);
+                //var val = o.data[0].SectionID;
+
+                //$('#Ddl_SelProSec').val(val);
+
+                var ProjectID = $('#Hdn_ProjectID').val();
+                var SectionNumber = $("#Ddl_SelProSec option:selected").attr('data-sctnNmbr');
+
+                getLineitems(sectionid, ProjectID, SectionNumber);
+            });
+
+            $('#Ddl_SelPro').val($('#Hdn_ProjectID').val());
+            $('#Ddl_SelPro').attr('disabled', 'disabled');
+            ProjectSectionChange();
+
+            $('#Ddl_LineItems').change(function () {
+
+
+                var LineItemID = new Array();
+                LineItemID = $(this).val();
+
+                //if (LineItemID.length > 1) {
+                //    $('#txt_LintItemDesc').attr('disabled', 'disabled');
+                //    $('#txt_LineItemSpec').attr('disabled', 'disabled');
+                //    $('#txt_LineItemQty').attr('disabled', 'disabled');
+                //    $('#Ddl_LineItemUnt').attr('disabled', 'disabled');
+                //    $('#txt_LineItemCosts').attr('disabled', 'disabled');
+                //    $('#txt_LineItemModel').attr('disabled', 'disabled');
+
+
+                //    tinymce.activeEditor.getBody().setAttribute('contenteditable', false);
+                //    $('#itemapprovaladd').prev('button').hide();
+
+                //    $('#chk_ActvTg').parent().css('display', 'none');
+                //    return;
+                //}
+
+                //else {
+
+                    $('#txt_LintItemDesc').removeAttr('disabled');
+                    $('#txt_LineItemSpec').removeAttr('disabled');
+                    $('#txt_LineItemQty').removeAttr('disabled');
+                    $('#Ddl_LineItemUnt').removeAttr('disabled');
+                    $('#txt_LineItemCosts').removeAttr('disabled');
+                    tinymce.activeEditor.getBody().setAttribute('contenteditable', true);
+                    $('#chk_ActvTg').parent().css('display', '');
+                    $('#itemapprovaladd').prev('button').show();
+                    $('#txt_LineItemModel').removeAttr('disabled');
+
+                    LoadLineItemDetails(LineItemID);
+                    LoadTaxes(LineItemID);
+
+                //}
+
+            });
+
+        });
+
+
+        function LoadTaxes(LID) {
+
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/GetTaxesFromPOSingle';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/GetTaxesFromPOSingle';
+            }
+            url1 += "?LID=" + LID;
+
+
+
+            var totdata;
+            $.get(url1)
+                .success(function (response) {
+                    var taxable = JSON.parse(response).data[0].Taxable;
+                    //console.log(taxable);
+
+                    if (taxable == '1') {
+
+
+                        $('#chk_StateTx').prop('checked', true);
+                        $('#chk_GSTHSTTx').prop('checked', true);
+                        $('#chk_PSTTx').prop('checked', true);
+                    }
+                    else {
+                        $('#chk_StateTx').prop('checked', false);
+                        $('#chk_GSTHSTTx').prop('checked', false);
+                        $('#chk_PSTTx').prop('checked', false);
+                    }
+
+                });
+
+
+        }
+
+        function ProjectSectionChange() {
+            $('#Ddl_SelPro').val($('#Hdn_ProjectID').val());
+            var pid = $("#Ddl_SelPro option:selected").attr('data-id');
+
+            if (pid == 0) {
+                $('#Ddl_SelProSec').html("<option>---Select---</option>");
+
+                return;
+            }
+            getsections(pid);
+        }
+
+
+        function getLineitems(sectionid, ProjectID, SectionNumber) {
+
+            var POID = $('#Hdn_PurchaseOrderID').val();
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/getLineItems';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/getLineItems';
+            }
+            url1 += "?BudgetsectionID=" + sectionid;
+            url1 += "&ProjectID=" + ProjectID;
+            url1 += "&SectionNumber=" + SectionNumber;
+            url1 += "&POID=" + POID;
+
+
+            var totdata;
+            $.get(url1)
+                .success(function (response) {
+                    //console.log(response);
+                    var html = "";
+                    //totdata = response;
+                    //totdata = JSON.parse(totdata).data;
+                    //for (var a = 0; a < totdata.length; a++) {
+                    //    var id = totdata[a].id;
+                    //    var name = totdata[a].sectionname;
+                    //    var Sectionnumber = totdata[a].Sectionnumber;
+                    //    html += "<option value='" + id + "'>" + Sectionnumber + "-" + name + "</option>";
+                    //}
+                    $('#Ddl_LineItems').html(response);
+                    //console.log('*****');
+                    $("#Ddl_LineItems").multiselect({ maxTextWrapSize: 38 }).multiselectfilter();
+                    $("#Ddl_LineItems").multiselect("refresh");
+
+                    setTimeout(function () {
+                        $('.ui-multiselect-menu').css('width', '444px');
+                    }, 1000);
+
+                    if (html == "") {
+                        //call here
+                    }
+                    var sectionid = $('#Ddl_SelProSec').val();
+
+                });
+        }
+
+        //function LoadLineItemDetails(LineItemID) {
+        //    var url1 = '';
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url1 = '/PurchaseOrder/LoadLineItemDetails';
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+        //        url1 = 'PurchaseOrder/LoadLineItemDetails';
+        //    }
+        //    url1 += "?LineItemID=" + LineItemID;
+
+
+
+        //    var totdata;
+        //    $.get(url1)
+        //        .success(function (response) {
+        //            var html = "";
+        //            totdata = response;
+        //            totdata = JSON.parse(totdata).data;
+        //            //for (var a = 0; a < totdata.length; a++) {
+        //            //    var id = totdata[a].id;
+        //            //    var name = totdata[a].sectionname;
+        //            //    var Sectionnumber = totdata[a].Sectionnumber;
+        //            //    html += "<option value='" + id + "'>" + Sectionnumber + "-" + name + "</option>";
+        //            //}
+
+        //            var ItemDescription = totdata[0].ItemDescription;
+        //            var SpecNum = totdata[0].SpecNum;
+        //            var Quantity = totdata[0].Quantity;
+        //            var UOMID = totdata[0].UOMID;
+        //            var Cost = totdata[0].Cost;
+        //            var Model = totdata[0].Model;
+
+
+        //            $('#txt_LintItemDesc').val(ItemDescription);
+        //            $('#txt_LineItemSpec').val(SpecNum);
+        //            $('#txt_LineItemQty').val(Quantity);
+        //            $('#Ddl_LineItemUnt').val(UOMID);
+        //            $('#txt_LineItemCosts').val(Cost);
+        //            $('#txt_LineItemModel').val(Model);
+
+        //            //$('#txt_LintItemDesc').attr('disabled
+
+        //        });
+
+        //    var url2 = '';
+
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url2 = '/PurchaseOrder/LoadTagData';
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+        //        url2 = 'PurchaseOrder/LoadTagData';
+        //    }
+        //    url2 += "?LineItemID=" + LineItemID;
+
+
+
+        //    var totdata2;
+        //    $.get(url2)
+        //        .success(function (response) {
+
+
+        //            var html = "";
+        //            totdata2 = response;
+        //            totdata2 = JSON.parse(totdata2).data;
+        //            var html = "";
+        //            for (i = 0; i < totdata2.length; i++) {
+        //                html += "Tag: " + totdata2[i].ProjectName + "\n";
+        //                html += "Specification: " + totdata2[i].SpecNum + "\n";
+        //                html += "Description: " + totdata2[i].ItemDescription + "\n";
+        //                html += "" + totdata2[i].Quantity + " " + totdata2[i].UOM + "\n";
+        //            }
+        //            $('#txt_LineItemAutoTagg').val(html);
+
+
+        //            //$('#txt_LintItemDesc').attr('disabled
+
+        //        });
+
+
+        //}
+
+
+        function LoadLineItemDetails(LineItemID) {
+            debugger;
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/LoadLineItemDetails';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/LoadLineItemDetails';
+            }
+            url1 += "?LineItemID=" + LineItemID;
+
+
+            // Get the li element
+            var listItem = document.getElementById('btn_AddLnItmToPONStay');
+            // Add event listener for click
+
+            var clickDisabled = true; // Set to true initially to disable click
+
+            listItem.addEventListener('click', function (event) {
+                if (clickDisabled) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            });
+
+
+            var totdata;
+            // alert('Wait for processing...');
+            // document.getElementById("btn_AddLnItmToPONStay").style.display = "none";
+            $.get(url1)
+
+                .success(function (response) {
+                    var html = "";
+                    totdata = response;
+                    totdata = JSON.parse(totdata).data;
+                    //for (var a = 0; a < totdata.length; a++) {
+                    //    var id = totdata[a].id;
+                    //    var name = totdata[a].sectionname;
+                    //    var Sectionnumber = totdata[a].Sectionnumber;
+                    //    html += "<option value='" + id + "'>" + Sectionnumber + "-" + name + "</option>";
+                    //}
+
+                    var ItemDescription = totdata[0].ItemDescription;
+                    var SpecNum = totdata[0].SpecNum;
+                    var Quantity = totdata[0].Quantity;
+                    var UOMID = totdata[0].UOMID;
+                    var Cost = totdata[0].Cost;
+                    var Model = totdata[0].Model;
+
+
+                    $('#txt_LintItemDesc').val(ItemDescription);
+                    $('#txt_LineItemSpec').val(SpecNum);
+                    $('#txt_LineItemQty').val(Quantity);
+                    $('#Ddl_LineItemUnt').val(UOMID);
+                    $('#txt_LineItemCosts').val(Cost);
+                    $('#txt_LineItemModel').val(Model);
+
+                    //$('#txt_LintItemDesc').attr('disabled
+                    // document.getElementById("btn_AddLnItmToPONStay").style.display = "list-item";
+                });
+
+            var url2 = '';
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url2 = '/PurchaseOrder/LoadTagData';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url2 = 'PurchaseOrder/LoadTagData';
+            }
+            url2 += "?LineItemID=" + LineItemID;
+
+            document.getElementById("btn_AddLnItmToPONStay").style.display = "none";
+            document.getElementById("btn_AddLnItmToPO").style.display = "none";
+
+
+            var totdata2;
+            $.get(url2)
+                .success(function (response) {
+
+
+                    var html = "";
+                    totdata2 = response;
+                    totdata2 = JSON.parse(totdata2).data;
+                    var html = "";
+                    for (i = 0; i < totdata2.length; i++) {
+                        html += "Tag: " + totdata2[i].ProjectName + "\n";
+                        html += "Specification: " + totdata2[i].SpecNum + "\n";
+                        html += "Description: " + totdata2[i].ItemDescription + "\n";
+                        html += "" + totdata2[i].Quantity + " " + totdata2[i].UOM + "\n";
+                    }
+                    $('#txt_LineItemAutoTagg').val(html);
+
+                    //M1007
+                    document.getElementById("btn_AddLnItmToPONStay").style.display = "list-item";
+                    document.getElementById("btn_AddLnItmToPO").style.display = "list-item";
+
+                    var val = $('#txt_LineItemAutoTagg').val();
+                    //if (val == null) {
+
+                    //    alert("Active Tag is empty");
+                    //}
+
+
+                });
+
+
+        }
+
+
+    </script>
+
+
+
+    <script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+    @*<script src="~/Scripts/editor_plugin.js"></script>*@
+    <script src="http://tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+
+
+    <script type="text/javascript">
+        var fontsize = "";
+        for (var a = 5; a <= 22; a = a + 0.5) {
+            fontsize += fontsize == "" ? a + "px" : " " + a + "px";
+        }
+
+        tinymce.init({
+
+            formats: {
+
+                underline: { inline: 'u' },
+
+            },
+            fontsize_formats: fontsize,
+            selector: "#txt_LineItemDtldDesc",
+            plugins: "textcolor,paste",
+            paste_auto_cleanup_on_paste: false,
+            paste_postprocess: function (pl, o) {
+                // Content DOM node containing the DOM structure of the clipboard
+                //alert(o.node.innerHTML);
+
+                o.node.innerHTML = replaceAll(o.node.innerHTML.toUpperCase(), '&NBSP;', '&nbsp');
+                //o.node.innerHTML = o.node.innerHTML.toUpperCase();
+            },
+
+            //external_plugins: { "nanospell": "js/plugin.js" },
+            //nanospell_server: "asp.net", // choose "php" "asp" "asp.net" or "java"
+            toolbar: "undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent| forecolor backcolor | fontsizeselect",
+            menubar: false,
+            setup: function (ed) {
+
+
+
+
+                ed.on('focusin', function (e) {
+
+                    ed.theme.resizeTo("100%", 480);
+                    window.location = window.location.href.split('#')[0] + '#editor';
+                });
+
+                ed.on('keydown', function (e) {
+                    var kc = e.key.charCodeAt(0);
+                    ////console.log(kc);
+
+                    if (kc >= 97 && kc <= 122 && e.ctrlKey == false && e.shiftKey == false && e.altKey == false) {
+                        //console.log(e);
+                        ////console.log(String.fromCharCode(kc - 32));
+                        ////console.log(ed);
+                        //return String.fromCharCode(kc - 32);
+                        tinymce.activeEditor.execCommand('mceInsertContent', true, String.fromCharCode(kc - 32));
+
+                        return false;
+                    }
+
+                });
+
+
+
+
+            },
+
+        });
+
+
+    </script>
+
+
+    <script type="text/javascript">
+
+        function LineItemAddToPO(REDIRECT) {
+            debugger;
+            var POLineItemID = $('#Ddl_LineItems').val();
+            var ItemApprovalID = "";
+            var ProjectID = $('#Hdn_ProjectID').val();
+
+
+            $('#expeditenotelist').find("span").each(function () {
+
+                var itemAppID = $(this).attr("data-index");
+                var itemdesc = $(this).attr("data-desc");
+                if (typeof itemAppID != "undefined")
+                    ItemApprovalID = ItemApprovalID + itemAppID + "#" + itemdesc + '^';
+
+            });
+            if (POLineItemID == null) {
+                notify("Plese select List Item");
+                return;
+            }
+
+            if (POLineItemID.length > 1) {
+
+                var ActvTg = '0';
+                if ($('#chk_ActvTg').is(':checked') == true) {
+                    ActvTg = '1'
+                }
+
+                var PurchaseOrderID = $('#Hdn_PurchaseOrderID').val();
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/addnewPOLineItemsMulti';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/addnewPOLineItemsMulti';
+                }
+                for (var i = 0; i < POLineItemID.length; i++) {
+
+
+                    $.ajax({
+                        type: "POST",
+                        async: false,
+                        url: url,
+                        contentType: "application/json; charset=utf-8",
+                        data: "{\"PurchaseOrderID\": \"" + PurchaseOrderID + "\", \"POLineItemID\":\"" + POLineItemID[i]
+                            + "\",\"ItemApprovalID\" : \"" + ItemApprovalID + "\", \"ActiveTag\":\"" + ActvTg + "\", \"ProjectID\":\"" + ProjectID + "\"}",
+                        success: function (data) {
+                            if (data == 'SUCCESS') {
+
+                                notify("Saving " + (i + 1) + " Item", 'green');
+
+                            }
+                            else {
+                                notify("Listitem not added(Duplicate exists).");
+                            }
+                        },
+                        error: function () { notify('Something went wrong'); }
+                    });
+
+
+                }
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/POEdit/' + PurchaseOrderID;
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = '/PurchaseOrder/POEdit/' + PurchaseOrderID;
+                }
+
+                if (REDIRECT == 'REDIRECT') {
+                    irrrrr = 0;
+                    window.location.href = url;
+                }
+                else {
+                    irrrrr = 0;
+                    window.location.reload();
+                }
+
+
+                return;
+            }
+
+            POLineItemID = POLineItemID[0];
+
+            ////console.log(POLineItemID);
+
+            var LineItemQty = $('#txt_LineItemQty').val();
+            if (LineItemQty.trim() == "" || isNaN(LineItemQty)) {
+                $('#txt_LineItemQty').val('0.00');
+            }
+            LineItemQty = $('#txt_LineItemQty').val();
+            if (LineItemQty.trim() == "" || isNaN(LineItemQty)) {
+                notify("Please enter Line Item Qty");
+                $('#txt_LineItemQty').focus();
+                return;
+            }
+            //else if (LineItemQty.trim() == "0") {
+            //    notify("Line Item Qty. cannot be zero.");
+            //    $('#txt_LineItemQty').focus();
+            //    return;
+            //}
+            var LineItemUnt = $('#Ddl_LineItemUnt').val();
+            if (LineItemUnt.trim() == "" || isNaN(LineItemUnt) || LineItemUnt == 0) {
+                notify("Please Select a Line Item Unit");
+                $('#Ddl_LineItemUnt').focus();
+                return;
+            }
+            var LineItemCosts = $('#txt_LineItemCosts').val();
+            if (LineItemCosts.trim() == "" || isNaN(LineItemCosts)) {
+                notify("Please enter Line Item Costs");
+                $('#txt_LineItemCosts').focus();
+                return;
+            }
+
+            var NoStateTx = '0';
+            if ($('#chk_StateTx').is(':checked') == true) {
+                NoStateTx = '1'
+            }
+            var NoGSTHSTTx = '0';
+            if ($('#chk_GSTHSTTx').is(':checked') == true) {
+                NoGSTHSTTx = '1'
+            }
+            var NoPSTTx = '0';
+            if ($('#chk_PSTTx').is(':checked') == true) {
+                NoPSTTx = '1'
+            }
+
+
+            var LineItemDtldDesc = tinyMCE.get('txt_LineItemDtldDesc').getContent();
+            LineItemDtldDesc = encodeURI(LineItemDtldDesc);
+            //alert(LineItemDtldDesc);
+            //alert(decodeURI(LineItemDtldDesc));
+            //return;
+            //var LineItemDtldDesc = $('#txt_LineItemDtldDesc').val();
+
+            //Added By Subhabrata Mondal 1/2/2016
+            var ActvTg = '0';
+            if ($('#chk_ActvTg').is(':checked') == true) {
+                ActvTg = '1'
+            }
+
+            var LineItemAutoTagg = $('#txt_LineItemAutoTagg').val();
+
+
+
+            //
+
+            var Model = $('#txt_LineItemModel').val();
+            var PurchaseOrderID = $('#Hdn_PurchaseOrderID').val();
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/addnewPOLineItems';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/addnewPOLineItems';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    'LineItemQty': LineItemQty, 'LineItemUnt': LineItemUnt,
+                    'LineItemCosts': LineItemCosts, 'NoStateTx': NoStateTx, 'NoGSTHSTTx': NoGSTHSTTx, 'NoPSTTx': NoPSTTx,
+                    'LineItemDtldDesc': LineItemDtldDesc, 'PurchaseOrderID': PurchaseOrderID, 'POLineItemID': POLineItemID, 'LineItemAutoTagg': LineItemAutoTagg, 'ActvTg': ActvTg,
+                    'ItemApprovalID': ItemApprovalID, 'Model': Model, 'ProjectID': ProjectID
+                },
+                success: function (data) {
+                    irrrrr = 0;
+                    if (data == 'SUCCESS') {
+                        //var sectionid = $('#Ddl_SelProSec').val();
+                        //loaditems(sectionid);
+                        //notify('Lineitem Successfully Added.');
+                        //$('#itemname').val('');
+                        //$('#itemdescription').val('');
+                        //$('#uom').val('0');
+                        //$('#itemquantity').val('');
+                        //$('#cost').val('');
+                        //$('#notes').val('');
+                        //$('#specnum').val('');
+                        //$('#vendor').val('');
+                        //$('#towh').attr('checked', false); // Checks it
+
+
+
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = '/PurchaseOrder/POEdit/' + PurchaseOrderID;
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = '/PurchaseOrder/POEdit/' + PurchaseOrderID;
+                        }
+
+                        if (REDIRECT == 'REDIRECT') {
+                            window.location.href = url;
+                        }
+                        else {
+                            irrrrr = 0;
+                            window.location.reload();
+                        }
+
+
+                    }
+                    else {
+                        notify("Listitem not added(Duplicate exists).");
+                    }
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+
+        function GoBack() {
+            var url = '';
+            var PurchaseOrderID = $('#Hdn_PurchaseOrderID').val();
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/POEdit/' + PurchaseOrderID;
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = '/PurchaseOrder/POEdit/' + PurchaseOrderID;
+            }
+
+
+            window.location.href = url;
+
+        }
+        $(document).ready(function () {
+            $('#btn_AddLnItmToPONStay').click(function () {
+                LineItemAddToPO('REDIRECT');
+            });
+
+            $('#btn_AddLnItmToPO').click(function () {
+                LineItemAddToPO('');
+            });
+
+            $('#btn_CnclLnItmToPO').click(function () {
+                GoBack();
+            });
+        });
+
+
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var POID = $('#Hdn_PurchaseOrderID').val();
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/GetTaxesFromPO';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/GetTaxesFromPO';
+            }
+            url1 += "?POID=" + POID;
+
+
+            $.get(url1)
+               .success(function (response) {
+                   var html = "";
+                   totdata = response;
+                   totdata = JSON.parse(totdata).data;
+                   var a = 0;
+                   var GSTHST = totdata[a].GSTHST;
+                   var PST = totdata[a].PST;
+                   var STATETAX = totdata[a].StateTax;
+                   //var GSTHSTTYPE = totdata[a].GSTHSTTYPE;
+                   //var PSTTYPE = totdata[a].PSTTYPE;
+                   //var STATETAXTYPE = totdata[a].STATETAXTYPE;
+
+                   if (GSTHST == '') {
+                       $('#lbl_GSTHSTTx').css('display', 'none');
+                   }
+                   else {
+                       $('#lbl_GSTHSTTx').css('display', '');
+                       $('#chk_GSTHSTTx').prev('span').text(GSTHST);
+                   }
+                   if (PST == '') {
+                       $('#lbl_PSTTx').css('display', 'none');
+                   }
+                   else {
+                       $('#lbl_PSTTx').css('display', '');
+                       $('#chk_PSTTx').prev('span').text(PST);
+                   }
+                   if (STATETAX == '') {
+                       $('#lbl_StateTx').css('display', 'none');
+                   }
+                   else {
+                       $('#lbl_StateTx').css('display', '');
+                       $('#chk_StateTx').prev('span').text(STATETAX);
+                   }
+
+
+
+
+                   //$('#chk_StateTx').text('No State Tax aa');// + STATETAXTYPE);
+
+                   @*-------------------------------------Changed by Subhabrata Mondal 12_11_2015-----------------------------------------*@
+
+                   @*Accroding to Test Plan 45*@
+
+                   @*---------------------------------Previous Part------------------------------------*@
+                   //$('#chk_StateTx').prev('span').text('No Tax1(' + STATETAXTYPE + ')');
+                   //$('#chk_GSTHSTTx').prev('span').text('No Tax2(' + GSTHSTTYPE + ')');
+                   //$('#chk_PSTTx').prev('span').text('No Tax3(' + PSTTYPE + ')');
+
+                   //$('#chk_StateTx').prev('span').text('Tax1(' + STATETAXTYPE + ')');
+                   //$('#chk_GSTHSTTx').prev('span').text('Tax2(' + GSTHSTTYPE + ')');
+                   //$('#chk_PSTTx').prev('span').text('Tax3(' + PSTTYPE + ')');
+                   @*---------------------------------Previous Part------------------------------------*@
+
+                   @*-------------------------------------Changed by Subhabrata Mondal 12_11_2015-----------------------------------------*@
+
+               });
+        });
+    </script>
+
+    <style type="text/css">
+        .mce_jqueryspellchecker .mceIcon {
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAHtSURBVDjLY/j//z8DJZiBKgY49drM9J3idhLEtu+xjvea4nLNqsVspnWr2S6QmF6+Zol2ltpq5QSlmcpxijMxDABp9pjkuMuu28rIpsMi3rLZFKzIus38mm6OuqRxpf41nC5w7rOJd+i1ngnUXGLTbj7Tsskk3rbL8ppZreEu7Ry1mWpJSvHK8Uoz0TWK5U/nYIg8y8rgPsl+l12P1WqgbTPdJtk/AtoWb1CkBdagnqyyWilawVM/Rw/FBQyx540ZGm/eYIg8P43BdYLdSZiEcYXeTJB/TaoNroH8q5OldVIhXE5SKUqhXSNRfZdKvPKVkOrED+L9d/8wN998w+B4XIL40I48K8FQf/O6+7In/7mbb35hsD2qjBKNDLU3ExjKb7pi1Rx61ke89+6fwBVP/jPXXn/HYHlYGiMdMJTe1JJc/PgHQ/X1xQyplznBYuFnmRiiz062nPfof8DSJ/8ZSq8/ZzA9KIEzIQE1Vvuuf/6fufv2M4bgsz4MxVdPui8Cal4C1Jx/+RGDPqpmTANiz7MAvXI+bO2L/5ZzHvzP2Pjif8DCx/8ZMi/fY9DcL0FUUmbwPKkg3Hr7T+WOV//95j/8z5B6/jaD6l4JkvIC0J9FTtPu/2dIPn+PQXG3BFmZiUFzbweDLH7NVMmNAOGld33BRiNUAAAAAElFTkSuQmCC) no-repeat center center !important;
+        }
+    </style>
+    <style type="text/css">
+        /** { margin: 0; padding: 0; }
+        body { font: 14px/1.4 Georgia, serif; }
+        #page-wrap { width: 600px; margin: 15px auto; }
+        p { margin: 0 0 15px 0; }
+        p:first-child { background: #fffcde; padding: 10px; }
+        #sidebar ul { background: #eee; padding: 10px; }
+        li { margin: 0 0 0 20px; }
+        #main { width: 390px; float: left; }*/
+        /*#sidebar { width: 190px; float: right; }*/
+        #sidebar {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+        }
+
+        .remove {
+            border: 1px solid #060506;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            display: block;
+            padding: 4px;
+            height: 25px;
+            text-decoration: none;
+            background: #7792A8;
+            color: #E2E2E2;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-family: helvetica;
+            font-size: 13px;
+            position: relative;
+        }
+
+            .remove a {
+                cursor: pointer;
+                position: absolute;
+                top: -5px;
+                right: -6px;
+                font-size: 0.9em;
+                color: white;
+                background: black;
+                border-radius: 100px;
+                padding: 7px;
+                line-height: 9px;
+            }
+        /*#sidebar ul { background: #eee; padding: 10px; }*/
+        /*li { margin: 0 0 0 20px; }*/
+    </style>
+
+    <style>
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+
+        label {
+            color: #333333;
+            font-weight: 500;
+            margin-bottom: 1px;
+        }
+
+        .section-header {
+            padding: 2px 4px;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            height: 25px;
+            padding: 2px;
+        }
+
+        td, th {
+            padding: 0px 8px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .nav > li > a {
+            position: relative !important;
+            display: block !important;
+            padding: 4px 15px !important;
+        }
+
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+            color: rgb(246, 251, 252) !important;
+            cursor: default;
+            background-color: #7792a8;
+            border: 1px solid #ddd;
+            border-bottom-color: transparent;
+            color: #7792a8;
+            font-size: 16.5px;
+        }
+
+        .container-fluid {
+            padding-right: 22px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid" id="angulardiv" ng-app="Project" ng-controller="PO">
+
+
+        <div class="row">
+
+            <div class="col-sm-4">
+                <div class="col-sm-12">
+                    <h3 class="section-header">Add Items To PO(@Html.Raw(ViewData["POIDTOSHOW"]))</h3>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="col-sm-12">
+                        <label style="color:#7792A8;">@Html.Raw(ViewData["GETVENDORNAME"])</label>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <label>Select Section</label>
+                    <select id="Ddl_SelProSec" class="form-control">
+                        <option value="0">--Select Section--</option>
+                        @Html.Raw(ViewData["getAllProjectSectionByPID"])
+                    </select>
+                </div>
+                <div class="col-sm-8">
+                    <label>Select Line Items</label>
+                    <select id="Ddl_LineItems" multiple="multiple" class="form-control">
+                        <option value="0">--Select Line Items--</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-12" style="padding:0px !important;">
+                    <div class="col-sm-3">
+                        <label>Model</label>
+                        <input disabled="disabled" type="text" id="txt_LineItemModel" class="form-control" />
+                    </div>
+
+                    <div class="col-sm-3">
+                        <label>Qty.</label>
+                        <input type="text" id="txt_LineItemQty" onkeyup="updatetagging();" class="floatonly form-control" />
+                    </div>
+
+                    <div class="col-sm-3">
+                        <label>UOM</label>
+                        <select id="Ddl_LineItemUnt" onchange="updatetagging();" class="form-control">
+                            <option value="0">--Select--</option>
+                            @Html.Raw(ViewData["getAllUOM"])
+                        </select>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <label>Cost</label>
+                        <input type="text" id="txt_LineItemCosts" class="floatonly form-control" />
+                    </div>
+
+                </div>
+                <div class="col-sm-12">
+
+                    <div class="col-sm-3">
+
+                        <label>
+                            <input type="checkbox" id="chk_ActvTg" onchange="OpenCloseAutoTagging(this);" />
+                            Active tag
+                        </label>
+
+
+                    </div>
+
+
+                    <div class="col-sm-12">
+                        <div id="LineItemAutoTaggArea" style="display: none;">
+                            <textarea id="txt_LineItemAutoTagg" style="height:59px;    font-weight: bold;" rows="4" class="form-control no-resize text-uppercase"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12" style="text-align: right;">
+
+                        <p id="lbl_StateTx">
+
+                            <span style="width: 270px; position: absolute; text-align: right;"></span>
+                            <input style="margin-left: 288px;" type="checkbox" id="chk_StateTx" class="edit_vendor_half" />
+                        </p>
+
+
+                        <p id="lbl_GSTHSTTx">
+                            <span style="width: 270px; position: absolute; text-align: right;"></span>
+                            <input style="margin-left: 288px;" type="checkbox" id="chk_GSTHSTTx" />
+                        </p>
+
+                        <p id="lbl_PSTTx">
+                            <span style="width: 270px; position: absolute; text-align: right;"></span>
+                            <input style="margin-left: 288px;" type="checkbox" id="chk_PSTTx" />
+                        </p>
+
+
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+            <div class="col-sm-7 newdesDiv">
+
+                <div class="col-sm-12">
+                    <h3 class="section-header" id="ponumbershow">Item Detailed Description</h3>
+                </div>
+
+                <div class="col-sm-12">
+                    <textarea id="txt_LineItemDtldDesc" tabindex="6"></textarea>
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <div class="row mrg15T">
+
+            <div class="col-sm-4 displaynone">
+                <label>Select Project</label>
+                <select id="Ddl_SelPro" class="form-control">
+                    <option data-id="0" value="0">--Select Project--</option>
+                    @Html.Raw(ViewData["getAllProjectName"])
+                </select>
+            </div>
+
+
+
+
+
+
+
+        </div>
+
+
+
+        <div class="row mrg15T">
+
+
+
+
+        </div>
+
+        <input type="hidden" id="Hdn_ProjectID" value="@ViewBag.ProjectID" />
+        <input type="hidden" id="Hdn_PurchaseOrderID" value="@ViewBag.PurchaseOrderID" />
+
+        <div class="user_panel_container policy-items displaynone">
+        </div>
+        <div class="user_panel_container policy-items ">
+        </div>
+        <div class="user_panel_container policy-items">
+        </div>
+
+        <div class="user_panel_container policy-items" id="LineItemDetail">
+
+            <div class="user_panel_container policy-items displaynone">
+                <a href="#editor" id="gotolink" class="displaynone"></a>
+                <a name="editor"></a>
+                <label>Line Item Description</label>
+                <textarea id="txt_LintItemDesc" disabled="disabled"></textarea>
+            </div>
+            <div class="user_panel_container policy-items displaynone">
+                <label>Line Item Spec. No.</label>
+                <input type="text" id="txt_LineItemSpec" disabled="disabled" />
+            </div>
+
+
+            <div class="user_panel_container policy-items displaynone">
+                <label>Line Item Seq.</label>
+                <input type="text" id="txt_LineItemSeq" />
+            </div>
+
+
+
+
+
+            <div class="user_panel_container policy-items">
+
+                <div class="user_panel_container policy-items">
+
+
+
+                </div>
+            </div>
+            @* <div class="user_panel_container policy-items">
+                    <input type="button" value="Save/Add" id="btn_AddLnItmToPONStay" />
+                    <input type="button" value="Save Item" id="btn_AddLnItmToPO" />
+                    <input type="button" value="Cancel Item" id="btn_CnclLnItmToPO" />
+
+                </div>*@
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+    </div>
+
+
+    <div class="row" style="margin-left: 4px;">
+        <div class="col-sm-4">
+            <button data-toggle="collapse" data-target="#itemapprovaladd" class="btn btn-poms mrg15T"><i class="fa fa-plus-square mrg5R"></i>Item Approvals</button>
+        </div>
+    </div>
+
+
+
+    <div id="itemapprovaladd" class="row collapse mrg15T" style="margin-left: 4px;padding: 15px;border: 1px solid #7d97ac;margin: 18px 15px 20px 7px;">
+
+        <div class="col-sm-9">
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>Select Item Approval Type</label>
+                    <select id="ddlItemApprovalType" class="form-control">
+
+                        @Html.Raw(ViewData["getAllApprovatItems"])
+                    </select>
+                    <label>Description</label>
+                    <input type="text" id="itemdesc" class="form-control" />
+                    <button type="button" value="" id="btn_AddItemApprovalInGrid" class="btn btn-poms mrg15T">Add Item Approval</button>
+                </div>
+
+            </div>
+
+            <div class="col-sm-6">
+
+                <div id="expeditenotelist" style="display: none;    margin-top: 21px;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Added By Subhabrata Mondal 1/2/2016*@
+
+    <div class="user_panel_container policy-items">
+
+        <div class="user_panel_container policy-items">
+        </div>
+    </div>
+
+    <div class="user_panel_container">
+    </div>
+
+    <div class="edit_vendor_full" id="itemApproval">
+        <div class="edit_vendor_half">
+            <fieldset>
+                <legend>Add Item</legend>
+                <div>
+                </div>
+
+            </fieldset>
+        </div>
+        <div class="edit_vendor_half">
+            <div class="user_panel_container">
+                <label>&nbsp;</label>
+
+
+                @*<textarea id="txt_AcordingToPermission" ng-model="PO.AcordingToPermission" rows="7" class="makedisable"></textarea>*@
+            </div>
+        </div>
+        @*<div class="logo_container_heading">Add Item</div>*@
+
+
+
+    </div>
+
+
+
+
+
+    <div class="float-panel-container">
+        <ul>
+            <li id="btn_AddLnItmToPONStay" title="Save Item"><a href="javascript:void(0);"><i class="fa fa-save mrg5R" data-toggle="tooltip"></i><span class="tooltip-toggle">Save / ADD</span></a></li>
+            <li id="btn_AddLnItmToPO" title="Save / ADD"><a href="javascript:void(0);"><i class="fa fa-plus-square" data-toggle="tooltip"></i><span class="tooltip-toggle">Save Item</span></a></li>
+            <li id="btn_CnclLnItmToPO" title="Cancel Item"><a href="javascript:void(0);"><i class="fa fa-remove" data-toggle="tooltip"></i><span class="tooltip-toggle">Cancel Item</span></a></li>
+
+        </ul>
+    </div>
+
+
+
+    @*Added By Subhabrata Mondal 1/2/2016*@
+    <script type="text/javascript">
+
+        // Added Dev1 04.01.2024
+        function OpenCloseAutoTagging(obj) {
+
+
+            var LineItemID = $('#Ddl_LineItems').val();
+
+            if ($(obj).is(':checked') == true && LineItemID != null && LineItemID != "") {
+                $('#LineItemAutoTaggArea').css('display', 'block');
+
+            }
+            else {
+
+                if ($(obj).is(':checked') == false && LineItemID != null && LineItemID != "") {
+                    $('#LineItemAutoTaggArea').css('display', 'none');
+                    alert("You have UNCHECKED ACTIVE TAG after selecting the LINEITEMS...");
+                    return;
+                }
+                else {
+                    $('#LineItemAutoTaggArea').css('display', 'none');
+                    //setTimeout(function () { alert("Please Select LineItem first..."); }, 4000);
+                    alert("Please Select LineItem first...");
+                    document.getElementById("chk_ActvTg").checked = false;
+                    return;
+
+                }
+
+            }
+            // $('#txt_LineItemAutoTagg').val('');
+
+
+
+
+            //if (LineItemID == null || LineItemID == "") {
+            //    alert("Please Select LineItem first...");
+            //    document.getElementById("mycheckbox").checked = false;
+            //    return;
+            //}
+
+            var url2 = '';
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url2 = '/PurchaseOrder/LoadTagData';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url2 = 'PurchaseOrder/LoadTagData';
+            }
+            url2 += "?LineItemID=" + LineItemID;
+
+
+
+            var totdata2;
+            $.get(url2)
+                .success(function (response) {
+
+
+                    var html = "";
+                    totdata2 = response;
+                    totdata2 = JSON.parse(totdata2).data;
+                    var html = "";
+
+
+                    for (i = 0; i < totdata2.length; i++) {
+                        html += "Tag: " + totdata2[i].ProjectName + "\n";
+                        html += "Specification: " + totdata2[i].SpecNum + "\n";
+                        html += "Description: " + totdata2[i].ItemDescription + "\n";
+                        html += "" + $('#txt_LineItemQty').val() + " " + $('#Ddl_LineItemUnt option:selected').text() + "\n";
+                    }
+
+                    $('#txt_LineItemAutoTagg').val(html);
+
+
+                    //$('#txt_LintItemDesc').attr('disabled
+
+                });
+
+        }
+
+
+        //function OpenCloseAutoTagging(obj) {
+
+        //    if ($(obj).is(':checked') == true) {
+        //        $('#LineItemAutoTaggArea').css('display', 'block');
+
+
+
+
+
+
+        //    }
+        //    else {
+        //        $('#LineItemAutoTaggArea').css('display', 'none');
+        //    }
+        //    // $('#txt_LineItemAutoTagg').val('');
+
+
+
+        //    var LineItemID = $('#Ddl_LineItems').val();
+
+        //    var url2 = '';
+
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url2 = '/PurchaseOrder/LoadTagData';
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+        //        url2 = 'PurchaseOrder/LoadTagData';
+        //    }
+        //    url2 += "?LineItemID=" + LineItemID;
+
+
+
+        //    var totdata2;
+        //    $.get(url2)
+        //        .success(function (response) {
+
+
+        //            var html = "";
+        //            totdata2 = response;
+        //            totdata2 = JSON.parse(totdata2).data;
+        //            var html = "";
+
+
+        //            for (i = 0; i < totdata2.length; i++) {
+        //                html += "Tag: " + totdata2[i].ProjectName + "\n";
+        //                html += "Specification: " + totdata2[i].SpecNum + "\n";
+        //                html += "Description: " + totdata2[i].ItemDescription + "\n";
+        //                html += "" + $('#txt_LineItemQty').val() + " " + $('#Ddl_LineItemUnt option:selected').text() + "\n";
+        //            }
+
+        //            $('#txt_LineItemAutoTagg').val(html);
+
+
+        //            //$('#txt_LintItemDesc').attr('disabled
+
+        //        });
+
+
+
+
+
+
+        //}
+
+        
+        
+
+
+        function updatetagging() {
+
+
+
+            var LineItemID = $('#Ddl_LineItems').val();
+
+            var url2 = '';
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url2 = '/PurchaseOrder/LoadTagData';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url2 = 'PurchaseOrder/LoadTagData';
+            }
+            url2 += "?LineItemID=" + LineItemID;
+
+
+
+            var totdata2;
+            $.get(url2)
+                .success(function (response) {
+
+
+                    var html = "";
+                    totdata2 = response;
+                    totdata2 = JSON.parse(totdata2).data;
+                    var html = "";
+                    for (i = 0; i < totdata2.length; i++) {
+                        html += "Tag: " + totdata2[i].ProjectName + "\n";
+                        html += "Specification: " + totdata2[i].SpecNum + "\n";
+                        html += "Description: " + totdata2[i].ItemDescription + "\n";
+                        html += "" + $('#txt_LineItemQty').val() + " " + $('#Ddl_LineItemUnt option:selected').text() + "\n";
+                    }
+
+                    $('#txt_LineItemAutoTagg').val(html);
+
+
+                    //$('#txt_LintItemDesc').attr('disabled
+
+                });
+
+
+
+
+
+
+        }
+        function OnApprovalItem() {
+            $('#popupforItemApproval').bPopup({
+                easing: 'easeOutBack', //uses jQuery easing plugin
+                speed: 450,
+                transition: 'slideDown',
+                modalColor: 'rgb(18, 54, 65)'
+
+            });
+        }
+
+        $(function () {
+            $("#itemApproval").hide();
+
+            $("#btn_AddApprovalItems").on("click", function () {
+                $("#itemApproval").toggle();
+                $("#expeditenotelist").css('display', 'block');
+                if ($("#expeditenotelist").children().length == 0) {
+                    $("<p>No Item Approval Availables.</p>").appendTo("#expeditenotelist");
+                }
+                else {
+
+                }
+            });
+
+            $("#btn_AddItemApprovalInGrid").on("click", function () {
+
+                $("#expeditenotelist").css('display', 'block');
+
+                var html = '';
+                var ItemApprovalID = $('#ddlItemApprovalType').val();
+                var itemdesc = $('#itemdesc').val().trim();
+
+                var exists = false;
+
+                if (ItemApprovalID == 0) {
+                    notify('Select Item Approval Type');
+                    return;
+                }
+
+                if (itemdesc == "") {
+                    notify('Enter Item Approval Description.');
+                    return;
+                }
+
+
+                //Added by Dev2 30-08-2023 
+                var ProjectID = $('#Hdn_ProjectID').val();
+
+                function checkProjectExistenceOldFab(ProjectID) {
+                    var a;
+
+                    var obj = new Object();
+                    obj.Mode = 'checkProjectExistenceOldFab';
+                    obj.ProjectID = ProjectID.toString();
+
+                    var DBSP = new DB_SP_CONNECT();
+                    DBSP.ProcedureName = "POMS_POItemApprovalAll";
+                    DBSP.obj = obj;
+                    DBSP.isasync = false;
+                    var o = DBSP.call_DB_Procedure();
+                    o = o.data;
+                    a = o[0].result;
+                    return a;
+                }
+
+                function checkFabGrpExistenceCheck(ProjectID) {
+                    var a;
+
+                    var obj = new Object();
+                    obj.Mode = 'checkFabGroupExistenceCheck';
+                    obj.ProjectID = ProjectID.toString();
+
+                    var DBSP = new DB_SP_CONNECT();
+                    DBSP.ProcedureName = "POMS_POItemApprovalAll";
+                    DBSP.obj = obj;
+                    DBSP.isasync = false;
+                    var o = DBSP.call_DB_Procedure();
+                    o = o.data;
+                    a = o[0].result;
+                    return a;
+                }
+
+                function checkFabPathExistenceCheck(ProjectID) {
+                    var a;
+
+                    var obj = new Object();
+                    obj.Mode = 'checkFabPathExistenceCheck';
+                    obj.ProjectID = ProjectID.toString();
+
+                    var DBSP = new DB_SP_CONNECT();
+                    DBSP.ProcedureName = "POMS_POItemApprovalAll";
+                    DBSP.obj = obj;
+                    DBSP.isasync = false;
+                    var o = DBSP.call_DB_Procedure();
+                    o = o.data;
+                    a = o[0].result;
+                    return a;
+                }
+
+                var IsProjectExistsOldFab = checkProjectExistenceOldFab(ProjectID);
+                var IsGroupExists = checkFabGrpExistenceCheck(ProjectID);
+                var IsPathExists = checkFabPathExistenceCheck(ProjectID);
+
+                if (IsProjectExistsOldFab == "true") {
+                    if (IsGroupExists == "false") {
+                        notify("Please Create Fabrication Groups");
+                        exists = true;
+                        return;
+                    }
+
+                    if (IsPathExists == "false") {
+                        notify("Please Create Fabrication Path");
+                        exists = true;
+                        return;
+                    }
+                }
+
+            //End of  Dev2 30-08-2023	
+
+                $('.remove').each(function () {
+                    var nowdesc = $(this).attr('data-desc');
+                    if (nowdesc == itemdesc) {
+
+                        if (ItemApprovalID == $(this).attr('data-index')) {
+                            notify("Description already exists");
+                            exists = true;
+                            return;
+                        }
+                    }
+                });
+
+
+
+                $("#expeditenotelist:has(p)").empty();
+
+
+
+                if (exists == false) {
+                    html += "<span data-desc='" + itemdesc + "' class='remove' data-index='" + ItemApprovalID + "'><a onclick='removeItemApproval(\"" + ItemApprovalID + "\",this);'>x</a><span>"
+                        + $("#ddlItemApprovalType option[value='" + ItemApprovalID + "']").text() + "-" + itemdesc + "</span></span>";
+                    $('#expeditenotelist').append(html);
+                    $("#ddlItemApprovalType").val("0");
+                    $("#itemdesc").val("");
+                }
+
+
+
+
+            });
+
+        });
+
+        function removeItemApproval(ItemApprovalID, obj) {
+
+            if (confirm("Do you want to delete item approval?")) {
+
+                $(obj).parent().remove();
+
+            }
+        }
+
+
+        $(document).ready(function () {
+            PreventTwoDecimalPlace("#txt_LineItemQty", 2);
+            PreventTwoDecimalPlace("#txt_LineItemCosts", 3);
+
+        });
+
+
+    </script>
+
+</body>
+</html>

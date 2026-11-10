@@ -1,0 +1,5472 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit Invoice</title>
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+   
+    @* <script src="~/Scripts/angular.min.js"></script>*@
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    @*<script src="~/Scripts/AddUser.js"></script>*@
+    <script src="~/Scripts/Project.js"></script>
+
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/swfupload.js"></script>
+    <script src="~/Scripts/jquery.swfupload.js"></script>
+    <link href="~/css/stylesForFileUpload.css" rel="stylesheet" />
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <style>
+          .inactivenow a
+        {
+            background: #a6b8bd !important;
+        }
+        .roundbtn {
+            cursor: pointer;
+            border: 3px solid #7792a8;
+            border-radius: 6px;
+            cursor: pointer;
+            background: #7792a8;
+            color: black;
+        }
+
+        .underline {
+            color: blue;
+            text-decoration: underline;
+        }
+
+        .tottaxpaid {
+            position: relative;
+            width: 100%;
+            height: 40px;
+            float: left;
+        }
+
+
+            .tottaxpaid p {
+                margin-top: 12px;
+                position: relative;
+                font-size: 1em;
+                color: #208093;
+                margin-left: 45px;
+            }
+
+
+        .noselect td {
+            opacity: 0.4 !important;
+            background-color: #eee !important;
+        }
+
+
+        .selectedrow {
+            background-color: rgb(239, 255, 144);
+        }
+
+        .selectedrowforinvoice {
+            background-color: rgb(239, 255, 144);
+        }
+
+
+
+
+        .singledown {
+            background: url('https://thebridgebytcg.com/Images/Arrow-Down-s.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+            background-color: #7792A8;
+            border-radius: 5px;
+        }
+
+        .doubledown {
+            background: url('https://thebridgebytcg.com/Images/Arrow-Down-d.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+            background-color: #7792A8;
+            border-radius: 5px;
+        }
+
+        .singleup {
+            margin-left: 20px;
+            background: url('https://thebridgebytcg.com/Images/Arrow-Down-s.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+            -webkit-transform: rotate(180deg);
+            background-color: #7792A8;
+            border-radius: 5px;
+        }
+
+        .doubleup {
+            background: url('https://thebridgebytcg.com/Images/Arrow-Down-d.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+            -webkit-transform: rotate(180deg);
+            background-color: #7792A8;
+            border-radius: 5px;
+        }
+        .deletedrow
+        {
+            background-color: #ffabaf !important;
+        }
+    </style>
+
+    <style type="text/css">
+        #sidebar {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+        }
+    </style>
+
+    <style type="text/css">
+        a.tooltip {
+            outline: none;
+        }
+
+            a.tooltip strong {
+                line-height: 30px;
+            }
+
+            a.tooltip:hover {
+                text-decoration: none;
+            }
+
+            a.tooltip span {
+                z-index: 10;
+                display: none;
+                padding: 14px 20px;
+                margin-top: -30px;
+                margin-left: 28px;
+                width: 300px;
+                line-height: 16px;
+            }
+
+            a.tooltip:hover span {
+                display: inline;
+                position: absolute;
+                color: #111;
+                border: 1px solid #DCA;
+                background: #fffAF0;
+            }
+
+        .callout {
+            z-index: 20;
+            position: absolute;
+            top: 30px;
+            border: 0;
+            left: -12px;
+        }
+
+        /*CSS3 extras*/
+        a.tooltip span {
+            border-radius: 4px;
+            box-shadow: 5px 5px 8px #CCC;
+        }
+    </style>
+
+    <style>
+        table.dataTable thead th, table.dataTable thead td {
+            padding: 5px!important;
+        }
+
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        .ui-multiselect {
+            width: 100% !important;
+                color: #526779 !important;
+            height: 25px !important;
+            margin-top: 0px !important;
+        }
+
+        .ui-multiselect-menu {
+            width: 23% !important;
+        }
+
+        label {
+            color: #333333;
+            font-weight: 500;
+        }
+
+        table.dataTable tbody th, table.dataTable tbody td {
+            padding: 5px 5px;
+        }
+    </style>
+
+    <script>
+        var POSelector = new Array();
+   
+
+        $(function () {
+
+            var obj = new Object();
+            //obj.curr = curr;
+            obj.SecurityID = '21';
+            obj.UserID = $('#hdn_userid').val();
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "CheckAuthority";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            console.log(o);
+            if (o[0].Isselected == '0') {
+                $('#Editable_Div').remove();
+            }
+
+            
+            var table = $('#tblPOSelector').DataTable();
+
+            table
+                .clear()
+                .draw();
+            $('#tblPOSelector_filter').hide();
+            $('#tblPOSelector_length').hide();
+
+            var table = $('#tblPOItemSelector').DataTable();
+
+            table
+                .clear()
+                .draw();
+
+            $('#tblPOItemSelector_filter').hide();
+            $('#tblPOItemSelector_length').hide();
+
+            $("#Ddl_Vendors").multiselect({
+                "multiple": false,
+                maxTextWrapSize: 42
+            }).multiselectfilter();
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            $('.ui-multiselect-menu').css('width', '84%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+            
+            var date = new Date();
+            var currentMonth = date.getMonth();
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+        });   
+        var POLineItemSelector = new Array();
+        $(function () {
+            $("#Ddl_Vendors").change(function () {
+                var textcurr = $('#Ddl_Vendors option:selected').attr('data-currcode');
+                //textcurr = textcurr.substring(textcurr.length - 3, textcurr.length);
+                $('#rateapi').prop('src', 'https://www.google.com/finance/converter?a=1&from=' + textcurr);
+                $('#currencysource').val(textcurr);
+                $('#gotoinvoices').show();
+
+                $('#POIdEdit').html('<a href="javascript:void(0);">PO # <span></span></a>');
+
+                var str = "" + $("#Ddl_Vendors").val();
+
+                var vendors = str.replace(/,/g, "^");
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/getPOSelectorBasedOnVendor';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/getPOSelectorBasedOnVendor';
+                }
+
+                url += "?VendorID=" + vendors;
+
+
+                $.get(url)
+                .success(function (response) {
+                    
+                    totdata = JSON.parse(response);
+                    totdata = totdata.data;
+
+
+                    // //console.log(totdata);
+                    if (totdata.length == 0) {
+
+
+                        var table = $('#tblPOSelector').DataTable();
+
+                        table
+                            .clear()
+                            .draw();
+
+
+                        return;
+                    };
+
+                    POSelector = [];
+
+
+                    for (i = 0; i < totdata.length ; i++) {
+
+                        var polink = "<a href='/Purchaseorder/POEdit/" + totdata[i].POID + "' target='_blank'>"
+                                              + totdata[i].TotalID + "</a>";
+                        POSelector[i] = new Array();
+
+                        POSelector[i][0] = totdata[i].POID;
+                        POSelector[i][1] = "<input type='checkbox' class='poselector_chk' />";
+                        POSelector[i][2] = polink;//totdata[i].TotalID;
+                        POSelector[i][3] = totdata[i].CurrencyCode;
+                        POSelector[i][4] = formatNumber(totdata[i].Total);
+                        POSelector[i][5] = formatNumber(totdata[i].Remaining);
+
+                        POSelector[i][7] = formatNumber(totdata[i].Tax);
+                        POSelector[i][6] = totdata[i].Terms.substring(0,20);
+                        POSelector[i][8] = totdata[i].ProjectID;
+                        POSelector[i][9] = totdata[i].Vendor_ID;
+
+                        POSelector2[indx][10] = totdata[i].Remaining;
+                        POSelector2[indx][11] = totdata[i].Total;
+                    }
+
+
+                    $('#tblPOSelector').dataTable().fnDestroy();
+
+                    $('#tblPOSelector').dataTable({
+                        "processing": true,
+                        "destroy" : true,
+                        "data": POSelector,
+                        "columns": [
+                                        { "title": "POID", "class": "displaynone" },
+                                        { "title": "", "class": "leftposition" },
+                                        { "title": "PO #", "class": "leftposition" },
+                                        { "title": "Curr", "class": "leftposition" },
+                                        { "title": "Amount", "class": "rightposition" },
+                                        { "title": "Remaining", "class": "rightposition" },
+                                        { "title": "Pymnt Sch.", "class": "leftposition displaynone" },
+                                        { "title": "Taxes", "class": "rightposition displaynone" }
+                                        , { "title": "ProjectID", "class": "displaynone" }
+                                        , { "title": "VendorId", "class": "displaynone" },
+                                        { "title": "RemainingDuplicate", "class": "displaynone" },
+                { "title": "AmountDuplicate", "class": "displaynone" }
+
+                        ],
+                        paging: false,
+                        "initComplete": function () {
+                            $('#tblPOSelector_filter').hide();
+
+                            AddtableTdTextAlign('#tblPOSelector', '4^5^7', 'right', false);
+                            
+                        },
+                        "order": [[2, "asc"]],
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [1] }
+                        ]
+                         , "order": [[2, "asc"]]
+                    });
+
+
+                    $('#tblPOSelector tbody tr').each(function () {
+                        $(this).find('td:eq(1) input').attr('onclick', 'selectpo(this);');
+                    });
+
+                    //getconvrateforproject();
+                   
+
+                });
+
+
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/getprojectlistForEdit';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/getprojectlistForEdit';
+                }
+
+                url += "?VendorID=" + vendors;
+
+
+                $.get(url)
+              .success(function (response) {
+
+                  $('#ddl_project').html(response);
+
+                  $("#ddl_project").multiselect('refresh');
+
+                  $('#ddl_project').find('option:eq(0)').prop('selected', 'selected');
+
+                 
+
+
+                  getProjectAccount($('#ddl_project').val());
+                  setTimeout(function () {
+                      rebuildposelector();
+                  }, 500)
+                 
+                 
+
+
+              });
+
+
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/gettermsforvendor';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/gettermsforvendor';
+                }
+
+                url += "?VendorID=" + vendors;
+
+
+                $.get(url)
+              .success(function (response) {
+
+                  $('#txt_Terms').val(response);
+
+              });
+
+                
+
+
+            });
+               //applyFxRate();
+
+        });
+
+
+
+
+
+        function selectpo1() {
+
+           
+
+            var table = $('#tblPOItemSelector').DataTable();
+
+            table.clear().draw();
+
+
+            $('#tblPOItemSelector_filter').hide();
+            $('#tblPOItemSelector_length').hide();
+
+            var poid = '';//$(obj).find('td:eq(0)').text();
+            var vendorid = $('#Ddl_Vendors').val();
+
+
+
+            $('#hdn_vendorid').val(vendorid);
+
+
+
+            var poid = '';
+
+            var terms = "";
+            var termscount = 0;
+
+            $('.poselector_chk').each(function () {
+                var curterms = "";
+
+                if ($(this).is(':checked')) {
+                    curterms = $(this).parent().parent().find('td:eq(6)').html();
+                    if (curterms != "") {
+
+                        if (terms == "") {
+                            terms = curterms;
+                            termscount++;
+                        }
+                        else {
+
+                            if (terms != curterms) {
+                                terms = curterms;
+                                termscount++;
+                            }
+                        }
+                    }
+                    poid += poid == "" ? $(this).parent().parent().find('td:eq(0)').html() : "^" + $(this).parent().parent().find('td:eq(0)').html();
+                }
+
+            });
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getPOLineItemSelectorBasedOnPOEditPage';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getPOLineItemSelectorBasedOnPOEditPage';
+            }
+
+            url += "?POID=" + poid;
+            url += "&invoiceid=" + $('#Hdn_InvoiceNumber').val();
+          
+
+            $('#hdn_poid').val(poid);
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                data: {},
+                async: false,
+                success: function (response) {
+                    console.log(response);
+                    //totdata = response.replace(/\'/g, '"');
+                    totdata = response;
+                    totdata = JSON.parse(totdata);
+                    console.log(totdata.data);
+                    
+                    totdata = totdata.data;
+                    
+                    // //console.log(totdata);
+                    if (totdata.length == 0) {
+
+
+                        var table = $('#tblPOItemSelector').DataTable();
+
+                        table
+                            .clear()
+                            .draw();
+
+
+                        return;
+                    };
+
+                    POLineItemSelector = [];
+
+                    var fxrate = 1;
+                    for (i = 0; i < totdata.length ; i++) {
+                        POLineItemSelector[i] = new Array();
+
+                        POLineItemSelector[i][0] = totdata[i].POLineItemID;
+
+                        POLineItemSelector[i][1] = "<input type='button' value='Select' />";
+
+                        POLineItemSelector[i][2] = totdata[i].TotalID;
+                        POLineItemSelector[i][3] = totdata[i].PONumber;
+                        POLineItemSelector[i][4] = totdata[i].ItemDescription;
+                        POLineItemSelector[i][5] = formatNumber(totdata[i].Quantity);
+
+
+                        POLineItemSelector[i][6] = totdata[i].CurrencyCode;
+
+
+
+                        POLineItemSelector[i][7] = formatNumber(parseFloat(totdata[i].Amount) / parseFloat(totdata[i].Quantity));
+
+                        POLineItemSelector[i][8] = formatNumber(replaceAll(totdata[i].Amount,',',''));
+
+
+                        console.log("Original: " + replaceAll(totdata[i].Amount, ',', ''));
+                        console.log("Calculated: " + formatNumber(replaceAll(totdata[i].Amount, ',', '')));
+
+                        POLineItemSelector[i][9] = formatNumber(replaceAll(totdata[i].AmountRemaining,',',''));
+                        POLineItemSelector[i][10] = (i + 1);
+                        //POLineItemSelector[i][9] = totdata[i].Amount;
+                        POLineItemSelector[i][11] = totdata[i].AmountRemaining;
+                        POLineItemSelector[i][12] = formatNumber(totdata[i].PercentPaid);
+                        POLineItemSelector[i][13] = formatNumber(replaceAll(totdata[i].AmountRemaining,',',''));
+                        POLineItemSelector[i][14] = replaceAll(totdata[i].Amount,',','');
+
+                    }
+
+                    console.log("POLineItemSelector>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                    console.log(POLineItemSelector);
+                    $('#tblPOItemSelector').dataTable().fnDestroy();
+
+                    $('#tblPOItemSelector').dataTable({
+                        "processing": true,
+                        "data": POLineItemSelector,
+                        "columns": [
+                            { "title": "POLineItemID", "class": "displaynone" },
+                            { "title": "Action", "class": "displaynone" },
+                            { "title": "Item #", "class": "underline selectpo leftposition" },
+                            { "title": "PO #", "class": "leftposition" },
+                            { "title": "Description", "class": "leftposition" },
+                            { "title": "Qty", "class": "rightposition" },
+                            { "title": "Curr", "class": "rightposition" },
+                            { "title": "PO Cost", "class": "rightposition" },
+                            { "title": "Total", "class": "rightposition" },
+
+                            { "title": "Rem", "class": "rightposition" },
+                            { "title": "RowIndex", "class": "displaynone" },
+                            { "title": "Total", "class": "displaynone" },
+                        { "title": "%", "class": "rightposition" },
+                        { "title": "RemDuplicate", "class": "displaynone" },
+                        { "title": "AmountDuplicate", "class": "displaynone" }
+
+                        ],
+                        paging: false,
+                        "initComplete": function () {
+
+
+
+                            $('#tblPOItemSelector_filter').hide();
+                            $('#tblPOItemSelector thead tr').find('th:eq(2)').removeClass('underline');
+
+                            $('#tblPOItemSelector tr').each(function () {
+                                $(this).find('td:eq(2)').css('cursor', 'pointer');
+                                $(this).find('td:eq(2)').attr('onclick', 'getotherinvoices(this);');
+                            });
+
+                        },
+                        "order": [[2, "asc"]],
+                        "aoColumnDefs": [
+
+                        ]
+                    });
+
+                    var i = 1;
+
+                    $('#tblPOItemSelector tbody tr').each(function () {
+                        
+                        $(this).find("td:eq(10)").html(i++);
+                    });
+
+                   // getconvrate();
+
+
+
+                }
+            }
+
+            );
+
+
+
+        }
+
+
+
+
+        function selectpo(obj) {
+
+            obj = $(obj).parent().parent();
+
+
+            $('#POIdEdit').html('<a href="javascript:void(0);">PO #<span></span></a>');
+
+            $('#tblInvoiceItems tbody').html('');
+
+            var table = $('#tblPOItemSelector').DataTable();
+
+            table.clear().draw();
+
+
+            $('#tblPOItemSelector_filter').hide();
+            $('#tblPOItemSelector_length').hide();
+
+            var poid = $(obj).find('td:eq(0)').text();
+            var vendorid = $('#Ddl_Vendors').val();
+
+
+
+            $('#hdn_vendorid').val(vendorid);
+
+
+
+
+            var rspnsurl = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                rspnsurl = '/PurchaseOrder/POEdit/' + poid;
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                rspnsurl = 'PurchaseOrder/POEdit/' + poid;
+            }
+
+            $('#POIdEdit').html('<a href="' + rspnsurl + '" target="_blank" data-id="' + poid + '" > PO # <span></span></a>');
+
+            var ProjectID = $(obj).find('td:eq(8)').text();
+
+            $('#Hdn_ProjectID').val(ProjectID);
+
+
+            $('#Hdn_TotalPOValue').val($(obj).find('td:eq(4)').text());
+            $('#Hdn_TotalPOTaxes').val($(obj).find('td:eq(7)').text());
+
+            ForToolTip();
+
+            
+
+            var poid = '';
+
+            var terms = "";
+            var termscount = 0;
+
+            $('.poselector_chk').each(function () {
+                var curterms = "";
+
+                if ($(this).is(':checked')) {
+                    curterms = $(this).parent().parent().find('td:eq(6)').html();
+                    if (curterms != "") {
+
+                        if (terms == "") {
+                            terms = curterms;
+                            termscount++;
+                        }
+                        else {
+
+                            if (terms != curterms) {
+                                terms = curterms;
+                                termscount++;
+                            }
+                        }
+                    }
+                    poid += poid == "" ? $(this).parent().parent().find('td:eq(0)').html() : "^" + $(this).parent().parent().find('td:eq(0)').html();
+                }
+
+            });
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getPOLineItemSelectorBasedOnPOEditPage';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getPOLineItemSelectorBasedOnPOEditPage';
+            }
+
+            url += "?POID=" + poid;
+            url += "&invoiceid=" + $('#Hdn_InvoiceNumber').val();
+
+            $('#hdn_poid').val(poid);
+
+
+            $.get(url)
+            .success(function (response) {
+
+
+
+                totdata = JSON.parse(response);
+                totdata = totdata.data;
+                var fxrate = $('#exchngrate').val();
+
+
+
+                // //console.log(totdata);
+                if (totdata.length == 0) {
+
+
+                    var table = $('#tblPOItemSelector').DataTable();
+
+                    table
+                        .clear()
+                        .draw();
+
+
+                    return;
+                };
+
+                POLineItemSelector = [];
+
+
+                for (i = 0; i < totdata.length ; i++) {
+                    POLineItemSelector[i] = new Array();
+
+                    POLineItemSelector[i][0] = totdata[i].POLineItemID;
+
+                    POLineItemSelector[i][1] = "<input type='button' value='Select' />";
+
+                    POLineItemSelector[i][2] = totdata[i].TotalID;
+                    POLineItemSelector[i][3] = totdata[i].PONumber;
+                    POLineItemSelector[i][4] = totdata[i].ItemDescription;
+                    POLineItemSelector[i][5] = formatNumber(totdata[i].Quantity);
+
+
+                    POLineItemSelector[i][6] = totdata[i].CurrencyCode;
+
+
+
+                    POLineItemSelector[i][7] = formatNumber(parseFloat(totdata[i].Amount) / parseFloat(totdata[i].Quantity));
+
+                    POLineItemSelector[i][8] = formatNumber(replaceAll(totdata[i].Amount,',',''));
+
+
+
+                    POLineItemSelector[i][9] = formatNumber(totdata[i].AmountRemaining);
+                    POLineItemSelector[i][10] = (i + 1);
+                    //POLineItemSelector[i][9] = totdata[i].Amount;
+                    POLineItemSelector[i][11] = totdata[i].AmountRemaining;
+                    POLineItemSelector[i][12] = formatNumber(totdata[i].PercentPaid);
+
+                    POLineItemSelector[i][13] = totdata[i].AmountRemaining;
+                    POLineItemSelector[i][14] = replaceAll(totdata[i].Amount,',','');
+
+                }
+
+
+                $('#tblPOItemSelector').dataTable().fnDestroy();
+
+                $('#tblPOItemSelector').dataTable({
+                    "processing": true,
+                    "data": POLineItemSelector,
+                    "columns": [
+                        { "title": "POLineItemID", "class": "displaynone" },
+                        { "title": "Action", "class": "displaynone" },
+                        { "title": "Item #", "class": "underline selectpo leftposition" },
+                        { "title": "PO #" ,"class" : "leftposition" },
+                        { "title": "Description","class" : "leftposition" },
+                        { "title": "Qty", "class": "rightposition" },
+                        { "title": "Curr", "class": "rightposition" },
+                        { "title": "PO Cost", "class": "rightposition" },
+                        { "title": "Total", "class": "rightposition" },
+                        { "title": "Rem", "class": "rightposition" },
+                        { "title": "RowIndex", "class": "displaynone" },
+                        { "title": "Total", "class": "displaynone" },
+                    { "title": "%", "class": "rightposition" },
+                    { "title": "RemDuplicate", "class": "displaynone" },
+                        { "title": "AmountDuplicate", "class": "displaynone" }
+
+                    ],
+                    paging: false,
+                    "initComplete": function () {
+
+
+
+                        $('#tblPOItemSelector_filter').hide();
+                        $('#tblPOItemSelector thead tr').find('th:eq(2)').removeClass('underline');
+
+                        $('#tblPOItemSelector tr').each(function () {
+                            $(this).find('td:eq(2)').css('cursor', 'pointer');
+                            $(this).find('td:eq(2)').attr('onclick', 'getotherinvoices(this);');
+                        });
+
+                    },
+                    "order": [[2, "asc"]],
+                    "aoColumnDefs": [
+
+                    ]
+                });
+
+                var i = 1;
+
+                $('#tblPOItemSelector tbody tr').each(function () {
+                    $(this).find("td:eq(10)").html(i++);
+                });
+
+                //getconvrate();
+
+
+
+            });
+
+           
+
+        }
+
+    </script>
+
+
+    <script>
+
+        function getotherinvoices(obj) {
+            var rw = $(obj).parent();
+            var itemid = $(rw).find('td:eq(0)').html();
+
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getotherinvoices';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getotherinvoices';
+            }
+
+            cancelselections();
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "{ \"itemid\" : \"" + itemid + "\"}",
+                async: false,
+                success: function (data) {
+                    
+                    var totdata = JSON.parse(data);
+                    totdata = totdata.data;
+
+                    if (totdata.length == 0) {
+                        var table = $('#tblprevinvoice').DataTable();
+                        table
+                            .clear()
+                            .draw();
+                        notify("No previous invoice.");
+                        return;
+                    };
+
+                    var prevdata = [];
+
+                    for (i = 0; i < totdata.length ; i++) {
+
+                        prevdata[i] = [];
+
+                        prevdata[i][0] = totdata[i].InvoiceDate;
+                        prevdata[i][1] = formatNumber(totdata[i].InvoiceAmount);
+                        prevdata[i][2] = formatNumber(totdata[i].Amount);
+                        prevdata[i][3] = formatNumber(totdata[i].Quantity);
+                        prevdata[i][4] = formatNumber(totdata[i].Percent);
+                        prevdata[i][5] = formatNumber(totdata[i].LineItemTotal);
+
+                    }
+
+
+                    $('#tblprevinvoice').dataTable().fnDestroy();
+
+                    $('#tblprevinvoice').dataTable({
+                        "processing": true,
+                        "data": prevdata,
+                        "columns": [
+                            { "title": "Invoice Date" },
+                            { "title": "Invoice Amt" },
+                            { "title": "Item Cost" },
+                            { "title": "Item Qty" },
+                            { "title": "%" },
+                            { "title": "Total" },
+                        ],
+                        paging: false,
+                        "initComplete": function () {
+                        },
+                        "order": [[2, "asc"]],
+                        "aoColumnDefs": [
+                        ]
+                    });
+                    $('#previnvoice').modal('show');
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+        }
+
+        $(function () {
+
+            $('#tblPOItemSelector').on('draw.dt', function () {
+                cancelselections();
+                var i = 1;
+                $('#tblPOItemSelector tbody tr').each(function () {
+                    $(this).find("td:eq(10)").html(i++);
+                });
+
+            });
+
+            $('#tblPOItemSelector tr').live('click', function (event) {
+
+                if ($(this).hasClass('theader')) {
+                    return;
+                }
+                var clickedrowindex = $(this).find("td:eq(10)").html();
+
+                if (!event.ctrlKey && !event.shiftKey) {
+                    var ln = $('.selectedrow').length;
+                    var hclass = false;
+                    hclass = $(this).hasClass('selectedrow');
+                    cancelselections();
+
+                    if (!hclass || ln > 1 || ln == 0) {
+                        $(this).addClass('selectedrow');
+                    }
+                    else if (ln == 1) {
+                        $(this).removeClass('selectedrow');
+                    }
+                }
+
+                else if (event.ctrlKey) {
+
+                    var hclass = false;
+                    hclass = $(this).hasClass('selectedrow');
+
+                    if (!hclass) {
+                        $(this).addClass('selectedrow');
+                    }
+                    else {
+                        $(this).removeClass('selectedrow');
+                    }
+
+                }
+
+                else if (event.shiftKey) {
+
+                    var closestrow = 99999999;
+                    var closestrowindex = 0;
+
+                    $('.selectedrow').each(function () {
+
+                        if ($(this).hasClass('selectedrow')) {
+                            var id = $(this).find("td:eq(10)").html();
+
+                            var diff = id - clickedrowindex;
+
+
+                            diff = diff < 0 ? 0 - diff : diff;
+                            if (closestrow > diff) {
+                                closestrow = diff;
+                                closestrowindex = id;
+                            }
+
+                        }
+
+                    });
+
+
+
+
+
+                    var startpoint = 0;
+                    var endpoint = 0;
+                    startpoint = clickedrowindex > closestrowindex ? closestrowindex : clickedrowindex;
+                    endpoint = clickedrowindex > closestrowindex ? clickedrowindex : closestrowindex;
+                    cancelselections();
+
+                    $('#tblPOItemSelector tbody tr').each(function () {
+
+                        var currrowindex = $(this).find("td:eq(10)").html();
+                        if (currrowindex >= startpoint && currrowindex <= endpoint) {
+                            $(this).addClass('selectedrow');
+                        }
+
+                    });
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                $('#tblPOItemSelector tbody tr').each(function () {
+
+                    if ($(this).hasClass('selectedrow')) {
+
+                        $(this).find('td').css('background-color', 'rgb(201, 240, 249)');
+                    }
+                    else {
+                        if ($(this).hasClass('odd')) {
+                            $(this).find('td').css('background-color', '#f9f9f9');
+                        }
+                        else {
+                            $(this).find('td').css('background-color', '#fff');
+
+                        }
+                    }
+
+
+                });
+
+
+
+
+            });
+
+
+            $('#tblInvoiceItems tr .selectable').live('click', function (event) {
+
+
+                var obj = $(this).parent();
+
+
+                if ($(obj).hasClass('theader')) {
+                    return;
+                }
+                var clickedrowindex = $(obj).attr('data-rowindex');
+
+                if (!event.ctrlKey && !event.shiftKey) {
+                    var ln = $('.selectedrowforinvoice').length;
+                    var hclass = false;
+                    hclass = $(obj).hasClass('selectedrowforinvoice');
+                    cancelselectionsinvoice();
+
+                    if (!hclass || ln > 1 || ln == 0) {
+                        $(obj).addClass('selectedrowforinvoice');
+                    }
+                    else if (ln == 1) {
+                        $(obj).removeClass('selectedrowforinvoice');
+                    }
+                }
+
+                else if (event.ctrlKey) {
+
+                    var hclass = false;
+                    hclass = $(obj).hasClass('selectedrowforinvoice');
+
+                    if (!hclass) {
+                        $(obj).addClass('selectedrowforinvoice');
+                    }
+                    else {
+                        $(obj).removeClass('selectedrowforinvoice');
+                    }
+
+                }
+
+                else if (event.shiftKey) {
+
+                    var closestrow = 99999999;
+                    var closestrowindex = 0;
+
+                    $('.selectedrowforinvoice').each(function () {
+
+                        if ($(this).hasClass('selectedrowforinvoice')) {
+                            var id = $(this).attr('data-rowindex');
+
+                            var diff = id - clickedrowindex;
+
+
+                            diff = diff < 0 ? 0 - diff : diff;
+                            if (closestrow > diff) {
+                                closestrow = diff;
+                                closestrowindex = id;
+                            }
+
+                        }
+
+                    });
+
+
+
+
+
+                    var startpoint = 0;
+                    var endpoint = 0;
+                    startpoint = clickedrowindex > closestrowindex ? closestrowindex : clickedrowindex;
+                    endpoint = clickedrowindex > closestrowindex ? clickedrowindex : closestrowindex;
+                    cancelselectionsinvoice();
+
+                    $('#tblInvoiceItems tbody tr').each(function () {
+
+                        var currrowindex = $(this).attr('data-rowindex');
+                        if (currrowindex >= startpoint && currrowindex <= endpoint) {
+                            $(this).addClass('selectedrowforinvoice');
+                        }
+
+                    });
+
+
+                   
+
+                   
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                $('#tblInvoiceItems tbody tr').each(function () {
+
+                    if ($(this).hasClass('selectedrowforinvoice')) {
+
+                        $(this).find('td').css('background-color', 'rgb(201, 240, 249)');
+                    }
+                    else {
+                        if ($(this).hasClass('odd')) {
+                            $(this).find('td').css('background-color', '#f9f9f9');
+                        }
+                        else {
+                            $(this).find('td').css('background-color', '#fff');
+
+                        }
+                    }
+
+
+                });
+
+
+                
+                var selectedrows = parseInt($('.selectedrowforinvoice').length);
+                if (selectedrows > 0) {
+                    var htm = '<i onclick="ChangeItemadjust(\'+\');" title="Increase selected value by 1 cent" class="fa fa-plus-circle" style="font-size: 25px;color: #7d97ac;" aria-hidden="true"></i>'
+                    + '<i onclick="ChangeItemadjust(\'-\');" title="Decrease selected value by 1 cent" class="fa fa-minus-circle mrg5L" style="font-size: 25px;color: #7d97ac;" aria-hidden="true"></i>';
+                    $('#lineadjustmentbuttons').html(htm);
+                }
+                else {
+                    $('#lineadjustmentbuttons').html('');
+                }
+
+
+            });
+
+
+        });
+
+
+        function ChangeItemadjust(op) {
+            var percent, qty, amnt, total, step, totalshow, newp, newtotal, remaining;
+
+            $('.selectedrowforinvoice').each(function () {
+                remaining = parseFloat($(this).attr('data-remaining'));
+                qty = replaceAll($(this).find('td:eq(7) input').val(), ',', '');
+                amnt = replaceAll($(this).find('td:eq(8) input').val(), ',', '');
+                percent = replaceAll($(this).find('td:eq(1) input').val(), ',', '');
+                total = parseFloat(qty) * parseFloat(amnt) * parseFloat(percent) / 100;
+                totalshow = replaceAll($(this).find('td:eq(11)').html(), ',', '');
+                totalshow = parseFloat(totalshow);
+
+                if (op == '+') {
+                    newtotal = totalshow + 1 / 100;
+                    totalshow = totalshow + 1 / 100;
+                }
+
+                else {
+                    newtotal = totalshow - 1 / 100;
+                    totalshow = totalshow - 1 / 100;
+
+                }
+                newp = 100 * newtotal / (parseFloat(qty) * parseFloat(amnt));
+
+                if (remaining < totalshow) {
+                    notify("Can not exceed remaining!");
+                    return;
+                }
+
+                $(this).find('td:eq(1) input').val(newp);
+                $(this).find('td:eq(1) input').trigger('keyup');
+
+
+
+
+                // $(this).find('td:eq(11)').html(newtotal);
+
+            });
+
+        }
+
+        function cancelselections() {
+
+            //$('#lineitems tr').removeClass('selectedrow');
+
+            $('.selectedrow').each(function () {
+
+                $(this).removeClass('selectedrow');
+
+                if ($(this).hasClass('odd')) {
+                    $(this).find('td').css('background-color', '#f9f9f9');
+                }
+                else {
+                    $(this).find('td').css('background-color', '#fff');
+                }
+
+
+            });
+
+
+
+        }
+
+        function cancelselectionsinvoice() {
+
+            //$('#lineitems tr').removeClass('selectedrow');
+
+            $('.selectedrowforinvoice').each(function () {
+
+                $(this).removeClass('selectedrowforinvoice');
+
+                if ($(this).hasClass('odd')) {
+                    $(this).find('td').css('background-color', '#f9f9f9');
+                }
+                else {
+                    $(this).find('td').css('background-color', '#fff');
+                }
+
+
+            });
+
+
+
+        }
+
+
+        function fetchfirst() {
+
+
+            //cancelselectionsinvoice();
+
+
+            var percent = $('#percentage').val();
+            var poidall = '';
+
+
+           
+
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getInvoiceDataAfterSelectingedit2first';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getInvoiceDataAfterSelectingedit2first';
+            }
+
+            cancelselections();
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "{ \"InvoiceID\" : \"" + $('#Hdn_InvoiceNumber').val() + "\"}",
+                async: false,
+                success: function (data) {
+                    data = JSON.parse(data).data;
+                    //console.log(data);
+                    BuildInvoiceTablefirst(data);
+                    
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+
+
+
+
+
+        function fetch(obj) {
+
+
+            //cancelselectionsinvoice();
+
+
+            var percent = $('#percentage').val();
+            var poidall = '';
+
+
+            if (obj == "onlyselected") {
+                $('.selectedrow').each(function () {
+                    if (!$(this).hasClass('noselect')) {
+                        $(this).addClass('noselect');
+                        var poid = $(this).find('td:eq(0)').html();
+                        poidall += poidall == "" ? poid : "^" + poid;
+                    }
+                });
+            }
+            else {
+                $('#tblPOItemSelector tbody tr').each(function () {
+                    if (!$(this).hasClass('noselect')) {
+                        $(this).addClass('noselect');
+                        var poid = $(this).find('td:eq(0)').html();
+                        poidall += poidall == "" ? poid : "^" + poid;
+                    }
+                });
+            }
+
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getInvoiceDataAfterSelectingedit2';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getInvoiceDataAfterSelectingedit2';
+            }
+
+            cancelselections();
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "{ \"PoidAll\" : \"" + poidall + "\", \"percent\" : \"" + percent + "\",\"InvoiceID\" : \"" + $('#Hdn_InvoiceNumber').val() + "\"}",
+                async: false,
+                success: function (data) {
+                    data = JSON.parse(data).data;
+                    BuildInvoiceTable(data, obj);
+                    
+                    CalculateOtherFields();
+                    SyncLowerTable();
+                    //getconvrate();
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+            applyFxRate();
+        }
+
+        function CalculateOtherFields() {
+
+            var SubTotalInvoice = '';
+            var TotalTax1 = 0;
+            var TotalTax2 = 0;
+            var TotalTax3 = 0;
+            var TotalInvoice = 0;
+            var Amount = 0.00;
+
+            $('#tblInvoiceItems tbody tr').each(function () {
+
+
+                //alert($(this).attr('data-rowid'));
+
+
+                //Amount += parseFloat(replaceAll($(this).find('td').eq(11).text(), ',', ''));
+                Amount += precise_round(parseFloat(replaceAll($(this).find('td').eq(11).text(), ',', '')), 2);
+
+                var TempTotalTax1 = precise_round(parseFloat(replaceAll($(this).find('td').eq(10).find('input[type="text"]').eq(0).val(), ',', '')), 2);
+                var TempTotalTax2 = precise_round(parseFloat(replaceAll($(this).find('td').eq(10).find('input[type="text"]').eq(1).val(), ',', '')), 2);
+                var TempTotalTax3 = precise_round(parseFloat(replaceAll($(this).find('td').eq(10).find('input[type="text"]').eq(2).val(), ',', '')), 2);
+
+
+                //Amount += parseFloat(replaceAll($(this).find('td').eq(11).text(),',',''));
+
+
+                //var TempTotalTax1 = replaceAll($(this).find('td').eq(10).find('input[type="text"]').eq(0).val(),',','');
+                //var TempTotalTax2 = replaceAll($(this).find('td').eq(10).find('input[type="text"]').eq(1).val(),',','');
+                //var TempTotalTax3 = replaceAll($(this).find('td').eq(10).find('input[type="text"]').eq(2).val(),',','');
+
+
+                TotalTax1 += isNaN(parseFloat(TempTotalTax1)) ? 0 : parseFloat(TempTotalTax1);
+                TotalTax2 += isNaN(parseFloat(TempTotalTax2)) ? 0 : parseFloat(TempTotalTax2);
+                TotalTax3 += isNaN(parseFloat(TempTotalTax3)) ? 0 : parseFloat(TempTotalTax3);
+
+
+            });
+
+            var tottax = parseFloat(parseFloat(TotalTax1).toFixed(2))
+                + parseFloat(parseFloat(TotalTax2).toFixed(2))
+                + parseFloat(parseFloat(TotalTax3).toFixed(2));
+
+           
+            //console.log("Amount : " + Amount);
+            //console.log("tottax : " + tottax);
+
+
+            $('#txt_SubtotalInvoice').val(formatNumber(Amount));
+
+            $('#txt_TotalTax1').val(formatNumber(isNaN(TotalTax1) ? 0 : TotalTax1));
+            $('#txt_TotalTax2').val(formatNumber(isNaN(TotalTax2) ? 0 : TotalTax2));
+            $('#txt_TotalTax3').val(formatNumber(isNaN(TotalTax3) ? 0 : TotalTax3));
+
+            $('#txt_TotalInvoice').val(formatNumber(Amount + tottax));
+
+           
+        }
+
+
+
+        function fetchreverse(obj) {
+
+            cancelselections();
+
+            if (obj == "onlyselected") {
+
+
+                $('.selectedrowforinvoice').each(function () {
+                    if (!$(this).hasClass('deletedrow')) {
+                        $(this).remove();
+                        var poitemidinvoice = $(this).attr('data-rowid');
+
+                        $('#tblPOItemSelector tbody tr').each(function () {
+                            var poitemidselector = $(this).find("td:eq(0)").html();
+                            if (poitemidselector == poitemidinvoice) { $(this).removeClass('noselect'); }
+                        });
+                    }
+                });
+
+
+
+            }
+            else {
+
+
+
+                $('#tblInvoiceItems tbody tr').each(function () {
+                    if (!$(this).hasClass('deletedrow')) {
+                        $(this).remove();
+                    }
+
+                });
+
+                $('#tblPOItemSelector tbody tr').each(function () {
+                    $(this).removeClass('noselect');
+                });
+
+            }
+
+            SyncAll();
+
+
+        }
+
+        function BuildInvoiceTablefirst(data) {
+
+            
+            var percent = data.Percent;
+
+            var html = "";
+
+            var tax1name = '';
+            var tax2name = '';
+            var tax3name = '';
+
+            var percentlocal = percent;
+            var Fxrate = $('#exchngrate').val();
+
+            for (var i = 0; i < data.length; i++) {
+
+                var DeletedStatus = data[i].DeletedStatus;
+                var totalamntc = parseFloat(data[i].Amount) * parseFloat(data[i].Quantity);
+                var totremainingc = data[i].Total.replace(',', '')
+                if ((totalamntc * percent / 100) > totremainingc) {
+                    percentlocal = totremainingc / totalamntc * 100;
+                }
+
+
+                percentlocal = data[i].Percent;
+
+                //console.log("TTT22" + percentlocal)
+
+
+                var IsApplicableTax1 = data[i].IsApplicableTax1;
+                var IsApplicableTax2 = data[i].IsApplicableTax2;
+                var IsApplicableTax3 = data[i].IsApplicableTax3;
+
+                var tmptot = parseFloat(totalamntc * percentlocal / 100);
+
+
+
+
+
+                var tottax1 = 0;
+                if (IsApplicableTax1 == "0") {
+                    tottax1 = CalculateTaxes(data[i].Tax1Val, data[i].Tax1type, tmptot);
+                    tottax1 = isNaN(parseFloat(tottax1)) ? 0 : parseFloat(tottax1);
+                }
+
+                var tottax2 = 0;
+
+                if (IsApplicableTax2 == "0") {
+                    tottax2 = CalculateTaxes(data[i].Tax2Val, data[i].Tax2type, tmptot);
+                    tottax2 = isNaN(parseFloat(tottax2)) ? 0 : parseFloat(tottax2);
+                }
+
+
+                var tottax3 = 0;
+
+                if (IsApplicableTax3 == "0") {
+                    tottax3 = CalculateTaxes(data[i].Tax3Val, data[i].Tax3type, tmptot);
+                    tottax3 = isNaN(parseFloat(tottax3)) ? 0 : parseFloat(tottax3);
+                }
+
+                if (tax1name == '' || tax2name == '' || tax3name == '') {
+
+                    tax1name = data[i].Tax1Name == '' ? '<p style="color:red">(Tax 1)</p>' : data[i].Tax1Name;
+                    tax2name = data[i].Tax2Name == '' ? '<p style="color:red">(Tax 2)</p>' : data[i].Tax2Name;
+                    tax3name = data[i].Tax3Name == '' ? '<p style="color:red">(Tax 3)</p>' : data[i].Tax3Name;
+
+                }
+
+
+                var tax1paid = data[i].TotalTax1Paid;
+                var tax2paid = data[i].TotalTax2Paid;
+                var tax3paid = data[i].TotalTax3Paid;
+
+
+
+
+
+                var t1html = "";
+                var t2html = "";
+                var t3html = "";
+
+                if (IsApplicableTax1 == "0" && parseFloat(tottax1) != 0) {
+                    t1html = "<div class='col-sm-12'>"
+                          + "<input style='width:50%;float:left;' class='taxablefield mrg5T tax1_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + formatNumber(parseFloat(tottax1)) + "' />"
+                          + "</div>";
+                }
+                else {
+                    data[i].Tax1Val = "0";
+                    t1html = "<div class='col-sm-12'>"
+                         + "<input style='width:50%;float:left;' class='taxablefield mrg5T displaynone tax1_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + "0.00" + "' />"
+                         + "</div>";
+
+                }
+
+                if (IsApplicableTax2 == "0" && parseFloat(tottax2) != 0) {
+                    t2html = "<div class='col-sm-12'>"
+                          + "<input style='width:50%;float:left;' class='taxablefield mrg5T tax2_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + formatNumber(parseFloat(tottax2)) + "' />"
+                           + "</div>";
+                }
+                else {
+                    data[i].Tax2Val = "0";
+                    t2html = "<div class='col-sm-12'>"
+                          + "<input style='width:50%;float:left;' class='taxablefield mrg5T displaynone tax2_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + "0.00" + "' />"
+                           + "</div>";
+                }
+
+
+
+
+                if (IsApplicableTax3 == "0" && parseFloat(tottax3) != 0) {
+                    t3html = "<div class='col-sm-12'>"
+                          + "<input style='width:50%;float:left;' class='taxablefield mrg5T tax3_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + formatNumber(parseFloat(tottax3)) + "' />"
+                          + "</div>";
+                }
+                else {
+                    data[i].Tax3Val = "0";
+                    t3html = "<div class='col-sm-12'>"
+                          + "<input style='width:50%;float:left;' class='taxablefield mrg5T displaynone tax3_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + "0.00" + "' />"
+                          + "</div>";
+                }
+
+                var ddlproaccnt = "<select>" + getprojectaccounts(parseInt(data[i].TotalPOID.split('-')[0]) - 1000) + "</select>";
+
+                var innerhtml = "";
+
+                var total = parseFloat(parseFloat(tottax1) + parseFloat(tottax2) + parseFloat(tottax3));
+
+
+                total = parseFloat(parseFloat(tottax1.toFixed(2)) + parseFloat(tottax2.toFixed(2)) + parseFloat(tottax3.toFixed(2)));
+
+
+
+                total += parseFloat(data[i].Amount * data[i].Quantity * percentlocal / 100);
+
+                //console.log("TTT" + percentlocal)
+                //exclude taxes
+
+                total = parseFloat(data[i].Amount * data[i].Quantity * percentlocal / 100);
+
+                //total = parseFloat(total) + parseFloat((parseFloat(data[i].Amount) * parseFloat(data[i].Quantity)) * parseFloat(percent) / 100);
+                //total = parseFloat(total).toFixed(2);
+
+                //console.log(total + "LLLL");
+                var totalamnt = parseFloat(data[i].Amount) * parseFloat(data[i].Quantity);
+
+
+                $('#tblPOItemSelector tbody tr').each(function () {
+                    var itemid = $(this).find('td:eq(0)').html();
+                    if (itemid == data[i].POLineItemID) {
+                        $(this).addClass('noselect');
+                    }
+                });
+                var isdeleted = DeletedStatus == 'D' ? 'deletedrow' : 'activerow';
+                var amounttextbox = '';
+                var quantitytextbox = '';
+                var percenttextbox = '';
+
+                if (DeletedStatus != 'D') {
+                    amounttextbox = "<input type='text' value='" + replaceAll(data[i].Amount,',','') + "' style='width: 70px;' placeholder='Add Qty' class='floatonly rightposition' onkeyup='QtySet(this);' />";
+                    quantitytextbox = "<input type='text' value='" + replaceAll(data[i].Quantity,',','') + "' style='width: 70px;' placeholder='Add Qty' class='floatonly rightposition' onkeyup='QtySet(this);' />";
+                    percenttextbox = "<input style='width: 40px;' type='text' value='" + data[i].Percent + "' class='rightposition percentclass floatonly' onkeyup='calculatepercent(this);' />"
+
+                }
+                else {
+                    amounttextbox = "<input disabled type='text' value='" +replaceAll(data[i].Amount,',','') + "' style='width: 70px;' placeholder='Add Qty' class='floatonly rightposition' onkeyup='QtySet(this);' />";
+                    quantitytextbox = "<input disabled type='text' value='" + replaceAll(data[i].Quantity,',','') + "' style='width: 70px;' placeholder='Add Qty' class='floatonly rightposition' onkeyup='QtySet(this);' />";
+                    percenttextbox = "<input disabled style='width: 40px;' type='text' value='" + data[i].Percent + "' class='rightposition percentclass floatonly' onkeyup='calculatepercent(this);' />"
+
+                }
+                innerhtml = "<tr " + "class='" + isdeleted + "' data-rowid='" + data[i].POLineItemID + "'"
+
+                          + " data-poid='" + data[i].POID + "'"
+
+
+                          + " data-tax1='" + data[i].Tax1 + "'"
+                          + " data-tax2='" + data[i].Tax2 + "'"
+                          + " data-tax3='" + data[i].Tax3 + "'"
+
+                          + " data-Tax1Val='" + data[i].Tax1Val + "'"
+                          + " data-Tax1type='" + data[i].Tax1type + "'"
+                          + " data-Tax2Val='" + data[i].Tax2Val + "'"
+                          + " data-Tax2type='" + data[i].Tax2type + "'"
+                          + " data-Tax3Val='" + data[i].Tax3Val + "'"
+                          + " data-Tax3type='" + data[i].Tax3type + "'"
+
+
+                          + " data-total='" + totalamnt + "'"
+
+                          + " data-remaining='" + data[i].TotalR.replace(',', '') + "'"
+
+
+
+                           + " data-rowindex='" + (i + 1) + "'"
+                          + ">"
+                          + "<td class='leftposition displaynone'>" + "<i class='fa fa-hand-o-right' style='cursor:pointer;'></i>" + "</td>"
+                          + "<td  class='leftposition'>"
+                          + percenttextbox
+                          + "</td>"
+
+                          + "<td  class='leftposition selectable'>" + data[i].TotalPOID + "</td>"
+                          + "<td  class='leftposition selectable'>" + data[i].TotalItemNumber + "</td>"
+                          + "<td  class='leftposition displaynone'>" + data[i].SpecNum + "</td>"
+                          + "<td  class='leftposition selectable'>" + data[i].ItemDescription + "</td>"
+                          + "<td class='displaynone'>" + "<input type='text' value='' placeholder='Add Notes' />" + "</td>"
+
+                          + "<td  class='rightposition'>"
+                          + quantitytextbox
+                           + "</td>"
+
+                           + "<td class='rightposition'>"
+                           + amounttextbox                           
+                           + "</td>"
+
+                             //+ "<td class='rightposition selectable'>" + formatNumber(parseFloat(data[i].Amount) * parseFloat(data[i].Quantity)) + "</td>"                             
+                            + "<td class='rightposition selectable'>" +formatNumber(precise_round(parseFloat(data[i].Amount), 2) * precise_round(parseFloat(data[i].Quantity), 2)) + "</td>"
+                          //+ "<td>" + "<input onkeyup='Synctax();' type='text' value='" + parseFloat(parseFloat(data[i].Tax1) + parseFloat(data[i].Tax2) + parseFloat(data[i].Tax3)) + "' /></td>"
+
+                          + "<td class='displaynone'>"
+                          + "<div class='row'>"
+
+                          + t1html
+
+                          //+ "<div class='col-sm-6'>"
+                          //+ "<p>(" + formatNumber(tax1paid) + ")</p>"
+                          //+ "</div>"
+
+                          + "</div>"
+
+                          + "<div class='row'>"
+
+                          + t2html
+
+                          //+ "<div class='col-sm-6'>"
+                          //+ "<p>(" + formatNumber(tax2paid) + ")</p>"
+                          //+ "</div>"
+
+                          + "</div>"
+
+                          + "<div class='row'>"
+
+                          + t3html
+
+                          //+ "<div class='col-sm-6'>"
+                          //+ "<p>(" + formatNumber(tax3paid) + ")</p>"
+                          //+ "</div>"
+
+                          + "</div>"
+
+
+                          + "</td>"
+
+
+                          + "<td class='rightposition selectable'>" + formatNumber(total) + "</td>"
+                          + "<td class='displaynone'>" + ddlproaccnt + "</td>"
+                          + "</tr>";
+
+                html += innerhtml;
+            }
+
+            var tottaxcolname = tax1name + ' ' + tax2name + ' ' + tax3name;
+
+
+
+            $('#tblInvoiceItems tbody').append(html);
+
+            $('#tblInvoiceItems thead tr').find('th:eq(10)').html(tottaxcolname);
+
+            //$('#tblInvoiceItems tbody tr').each(function () {
+            //    var ddl = $('#Ddl_ProjectAccount').clone().removeAttr('id');
+            //    var selectedval = $('#Ddl_ProjectAccount').val();
+            //    $(ddl).css('width', '150px');
+            //    $(ddl).val(selectedval);
+            //    $(this).find('td:eq(11)').html(ddl);
+            //});
+
+            //SyncAll();
+
+            //taxablecalc();
+            applyFxRate();
+        }
+
+        function UpdateInvoice() {
+            applyFxRate();
+
+            var goAhead = true;
+            var ttmp = 1;
+            $('#tblInvoiceItems tbody tr').each(function () {
+                var ProjectAccount = $(this).find('td').eq(12).find('select').val();
+                if (ProjectAccount == "0") {
+                    notify("Row number " + ttmp + " Does not have any Project account associated.");
+                    goAhead = false;
+                    return;
+                }
+                ttmp++;
+            }
+            );
+
+
+            if (!goAhead) {
+                return;
+            }
+
+
+
+
+            var vendorid = $('#hdn_vendorid').val();
+            var POID = $('#hdn_poid').val();
+
+            var tmp = true;
+            var i = 0;
+            var probrow = new Array();
+
+            $('#tblInvoiceItems tbody tr').each(function () {
+
+                var total = replaceAll($(this).attr('data-remaining').replace(',', ''), ',', '');
+
+
+
+                var t1 = 0;
+                var t2 = 0;
+                var t3 = 0;
+
+                t1 = replaceAll($(this).find('td:eq(10)').find('input:eq(0)').val().replace(',', ''), ',', '');
+                t2 = replaceAll($(this).find('td:eq(10)').find('input:eq(1)').val().replace(',', ''), ',', '');
+                t3 = replaceAll($(this).find('td:eq(10)').find('input:eq(2)').val().replace(',', ''), ',', '');
+
+                t1 = isNaN(parseFloat(t1)) ? 0 : parseFloat(t1);
+                t2 = isNaN(parseFloat(t2)) ? 0 : parseFloat(t2);
+                t3 = isNaN(parseFloat(t3)) ? 0 : parseFloat(t3);
+
+                var vl = replaceAll($(this).find('td:eq(11)').html().replace(',', ''), ',', '');
+                vl = isNaN(parseFloat(vl)) ? 0 : parseFloat(vl);
+
+
+                var tottax = parseFloat(t1) + parseFloat(t2) + parseFloat(t3);
+
+
+
+                // vl -= parseFloat(tottax);//.replace(',', '')
+
+
+
+                i++;
+
+                total = parseFloat(total).toFixed(2);
+                vl = parseFloat(vl).toFixed(2);
+                var Fxrate = $('#exchngrate').val();
+
+                if (parseFloat(vl / Fxrate) > parseFloat(total)) {
+
+                    probrow.push({ 'rownumber': i });                 
+                }
+
+
+            });
+
+            var htm = '';
+            var rnum = '';
+
+            if (probrow.length > 0) {
+                for (var a = 0; a < probrow.length; a++) {
+                    rnum += rnum == '' ? probrow[a].rownumber : ", " + probrow[a].rownumber;
+
+                    
+                }
+
+                htm += 'Row number(s) ' + rnum + ' exceeding total remaining value.';
+                $('#invexceedtotal_text').html(htm);
+                $('#invexceedtotal').modal('show');
+
+            }
+
+        
+        else{
+            UpdateInvoice2();
+            }
+
+         
+
+        }
+
+        function UpdateInvoice2() {
+
+
+            var goAhead = true;
+            var ttmp = 1;
+            $('#tblInvoiceItems tbody tr').each(function () {
+                var ProjectAccount = $(this).find('td').eq(12).find('select').val();
+                if (ProjectAccount == "0") {
+                    notify("Row number " + ttmp + " Does not have any Project account associated.");
+                    goAhead = false;
+                    return;
+                }
+                ttmp++;
+            }
+            );
+
+
+            if (!goAhead) {
+                return;
+            }
+
+
+
+
+            var vendorid = $('#hdn_vendorid').val();
+            var POID = $('#hdn_poid').val();
+
+            if ($('#txt_InvoiceNumber').val() != '') {
+                var invonum = $("#txt_InvoiceNumber").val();
+                var filter = RegExp(/^[\w-]+$/);
+                if (filter.test(invonum)) {
+
+
+                }
+                else {
+                    notify("Please enter the Invoice Number in correct format");
+                    return false;
+                }
+            }
+
+            //console.log(POID);
+
+            var tmp = true;
+            var i = 0;
+            var probrow = 0;
+
+            $('#tblInvoiceItems tbody tr').each(function () {
+
+                var total = replaceAll($(this).attr('data-remaining').replace(',', ''), ',', '');
+
+
+
+                var t1 = 0;
+                var t2 = 0;
+                var t3 = 0;
+
+                t1 = replaceAll($(this).find('td:eq(10)').find('input:eq(0)').val().replace(',', ''), ',', '');
+                t2 = replaceAll($(this).find('td:eq(10)').find('input:eq(1)').val().replace(',', ''), ',', '');
+                t3 = replaceAll($(this).find('td:eq(10)').find('input:eq(2)').val().replace(',', ''), ',', '');
+
+                t1 = isNaN(parseFloat(t1)) ? 0 : parseFloat(t1);
+                t2 = isNaN(parseFloat(t2)) ? 0 : parseFloat(t2);
+                t3 = isNaN(parseFloat(t3)) ? 0 : parseFloat(t3);
+                var Fxrate = $('#exchngrate').val();
+
+                var vl = replaceAll($(this).find('td:eq(11)').html().replace(',', ''), ',', '');
+                vl = isNaN(parseFloat(vl)) ? 0 : parseFloat(vl / Fxrate);
+
+
+                var tottax = parseFloat(t1) + parseFloat(t2) + parseFloat(t3);
+
+
+
+                // vl -= parseFloat(tottax);//.replace(',', '')
+
+
+
+                i++;
+
+                total = parseFloat(total).toFixed(2);
+                vl = parseFloat(vl).toFixed(2);
+
+                if (parseFloat(vl) > parseFloat(total)) {
+
+                    if (probrow == "0") {
+                        probrow = i;
+                    }
+
+
+
+                    tmp = false;
+                    return;
+                }
+
+
+            });
+
+
+            //if (probrow != "0") {
+            //    notify('Row number ' + (probrow) + ' is exceeding total remaining value.');
+            //}
+
+
+            //if (!tmp) {
+            //    return;
+            //}
+
+            if ($('#Ddl_Vendors').val() == null) {
+
+                notify('Please Select Vendors.');
+                return;
+            }
+            if ($('#Hdn_ProjectID').val() == '0') {
+
+                notify('Please Select POs.');
+                return;
+
+            }
+
+
+            if ($('#tblInvoiceItems tbody tr').length < 1) {
+                notify('Please Add items in Invoice first');
+                return;
+            }
+
+
+            var InvoiceID = $('#Hdn_InvoiceNumber').val();
+            if ($('#txt_InvoiceDate').val().trim() == '') {
+                errorfunc('txt_InvoiceDate', 'Please insert Invoice Date.');
+                return;
+            }
+            var InvoiceDate = $('#txt_InvoiceDate').val();
+            if ($('#txt_Terms').val().trim() == '' || $('#txt_Terms').val().trim() == '0') {
+                errorfunc('txt_Terms', 'Please Select Terms.');
+                return;
+            }
+            var Terms = $('#txt_Terms').val();
+            //if ($('#Ddl_ProjectAccount').val().trim() == '0') {
+            //    errorfunc('Ddl_ProjectAccount', 'Please Select Project Account.');
+            //    return;
+            //}
+
+
+            var ProjectAccount = $('#Ddl_ProjectAccount').val();
+            if ($('#Ddl_ProjectAccount').val().trim() == '0') {
+                errorfunc('Ddl_ProjectAccount', 'Please Select Project Account.');
+                return;
+            }
+
+
+
+
+
+            if ($('#txt_InvoiceNumber').val().trim() == '') {
+                errorfunc('txt_InvoiceNumber', 'Please enter Invoice Number.');
+                return;
+            }
+            var InvoiceNumber = $('#txt_InvoiceNumber').val();
+
+            if ($('#txt_TotalInvoiceAmount').val().replace(',', '').trim() == '0' || $('#txt_TotalInvoiceAmount').val().replace(',', '').trim() == '') {
+                errorfunc('txt_TotalInvoiceAmount', 'Please enter Total Invoice Amount.');
+                return;
+            }
+            var TotalInvoiceAmount = replaceAll($('#txt_TotalInvoiceAmount').val().replace(',', ''), ',', '');
+
+            if ($('#txt_InvoiceMemo').val().trim() == '0') {
+                errorfunc('txt_InvoiceMemo', 'Please enter Invoice Memo.');
+                return;
+            }
+            var InvoiceMemo = $('#txt_InvoiceMemo').val();
+
+            var SubtotalInvoice = replaceAll($('#txt_SubtotalInvoice').val().replace(',', ''), ',', '');
+            var Fxrate = $('#exchngrate').val();
+
+           // SubtotalInvoice = SubtotalInvoice / Fxrate;
+            //console.log(TotalInvoiceAmount + ">>>" + SubtotalInvoice)
+            SubtotalInvoice = Math.round((SubtotalInvoice * 100)) / 100;
+
+
+
+            var TotalTax1 = replaceAll($('#txt_TotalTax1').val(), ',', '');
+            var TotalTax2 = replaceAll($('#txt_TotalTax2').val(), ',', '');
+            var TotalTax3 = replaceAll($('#txt_TotalTax3').val(), ',', '');
+
+
+            var TotalInvoice = replaceAll($('#txt_TotalInvoice').val(), ',', '');
+            var TotalInvoice2 = replaceAll($('#txt_SubtotalInvoice').val(), ',', '');
+            var TotalInvoice3 = replaceAll($('#txt_TotalInvoice').val(), ',', '');
+            
+            //TotalInvoice = TotalInvoice / Fxrate;
+            TotalInvoice = Math.round((TotalInvoice * 100)) / 100;
+            if (parseFloat(TotalInvoiceAmount) != parseFloat(TotalInvoice3)) {
+                errorfunc('txt_TotalInvoiceAmount', 'Invoice totals does not match.');
+                notify('Invoice total does not match with each other.');
+                return;
+
+            }
+
+
+
+            var Exrate = replaceAll($('#exchngrate').val(), ',', '');
+
+
+
+
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/UpdateInvoice';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/UpdateInvoice';
+            }
+
+          
+
+
+            url += "?InvoiceDate=" + InvoiceDate;
+            url += "&Terms=" + Terms;
+            url += "&ProjectAccount=" + ProjectAccount;
+            url += "&InvoiceNumber=" + InvoiceNumber;
+            url += "&TotalInvoiceAmount=" + replaceAll(TotalInvoiceAmount.replace(',', ''),',','');
+            url += "&InvoiceMemo=" + InvoiceMemo;
+            url += "&SubtotalInvoice=" + replaceAll(SubtotalInvoice.toString().replace(',', ''), ',', '');
+            url += "&TotalTax3=" + replaceAll(TotalTax3,',','');
+            url += "&TotalTax1=" + replaceAll(TotalTax1,',','');
+            url += "&TotalTax2=" + replaceAll(TotalTax2,',','');
+            url += "&TotalInvoice=" + replaceAll(TotalInvoice.toString(), ',', '');
+            url += "&InvoiceID=" + InvoiceID;
+            url += "&Exrate=" + Exrate;
+            url += "&POID=" + POID;
+            
+
+
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                async: false,
+                success: function (data) {
+                    InvoiceID = data;
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+            if (InvoiceID == '0') {
+                notify("Can not update, duplicate invoicenumber exists");
+                return;
+            }
+
+            var InvoiceItems = new Array();
+            $('#tblInvoiceItems tbody tr').each(function () {
+
+
+
+                var tmp = 1;
+
+                var Percentage = $(this).find('td').eq(tmp + 0).find('.percentclass').val().replace(',', '');
+                Percentage = isNaN(parseFloat(Percentage)) ? 0 : parseFloat(Percentage);
+
+                var PONumber = $(this).find('td').eq(tmp + 1).text();
+                var ItemNumber = $(this).find('td').eq(tmp + 2).text();
+                var Spec = $(this).find('td').eq(tmp + 3).text();
+                var Description = $(this).find('td').eq(tmp + 4).html();//find('input[type="text"]').val();
+                var Note = $(this).find('td').eq(tmp + 5).find('input[type="text"]').val();
+                var Qty = $(this).find('td').eq(tmp + 6).find('input[type="text"]').val().replace(',', '');
+                Qty = isNaN(parseFloat(Qty)) ? 0 : parseFloat(Qty);
+
+
+                var Amount = replaceAll($(this).find('td').eq(tmp + 7).find('input').val(),',','');
+                //console.log("Hey" + Amount);
+                Amount = isNaN(parseFloat(Amount)) ? 0 : parseFloat(Amount);
+
+                //var Taxes = $(this).find('td').eq(tmp + 8).find('input[type="text"]').val();
+
+
+                tmp = 2;
+
+                var Tax1 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(0).val().replace(',', '');
+                Tax1 = isNaN(parseFloat(Tax1)) ? 0 : parseFloat(Tax1);
+
+                var Tax2 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(1).val().replace(',', '');
+                Tax2 = isNaN(parseFloat(Tax2)) ? 0 : parseFloat(Tax2);
+
+
+                var Tax3 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(2).val().replace(',', '');
+                Tax3 = isNaN(parseFloat(Tax3)) ? 0 : parseFloat(Tax3);
+
+
+                var Taxes = parseFloat(Tax1) + parseFloat(Tax2) + parseFloat(Tax3);
+
+                Taxes = parseFloat(Taxes).toFixed(2);
+
+                var LineItemTotal = $(this).find('td').eq(tmp + 9).text().replace(',', '');
+                var ProjectAccount = $(this).find('td').eq(tmp + 10).find('select').val();
+                var PurchaseOrderID = '';
+                var POLineItemID = $(this).attr('data-rowid');
+
+                // alert(Percentage + '^' + PONumber + '^' + ItemNumber + '^' + Spec + '^' + Description + '^' + Note + '^' + Qty + '^' + Amount + '^' + Taxes + '^' + LineItemTotal + '^' + ProjectAccount);
+
+                var itemObj = new Object();
+                //itemObj += '"Percentage":' + Percentage + ',';
+                //url += "?Percentage=" + Percentage;
+                itemObj.Percentage = Percentage;
+
+                //url += "&PONumber=" + PONumber;
+                itemObj.PONumber = PONumber;
+
+                //url += "&ItemNumber=" + ItemNumber;
+                itemObj.ItemNumber = ItemNumber;
+
+                //url += "&Spec=" + Spec;
+                itemObj.Spec = Spec;
+
+                //url += "&Description=" + Description;
+                itemObj.Description = Description;
+
+                //url += "&Note=" + Note;
+                itemObj.Note = (Note == '' ? "" : Note);
+
+                //url += "&Qty=" + Qty;
+                itemObj.Qty = Qty;
+
+                //url += "&Amount=" + Amount;
+                itemObj.Amount = Amount;
+
+                //url += "&Taxes=" + Taxes;
+                itemObj.Taxes = Taxes;
+
+                //url += "&LineItemTotal=" + LineItemTotal;
+                itemObj.LineItemTotal = LineItemTotal;
+
+                //url += "&ProjectAccount=" + ProjectAccount;
+                itemObj.ProjectAccount = ProjectAccount;
+
+                //url += "&InvoiceID=" + InvoiceID;
+                itemObj.InvoiceID = InvoiceID;
+
+                //url += "&PurchaseOrderID=" + PurchaseOrderID;
+                itemObj.PurchaseOrderID = (PurchaseOrderID == '' ? "" : PurchaseOrderID);
+
+                //url += "&POLineItemID=" + POLineItemID;
+                itemObj.POLineItemID = POLineItemID;
+
+                //url += "&Tax1=" + Tax1;
+                itemObj.Tax1 = Tax1;
+
+                //url += "&Tax2=" + Tax2;
+                itemObj.Tax2 = Tax2;
+
+                //url += "&Tax3=" + Tax3;
+                itemObj.Tax3 = Tax3;
+
+                InvoiceItems.push(itemObj);
+                console.log(InvoiceItems);
+
+                //var url = '';
+                //if (LOCALORSERVERNEW == 'LOCAL') {
+                //    url = '/Invoice/SaveInvoiceItems';
+                //}
+                //else if (LOCALORSERVERNEW == 'SERVER') {
+                //    url = 'Invoice/SaveInvoiceItems';
+                //}
+
+                //url += "?Percentage=" + Percentage;
+                //url += "&PONumber=" + PONumber;
+                //url += "&ItemNumber=" + ItemNumber;
+                //url += "&Spec=" + Spec;
+                //url += "&Description=" + Description;
+                //url += "&Note=" + Note;
+                //url += "&Qty=" + Qty;
+                //url += "&Amount=" + Amount;
+                //url += "&Taxes=" + Taxes;
+                //url += "&LineItemTotal=" + LineItemTotal;
+                //url += "&ProjectAccount=" + ProjectAccount;
+                //url += "&InvoiceID=" + InvoiceID;
+                //url += "&PurchaseOrderID=" + PurchaseOrderID;
+                //url += "&POLineItemID=" + POLineItemID;
+                //url += "&Tax1=" + Tax1;
+                //url += "&Tax2=" + Tax2;
+                //url += "&Tax3=" + Tax3;
+
+                //return;
+
+
+                
+
+
+                //var url = '';
+                //if (LOCALORSERVERNEW == 'LOCAL') {
+                //    url = '/Invoice/SaveInvoiceItems';
+                //}
+                //else if (LOCALORSERVERNEW == 'SERVER') {
+                //    url = 'Invoice/SaveInvoiceItems';
+                //}
+
+                //url += "?Percentage=" + Percentage;
+                //url += "&PONumber=" + PONumber;
+                //url += "&ItemNumber=" + ItemNumber;
+                //url += "&Spec=" + Spec;
+                //url += "&Description=" + Description;
+                //url += "&Note=" + Note;
+                //url += "&Qty=" + Qty;
+                //url += "&Amount=" + Amount;
+                //url += "&Taxes=" + Taxes;
+                //url += "&LineItemTotal=" + LineItemTotal;
+                //url += "&ProjectAccount=" + ProjectAccount;
+                //url += "&InvoiceID=" + InvoiceID;
+                //url += "&PurchaseOrderID=" + PurchaseOrderID;
+                //url += "&POLineItemID=" + POLineItemID;
+                //url += "&Tax1=" + Tax1;
+                //url += "&Tax2=" + Tax2;
+                //url += "&Tax3=" + Tax3;
+
+
+                //$.ajax({
+                //    type: "POST",
+                //    url: url,
+                //    datatype: "json",
+                //    contentType: "application/json; charset=utf-8",
+                //    data: "",
+                //    async:false,
+                //    success: function (data) {
+                       
+                //    },
+                //    error: function () { notify('Something went wrong'); }
+                //});
+
+
+
+
+
+            });
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/SaveBulkInvoiceItems';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/SaveBulkInvoiceItems';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                data: JSON.stringify(InvoiceItems),
+                traditional: true,
+                contentType: 'application/json',
+                async: false,
+                success: function (data) {
+                    notify("Updated invoice", 'green');
+                    setTimeout(function () {
+                        irrrrr = 0;
+                        window.location.reload();
+                    }, 3000);
+
+                },
+                error: function () {
+                    notify('Something went wrong ');
+                }
+            });
+
+
+           
+        }
+
+
+
+        function BuildInvoiceTable(data, obj) {
+
+            //console.log(data);
+
+
+            var percent = parseFloat($('#percentage').val());
+
+            var html = "";
+
+            var tax1name = '';
+            var tax2name = '';
+            var tax3name = '';
+
+            var percentlocal = percent;
+            var fxRate = $('#exchngrate').val();
+
+            for (var i = 0; i < data.length; i++) {
+
+
+                //console.log(data[i]);
+
+                var totalamntc = parseFloat(data[i].Amount) * parseFloat(data[i].Quantity);
+                var totremainingc = data[i].Total.replace(',', '')
+                if ((totalamntc * percent / 100) > totremainingc) {
+                    percentlocal = totremainingc / totalamntc * 100;
+                }
+
+
+
+
+                var IsApplicableTax1 = data[i].IsApplicableTax1;
+                var IsApplicableTax2 = data[i].IsApplicableTax2;
+                var IsApplicableTax3 = data[i].IsApplicableTax3;
+
+                var tmptot = parseFloat(totalamntc * percentlocal / 100);
+
+
+
+
+
+                var tottax1 = 0;
+                if (IsApplicableTax1 == "0") {
+                    tottax1 = CalculateTaxes(data[i].Tax1Val, data[i].Tax1type, tmptot);
+                    tottax1 = isNaN(parseFloat(tottax1)) ? 0 : parseFloat(tottax1);
+                }
+
+                var tottax2 = 0;
+
+                if (IsApplicableTax2 == "0") {
+                    tottax2 = CalculateTaxes(data[i].Tax2Val, data[i].Tax2type, tmptot);
+                    tottax2 = isNaN(parseFloat(tottax2)) ? 0 : parseFloat(tottax2);
+                }
+
+
+                var tottax3 = 0;
+
+                if (IsApplicableTax3 == "0") {
+                    tottax3 = CalculateTaxes(data[i].Tax3Val, data[i].Tax3type, tmptot);
+                    tottax3 = isNaN(parseFloat(tottax3)) ? 0 : parseFloat(tottax3);
+                }
+
+                if (tax1name == '' || tax2name == '' || tax3name == '') {
+
+                    tax1name = data[i].Tax1Name == '' ? '<p style="color:red">(Tax 1)</p>' : data[i].Tax1Name;
+                    tax2name = data[i].Tax2Name == '' ? '<p style="color:red">(Tax 2)</p>' : data[i].Tax2Name;
+                    tax3name = data[i].Tax3Name == '' ? '<p style="color:red">(Tax 3)</p>' : data[i].Tax3Name;
+
+                }
+
+
+                var tax1paid = data[i].TotalTax1Paid;
+                var tax2paid = data[i].TotalTax2Paid;
+                var tax3paid = data[i].TotalTax3Paid;
+
+
+
+
+
+                var t1html = "";
+                var t2html = "";
+                var t3html = "";
+
+                if (IsApplicableTax1 == "0" && parseFloat(tottax1) != 0) {
+                    t1html = "<div class='col-sm-12'>"
+                          + "<input style='width:50%;float:left;' class='taxablefield mrg5T tax1_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + formatNumber(parseFloat(tottax1)) + "' />"
+                          + "</div>";
+                }
+                else {
+                    data[i].Tax1Val = "0";
+                    t1html = "<div class='col-sm-12'>"
+                         + "<input style='width:50%;float:left;' class='taxablefield mrg5T displaynone tax1_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + "0.00" + "' />"
+                         + "</div>";
+
+                }
+
+                if (IsApplicableTax2 == "0" && parseFloat(tottax2) != 0) {
+                    t2html = "<div class='col-sm-12'>"
+                          + "<input style='width:50%;float:left;' class='taxablefield mrg5T tax2_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + formatNumber(parseFloat(tottax2)) + "' />"
+                           + "</div>";
+                }
+                else {
+                    data[i].Tax2Val = "0";
+                    t2html = "<div class='col-sm-12'>"
+                          + "<input style='width:50%;float:left;' class='taxablefield mrg5T displaynone tax2_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + "0.00" + "' />"
+                           + "</div>";
+                }
+
+
+
+
+                if (IsApplicableTax3 == "0" && parseFloat(tottax3) != 0) {
+                    t3html = "<div class='col-sm-12'>"
+                          + "<input style='width:50%;float:left;' class='taxablefield mrg5T tax3_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + formatNumber(parseFloat(tottax3)) + "' />"
+                          + "</div>";
+                }
+                else {
+                    data[i].Tax3Val = "0";
+                    t3html = "<div class='col-sm-12'>"
+                          + "<input style='width:50%;float:left;' class='taxablefield mrg5T displaynone tax3_" + [i] + " floatonly' onkeyup='Synctax();' type='text' value='" + "0.00" + "' />"
+                          + "</div>";
+                }
+
+                var ddlproaccnt = "<select>" + getprojectaccounts(parseInt(data[i].TotalPOID.split('-')[0]) - 1000) + "</select>";
+
+                var innerhtml = "";
+
+                var total = parseFloat(parseFloat(tottax1) + parseFloat(tottax2) + parseFloat(tottax3));
+
+              
+                total = parseFloat(parseFloat(tottax1.toFixed(2)) + parseFloat(tottax2.toFixed(2)) + parseFloat(tottax3.toFixed(2)));
+
+               
+
+                total += parseFloat(data[i].Amount * data[i].Quantity * percentlocal / 100);
+
+
+                //exclude taxes
+
+                total = parseFloat(data[i].Amount * data[i].Quantity * percentlocal / 100);
+
+                //total = parseFloat(total) + parseFloat((parseFloat(data[i].Amount) * parseFloat(data[i].Quantity)) * parseFloat(percent) / 100);
+                //total = parseFloat(total).toFixed(2);
+
+               //console.log(total + "LLLL");
+                var totalamnt = parseFloat(data[i].Amount) * parseFloat(data[i].Quantity);
+
+                innerhtml = "<tr data-rowid='" + data[i].POLineItemID + "'"
+
+                          + " data-poid='" + data[i].POID + "'"
+
+
+                          + " data-tax1='" + data[i].Tax1 + "'"
+                          + " data-tax2='" + data[i].Tax2 + "'"
+                          + " data-tax3='" + data[i].Tax3 + "'"
+
+                          + " data-Tax1Val='" + data[i].Tax1Val + "'"
+                          + " data-Tax1type='" + data[i].Tax1type + "'"
+                          + " data-Tax2Val='" + data[i].Tax2Val + "'"
+                          + " data-Tax2type='" + data[i].Tax2type + "'"
+                          + " data-Tax3Val='" + data[i].Tax3Val + "'"
+                          + " data-Tax3type='" + data[i].Tax3type + "'"
+
+
+                          + " data-total='" + totalamnt + "'"
+
+                          + " data-remaining='" + data[i].Total.replace(',', '') + "'"
+
+
+
+                           + " data-rowindex='" + (i + 1) + "'"
+                          + ">"
+                          + "<td class='leftposition displaynone'>" + "<i class='fa fa-hand-o-right' style='cursor:pointer;'></i>" + "</td>"
+                          + "<td  class='leftposition'>" + "<input style='width: 40px;' type='text' value='" + percentlocal + "' class='rightposition percentclass floatonly' onkeyup='calculatepercent(this);' />" + "</td>"
+                          + "<td  class='leftposition selectable'>" + data[i].TotalPOID + "</td>"
+                          + "<td  class='leftposition selectable'>" + data[i].TotalItemNumber + "</td>"
+                          + "<td  class='leftposition displaynone'>" + data[i].SpecNum + "</td>"
+                          + "<td  class='leftposition selectable'>" + data[i].ItemDescription + "</td>"
+                          + "<td class='displaynone'>" + "<input type='text' value='' placeholder='Add Notes' />" + "</td>"
+                          + "<td  class='rightposition'>" + "<input type='text' value='" + replaceAll(data[i].Quantity,',','') + "' style='width: 70px;' placeholder='Add Qty' class='floatonly rightposition' onkeyup='QtySet(this);' />" + "</td>"
+
+
+                           + "<td class='rightposition selectable'>"
+                                                      + "<input type='text' value='" + replaceAll(data[i].Amount,',','') + "' style='width: 70px;' placeholder='Add Qty' class='floatonly rightposition' onkeyup='QtySet(this);' />"
+
+                           + "</td>"
+                             + "<td class='rightposition selectable'>" + formatNumber(parseFloat(data[i].Amount) * parseFloat(data[i].Quantity)) + "</td>"
+                          //+ "<td>" + "<input onkeyup='Synctax();' type='text' value='" + parseFloat(parseFloat(data[i].Tax1) + parseFloat(data[i].Tax2) + parseFloat(data[i].Tax3)) + "' /></td>"
+
+                          + "<td class='displaynone'>"
+                          + "<div class='row'>"
+
+                          + t1html
+
+                          //+ "<div class='col-sm-6'>"
+                          //+ "<p>(" + formatNumber(tax1paid) + ")</p>"
+                          //+ "</div>"
+
+                          + "</div>"
+
+                          + "<div class='row'>"
+
+                          + t2html
+
+                          //+ "<div class='col-sm-6'>"
+                          //+ "<p>(" + formatNumber(tax2paid) + ")</p>"
+                          //+ "</div>"
+
+                          + "</div>"
+
+                          + "<div class='row'>"
+
+                          + t3html
+
+                          //+ "<div class='col-sm-6'>"
+                          //+ "<p>(" + formatNumber(tax3paid) + ")</p>"
+                          //+ "</div>"
+
+                          + "</div>"
+
+
+                          + "</td>"
+
+
+                          + "<td class='rightposition selectable'>" + formatNumber(total) + "</td>"
+                          + "<td class='displaynone'>" + ddlproaccnt + "</td>"
+                          + "</tr>";
+
+                html += innerhtml;
+            }
+
+            var tottaxcolname = tax1name + ' ' + tax2name + ' ' + tax3name;
+
+
+
+            $('#tblInvoiceItems tbody').append(html);
+
+            $('#tblInvoiceItems thead tr').find('th:eq(10)').html(tottaxcolname);
+
+            //$('#tblInvoiceItems tbody tr').each(function () {
+            //    var ddl = $('#Ddl_ProjectAccount').clone().removeAttr('id');
+            //    var selectedval = $('#Ddl_ProjectAccount').val();
+            //    $(ddl).css('width', '150px');
+            //    $(ddl).val(selectedval);
+            //    $(this).find('td:eq(11)').html(ddl);
+            //});
+
+            SyncAll();
+
+            taxablecalc();
+
+        }
+
+
+        function getprojectaccounts(ProjectID) {
+            if (ProjectID == null || ProjectID == '' || ProjectID == undefined) {
+                return;
+            }
+          
+
+            //
+            // var ProjectID = $('#Hdn_ProjectID').val();
+            var html = '';
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getProjectAccount';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getProjectAccount';
+            }
+            url += "?ProjectID=" + ProjectID;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                success: function (data) {
+                    if (data.trim() != '') {
+                        html += data;
+                    }
+                    else {
+                        html = '<option value="0">--No Project Account--</option>';
+                    }
+
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+            return html;
+        }
+
+        function CalculateTaxes(val, type, total) {
+            var t = 0;
+            if (type == '%') {
+                t = total * val / 100;
+            }
+            else {
+                t = val;
+            }
+            ////console.log(t);
+            return isNaN(t) ? 0 : t;
+
+        }
+        function calculatepercent(obj) {
+           
+
+            if ($(obj).val() > 100) {
+                $(obj).val('100');
+            }
+
+            $('#tblInvoiceItems tbody').find('tr').each(function () {
+
+                
+
+                var rw = $(this);
+
+                var p = replaceAll($(rw).find('td:eq(1) input').val().replace(',', ''));
+
+                var qty = replaceAll($(rw).find('td:eq(7) input').val());
+
+                var cost = replaceAll($(rw).find('td:eq(8) input').val(), ',', '');//8 -
+
+              
+
+                ////console.log(cost +  "*" +  qty + "*" + p );
+                var tot = replaceAll($(rw).attr('data-total'), ',', '');
+                var vl = cost * qty * p / 100;
+
+
+                
+                var total = replaceAll($(this).attr('data-total'),',','');
+                
+                //console.log("vl" + vl);
+
+                var TaxVal = '';
+                var Taxtype = '';
+
+                var tottax1 = 0;
+                TaxVal = $(this).attr('data-Tax1Val');
+                Taxtype = $(this).attr('data-Tax1type');
+
+                tottax1 = CalculateTaxes(TaxVal, Taxtype, vl);
+
+                var tottax2 = 0;
+                TaxVal = $(this).attr('data-Tax2Val');
+                Taxtype = $(this).attr('data-Tax2type');
+
+                tottax2 = CalculateTaxes(TaxVal, Taxtype, vl);
+
+
+                var tottax3 = 0;
+                TaxVal = $(this).attr('data-Tax3Val');
+                Taxtype = $(this).attr('data-Tax3type');
+
+                tottax3 = CalculateTaxes(TaxVal, Taxtype, vl);
+
+
+                //vl += parseFloat(tottax1) + parseFloat(tottax2) + parseFloat(tottax3);
+                var Fxrate = $('#exchngrate').val();
+
+
+                $(this).find('td:eq(11)').html(isNaN(vl) ? 0 : formatNumber(vl));
+                $(this).find('td:eq(10)').find('input:eq(0)').val(formatNumber(tottax1));
+                $(this).find('td:eq(10)').find('input:eq(1)').val(formatNumber(tottax2));
+                $(this).find('td:eq(10)').find('input:eq(2)').val(formatNumber(tottax3));
+
+            });
+
+            if (!isloaded) {
+                isloaded = true;
+                return;
+            }
+
+            if ($('#tblInvoiceItems tbody').find('tr').eq(0).find('td').length > 1) {
+                $('#tblInvoiceItems tbody').find('tr').each(function () {
+
+                    var rw = $(this);
+                    var p = $(rw).find('td:eq(1) input').val().replace(',', '');
+                    var qty = $(rw).find('td:eq(7) input').val().replace(',', '');
+                    var cost = replaceAll($(rw).find('td:eq(8) input').val(), ',', '');
+                    var tot = replaceAll($(rw).attr('data-total'), ',', '');
+                    var vl = cost * qty * p / 100;
+                    vl = GetExchangeConversion(vl);
+
+                    var total = replaceAll($(this).attr('data-total'), ',', '');
+                    var TaxVal = '';
+                    var Taxtype = '';
+                    var tottax1 = 0;
+                    TaxVal = $(this).attr('data-Tax1Val');
+                    Taxtype = $(this).attr('data-Tax1type');
+                    tottax1 = CalculateTaxes(TaxVal, Taxtype, vl);
+
+                    var tottax2 = 0;
+                    TaxVal = $(this).attr('data-Tax2Val');
+                    Taxtype = $(this).attr('data-Tax2type');
+                    tottax2 = CalculateTaxes(TaxVal, Taxtype, vl);
+
+                    var tottax3 = 0;
+                    TaxVal = $(this).attr('data-Tax3Val');
+                    Taxtype = $(this).attr('data-Tax3type');
+                    tottax3 = CalculateTaxes(TaxVal, Taxtype, vl);
+                    $(this).find('td:eq(11)').html(isNaN(vl) ? 0 : formatNumber(vl));
+                    $(this).find('td:eq(10)').find('input:eq(0)').val(formatNumber(tottax1));
+                    $(this).find('td:eq(10)').find('input:eq(1)').val(formatNumber(tottax2));
+                    $(this).find('td:eq(10)').find('input:eq(2)').val(formatNumber(tottax3));
+
+                });
+            }
+
+
+            SyncAll();
+
+
+        }
+
+
+        function Synctax() {
+
+
+            $('#tblInvoiceItems tbody').find('tr').each(function () {
+
+
+                var p = $(this).find('td:eq(1)').find('input').val();
+                var total = replaceAll($(this).attr('data-total'),',','');
+                var vl = parseFloat(total) * parseFloat(p) / 100;
+
+                var TaxVal = '';
+                var Taxtype = '';
+
+                var tottax1 = 0;
+                TaxVal = $(this).find('td:eq(10)').find('input:eq(0)').val();
+                Taxtype = $(this).attr('data-Tax1type');
+
+                tottax1 = isNaN(parseFloat(TaxVal)) ? 0 : TaxVal;//CalculateTaxes(TaxVal, Taxtype, vl);
+
+
+                var tottax2 = 0;
+                TaxVal = $(this).find('td:eq(10)').find('input:eq(1)').val();
+                Taxtype = $(this).attr('data-Tax2type');
+
+                tottax2 = isNaN(parseFloat(TaxVal)) ? 0 : TaxVal;//CalculateTaxes(TaxVal, Taxtype, vl);
+
+
+                var tottax3 = 0;
+                TaxVal = $(this).find('td:eq(10)').find('input:eq(2)').val();
+                Taxtype = $(this).attr('data-Tax3type');
+
+                tottax3 = isNaN(parseFloat(TaxVal)) ? 0 : TaxVal;//CalculateTaxes(TaxVal, Taxtype, vl);
+
+                ////console.log(parseFloat(tottax1) + ">>>" +  parseFloat(tottax2) + ">>>" + parseFloat(tottax3));
+
+                vl += parseFloat(tottax1) + parseFloat(tottax2) + parseFloat(tottax3);
+
+
+                $(this).find('td:eq(10)').html(isNaN(vl) ? 0 : formatNumber(vl));
+
+
+            });
+            console.log("11111111111111111111111111");
+            CalculateOtherFields();
+        }
+        function SyncAll() {
+            if ($('#tblPOItemSelector tbody').find('tr').eq(0).find('td').length > 1) {
+
+                $('#tblPOItemSelector tbody tr').each(function () {
+
+                    var invoicedamount = 0;
+                    var totamnt = replaceAll($(this).find("td:eq(11)").html(), ',', '');
+                    var poitemid = replaceAll($(this).find("td:eq(0)").html(), ',', '');
+
+
+
+                    $('#tblInvoiceItems tbody').find('tr').each(function () {
+                        if ($(this).attr('data-rowid') == poitemid) {
+                            var p = $(this).find('td:eq(1)').find('input').val().replace(',', '');
+                            p = isNaN(parseFloat(p)) ? 0 : parseFloat(p);
+                            var total = replaceAll($(this).attr('data-total'), ',', '');
+                            var vl = parseFloat(total) * parseFloat(p) / 100;
+                            invoicedamount += vl;
+                        }
+                    });
+
+
+
+                    $(this).find("td:eq(9) input").val(parseFloat(replaceAll(totamnt, ',', '')) - parseFloat(invoicedamount));
+
+
+
+
+                });
+
+                console.log("222222222222222222222222");
+
+                CalculateOtherFields();
+            }
+
+        }
+
+
+
+
+
+        function QtySet(obj) {
+
+            $('#tblInvoiceItems tbody').find('tr').each(function () {
+
+
+
+                var rw = $(this);
+
+                var p = $(rw).find('td:eq(1) input').val().replace(',', '');
+
+                var qty = $(rw).find('td:eq(7) input').val().replace(',', '');
+
+                var cost = replaceAll($(rw).find('td:eq(8) input').val(), ',', '');//8 -
+
+
+
+                ////console.log(cost +  "*" +  qty + "*" + p );
+                var tot = replaceAll($(rw).attr('data-total'), ',', '');
+                var vl = cost * qty * p / 100;
+
+
+
+                var total = replaceAll($(this).attr('data-total'), ',', '');
+
+                //console.log("vl" + vl);
+
+                var TaxVal = '';
+                var Taxtype = '';
+
+                var tottax1 = 0;
+                TaxVal = $(this).attr('data-Tax1Val');
+                Taxtype = $(this).attr('data-Tax1type');
+
+                tottax1 = CalculateTaxes(TaxVal, Taxtype, vl);
+
+                var tottax2 = 0;
+                TaxVal = $(this).attr('data-Tax2Val');
+                Taxtype = $(this).attr('data-Tax2type');
+
+                tottax2 = CalculateTaxes(TaxVal, Taxtype, vl);
+
+
+                var tottax3 = 0;
+                TaxVal = $(this).attr('data-Tax3Val');
+                Taxtype = $(this).attr('data-Tax3type');
+
+                tottax3 = CalculateTaxes(TaxVal, Taxtype, vl);
+
+
+                //vl += parseFloat(tottax1) + parseFloat(tottax2) + parseFloat(tottax3);
+
+                var Fxrate = $('#exchngrate').val();
+
+                $(this).find('td:eq(11)').html(isNaN(vl) ? 0 : formatNumber(vl));
+                $(this).find('td:eq(10)').find('input:eq(0)').val(formatNumber(tottax1));
+                $(this).find('td:eq(10)').find('input:eq(1)').val(formatNumber(tottax2));
+                $(this).find('td:eq(10)').find('input:eq(2)').val(formatNumber(tottax3));
+
+            });
+
+
+            SyncAll();
+        }
+
+
+
+        function SyncLowerTable(obj) {
+
+            $('#tblInvoiceItems tbody tr').each(function () {
+
+                // $(this).find('td:eq(7)').find('input').val().greenify(',', '');
+
+                var qty = isNaN(parseFloat(replaceAll($(this).find('td:eq(7)').find('input').val(), ',', ''))) ? 0 : parseFloat(replaceAll($(this).find('td:eq(7)').find('input').val().replace(',', ''),',',''));
+
+                //console.log("qty   :" + parseFloat($(this).find('td:eq(7)').find('input').val()));
+                var rw = $(this);
+
+                var p = replaceAll($(rw).find('td:eq(1) input').val().replace(',', ''),',','');
+                var cost = replaceAll($(rw).find('td:eq(8) input').val().replace(',', ''),',','');//8 - 
+                var t1 = replaceAll($(rw).find('td:eq(10) input:eq(0)').val().replace(',', ''), ',', '');
+                var t2 = replaceAll($(rw).find('td:eq(10) input:eq(1)').val().replace(',', ''), ',', '');
+                var t3 = replaceAll($(rw).find('td:eq(10) input:eq(2)').val().replace(',', ''), ',', '');
+
+                //console.log(cost +  "*" +  qty + "*" + p );
+                var tot = replaceAll($(rw).attr('data-total').replace(',', ''), ',', '');
+                var vl = cost * qty * p / 100;
+
+                //if (parseFloat(tot) < parseFloat(vl))
+                //{
+                //    notify('Amount exceeds remaining.');
+                //}
+
+                //console.log("VL   :::" + vl);
+
+                var tottax = parseFloat(t1) + parseFloat(t2) + parseFloat(t3);
+                vl += isNaN(tottax) ? 0 : tottax;
+                vl = parseFloat(vl).toFixed(2);
+
+               // $(rw).find('td:eq(11)').html(vl);
+
+            });
+
+
+            SyncAll();
+        }
+
+        function taxablecalc() {
+
+            $('#tblInvoiceItems tbody').find('tr').each(function () {
+
+                var tr = $(this).find('td:eq(10)');
+
+                var tb1 = $(tr).find('input:eq(0)');
+                var tb2 = $(tr).find('input:eq(1)');
+                var tb3 = $(tr).find('input:eq(2)');
+
+
+                var cnt = 3;
+
+                if ($(tb1).hasClass('displaynone')) {
+                    cnt--;
+                }
+                else {
+                    if ($(tr).find('.txremove1').length == 0) {
+
+                        $(tb1).after('<i  onclick="removeaddtaxfield(this,\'R\');" style="color:red;float:left;" class="txremove1 mrg5L mrg10T fa fa-times"></i>');
+                    }
+                }
+
+                if ($(tb2).hasClass('displaynone')) {
+                    cnt--;
+                }
+
+                else {
+                    if ($(tr).find('.txremove2').length == 0) {
+                        $(tb2).after('<i  onclick="removeaddtaxfield(this,\'R\');" style="color:red;float:left;" class="txremove2 mrg5L mrg10T fa fa-times"></i>');
+                    }
+                }
+
+                if ($(tb3).hasClass('displaynone')) {
+                    cnt--;
+                }
+                else {
+                    if ($(tr).find('.txremove3').length == 0) {
+                        $(tb3).after('<i  onclick="removeaddtaxfield(this,\'R\');" style="color:red;float:left;" class="txremove3 mrg5L mrg10T fa fa-times"></i>');
+                    }
+                }
+
+
+
+                if (cnt != 3) {
+                    if ($(tr).find('.newaddtax').length == 0) {
+                        $(tr).append('<i class="mrg5T newaddtax fa fa-plus-square" style="color:#7792A8;float:left;" onclick="removeaddtaxfield(this,\'A\');"></i>');
+                    }
+                }
+                else {
+                    $(tr).find('.newaddtax').remove();
+                }
+
+            });
+
+        }
+
+        function removeaddtaxfield(obj, mode) {
+            if (mode == 'R') {
+                $(obj).prev('input').addClass('displaynone');
+                $(obj).prev('input').val("0.00");
+                $(obj).remove();
+            }
+            else {
+
+                var tr = $(obj).parent();
+
+                var tb1 = $(tr).find('input:eq(0)');
+                var tb2 = $(tr).find('input:eq(1)');
+                var tb3 = $(tr).find('input:eq(2)');
+
+                if ($(tb1).hasClass('displaynone')) {
+                    $(tb1).val('0.00');
+                    $(tb1).removeClass('displaynone');
+
+                }
+                else if ($(tb2).hasClass('displaynone')) {
+                    $(tb2).val('0.00');
+                    $(tb2).removeClass('displaynone');
+
+                }
+                else if ($(tb2).hasClass('displaynone')) {
+                    $(tb2).val('0.00');
+                    $(tb2).removeClass('displaynone');
+
+                }
+                else if ($(tb3).hasClass('displaynone')) {
+                    $(tb3).val('0.00');
+                    $(tb3).removeClass('displaynone');
+
+                }
+
+
+
+
+            }
+            taxablecalc();
+            SyncLowerTable();
+            SyncAll();
+
+        }
+
+
+        function SaveInvoice() {
+
+           
+            var goAhead = true;
+            var ttmp = 1;
+            $('#tblInvoiceItems tbody tr').each(function () {
+                var ProjectAccount = $(this).find('td').eq(12).find('select').val();
+                if (ProjectAccount == "0") {
+                    notify("Row number " + ttmp + " Does not have any Project account associated.");
+                    goAhead = false;
+                    return;
+                }
+                ttmp++;
+            }
+            );
+
+
+            if (!goAhead) {
+                return;
+            }
+
+
+
+
+            var vendorid = $('#hdn_vendorid').val();
+            var POID = $('#hdn_poid').val();
+
+            var tmp = true;
+            var i = 0;
+            var probrow = 0;
+
+            $('#tblInvoiceItems tbody tr').each(function () {
+
+                var total = replaceAll($(this).attr('data-remaining').replace(',', ''), ',', '');
+
+
+
+                var t1 = 0;
+                var t2 = 0;
+                var t3 = 0;
+
+                t1 = replaceAll($(this).find('td:eq(10)').find('input:eq(0)').val().replace(',', ''), ',', '');
+                t2 = replaceAll($(this).find('td:eq(10)').find('input:eq(1)').val().replace(',', ''), ',', '');
+                t3 = replaceAll($(this).find('td:eq(10)').find('input:eq(2)').val().replace(',', ''), ',', '');
+
+                t1 = isNaN(parseFloat(t1)) ? 0 : parseFloat(t1);
+                t2 = isNaN(parseFloat(t2)) ? 0 : parseFloat(t2);
+                t3 = isNaN(parseFloat(t3)) ? 0 : parseFloat(t3);
+
+                var vl = replaceAll($(this).find('td:eq(11)').html().replace(',', ''), ',', '');
+                vl = isNaN(parseFloat(vl)) ? 0 : parseFloat(vl);
+
+
+                var tottax = parseFloat(t1) + parseFloat(t2) + parseFloat(t3);
+
+
+
+                vl -= parseFloat(tottax);//.replace(',', '')
+
+
+
+                i++;
+
+                total = parseFloat(total).toFixed(2);
+                vl = parseFloat(vl).toFixed(2);
+
+                if (parseFloat(vl) > parseFloat(total)) {
+
+                    if (probrow == "0") {
+                        probrow = i;
+                    }
+
+
+
+                    tmp = false;
+                    return;
+                }
+
+
+            });
+
+
+            if (probrow != "0") {
+                notify('Row number ' + (probrow) + ' is exceeding total remaining value.');
+            }
+
+
+            if (!tmp) {
+                return;
+            }
+
+            if ($('#Ddl_Vendors').val() == null) {
+
+                notify('Please Select Vendors.');
+                return;
+            }
+            if ($('#Hdn_ProjectID').val() == '0') {
+
+                notify('Please Select POs.');
+                return;
+
+            }
+
+
+            if ($('#tblInvoiceItems tbody tr').length < 1) {
+                notify('Please Add items in Invoice first');
+                return;
+            }
+
+
+            var InvoiceID = '';
+            if ($('#txt_InvoiceDate').val().trim() == '') {
+                errorfunc('txt_InvoiceDate', 'Please insert Invoice Date.');
+                return;
+            }
+            var InvoiceDate = $('#txt_InvoiceDate').val();
+            if ($('#txt_Terms').val().trim() == '' || $('#txt_Terms').val().trim() == '0') {
+                errorfunc('txt_Terms', 'Please Select Terms.');
+                return;
+            }
+            var Terms = $('#txt_Terms').val();
+            //if ($('#Ddl_ProjectAccount').val().trim() == '0') {
+            //    errorfunc('Ddl_ProjectAccount', 'Please Select Project Account.');
+            //    return;
+            //}
+           
+
+            var ProjectAccount = $('#Ddl_ProjectAccount').val();
+            if ($('#Ddl_ProjectAccount').val().trim() == '0') {
+                errorfunc('Ddl_ProjectAccount', 'Please Select Project Account.');
+                return;
+            }
+
+
+
+
+
+            if ($('#txt_InvoiceNumber').val().trim() == '') {
+                errorfunc('txt_InvoiceNumber', 'Please enter Invoice Number.');
+                return;
+            }
+            var InvoiceNumber = $('#txt_InvoiceNumber').val();
+
+            if ($('#txt_TotalInvoiceAmount').val().replace(',', '').trim() == '0' || $('#txt_TotalInvoiceAmount').val().replace(',', '').trim() == '') {
+                errorfunc('txt_TotalInvoiceAmount', 'Please enter Total Invoice Amount.');
+                return;
+            }
+            var TotalInvoiceAmount = replaceAll($('#txt_TotalInvoiceAmount').val().replace(',', ''),',','');
+
+            if ($('#txt_InvoiceMemo').val().trim() == '0') {
+                errorfunc('txt_InvoiceMemo', 'Please enter Invoice Memo.');
+                return;
+            }
+            var InvoiceMemo = $('#txt_InvoiceMemo').val();
+
+            var SubtotalInvoice = replaceAll($('#txt_SubtotalInvoice').val().replace(',', ''),',','');
+
+            //console.log(TotalInvoiceAmount + ">>>" + SubtotalInvoice)
+           
+
+
+
+            var TotalTax1 = replaceAll($('#txt_TotalTax1').val(),',','');
+            var TotalTax2 = replaceAll($('#txt_TotalTax2').val(),',','');
+            var TotalTax3 = replaceAll($('#txt_TotalTax3').val(),',','');
+
+
+            var TotalInvoice = replaceAll($('#txt_SubtotalInvoice').val(), ',', '');
+
+            if (parseFloat(TotalInvoiceAmount) != parseFloat(TotalInvoice)) {
+                errorfunc('txt_TotalInvoiceAmount', 'Invoice totals does not match.');
+                notify('Invoice total does not match with each other.');
+                return;
+
+            }
+
+
+
+            var Exrate =replaceAll($('#exchngrate').val(),',','');
+
+            //var url5 = '';
+            //if (LOCALORSERVERNEW == 'LOCAL') {
+            //    url5 = '/Invoice/checkInvoiceName';
+            //}
+            //else if (LOCALORSERVERNEW == 'SERVER') {
+            //    url5 = 'Invoice/checkInvoiceName';
+            //}
+
+            //$.ajax({
+            //    type: "POST",
+            //    url: url5,
+            //    data: { 'ProjectID': $("#ddl_project").val(), 'InvoiceName': $("#txt_InvoiceNumber").val() },
+            //    async: false,
+            //    success: function (data) {
+            //        if (data != "0") {
+            //            notify('Invoice Name Exists!!');
+            //            return;
+            //        }
+            //    },
+            //    error: function () { notify('Something went wrong'); }
+            //});
+
+
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/SaveInvoice';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/SaveInvoice';
+            }
+
+            url += "?InvoiceDate=" + InvoiceDate;
+            url += "&Terms=" + Terms;
+            url += "&ProjectAccount=" + ProjectAccount;
+            url += "&InvoiceNumber=" + InvoiceNumber;
+            url += "&TotalInvoiceAmount=" + TotalInvoiceAmount.replace(',', '');
+            url += "&InvoiceMemo=" + InvoiceMemo;
+            url += "&SubtotalInvoice=" + SubtotalInvoice.replace(',', '');
+            url += "&TotalTax1=" + TotalTax1;
+            url += "&TotalTax2=" + TotalTax2;
+            url += "&TotalTax3=" + TotalTax3;
+            url += "&TotalInvoice=" + TotalInvoice.replace(',', '');
+            url += "&VendorId=" + vendorid;
+            url += "&POID=" + POID;
+            url += "&Exrate=" + Exrate;
+            url += "&ProjectID=" + $("#ddl_project").val();
+
+
+            $('#btn_Save').removeAttr('onclick');
+            $('#btn_Save').find('i').removeClass('fa-save').addClass("fa-spinner fa-spin");
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                async: false,
+                success: function (data) {
+                    InvoiceID = data;
+
+
+
+
+                    if (InvoiceID == "0") {
+                        notify("Duplicate Invoice Number");
+                        $('#btn_Save').attr('onclick', 'SaveInvoice();');
+                        $('#btn_Save').find('i').removeClass('fa-spinner fa-spin').addClass("fa-save");
+                        return;
+                    }
+
+                    $('#tblInvoiceItems tbody tr').each(function () {
+
+
+
+                        var tmp = 1;
+
+                        var Percentage = $(this).find('td').eq(tmp + 0).find('.percentclass').val().replace(',', '');
+                        Percentage = isNaN(parseFloat(Percentage)) ? 0 : parseFloat(Percentage);
+
+                        var PONumber = $(this).find('td').eq(tmp + 1).text();
+                        var ItemNumber = $(this).find('td').eq(tmp + 2).text();
+                        var Spec = $(this).find('td').eq(tmp + 3).text();
+                        var Description = $(this).find('td').eq(tmp + 4).html();//find('input[type="text"]').val();
+                        var Note = $(this).find('td').eq(tmp + 5).find('input[type="text"]').val();
+                        var Qty = $(this).find('td').eq(tmp + 6).find('input[type="text"]').val().replace(',', '');
+                        Qty = isNaN(parseFloat(Qty)) ? 0 : parseFloat(Qty);
+
+
+                        var Amount = $(this).find('td').eq(tmp + 7).find('input').val().replace(',', '');
+                        Amount = isNaN(parseFloat(Amount)) ? 0 : parseFloat(Amount);
+
+                        //var Taxes = $(this).find('td').eq(tmp + 8).find('input[type="text"]').val();
+
+
+                        tmp = 2;
+
+                        var Tax1 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(0).val().replace(',', '');
+                        Tax1 = isNaN(parseFloat(Tax1)) ? 0 : parseFloat(Tax1);
+
+                        var Tax2 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(1).val().replace(',', '');
+                        Tax2 = isNaN(parseFloat(Tax2)) ? 0 : parseFloat(Tax2);
+
+
+                        var Tax3 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(2).val().replace(',', '');
+                        Tax3 = isNaN(parseFloat(Tax3)) ? 0 : parseFloat(Tax3);
+
+
+                        var Taxes = parseFloat(Tax1) + parseFloat(Tax2) + parseFloat(Tax3);
+
+                        Taxes = parseFloat(Taxes).toFixed(2);
+
+                        var LineItemTotal = $(this).find('td').eq(tmp + 9).text().replace(',', '');
+                        var ProjectAccount = $(this).find('td').eq(tmp + 10).find('select').val();
+                        var PurchaseOrderID = '';
+                        var POLineItemID = $(this).attr('data-rowid');
+
+                        // alert(Percentage + '^' + PONumber + '^' + ItemNumber + '^' + Spec + '^' + Description + '^' + Note + '^' + Qty + '^' + Amount + '^' + Taxes + '^' + LineItemTotal + '^' + ProjectAccount);
+
+                        var itemObj = new Object();
+                        //itemObj += '"Percentage":' + Percentage + ',';
+                        //url += "?Percentage=" + Percentage;
+                        itemObj.Percentage = Percentage;
+
+                        //url += "&PONumber=" + PONumber;
+                        itemObj.PONumber = PONumber;
+
+                        //url += "&ItemNumber=" + ItemNumber;
+                        itemObj.ItemNumber = ItemNumber;
+
+                        //url += "&Spec=" + Spec;
+                        itemObj.Spec = Spec;
+
+                        //url += "&Description=" + Description;
+                        itemObj.Description = Description;
+
+                        //url += "&Note=" + Note;
+                        itemObj.Note = (Note == '' ? "" : Note);
+
+                        //url += "&Qty=" + Qty;
+                        itemObj.Qty = Qty;
+
+                        //url += "&Amount=" + Amount;
+                        itemObj.Amount = Amount;
+
+                        //url += "&Taxes=" + Taxes;
+                        itemObj.Taxes = Taxes;
+
+                        //url += "&LineItemTotal=" + LineItemTotal;
+                        itemObj.LineItemTotal = LineItemTotal;
+
+                        //url += "&ProjectAccount=" + ProjectAccount;
+                        itemObj.ProjectAccount = ProjectAccount;
+
+                        //url += "&InvoiceID=" + InvoiceID;
+                        itemObj.InvoiceID = InvoiceID;
+
+                        //url += "&PurchaseOrderID=" + PurchaseOrderID;
+                        itemObj.PurchaseOrderID = (PurchaseOrderID == '' ? "" : PurchaseOrderID);
+
+                        //url += "&POLineItemID=" + POLineItemID;
+                        itemObj.POLineItemID = POLineItemID;
+
+                        //url += "&Tax1=" + Tax1;
+                        itemObj.Tax1 = Tax1;
+
+                        //url += "&Tax2=" + Tax2;
+                        itemObj.Tax2 = Tax2;
+
+                        //url += "&Tax3=" + Tax3;
+                        itemObj.Tax3 = Tax3;
+
+                        InvoiceItems.push(itemObj);
+
+                        //var url = '';
+                        //if (LOCALORSERVERNEW == 'LOCAL') {
+                        //    url = '/Invoice/SaveInvoiceItems';
+                        //}
+                        //else if (LOCALORSERVERNEW == 'SERVER') {
+                        //    url = 'Invoice/SaveInvoiceItems';
+                        //}
+
+                        //url += "?Percentage=" + Percentage;
+                        //url += "&PONumber=" + PONumber;
+                        //url += "&ItemNumber=" + ItemNumber;
+                        //url += "&Spec=" + Spec;
+                        //url += "&Description=" + Description;
+                        //url += "&Note=" + Note;
+                        //url += "&Qty=" + Qty;
+                        //url += "&Amount=" + Amount;
+                        //url += "&Taxes=" + Taxes;
+                        //url += "&LineItemTotal=" + LineItemTotal;
+                        //url += "&ProjectAccount=" + ProjectAccount;
+                        //url += "&InvoiceID=" + InvoiceID;
+                        //url += "&PurchaseOrderID=" + PurchaseOrderID;
+                        //url += "&POLineItemID=" + POLineItemID;
+                        //url += "&Tax1=" + Tax1;
+                        //url += "&Tax2=" + Tax2;
+                        //url += "&Tax3=" + Tax3;
+
+                        return;
+
+
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = '/Invoice/SaveBulkInvoiceItems';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'Invoice/SaveBulkInvoiceItems';
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            datatype: "json",
+                            data: JSON.stringify(InvoiceItems),
+                            traditional: true,
+                            contentType: 'application/json',
+                            async: false,
+                            success: function (data) {
+                                irrrrr = 0;
+                                window.location.reload();
+                            },
+                            error: function () {
+                                notify('Something went wrong ');
+                            }
+                        });
+
+
+
+
+
+                    });
+
+
+
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+        }
+
+        function getProjectAccount1(ProjectID) {
+            //
+            // var ProjectID = $('#Hdn_ProjectID').val();
+          
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getProjectAccount';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getProjectAccount';
+            }
+            url += "?ProjectID=" + ProjectID;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                async: false,
+                success: function (data) {
+                    var html = '';//'<option value="0">--Select Project Account--</option>';
+                    html += data;
+                    $('#Ddl_ProjectAccount').html(html);
+
+
+                   
+
+
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+        }
+
+
+
+        function getProjectAccount(ProjectID) {
+            if (ProjectID == null || ProjectID == '' || ProjectID == undefined) {
+                return;
+            }
+            console.log('222222222');
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getProjectAccount';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getProjectAccount';
+            }
+            url += "?ProjectID=" + ProjectID;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                async: false,
+                success: function (data) {
+                    var html = '';//'<option value="0">--Select Project Account--</option>';
+                    html += data;
+                    $('#Ddl_ProjectAccount').html(html);
+
+
+                    var bankname = $('#Ddl_ProjectAccount option:selected').attr('data-accountname');
+                    getbalance(bankname);
+
+
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+        }
+
+
+        function SaveNewInvoice() {
+
+            if ($('#Ddl_Vendors').val() == null) {
+
+                notify('Please Select Vendors.');
+                return;
+            }
+            if ($('#Hdn_ProjectID').val() == '0') {
+
+                notify('Please Select POs.');
+                return;
+
+            }
+
+
+            if ($('#tblInvoiceItems tbody tr').length < 1) {
+                notify('Please Add items in Invoice first');
+                return;
+            }
+
+
+            var InvoiceID = '';
+            if ($('#txt_InvoiceDate').val().trim() == '') {
+                errorfunc('txt_InvoiceDate', 'Please insert Invoice Date.');
+                return;
+            }
+            var InvoiceDate = $('#txt_InvoiceDate').val();
+            if ($('#txt_Terms').val().trim() == '' || $('#txt_Terms').val().trim() == '0') {
+                errorfunc('txt_Terms', 'Please Select Terms.');
+                return;
+            }
+            var Terms = $('#txt_Terms').val();
+            
+            var ProjectAccount = $('#Ddl_ProjectAccount').val();
+            if ($('#Ddl_ProjectAccount').val().trim() == '0') {
+                errorfunc('Ddl_ProjectAccount', 'Please Select Project Account.');
+                return;
+            }
+
+
+
+            if ($('#txt_InvoiceNumber').val().trim() == '') {
+                errorfunc('txt_InvoiceNumber', 'Please enter Invoice Number.');
+                return;
+            }
+            var InvoiceNumber = $('#txt_InvoiceNumber').val();
+
+            if ($('#txt_TotalInvoiceAmount').val().replace(',', '').trim() == '0') {
+                errorfunc('txt_TotalInvoiceAmount', 'Please enter Total Invoice Amount.');
+                return;
+            }
+            var TotalInvoiceAmount = $('#txt_TotalInvoiceAmount').val().replace(',', '');
+
+            if ($('#txt_InvoiceMemo').val().trim() == '0') {
+                errorfunc('txt_InvoiceMemo', 'Please enter Invoice Memo.');
+                return;
+            }
+            var InvoiceMemo = $('#txt_InvoiceMemo').val();
+
+            var SubtotalInvoice = $('#txt_SubtotalInvoice').val();
+
+            if (parseFloat(TotalInvoiceAmount) != parseFloat(SubtotalInvoice)) {
+                errorfunc('txt_TotalInvoiceAmount', 'Invoice total does not match Sub total Invoice.');
+                notify('Invoice total does not match Sub total Invoice.');
+                return;
+
+            }
+
+            var TotalTax1 = $('#txt_TotalTax1').val();
+            var TotalTax2 = $('#txt_TotalTax2').val();
+            var TotalTax3 = $('#txt_TotalTax3').val();
+
+
+            var TotalInvoice = $('#txt_TotalInvoice').val();
+
+            // alert(InvoiceDate + '^' + Terms + '^' + ProjectAccount + '^' + InvoiceNumber + '^' + TotalInvoiceAmount + '^' + InvoiceMemo + '^' + SubtotalInvoice + '^' + TotalTax1 + '^' + TotalTax2 + '^' + TotalTax3 + '^' + TotalInvoice);
+
+
+            if (parseFloat(TotalInvoice.replace(',', '')) != parseFloat(TotalInvoiceAmount.replace(',', ''))) {
+                errorfunc('txt_TotalInvoiceAmount', '');
+                notify('The Total Invoice Amount should be same as the calculated Invoice Amount, revise the PO to reflect this change.');
+                return;
+
+            }
+
+
+
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/SaveInvoice';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/SaveInvoice';
+            }
+
+            url += "?InvoiceDate=" + InvoiceDate;
+            url += "&Terms=" + Terms;
+            url += "&ProjectAccount=" + ProjectAccount;
+            url += "&InvoiceNumber=" + InvoiceNumber;
+            url += "&TotalInvoiceAmount=" + TotalInvoiceAmount.replace(',', '');
+            url += "&InvoiceMemo=" + InvoiceMemo;
+            url += "&SubtotalInvoice=" + SubtotalInvoice;
+            url += "&TotalTax1=" + TotalTax1;
+            url += "&TotalTax2=" + TotalTax2;
+            url += "&TotalTax3=" + TotalTax3;
+            url += "&TotalInvoice=" + TotalInvoice;
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                async: false,
+                success: function (data) {
+                    InvoiceID = data;
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+
+
+            $('#tblInvoiceItems tbody tr').each(function () {
+
+
+
+                var tmp = 1;
+
+                var Percentage = $(this).find('td').eq(tmp + 0).find('.percentclass').val();
+                var PONumber = $(this).find('td').eq(tmp + 1).text();
+                var ItemNumber = $(this).find('td').eq(tmp + 2).text();
+                var Spec = $(this).find('td').eq(tmp + 3).text();
+                var Description = $(this).find('td').eq(tmp + 4).find('input[type="text"]').val();
+                var Note = $(this).find('td').eq(tmp + 5).find('input[type="text"]').val();
+                var Qty = $(this).find('td').eq(tmp + 6).find('input[type="text"]').val();
+                var Amount = $(this).find('td').eq(tmp + 7).find('input').val().replace(',', '');
+                //var Taxes = $(this).find('td').eq(tmp + 8).find('input[type="text"]').val();
+
+                var Tax1 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(0).val();
+                var Tax2 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(1).val();
+                var Tax3 = $(this).find('td').eq(tmp + 8).find('input[type="text"]').eq(2).val();
+
+                var Taxes = parseFloat(Tax1) + parseFloat(Tax2) + parseFloat(Tax3);
+
+
+                var LineItemTotal = $(this).find('td').eq(tmp + 9).text();
+                var ProjectAccount = $(this).find('td').eq(tmp + 10).find('select').val();
+                var PurchaseOrderID = '';
+                var POLineItemID = $(this).attr('data-rowid');
+
+                // alert(Percentage + '^' + PONumber + '^' + ItemNumber + '^' + Spec + '^' + Description + '^' + Note + '^' + Qty + '^' + Amount + '^' + Taxes + '^' + LineItemTotal + '^' + ProjectAccount);
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/SaveInvoiceItems';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/SaveInvoiceItems';
+                }
+
+                url += "?Percentage=" + Percentage;
+                url += "&PONumber=" + PONumber;
+                url += "&ItemNumber=" + ItemNumber;
+                url += "&Spec=" + Spec;
+                url += "&Description=" + Description;
+                url += "&Note=" + Note;
+                url += "&Qty=" + Qty;
+                url += "&Amount=" + Amount;
+                url += "&Taxes=" + Taxes;
+                url += "&LineItemTotal=" + LineItemTotal;
+                url += "&ProjectAccount=" + ProjectAccount;
+                url += "&InvoiceID=" + InvoiceID;
+                url += "&PurchaseOrderID=" + PurchaseOrderID;
+                url += "&POLineItemID=" + POLineItemID;
+                url += "&Tax1=" + Tax1;
+                url += "&Tax2=" + Tax2;
+                url += "&Tax3=" + Tax3;
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    datatype: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: "",
+                    success: function (data) {
+                        irrrrr = 0;
+                        window.location.reload();
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+
+
+
+
+            });
+
+        }
+
+        function CancelInvoice() {
+            irrrrr = 0;
+            window.location.reload();
+        }
+
+        function formatNumber(number) {
+            number = parseFloat(number);
+            var number = number.toFixed(2) + '';
+            var x = number.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return numberWithCommas(x1 + x2);
+        }
+
+        function numberWithCommas(x) {
+            var parts = x.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
+
+
+        function formatNumber4(number) {
+            number = parseFloat(number);
+            var number = number.toFixed(4) + '';
+            var x = number.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //$('#master_content').removeClass('displaynone');
+
+            $('#Ddl_ProjectAccount').change(function () {
+                var bankname = $(this).find('option:selected').attr('data-accountname');
+                getbalance(bankname);
+
+            });
+
+
+            PreventTwoDecimalPlace("#exchngrate", 5);
+
+
+            $("#ddl_project").multiselect({
+                maxTextWrapSize: 42,
+                multiple : false
+            }).multiselectfilter();
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            $('.ui-multiselect-menu').css('width', '84%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+
+
+            //alert(2);
+            ForToolTip();
+
+        });
+
+        function ForToolTip() {
+            $('.tooltip').mouseover(function () {
+
+                var obj = $(this);
+                $(obj).find("span").text('Loading .....');
+
+                var POID = $(this).attr('data-id');
+                //console.log('POID----' + POID);
+
+                if (POID == '0' || POID == '' || POID == 'undefined') {
+                    return;
+                }
+                else {
+
+                    var html = "";
+                    html += "<div class='user_panel_container'>"
+                    html += "<div>" + "<b>Total PO Value : </b>" + $('#Hdn_TotalPOValue').val() + "</div>";
+                    html += "<div>" + "<b>Total PO Taxes : </b>" + $('#Hdn_TotalPOTaxes').val() + "</div>";
+                    html += "</div>";
+                    $(obj).find("span").html(html);
+                }
+            })
+            .mouseout(function () {
+                //alert(2);
+                // $(this).find("span").text( "mouse out " );
+            });
+        }
+
+        function opentermspopup() {
+
+            $('#termspopup').modal('show');
+            setTimeout(function () {
+                $("#txtInvoiceTerms").focus();
+            },1000);
+           
+
+        }
+
+        function addnewterms() {
+
+            if ($("#txtInvoiceTerms").val() == '') {
+                errorfunc('txtInvoiceTerms', 'Invoice Terms cannot be empty.');
+                return false;
+            }
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/TermsManagement';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/TermsManagement';
+            }
+
+            var termsObj =
+                { ID: '', Term: $("#txtInvoiceTerms").val().trim(), Status: true, Mode: 'INSERTVENDORTERMS2' };
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: termsObj,
+                async: false,
+                success: function (data) {
+                    if (data == "EXISTS") {
+                        notify('Invoice term exists!!!', 'RED');
+                    }
+                    else {
+                        notify('Invoice term inserted successfully!!!', 'GREEN');
+                        var id = data.split('^')[1];
+
+                        var checked = $('#selectafterchecking').is(':checked');
+
+                        $('#txt_Terms').append('<option value="' + id + '" data-id="' + id + '">' + $("#txtInvoiceTerms").val().trim() + "</option>");
+                        if (checked) {
+                            $('#txt_Terms').val(id);
+                        }
+
+                        $('#txtInvoiceTerms').val('');
+                        $('#selectafterchecking').prop('checked', true);
+                    }
+                   
+                    $('#termspopup').modal('hide');
+
+                }
+            });
+
+
+           
+
+        }
+
+        function getInvoiceDetails(InvoiceNumber) {
+
+           
+            var POID = '';
+            var ProjectID = '';
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/GetInvoiceDetails';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/GetInvoiceDetails';
+            }
+
+            url += "?InvoiceNumberVendor=" + InvoiceNumber;
+            // url += "&PONumber=" + PONumber;           
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                async : false,
+                data: "",
+                success: function (data) {
+                    //Added By Subhabrata Mondal 3_11_2015
+                    data = JSON.parse(data);
+                    //console.log(data);
+
+                    if (data == null || data == '') {
+                        notify('Invoice Number not exists!');
+                        return;
+                    }
+                    //console.log(data.InvoiceNumberVendorOP);
+                    console.log(data);
+                    console.log("data>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+                    $('#txt_InvoiceNumber').val(data.InvoiceNumberVendorOP);
+                    $('#txt_InvoiceDate').val(data.InvoiceDate);
+                    
+                    $('#txt_InvoiceDate').datepickercustom({
+                        changeMonth: true,
+                        changeYear: true,
+                        //dateFormat: 'MM dd yy'
+                        dateFormat: 'yy/mm/dd'
+                        //,minDate: new Date(currentYear, currentMonth, currentDate)
+                    });
+                   // $('#txt_InvoiceDate').datepicker("setDate", date);
+
+                   
+
+                    $('#txt_TotalInvoiceAmount').val(formatNumber(data.InvoiceAmount));
+                    
+                    $('#exchngrate').val(formatNumber4(data.ExRate));
+                    var Fxrate = $('#exchngrate').val();
+                    $('#txt_InvoiceMemo').val(data.Memo);
+                    $('#txt_SubtotalInvoice').val(formatNumber(data.Subtotal));
+                    $('#txt_TotalTax1').val(data.Tax1);
+                    $('#txt_TotalTax2').val(data.Tax2);
+                    $('#txt_TotalTax3').val(data.Tax3);
+                    $('#txt_TotalInvoice').val(formatNumber(data.TotalInvoice));
+
+                    $('#Ddl_Vendors').val(data.VendorID);
+                    $('#Ddl_Vendors').multiselect('refresh');
+                    $('#Ddl_Vendors').multiselect('disable');
+
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url = '/Invoice/GetVendorAddress';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url = 'Invoice/GetVendorAddress';
+                    }
+                    url += "?vendorID=" + data.VendorID;
+                    $.get(url)
+                     .success(function (response) {
+                         $('#lblAddress').text(response.split('%%%')[0]);
+                         $('#lblLegal').text(response.split('%%%')[1]);
+                         $('#lblAddress').parent().attr('href', '/Vendor/EditVendor/' + data.VendorID);
+                     });
+
+                    vendorchanged(data.Project_ID, data.POID);
+
+                    $('#Ddl_ProjectAccount').val(data.ProjectAccount);
+
+                    var bankname = $('#Ddl_ProjectAccount option:selected').attr('data-accountname');
+                    getbalance(bankname);
+
+
+                    $('#txt_Terms').val(data.Terms);
+                    //select_Invoive_Details(InvoiceNumber);
+
+
+                    //POID = data.split('^')[0];
+                    //ProjectID = data.split('^')[1];
+
+
+                    //selectpoforfirst(POID, ProjectID);
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+
+
+        function vendorchanged(Project_ID, POID) {
+
+            var textcurr = $('#Ddl_Vendors option:selected').attr('data-currcode');
+           
+            $('#rateapi').prop('src', 'https://www.google.com/finance/converter?a=1&from=' + textcurr);
+
+            $('#currencysource').val(textcurr);
+
+            $('#gotoinvoices').show();
+
+            $('#POIdEdit').html('<a href="javascript:void(0);">PO # <span></span></a>');
+
+            var str = "" + $("#Ddl_Vendors").val();
+
+            var vendors = str.replace(/,/g, "^");
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getPOSelectorBasedOnVendoredit';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getPOSelectorBasedOnVendoredit';
+            }
+
+            url += "?VendorID=" + vendors;
+            url += "&Invoiceid=" + $('#Hdn_InvoiceNumber').val();
+           
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: {},
+                async: false,
+                success: function (response) {
+
+                    totdata = JSON.parse(response);
+                    totdata = totdata.data;
+
+
+                    // //console.log(totdata);
+                    if (totdata.length == 0) {
+
+
+                        var table = $('#tblPOSelector').DataTable();
+
+                        table
+                            .clear()
+                            .draw();
+
+
+                        return;
+                    };
+                    console.log(totdata);
+                    console.log('totdata');
+
+                    POSelector = [];
+
+                    var ii = 0;
+                    for (i = 0; i < totdata.length ; i++) {
+                        
+                        var chk = "<input type='checkbox' class='poselector_chk' />";
+                        //console.log(POID);
+                        for (var l = 0; l < POID.split('^').length; l++) {
+                            
+
+                            if (POID.split('^')[l] == totdata[i].POID) {
+                               chk = "<input type='checkbox' checked class='poselector_chk' />"
+                            }
+                        }
+                        var fxrate = $('#exchngrate').val();
+
+                        if (totdata[i].ProjectID == Project_ID) {
+                            var polink = "<a href='/Purchaseorder/POEdit/" + totdata[i].POID + "' target='_blank'>"
+                                             + totdata[i].TotalID + "</a>";
+
+                            POSelector[ii] = new Array();
+
+                            POSelector[ii][0] = totdata[i].POID;
+
+                            POSelector[ii][1] = chk;
+                            POSelector[ii][2] = polink;//totdata[i].TotalID;
+                            POSelector[ii][3] = totdata[i].CurrencyCode;
+                            POSelector[ii][4] = formatNumber(totdata[i].Total);
+                            POSelector[ii][5] = formatNumber(totdata[i].Remaining);
+
+                            POSelector[ii][7] = formatNumber(totdata[i].Tax);
+                            POSelector[ii][6] = totdata[i].Terms.substring(0, 20);
+                            POSelector[ii][8] = totdata[i].ProjectID;
+                            POSelector[ii][9] = totdata[i].Vendor_ID;
+
+                            POSelector[ii][10] = totdata[i].Remaining;
+                            POSelector[ii][11] = totdata[i].Total;
+                            ii++;
+                        }
+
+
+                    }
+
+
+                    $('#tblPOSelector').dataTable().fnDestroy();
+
+                    $('#tblPOSelector').dataTable({
+                        "processing": true,
+                        "destroy": true,
+                        "data": POSelector,
+                        "columns": [
+                                        { "title": "POID", "class": "displaynone" },
+                                        { "title": "", "class": "leftposition" },
+                                        { "title": "PO #", "class": "leftposition" },
+                                        { "title": "Curr", "class": "leftposition" },
+                                        { "title": "Amount", "class": "rightposition" },
+                                        { "title": "Remaining", "class": "rightposition" },
+                                        { "title": "Pymnt Sch.", "class": "leftposition displaynone" },
+                                        { "title": "Taxes", "class": "rightposition displaynone" }
+                                        , { "title": "ProjectID", "class": "displaynone" }
+                                        , { "title": "VendorId", "class": "displaynone" },
+                                        { "title": "RemainingDuplicate", "class": "displaynone" },
+                { "title": "AmountDuplicate", "class": "displaynone" }
+
+                        ],
+                        paging: false,
+                        "initComplete": function () {
+                            $('#tblPOSelector_filter').hide();
+
+                            AddtableTdTextAlign('#tblPOSelector', '4^5^7', 'right', false);
+
+                        },
+                        "order": [[2, "asc"]],
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [1] }
+                        ]
+                         , "order": [[2, "asc"]]
+                    });
+
+
+                    $('#tblPOSelector tbody tr').each(function () {
+                        $(this).find('td:eq(1) input').attr('onclick', 'selectpo(this);');
+                    });
+
+                   // getconvrateforproject();
+
+                   selectpo1();
+
+                }
+
+            });
+
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getprojectlistForEdit';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getprojectlistForEdit';
+            }
+
+            url += "?VendorID=" + vendors;
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                
+                contentType: "application/json; charset=utf-8",
+                data: {},
+                async: false,
+                success: function (response) {
+
+                    $('#ddl_project').html(response);
+                    $('#ddl_project').val(Project_ID);
+                    $("#ddl_project").multiselect('refresh');
+                    $("#ddl_project").multiselect('disable');
+                    //console.log("HAHAHAHAHAHA" + Project_ID);
+                   
+                    var t1 = $('#ddl_project option:selected').attr('data-tax1');
+                    var t2 = $('#ddl_project option:selected').attr('data-tax2');
+                    var t3 = $('#ddl_project option:selected').attr('data-tax3');
+
+                    t1 = t1 == '' ? 'Total Tax 1' : 'Total ' + t1;
+                    t2 = t2 == '' ? 'Total Tax 2' : 'Total ' + t2;
+                    t3 = t3 == '' ? 'Total Tax 3' : 'Total ' + t3;
+
+                    $('#tt1').text(t1);
+                    $('#tt2').text(t2);
+                    $('#tt3').text(t3);
+
+                    //$('#ddl_project').find('option:eq(0)').prop('selected', 'selected');
+
+                    getProjectAccount1($('#ddl_project').val());
+
+                    //setTimeout(function () {
+                    //    rebuildposelector();
+                    //}, 500)
+
+
+                }
+
+          });
+
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/gettermsforvendor';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/gettermsforvendor';
+            }
+
+            url += "?VendorID=" + vendors;
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+               
+                contentType: "application/json; charset=utf-8",
+                data: {},
+                async: false,
+                success: function (response) {
+
+                    $('#txt_Terms').val(response);
+
+                }
+            });
+
+            fetchfirst();
+
+
+
+        }
+
+
+
+
+        $(function () {
+            var paymentcount = $('#hdn_status').val().split('^')[1];
+            var subtotal = $('#hdn_status').val().split('^')[0];
+
+            if (subtotal == 0) {
+                $('#btn_void').remove();
+            }
+            if (paymentcount > 0) {
+                $('#btn_void').addClass('inactivenow').removeAttr('onclick');
+                $('#btn_delete').addClass('inactivenow').removeAttr('onclick');
+
+            }
+
+            getInvoiceDetails($('#Hdn_InvoiceNumber').val());
+
+        });
+
+        function voidinvoice() {
+
+            var c = confirm("Do you want to void this invoice?");
+            if (!c) {
+                return;
+            }
+            var invoiceid = $('#Hdn_InvoiceNumber').val();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/VoidInvoice';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = '/Invoice/VoidInvoice';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'invoiceid': '" + invoiceid + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                async: false,
+                success: function (data) {
+                    if (data == 'SUCCESS') {
+                        notify('Invoice voided successfully', 'green');
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 4000);
+                    }
+                }
+            });
+
+
+
+
+        }
+
+
+        function deleteinvoice() {
+            var c = confirm("Do you want to delete this invoice?");
+            if (!c) {
+                return;
+            }
+            var invoiceid = $('#Hdn_InvoiceNumber').val();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/deleteinvoice';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = '/Invoice/deleteinvoice';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'invoiceid': '" + invoiceid + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                async: false,
+                success: function (data) {
+                    if (data == 'SUCCESS') {
+                        notify('Invoice deleted successfully', 'green');
+                        setTimeout(function () {
+                            irrrrr = 0;
+                            var urld = '';
+                            if (LOCALORSERVERNEW == 'LOCAL') {
+                                urld = '/Invoice/invoicesearch';
+                            }
+                            else if (LOCALORSERVERNEW == 'SERVER') {
+                                urld = 'Invoice/invoicesearch';
+                            }
+                            
+
+                            window.location.href = urld;
+
+                        }, 4000);
+                    }
+                }
+            });
+
+
+
+
+        }
+
+
+
+
+
+    </script>
+
+
+
+</head>
+<body>
+
+    <input type="hidden" id="hdn_userid" value="@ViewBag.UserID" />
+
+    <div id="invexceedtotal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">INVOICE EDIT</h4>
+      </div>
+      <div class="modal-body" id="invexceedtotal_text">
+        <p>Some text in the modal.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-poms" onclick="UpdateInvoice2();">CONTINUE AND SAVE THE INVOICE</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+    <input type="hidden" id="Hdn_InvoiceNumber" value="@ViewBag.InvoiceNumber" />
+    <input type="hidden" id="hdn_status" value="@ViewData["PaymentStatus"]" />
+
+
+    <div id="termspopup" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add New Terms</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="col-sm-12">
+                      <label>Invoice Terms</label>
+                      <input type="text" id="txtInvoiceTerms" class="form-control" />
+
+                  </div>
+                    <div class="col-sm-4">
+                        <label>Select After Adding
+                        <input type="checkbox" checked id="selectafterchecking" />
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="addnewterms();">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <input type="hidden" id="Hdn_ProjectID" />
+
+    <input type="hidden" id="Hdn_TotalPOValue" />
+    <input type="hidden" id="Hdn_TotalPOTaxes" />
+
+    <div class="container-fluid" style="zoom: 0.95;" id="angulardiv">
+
+
+        <div class="row">
+            <div class="col-sm-6">
+
+
+                <div class="col-sm-12">
+                    <h3 class="section-header" style="margin-top: -20px; margin-bottom: 0px;">Vendor</h3>
+                </div>
+                <div class="col-sm-6">
+                    <div class="col-sm-12">
+                        <label>Vendor</label>
+                        <select onchange="ProjectNameAtLabel(this);" id="Ddl_Vendors" name="Vendors" class="form-control">
+                            @*onchange="GetDefaultBuyer(this);"*@
+                            @*<option value="0">--Select Vendors--</option>*@
+                            @Html.Raw(ViewData["AllParentVendor"])
+                        </select>
+                        <label id="lbl_ProjectName" class="displaynone">No vendor has been selected.</label>
+                    </div>
+
+                    <div class="col-sm-12 mrg10T">
+                        <label>Project</label>
+
+                        <select class="form-control " multiple="multiple" id="ddl_project" onchange="rebuildposelector();">
+                            <option>--Select Project---</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 pad15L pull-right">
+                    <div class="col-sm-12">
+                         <span id="lblLegal"></span>
+                        <a target="_blank">
+                            <textarea class="form-control mrg10T" id="lblAddress" rows="4" cols="35" disabled="disabled" style="resize: none; margin-top:0px; cursor: pointer;"></textarea>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-sm-6">
+
+
+
+                <div class="col-sm-12">
+                    <h3 class="section-header" style="margin-top: -20px; margin-bottom: 0px;">Invoice Data</h3>
+                </div>
+
+
+
+                <div class="col-sm-2">
+                    <label style="padding: 0px 0px;">Date</label>
+                    <input type="text" id="txt_InvoiceDate" class="form-control" />
+                </div>
+
+                <div class="col-sm-4">
+                    <label>Terms</label>
+                    <i class="fa fa-plus-square-o" style="float:right;margin-top:5px;cursor:pointer;" title="Add New Payment Terms" onclick="opentermspopup();" aria-hidden="true"></i>
+                    <select id="txt_Terms" class="form-control">
+                       
+                        @Html.Raw(ViewData["getAllTerms"])
+                    </select>
+                </div>
+
+                <div class="col-sm-3">
+                    <label>Number</label>
+                    <input type="text" id="txt_InvoiceNumber" class="form-control rightposition" />
+                </div>
+
+                <div class="col-sm-3">
+                    <label>Total Amt.</label>
+                    <input type="text" id="txt_TotalInvoiceAmount" class="floatonly form-control rightposition" />
+                </div>
+
+                <div class="col-sm-6">
+
+                    <label>Project Account</label>
+                    <span id="bnkbalance" style="float:right;"></span>
+                    @*<input type="text" id="txt_ProjectAccount" />*@
+                    <select id="Ddl_ProjectAccount" class="form-control">
+
+                        <option value="0">--Select Project Account--</option>
+                        @Html.Raw(ViewData["getProjectAccount"])
+                    </select>
+
+                </div>
+
+
+                <div class="col-sm-3">
+
+                    <label style="padding: 0px 0px;cursor:pointer;">Fx Rate</label>
+                    <input type="text" id="exchngrate" data-edited="N" onkeyup="dataedited('Y',this);" class="floatonly form-control rightposition"  />
+                   
+                    <label class="displaynone" onclick="openexchange();" style="cursor:pointer; text-decoration:underline;color: #4646f9;">Fx Rates API</label>
+                </div>
+
+
+                <div class="col-sm-3">
+
+                    <label style="padding: 0px 0px;">Invoice Memo</label>
+                    <textarea id="txt_InvoiceMemo" rows="1" style="height: 25px; overflow: hidden;" class="form-control no-resize"></textarea>
+                </div>
+
+
+
+                <div class="col-sm-4 displaynone mrg10T" id="gotoinvoices">
+                    <button class="btn btn-poms mrg15L displaynone" style="padding: 3px;" type="button" onclick="gotoinvoices();">Invoices for this vendor</button>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+
+
+
+
+
+
+        <div class="row mrg15T">
+
+
+            <div class="col-sm-5">
+
+
+                <div class="col-sm-12">
+                    <h3 class="section-header" style="margin-bottom: 0px;">PO Selector</h3>
+                </div>
+
+
+
+
+
+                <div class="col-sm-12" style="zoom: 0.85">
+
+                    <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblPOSelector" style="text-align: center;">
+                        <thead>
+                            <tr>
+                                <th class="displaynone">POID</th>
+                                <th style="width: 5%">
+                                    <input type="checkbox" /></th>
+                                <th style="text-align: center; width: 40%;">PO #</th>
+                                <th style="text-align: center; width: 15%;">Curr</th>
+                                <th style="text-align: right; width: 20%;">Amount</th>
+                                <th style="text-align: right; width: 20%;">Remaining</th>
+                                <th  class="displaynone">Payment Schedule</th>
+                                <th class="displaynone">Taxes</th>
+                                <th class="displaynone">ProjectID</th>
+                                <th class="displaynone">VendorId</th>
+                                 <th class="displaynone">RemainingDuplicate</th>
+                                <th class="displaynone">AmountDuplicate</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+
+            </div>
+
+            <div class="col-sm-7">
+
+                <div class="col-sm-12">
+                    <h3 class="section-header" style="margin-bottom: 0px;">Item Selector</h3>
+                </div>
+
+
+
+                <div class="col-sm-12" style="overflow: auto; zoom: 0.85; max-height: 350px;">
+                    <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblPOItemSelector" style="text-align: center;">
+                        <thead>
+                            <tr class="theader">
+                                <th class="displaynone">POLineItemID</th>
+                                <th class="displaynone">Action</th>
+                                <th style="width:15%;">Item #</th>
+                                <th style="width:40%;">PO #</th>
+                                <th style="text-align: center; width:28%;">Description</th>
+                                <th style="text-align: right; width:9%;">Qty</th>
+                                <th style="text-align: right; width:5%;">Curr</th>
+                                <th style="text-align: right; width:9%;">PO Cost</th>
+                                <th style="text-align: right; width:9%;">Total</th>
+                                <th style="text-align: right; width:9%;">Rem</th>
+                                <th class="displaynone">RowIndex</th>
+                                <th class="displaynone">Total</th>
+                                <th style="text-align: right; width:6%;">%</th>
+                               <th class="displaynone">RemainingDuplicate</th>
+                                <th class="displaynone">AmountDuplicate</th>
+
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <input type="hidden" id="hdn_vendorid" />
+        <input type="hidden" id="hdn_poid" />
+
+
+        <div class="row mrg5T mrg5B">
+
+
+            <div class="col-sm-3 col-sm-offset-7">
+
+
+
+
+
+
+                <div class="col-sm-3">
+                    <label>Apply %</label>
+                    <input type="text" data-maxvalcheck="100" value="100" id="percentage" class="floatonly form-control rightposition" />
+                </div>
+
+                <div class="col-sm-9 mrg20T" style="font-size: 32px; padding-left: 8px; color: #7792a8; margin-top: 10px !important; font-weight: bolder;">
+                    <i title="Select selected" style="cursor: pointer;" class="fa fa-angle-down roundbtn" aria-hidden="true" onclick="fetch('onlyselected');"></i>
+                    <input type="button" class="singledown displaynone" title="Select selected" onclick="fetch('onlyselected');" />
+
+
+                    <i style="cursor: pointer;" title="Select selected" class="fa fa-angle-double-down roundbtn" aria-hidden="true" onclick="fetch('all');"></i>
+                    <input type="button" class="doubledown displaynone" title="Select all" onclick="fetch('all');" />
+
+
+                    <i style="cursor: pointer;" title="Unselect selected" class="fa fa-angle-up mrg10L roundbtn" aria-hidden="true" onclick="fetchreverse('onlyselected');"></i>
+                    <input type="button" class="singleup displaynone" title="Unselect selected" onclick="fetchreverse('onlyselected');" />
+
+                    <i style="cursor: pointer;" title="Unselect All" class="fa fa-angle-double-up roundbtn" aria-hidden="true" onclick="fetchreverse('all');"></i>
+                    <input type="button" class="doubleup displaynone" title="Unselect All" onclick="fetchreverse('all');" />
+                </div>
+
+            </div>
+
+
+             <div class="col-sm-2 mrg20T" id="lineadjustmentbuttons">
+
+                </div>
+
+
+        </div>
+
+
+
+
+
+        <div class="row">
+
+            <div class="col-sm-12">
+                <div class="col-sm-12">
+                    <h3 class="section-header">Invoice Items</h3>
+                </div>
+
+                <div class="col-sm-12" style="overflow-x: auto; overflow-y: auto; max-height: 500px; zoom: 0.85;">
+
+
+                    <table cellpadding="0" cellspacing="0" border="0" class="display no-footer dataTable" id="tblInvoiceItems" style="text-align: center; font-size: 0.9em;">
+                        <thead>
+                            <tr class="theader">
+                                <th class="leftposition displaynone"></th>
+
+                                <th class="leftposition" style="width: 6%">%</th>
+                                <th  class="leftposition" id="POIdEdit" style="width: 9%">PO # </th>
+                                <th  class="leftposition" style="width: 9%">Item #</th>
+                                <th  class="leftposition displaynone" style="width: 10%">Spec</th>
+                                <th style="width: 34%; text-align: center;">Description</th>
+                                <th class="displaynone">Note</th>
+                                <th  class="rightposition" style="width: 9%">Qty</th>
+                                <th class="rightposition" style="width: 9%">Amount</th>
+                                <th class="rightposition" style="width: 9%">Sub Total</th>
+                                <th class="displaynone">Tax1 Tax2 Tax3</th>
+                                <th class="rightposition" style="width: 9%">Line Item Total</th>
+                                <th class="displaynone">Project Account</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+
+                    </table>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <hr />
+
+
+
+        <div class="row mrg15T">
+
+            <div class="col-sm-8">
+            </div>
+
+            <div class="col-sm-2">
+                <label>Subtotal Invoice</label>
+            </div>
+
+            <div class="col-sm-2">
+                <input class="form-control" style="text-align: right;" type="text" id="txt_SubtotalInvoice" disabled="disabled" />
+            </div>
+
+        </div>
+
+        <div class="row mrg10T">
+            <div class="col-sm-8">
+            </div>
+
+            <div class="col-sm-2">
+                <label id="tt1">Total Tax 1</label>
+            </div>
+
+            <div class="col-sm-2">
+                <input class="form-control floatonly" type="text" onkeyup="calculatefortaxfields();" style="text-align: right;" id="txt_TotalTax1" />
+            </div>
+        </div>
+
+
+        <div class="row mrg10T">
+            <div class="col-sm-8">
+            </div>
+
+            <div class="col-sm-2">
+                <label id="tt2">Total Tax 2</label>
+            </div>
+
+            <div class="col-sm-2">
+                <input class="form-control floatonly" type="text" onkeyup="calculatefortaxfields();" style="text-align: right;" id="txt_TotalTax2"  />
+            </div>
+        </div>
+
+        <div class="row mrg10T">
+            <div class="col-sm-8">
+            </div>
+
+            <div class="col-sm-2">
+                <label id="tt3">Total Tax 3</label>
+            </div>
+
+            <div class="col-sm-2">
+                <input class="form-control floatonly" type="text" onkeyup="calculatefortaxfields();" id="txt_TotalTax3" style="text-align: right;" />
+            </div>
+        </div>
+
+        <div class="row mrg10T">
+            <div class="col-sm-8">
+            </div>
+
+            <div class="col-sm-2">
+                <label>Total Invoice</label>
+            </div>
+
+            <div class="col-sm-2">
+                <input class="form-control" type="text" id="txt_TotalInvoice" style="text-align: right;" disabled="disabled" />
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <div class="float-panel-container" id="Editable_Div">
+        <ul>
+            <li id="btn_Save" onclick="UpdateInvoice();" title="Update" ><a href="javascript:void(0)"><i class="fa fa-save mrg5R"data-toggle="tooltip"></i><span class="tooltip-toggle">Update</span></a></li>
+            <li id="btn_void" onclick="voidinvoice();" title="Void" ><a href="javascript:void(0)"><i class="fa fa-ban mrg5R"data-toggle="tooltip"></i><span class="tooltip-toggle">Void</span></a></li>
+            <li id="btn_delete" onclick="deleteinvoice();" title="Delete" ><a href="javascript:void(0)"><i class="fa fa-trash-o mrg5R"data-toggle="tooltip"></i><span class="tooltip-toggle">Delete</span></a></li>
+
+            <li id="btn_Cancel" onclick="CancelInvoice();" title="Cancel" ><a href="javascript:void(0)"><i class="fa fa-times mrg5R"data-toggle="tooltip"></i><span class="tooltip-toggle">Cancel</span></a></li>
+
+        </ul>
+    </div>
+
+    <div id="previnvoice" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Invoices</h4>
+                </div>
+                <div class="modal-body">
+
+
+                    <table cellpadding="0" cellspacing="0" border="0" class="display no-footer dataTable" id="tblprevinvoice" style="text-align: center; font-size: 0.9em;">
+                        <thead>
+                            <tr class="theader">
+
+                                <th>Invoice Date</th>
+                                <th>Invoice Amt.</th>
+                                <th>Item Amount</th>
+                                <th>Item Quantity</th>
+                                <th>%</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+
+                    </table>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+    <div id="currexchange" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:350px;">
+
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Exchange Rate</h4>
+      </div>
+      <div class="modal-body">
+          <div class="row displaynone">
+          <div class="col-sm-6">
+
+       <select id="currencysource" onchange="getfxrate();" class="form-control">
+           @Html.Raw(@ViewData["GetAllCurency"])
+       </select>
+              </div>
+
+              <div class="col-sm-6">
+       <select id="currencytarget" onchange="getfxrate();" class="form-control">
+                   @Html.Raw(@ViewData["GetAllCurency"])
+
+       </select>
+              </div>
+
+              <div class="col-sm-4 mrg10T">
+                  <label id="exchangerate"></label>
+              </div>
+
+
+              </div>
+
+          <iframe id="rateapi" src="https://www.google.com/finance/converter?a=1&from=CAD" width="100%;"></iframe>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+    <script>
+
+        function getbalance(name) {
+            $('#bnkbalance').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+
+            setTimeout(function () {
+                var data = qbcheckbankaccount(name);
+
+                $('#bnkbalance').html('');
+                if (data == 'Unauthorized-401') {
+                    notify("Unauthorized access to QBO. System not yet authorized to use any QB account");
+
+
+                }
+                else if (data != "INVALID") {
+                  //  $('#bnkbalance').html(formatNumber(data.split('^^^')[0].split('(')[0]) + ' (' + data.split('^^^')[0].split('(')[1]);
+                    $('#bnkbalance').html(formatNumber(data.split('^^^')[0].split(' (')[0]) + ' ' + data.split('^^^')[0].split(' (')[1].split(')')[0]);
+                }
+                else {
+                    $('#bnkbalance').html('Does not exist in QBO');
+                }
+            }, 200);
+
+
+        }
+        function qbcheckbankaccount(name) {
+            var response = '';
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/QuickBook/CheckBankAccount';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'QuickBook/CheckBankAccount';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'name': '" + name + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                async: false,
+                success: function (data) { response = data; }
+            });
+
+            return response;
+
+        }
+
+
+
+        function ProjectNameAtLabel(obj) {
+            var Projectval = $(obj).find("option:selected").attr('data-id');
+            Projectval = Projectval == null ? "" : Projectval.toString();
+
+
+            var ProjectText = $(obj).find('option:selected').text();
+            ProjectText = ProjectText == null ? "" : ProjectText.toString();
+
+
+            if (Projectval.toString() == null || Projectval.toString() == undefined || Projectval.toString() == 'undefined') {
+                $('#lbl_ProjectName').html('No vendor has been selected.');
+                return;
+            }
+
+            if (Projectval.toString() == '0') {
+                $('#lbl_ProjectName').html('No vendor has been selected.');
+            }
+            else {
+                $('#lbl_ProjectName').html('Selected vendor : ' + $(obj).find('option:selected').text());
+            }
+
+
+        }
+    </script>
+
+    <script>
+        function gotoinvoices() {
+
+            var totid = "";
+            //$('#tblPOSelector tbody tr').each(function () {
+            //    var poid = $(this).find('td:eq(0)').html();
+            //    totid += totid == "" ? poid : "^" + poid;
+            //});
+            totid = $('#Ddl_Vendors').val();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/invoicesearch';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/invoicesearch';
+            }
+            url += "/" + totid;
+
+            window.open(url);
+
+
+        }
+    </script>
+
+    <script>
+        function getconvrate() {
+
+            if ($('#exchngrate').attr('data-edited') == 'Y') {
+                return;
+            }
+
+
+            var VID = $('#Ddl_Vendors').val();
+
+            var totalbeforeconv = 0;
+            var totalafterconv = 0;
+
+            
+
+            $('#tblPOItemSelector tbody tr').each(function () {
+
+                var POLineItemID = $(this).find('td:eq(0)').html();
+                var total = replaceAll($(this).find('td:eq(7)').html(), ',', '');
+               
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/getconvrate';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/getconvrate';
+                }
+
+              
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    datatype: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ \"VID\" : \"" + VID + "\",\"POLineItemID\" : \"" + POLineItemID + "\"}",
+                    async: false,
+                    success: function (data) {
+
+                        if (!isNaN(data)) {
+                            var data = parseFloat(data) * parseFloat(total);
+                            totalafterconv += parseFloat(data);
+                            totalbeforeconv += parseFloat(total);
+                        }
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+
+
+
+
+            });
+
+           
+            $('#exchngrate').val(formatNumber4(parseFloat(totalafterconv / totalbeforeconv)));
+
+        }
+
+
+        function getconvrateforproject() {
+
+            if ($('#exchngrate').attr('data-edited') == 'Y') {
+                return;
+            }
+
+            var VID = $('#Ddl_Vendors').val();
+
+            var totalbeforeconv = 0;
+            var totalafterconv = 0;
+
+
+
+            $('#tblPOSelector tbody tr').each(function () {
+
+              
+
+                var POID = $(this).find('td:eq(0)').html();
+                var PID = $(this).find('td:eq(9) input').val();
+
+                var total = replaceAll($(this).find('td:eq(5)').html(), ',', '');
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/getconvrateforproject';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/getconvrateforproject';
+                }
+
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    datatype: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ \"VID\" : \"" + VID + "\",\"PID\" : \"" + PID + "\",\"POID\" : \"" + POID + "\"}",
+                    async: false,
+                    success: function (data) {
+
+                        if (!isNaN(data)) {
+                            var data = parseFloat(data) * parseFloat(total);
+                            totalafterconv += parseFloat(data);
+                            totalbeforeconv += parseFloat(total);
+                        }
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+
+
+
+
+            });
+
+
+            $('#exchngrate').val(formatNumber4(parseFloat(totalafterconv / totalbeforeconv)));
+
+        }
+
+        function rebuildposelector() {
+           
+
+            console.log("here debugged!!!");
+
+            var project = $('#ddl_project').val();
+            var POSelector2 = new Array();
+            var indx = 0;
+
+            
+            //if (project == undefined) {
+            //    project = [];
+            //}
+           
+
+            //POSelector2 = [];
+
+
+            for (i = 0; i < totdata.length ; i++) {
+
+               
+
+                for (i = 0; i < POSelector.length ; i++) {
+
+                    var flag = 0;
+
+                    //for (var a = 0; a < project.length; a++) {
+
+                    //    //console.log("POSelector[8] " + POSelector[i][8]);
+
+                    //    if (project[a] == POSelector[i][8]) { flag = 1; }
+                    //}
+
+
+                    if (project == POSelector[i][8]) { flag = 1; }
+
+                    if (flag == 1) {
+                        POSelector2[indx] = new Array();
+                        POSelector2[indx][0] = POSelector[i][0];
+                        POSelector2[indx][1] = POSelector[i][1];
+                        POSelector2[indx][2] = POSelector[i][2];
+                        POSelector2[indx][3] = POSelector[i][3];
+                        POSelector2[indx][4] = POSelector[i][4];
+                        POSelector2[indx][5] = POSelector[i][5];
+                        POSelector2[indx][7] = POSelector[i][7];
+                        POSelector2[indx][6] = POSelector[i][6];
+                        POSelector2[indx][8] = POSelector[i][8];
+                        POSelector2[indx][9] = POSelector[i][9];
+
+                        POSelector2[indx][10] = POSelector[i][5];
+                        POSelector2[indx][11] = POSelector[i][4];
+                        indx++;
+
+                    }
+
+                }
+            }
+
+          
+
+
+                $('#tblPOSelector').dataTable().fnDestroy();
+
+                $('#tblPOSelector').dataTable({
+                    "processing": true,
+                    "destroy" : true,
+                    "data": POSelector2,
+                    "columns": [
+
+                          { "title": "POID", "class": "displaynone" },
+                                        { "title": "", "class": "leftposition" },
+                                        { "title": "PO #", "class": "leftposition" },
+                                        { "title": "Curr", "class": "leftposition" },
+                                        { "title": "Amount", "class": "rightposition" },
+                                        { "title": "Remaining", "class": "rightposition" },
+                                        { "title": "Pymnt Sch.", "class": "leftposition displaynone" },
+                                        { "title": "Taxes", "class": "rightposition displaynone" }
+                                        , { "title": "ProjectID", "class": "displaynone" }
+                                        , { "title": "VendorId", "class": "displaynone" },
+                                        { "title": "RemainingDuplicate", "class": "displaynone" },
+                                { "title": "AmountDuplicate", "class": "displaynone" }
+
+
+                                   
+
+                    ]
+                    //,
+                    //paging: false,
+                    //"initComplete": function () {
+                    //    $('#tblPOSelector_filter').hide();
+
+                    //   // AddtableTdTextAlign('#tblPOSelector', '4^5^7', 'right', false);
+                    //},
+                    //"order": [[2, "asc"]],
+                    //"aoColumnDefs": [
+                    //    { 'bSortable': false, 'aTargets': [1] }
+                    //]
+                    // , "order": [[2, "asc"]]
+                });
+
+
+                $('#tblPOSelector tbody tr').each(function () {
+                    $(this).find('td:eq(1) input').attr('onclick', 'selectpo(this);');
+                });
+
+        }
+        var isloaded = false;
+        function applyFxRate() {
+            return;
+
+            var currentExchngRate = parseFloat($('#exchngrate').val().trim());
+
+            if ($('#tblPOSelector tbody').find('tr').eq(0).find('td').length > 1) {
+
+                $('#tblPOSelector tbody tr').each(function () {
+                    var remainingAmount = $(this).find('td:eq(10)').html().replace(",", "");
+                    var orAmount = $(this).find('td:eq(11)').html().replace(",", "");
+                    if (currentExchngRate > 0) {
+                        $(this).find('td:eq(5)').html(formatNumber(parseFloat(remainingAmount * currentExchngRate).toFixed(2)));
+                        $(this).find('td:eq(4)').html(formatNumber(parseFloat(orAmount * currentExchngRate).toFixed(2)));
+                    }
+                    else {
+                        $(this).find('td:eq(5)').html($(this).find('td:eq(10)').html());
+                        $(this).find('td:eq(4)').html($(this).find('td:eq(11)').html());
+                    }
+                });
+
+            }
+            if ($('#tblPOItemSelector tbody').find('tr').eq(0).find('td').length > 1) {
+                $('#tblPOItemSelector tbody tr').each(function () {
+                    var remainingAmount = $(this).find('td:eq(13)').html();
+                    var orAmount = $(this).find('td:eq(14)').html();
+
+                    if (remainingAmount != undefined) {
+                        remainingAmount = remainingAmount.replace(",", "");
+                    }
+
+                    if (currentExchngRate > 0) {
+                        $(this).find('td:eq(9)').html(formatNumber(parseFloat(remainingAmount * currentExchngRate).toFixed(2)));
+                        $(this).find('td:eq(8)').html(formatNumber(parseFloat(orAmount * currentExchngRate).toFixed(2)));
+                    }
+                    else {
+                        $(this).find('td:eq(9)').html($(this).find('td:eq(13)').html());
+                        $(this).find('td:eq(8)').html($(this).find('td:eq(14)').html());
+                    }
+                });
+            }
+          
+            calculatepercent($('#tblInvoiceItems tbody tr td:eq(1)'));
+        }
+
+        function GetExchangeConversion(exValue) {
+            var exchangeValue = exValue;
+            var currentExchngRate = parseFloat($('#exchngrate').val().trim());
+            if (currentExchngRate > 0) {
+                exchangeValue = parseFloat(currentExchngRate * exchangeValue).toFixed(2);
+            }
+            return exchangeValue;
+        }
+
+        function dataedited(val, obj) {
+
+            //console.log('%%%%%%');
+
+            $(obj).removeAttr('data-edited');
+            $(obj).attr('data-edited', val);
+            applyFxRate();
+        }
+
+        function openexchange() {
+
+            $('#currexchange').modal('show');
+
+        }
+
+        function getfxrate() {
+
+            if ($('#currencysource').val() == 0) {
+                notify("Select Base currency");
+                return;
+            }
+            
+            if ($('#currencytarget').val() == 0) {
+                notify("Select Target currency");
+                return;
+            }
+
+
+            var source = $('#currencysource option:selected').attr('data-currencycode');
+            var target = $('#currencytarget option:selected').attr('data-currencycode');
+
+
+            /////http://fixer.io/
+
+            var url = '';
+            // url = 'http://api.fixer.io/latest?base=' + source + '&symbols=' + target;
+            url = "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20(%22"
+                + source +  target + "%22)&format=json&env=store://datatables.org/alltableswithkeys&callback=";
+
+            $.get(url)
+               .success(function (response) {
+                   //var rate = response["rates"][target];
+                   $('#exchangerate').text("Convertion rate is: " + response.query.results.rate.Rate);
+                   ////console.log(response.query.results.rate);
+               });
+
+        }
+
+        function calculatefortaxfields() {
+            var st = replaceAll($('#txt_SubtotalInvoice').val(), ',', '');
+            var t1 = replaceAll($('#txt_TotalTax1').val(), ',', '');
+            var t2 = replaceAll($('#txt_TotalTax2').val(), ',', '');
+            var t3 = replaceAll($('#txt_TotalTax3').val(), ',', '');
+
+
+            if (t1 == '') {
+                t1 = 0;
+                $('#txt_TotalTax1').val(0);
+            }
+            if (t2 == '') {
+                t2 = 0;
+                $('#txt_TotalTax2').val(0);
+            }
+            if (t3 == '') {
+                t3 = 0;
+                $('#txt_TotalTax3').val(0);
+            }
+
+            var tot = parseFloat(st) + parseFloat(t1) + parseFloat(t2) + parseFloat(t3);
+
+            $('#txt_TotalInvoice').val(formatNumber(tot));
+        }
+        function precise_round(num, dec) {
+            if ((typeof num !== 'number') || (typeof dec !== 'number'))
+                return false;
+
+            var num_sign = num >= 0 ? 1 : -1;
+            return (Math.round((num * Math.pow(10, dec)) + (num_sign * 0.0001)) / Math.pow(10, dec)).toFixed(dec);
+        }
+       
+    </script>
+</body>
+</html>

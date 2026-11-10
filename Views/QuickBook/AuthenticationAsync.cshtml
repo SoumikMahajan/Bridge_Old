@@ -1,0 +1,32 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+
+<script src="~/Scripts/jquery-1.12.0.js"></script>
+<script>
+    $(function () {
+        var secs = 4;
+        window.setInterval(function () {
+            $('#seconds').html(secs--);
+            if (secs == 0) {
+                $('#aaa').click();
+            }
+        }, 1000);
+    });
+    function closenow() {
+        window.close();
+    }
+</script>
+<body style="background-color:#d1e8ef;">
+    <div style="text-align:center;">
+        <a href="~/Home/Dashboard" class="">
+            <img src="~/Images/logo.png" class="img-responsive mrg0T mrg0B" width="353" alt="" />
+        </a>
+    </div>
+
+
+    <h2>Authentication Done. You can <a href="#" id="aaa" onclick="closenow();">close</a>  this window, or the window is closing in <span id="seconds">5</span> second(s).</h2>
+</body>

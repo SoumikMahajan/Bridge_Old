@@ -1,0 +1,34 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SystemLevelPermission</title>
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/InnerMisc.js"></script>
+    <script src="~/Scripts/User.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+  
+</head>
+<body>
+    
+    <div class="logo_container_heading">
+        Welcome @ViewBag.FullName
+        
+    </div>
+    <div class="policy-items">      
+
+        @Html.Raw(ViewBag.html)
+
+    </div>
+</body>
+</html>

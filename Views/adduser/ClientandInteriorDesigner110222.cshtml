@@ -1,0 +1,769 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Add User</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+
+
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+
+
+    <script src="~/Scripts/AddUser.js"></script>
+
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+
+
+
+    <script type="text/javascript">
+        function GenerateNdPutPassword() {
+            var newpass = generatepassword();
+            $('#txt_FName').val(newpass);
+            $('#txt_Password').val(newpass);
+            $('#txt_ConfrmPswrd').val(newpass);
+        }
+        function generatepassword() {
+            var plength = 8;
+            var keylist = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            var temp = ''
+            var isupperchar = false;
+            var isnumber = false;
+            var islowerchar = false;
+            temp = ''
+            while (isupperchar == false || isnumber == false || islowerchar == false) {
+                temp = '';
+                for (i = 0; i < plength; i++) {
+                    var tmp = keylist.charAt(Math.floor(Math.random() * keylist.length));
+                    var ccode = tmp.charCodeAt(0);
+                    if ((ccode > 64 && ccode < 91)) {
+                        isupperchar = true;
+                    }
+                    else if ((ccode > 96 && ccode < 123)) {
+                        islowerchar = true;
+                    }
+                    else if (ccode > 47 && ccode < 58) {
+                        isnumber = true;
+                    }
+                    temp += tmp;
+                }
+            }
+            // alert('isupperchar: ' + isupperchar + ' islowerchar: ' + islowerchar + ' isnumber: ' + isnumber);
+            return temp
+        }
+    </script>
+
+
+    <style type="text/css">
+        /** { margin: 0; padding: 0; }
+        body { font: 14px/1.4 Georgia, serif; }
+        #page-wrap { width: 600px; margin: 15px auto; }
+        p { margin: 0 0 15px 0; }
+        p:first-child { background: #fffcde; padding: 10px; }
+        #sidebar ul { background: #eee; padding: 10px; }
+        li { margin: 0 0 0 20px; }
+        #main { width: 390px; float: left; }*/
+        /*#sidebar { width: 190px; float: right; }*/
+        #sidebar {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+        }
+        /*#sidebar ul { background: #eee; padding: 10px; }*/
+        /*li { margin: 0 0 0 20px; }*/
+    </style>
+
+
+    <style>
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        #popupforvendorlist .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 6px 0px;
+            width: 96%;
+            height: 20px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+
+        .nav-tabs > li > a {
+            background-color: rgba(238, 238, 238, 0.43);
+            border-color: #eee #eee #ddd;
+            text-transform: uppercase;
+        }
+
+            .nav-tabs > li > a:hover {
+                background-color: #ddd;
+            }
+    </style>
+
+    <style>
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+
+        label {
+            color: #333333;
+            font-weight: 500;
+            margin-bottom: 1px;
+        }
+
+        .section-header {
+            padding: 2px 4px;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .nav > li > a {
+            position: relative !important;
+            display: block !important;
+            padding: 4px 15px !important;
+        }
+
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+            color: rgb(246, 251, 252) !important;
+            cursor: default;
+            background-color: #7792a8;
+            border: 1px solid #ddd;
+            border-bottom-color: transparent;
+            color: #7792a8;
+            font-size: 16.5px;
+        }
+    </style>
+
+
+</head>
+<body>
+
+    <div class="container-fluid" id="angulardiv" ng-app="customer" ng-controller="customer" style="zoom:0.95">
+
+
+
+
+
+        
+
+        <div class="row">
+
+            <div class="col-sm-5">
+
+                <div class="col-sm-12">
+                    <h3 class="section-header" id="usertypeselected" >ADD NEW USER (Select User Type from DropDown)</h3>
+                </div>
+
+
+                    <div class="col-sm-4">
+                        <label>User Type</label>
+                        <select ng-options="c.UserType for c in UserType" ng-change="getPriority();" ng-model="selectedUserType" name="paysId" id="Ddl_UsrTyp" class="form-control">
+                            <option>select</option>
+                        </select>
+                    </div>
+
+                <div class="col-sm-4">
+                    <label>Company Name</label>
+                    <input type="text" class="form-control" id="txt_CompanyName" ng-model="User.CompanyName" />
+                </div>
+
+                <div class="col-sm-4">
+                    <label>Title</label>
+                    <input type="text" class="form-control" id="txt_CompanyTitle" ng-model="User.CompanyTitle" />
+                </div>
+
+
+                    <div class="col-sm-4 req">
+                        <label>First Name</label>
+                        <input type="text" class="form-control text-uppercase" id="txt_FName" ng-model="User.Firstname" />
+                    </div>
+
+                <div class="col-sm-4">
+                    <label>Last Name</label>
+                    <input type="text" id="txt_LName" ng-model="User.Lastname" class="form-control text-uppercase" />
+                </div>
+
+
+                <div class="col-sm-4 req">
+
+                    <label>Email address</label>
+                    <input type="text" id="txt_Email" ng-model="User.Email" class="form-control emailvalidator" readonly onfocus="this.removeAttribute('readonly');" style="background-color:#fff"  />
+                    @*onblur="CheckAvailEmail(this);" *@
+                </div>
+
+                    <div class="col-sm-4">
+
+                        <label>Phone</label>
+                        <input type="text" id="txt_Phone" ng-model="User.Phone" class="form-control" />
+
+                    </div>
+
+               
+
+
+                
+
+                
+
+                    
+
+                    <div class="col-sm-4">
+                        <label>Phone Ext.</label>
+                        <input type="text" id="txt_Extension" ng-model="User.Extension" class="form-control" />
+
+                    </div>
+
+
+              
+
+               
+                    
+
+                    
+
+
+               
+
+                <div class="col-sm-6">
+                  
+                        <label>Address</label>
+                        <textarea id="txt_Address" ng-model="User.Address" style="height:70px;" class="form-control no-resize"></textarea>
+                   
+
+                </div>
+
+            
+
+                    <div class="col-sm-6">
+                        <label>Country</label>
+                        <select id="Ddl_Country" onchange="GetCtryID(this);" tabindex="5" ng-model="User.Country" class="form-control">
+                            @Html.Raw(ViewData["GetAllCountry"])
+                        </select>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label>State/Prov</label>
+                        <select id="Ddl_State" onchange="GetStateID(this);" tabindex="6" ng-model="User.State" class="form-control">
+                            <option value="0" name="ddlState_0">--Select State/Prov--</option>
+                        </select>
+
+                    </div>
+
+
+
+              
+
+                <div class="col-sm-6">
+                    <label>City</label>
+                    <input type="text" id="txt_City" ng-model="User.City" class="form-control" />
+                </div>
+
+                <div class="col-sm-6">
+                    <label>Postal/Zip Code</label>
+                    <input type="text" id="txt_ZipCode" class="form-control postalcode" ng-model="User.ZipCode" />
+                </div>
+
+            </div>
+
+          <div class="col-sm-7" style="padding-left:12px;">
+
+              <div class="col-sm-12">
+
+                  <div id="UserTypeSecurityDiv" class="showHide" style="display: none;">
+
+                      <div class="row">
+                          <div class="col-sm-12">
+                              <h3 class="section-header">SECURITY PERMISSIONS</h3>
+                          </div>
+                      </div>
+
+
+                      <div class="security-title displaynone">{{ selectedUserType.UserType }}</div>
+                      <button type="button" style="    margin-left: -12px;" class="btn btn-poms mrg5B uncheckallbtn" data-uncheckclass="chkScrty">Uncheck All</button>
+                      <button type="button" class="btn btn-poms mrg5B checkallbtn" data-checkclass="chkScrty">Check All</button>
+                      <div class="security-detail">
+                          <table border="1" class="table" style="width:100%; margin-bottom:0px !important;" cellspacing="0" cellpadding="0" id="priority_checkbox"></table>
+                      </div>
+                  </div>
+
+              </div>
+          </div>
+          
+
+        </div>
+
+       
+
+        <div class="row">
+            
+            
+            <div class="col-sm-3 displaynone">
+                <label>User Name</label>
+                <input type="text" id="txt_UName" ng-model="User.Username" class="form-control" />
+            </div>
+
+            
+
+        </div>
+
+        <div class="row mrg10T">
+            <div class="col-sm-3 req displaynone">
+                <label style="width: 100px;">Password </label>
+                @*<a href="javascript:GenerateNdPutPassword();">Generate Password</a>*@
+                <input type="password" id="txt_Password" ng-model="User.UserPassword" class="form-control" />
+
+            </div>
+            <div class="col-sm-3 req displaynone">
+                <label>Confirm password</label>
+                <input type="password" id="txt_ConfrmPswrd" ng-model="User.ConfrmPswrd" class="form-control" />
+            </div>
+            
+
+            
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+    <div class="float-panel-container">
+        <ul>
+            <li id="btn_CrtClientOrID" title="Create User"><a href="javascript:void(0);"><i class="fa fa-save mrg5R" ></i><span class="tooltip-toggle">Create User</span></a></li>
+
+        </ul>
+    </div>
+
+
+
+    <script type="text/javascript">
+
+        angular.module("customer", [])
+            .controller("customer", function ($http, $scope) {
+
+                var url55 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url55 = '/adduser/return_priorities_new';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url55 = 'adduser/return_priorities_new';
+                }
+
+
+
+                $scope.getPriority = function () {
+                    var selectedid = $scope.selectedUserType.Fldid;
+                    //console.log(selectedid);
+                    var selectedvaltype = $scope.selectedUserType.UserType;
+
+                    if (selectedid == '4' || selectedid == '5') {
+                        $('.forclientonly').css('display', 'block');
+                    }
+                    else {
+                        $('.forclientonly').css('display', 'none');
+                    }
+
+                    if (selectedid != '0') {
+                        $('#usertypeselected').text("ADD NEW " + selectedvaltype.toUpperCase());
+                    }
+                    else {
+                        $('#usertypeselected').text("ADD NEW USER (Select User Type from DropDown)");
+                    }
+
+
+                    if (selectedid == '0') {
+                        $('#UserTypeSecurityDiv').css('display', 'none');
+                        $('#btn_CrtClientOrID').val("Create User");
+                    }
+                    else {
+                        $('#UserTypeSecurityDiv').css('display', 'block');
+                        $('#btn_CrtClientOrID').val("Create " + selectedvaltype);
+
+
+
+
+
+
+                        $http.get(url55 + "?usertypeid=" + selectedid)
+                                .success(function (response) {
+                                    // $scope.prioritylist = response;
+
+                                    $('#UserTypeSecurityDiv').css('display', 'block');
+
+
+
+                                    var grouptype = "";
+                                    var currg = "";
+                                    var html = "<tr>"
+                                        + "<th>Security Item</th>"
+                                        + "<th>Assigned</th>"
+                                        + "</tr>";
+
+                                    var plist = response.data;
+                                    var html = "";
+                                    for (var i = 0; i < plist.length; i++) {
+                                        currg = plist[i].GroupType;
+                                        if (currg == grouptype) {
+                                        }
+                                        else {
+                                            grouptype = currg;
+                                            html += "<tr><td style='color:white;background:black;' colspan='2'>" + grouptype + "</td></tr>";
+                                        }
+                                        html += "<tr><td><label style='padding:0px;width:100%;' for='prioritychk_" + plist[i].security_id + "'>" + plist[i].priority_name + "</label></td>";
+                                        if (plist[i].is_selected == "1") {
+                                            html += '<td><input  type="checkbox" class="chkScrty" value="1" id="prioritychk_' + plist[i].security_id + '" checked></td></tr>';
+                                        }
+                                        else {
+                                            html += '<td><input type="checkbox" class="chkScrty" value="0" id="prioritychk_' + plist[i].security_id + '"></td></tr>';
+                                        }
+                                    }
+                                    $('#priority_checkbox').html(html);
+
+                                    var tableobj = $('#priority_checkbox');
+                                    rebuiltPriorityintoDivs(tableobj);
+
+                                });
+                    }
+                }
+
+                var url5 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url5 = '/adduser/getUserType';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url5 = '/adduser/getUserType';
+                }
+
+
+
+                $http.get(url5)
+                    .success(function (response) {
+                        $scope.UserType = response;
+                        $scope.selectedUserType = $scope.UserType[0];
+                    });
+
+
+
+                $scope.AddClientorID = function () {
+
+                    var priorities = "";
+
+                    $('.chkScrty').each(function () {
+
+                        if ($(this).is(":checked")) {
+
+
+                            if (priorities == "")
+                            { priorities += $(this).attr('id').split('prioritychk_')[1]; }
+                            else {
+                                priorities += "," + $(this).attr('id').split('prioritychk_')[1];
+                            }
+                        }
+                    });
+
+                    $scope.User.Usertype = $scope.selectedUserType.Fldid;
+                    $scope.User.DefaultbuyerID = '0';
+                    $scope.User.priorities_on_list = priorities;
+                    $scope.User.Isbuyer = '0';
+
+                    if ($scope.User.UserPassword == null || $scope.User.UserPassword == '') {
+                        var plength = 8;
+                        var keylist = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                        var temp = '';
+                        var isupperchar = false;
+                        var isnumber = false;
+                        var islowerchar = false;
+                        temp = ''
+                        while (isupperchar == false || isnumber == false || islowerchar == false) {
+                            temp = '';
+                            for (i = 0; i < plength; i++) {
+                                var tmp = keylist.charAt(Math.floor(Math.random() * keylist.length));
+                                var ccode = tmp.charCodeAt(0);
+                                if ((ccode > 64 && ccode < 91)) {
+                                    isupperchar = true;
+                                }
+                                else if ((ccode > 96 && ccode < 123)) {
+                                    islowerchar = true;
+                                }
+                                else if (ccode > 47 && ccode < 58) {
+                                    isnumber = true;
+                                }
+                                temp += tmp;
+                            }
+                        }
+                        $scope.User.UserPassword = temp;
+                        $scope.User.ConfrmPswrd = temp;
+
+
+                        // alert($scope.User.Password);
+                        // alert(1);
+                    }
+
+
+
+
+
+
+                    $('#loader_createuser').show();
+                    $('#btn_CrtClientOrID').hide();
+
+                    var obj = JSON.stringify($scope.User);
+
+
+                    var url555 = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url555 = '/adduser/CreateClientorID';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url555 = '/adduser/CreateClientorID';
+                    }
+
+                    // alert(url555);
+
+                    $.ajax({
+                        url: url555,
+                        type: "POST",
+                        dataType: "text",
+                        contentType: "application/json; charset=utf-8",
+                        data: obj,
+
+
+                        error: function () {
+                            alert("failed");
+                            $('#loader_createuser').hide();
+                            $('#btn_CrtClientOrID').show();
+                        },
+                        success: function (data) {
+                            irrrrr = 0;
+                            if (data == 'INVALID^USERNAME') {
+
+                                $('#txt_UName').val('');
+                                errorfunc('txt_UName', 'Please enter an unique User name');
+                                alert('Username already exists !! Please give an unique one !!');
+                            }
+                            else if (data == 'INVALID^EMAIL') {
+
+                                $('#txt_Email').val('');
+                                errorfunc('txt_Email', 'Please enter an unique Email Address');
+                                alert('Email already exists !! Please give an unique one !!');
+                            }
+                            else {
+                                notify('User Activation mail has been sent to User.','green');
+
+                                $scope.User.Firstname = '';
+                                $scope.User.Lastname = '';
+                                $scope.User.Username = '';
+                                $scope.User.UserPassword = '';
+                                $scope.User.ConfrmPswrd = '';
+                                $scope.User.Email = '';
+                                $scope.User.Usertype = '';
+                                $scope.User.Isbuyer = '';
+                                $scope.User.DefaultbuyerID = '';
+                                $scope.User.priorities_on_list = '';
+
+
+                                $('#txt_FName').val('');
+                                $('#txt_LName').val('');
+                                $('#txt_UName').val('');
+                                $('#txt_Password').val('');
+                                $('#txt_ConfrmPswrd').val('');
+                                $('#txt_Email').val('');
+
+                                irrrrr = 0;
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 4000);
+                               
+
+                            }
+
+                            $('#loader_createuser').hide();
+                            $('#btn_CrtClientOrID').show();
+                        }
+                    });
+
+
+
+
+                }
+
+
+            });
+
+
+
+        function EditPOPUP(obj) {
+            alert(obj);
+
+            $('.popup_container').fadeIn(40);
+        }
+    </script>
+
+
+    <script>
+
+        function rebuiltPriorityintoDivs(obj) {
+
+            $('.newappendeddivforpermissions').remove();
+
+            var ttt = 0;
+            var cnt = -1;
+            var outerhtml = "<div style='margin-left: -16px;margin-right: -14px;' class='row newappendeddivforpermissions'>";
+
+            $(obj).find('tbody tr').each(function () {
+
+
+
+                if ($(this).find('td').length == 1) {
+
+                    cnt++;
+
+                    if (ttt == 0) {
+
+
+                        outerhtml += '<div class="row" style="margin-left:0px;margin-right:0px;">';
+
+                        outerhtml += '<div class="col-sm-3">';
+                    }
+                    else {
+
+
+
+
+                        if (cnt % 4 == 0) {
+                            outerhtml += '</div></div><div class="row"  style="margin-left:0px;margin-right:0px;"><div class="col-sm-3">';
+
+                        }
+                        else {
+                            outerhtml += '</div><div class="col-sm-3">';
+                        }
+                    }
+                    outerhtml += '<div class="col-sm-12 section-header"><span style="float: left;width: 76.9%;text-align: left;">' + $(this).find('td:eq(0)').html() + '</span>'
+                    + '<input style="float:left;margin-left:2px;    margin-top: 10px;" type="checkbox" onclick="Checkallinner(this);" /></div> ';
+
+               
+                }
+
+                else {
+                    outerhtml += '<div class="col-sm-9">';
+                    outerhtml += '<span>' + $(this).find('td:eq(0)').html() + '</span></div>';
+                    outerhtml += '<div class="col-sm-3">' + $(this).find('td:eq(1)').html() + '</div>';
+
+                }
+
+                ttt = 1;
+
+
+            });
+
+            outerhtml += "</div>";
+            //console.log(outerhtml);
+
+            $(obj).after(outerhtml);
+
+            $(obj).html('');
+
+        }
+
+        function Checkallinner(obj) {
+
+            var pdiv = $(obj).parent().parent();
+            if ($(obj).is(':checked')) {
+                $(pdiv).find('.chkScrty').prop('checked', true);
+            }
+            else {
+                $(pdiv).find('.chkScrty').prop('checked', false);
+
+            }
+        }
+    </script>
+
+</body>
+</html>
+
+

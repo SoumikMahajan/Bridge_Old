@@ -1,0 +1,297 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ContactTypes</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+
+    <script src="~/Scripts/Project.js"></script>
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <link href="~/css/Misc.css" rel="stylesheet" />
+
+
+    <style>
+        .ui-autocomplete {
+            cursor: pointer;
+            height: 120px;
+            overflow-y: scroll;
+        }
+    </style>
+
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+</head>
+<body>
+    <div class="main_container" id="angulardiv" ng-app="Project" ng-controller="Project">
+       
+
+        <div class="logo_container_heading">Project Contact Type</div>
+
+        <div class="user_panel_container">
+            <label>Contact Type Name</label>
+            <input type="text" id="txt_ProjectContactTypeName" />
+        </div>
+        <div class="user_panel_container">
+            <input type="button" value="Add Contact Type" id="btn_AddContactTypeName" onclick="CreateContactType();">
+        </div>
+        <div class="user_panel_container">
+            <div class="logo_container_heading" style="margin-top: 100px;">Project Contact Types</div>
+
+            <table id="ProjectContactTypes" class="display  compact" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+
+        </div>
+        <div id="popup">
+            <input type="hidden" id="Hdn_ContactTypeID" />
+            <span class="button b-close"><span>X</span></span>
+            @*<div class="user_panel_container">
+                <input type="button" value="Add Contact Type" id="btn_AddContactTypeNamqqe">
+            </div>*@
+            <div class="user_panel_container">
+                <label>Contact Type Name</label>
+                <input type="text" id="txt_ProjectContactTypeNameEdt" />
+            </div>
+            <div class="user_panel_container">
+                <input type="button" value="Update Contact Type" id="btn_UpdtContactTypeName" onclick="UpdateContactType();">
+            </div>
+            
+        </div>
+    </div>
+
+    <style type="text/css">
+        #popup, #popup2, .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+            }
+    </style>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        clicknew();
+        $('.paginate_button').live('click', function () {
+            RowHtmlRender();
+        });
+    });
+    function clicknew() {
+        $(document).ready(function () {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/GetProjectContactTypesJSON';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/GetProjectContactTypesJSON';
+            }
+
+            var totdata;
+            $.get(url1)
+                .success(function (response) {
+                    var project;
+                    totdata = JSON.parse(response);
+                    //console.log(totdata);
+                    var project = new Array();
+                    for (i = 0; i < totdata.length ; i++) {
+                        project[i] = new Array();
+                        project[i][0] = "";//totdata[i].ContactTypeID;// Convert.ToString(dr["ProjectContact_ID"]);
+                        project[i][1] = totdata[i].ContactTypeID;
+                        project[i][2] = totdata[i].ContactType;
+                    }
+                    $('#ProjectContactTypes').dataTable({
+                        "processing": true,
+                        "data": project,
+                        "columns": [
+                            { "title": "Action" },
+                            { "title": "ContactTypeID", "class": "displaynone" },//, "class": "displaynone" 
+                            { "title": "ContactType" },
+                        ]
+                        ,
+                        "initComplete": function () {
+                            RowHtmlRender();
+                        }
+                        // ,"aoColumnDefs": [
+                        //     { 'bSortable': false, 'aTargets': [0, 1] }
+                        // ]
+                    });
+                    var html = "";
+
+                    html = "<tr>"
+                    + "<th  rowspan='1' colspan='1'><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px;' /></th>"
+                    //+ "<th  rowspan='1' colspan='1'><input class='srch' data-indx='1' type='text' placeholder='Search '></th>"
+                    + "<th  rowspan='1' colspan='1' class='displaynone'></th>"
+                    + "<th  rowspan='1' colspan='1'><input class='srch' data-indx='2' type='text' placeholder='Search '></th>"
+                    + "</tr>";
+
+                    $('#ProjectContactTypes').on('draw.dt', function () {
+                        RowHtmlRender();
+                    });
+
+
+                    $('#ProjectContactTypes thead').append(html);
+                    var table = $('#ProjectContactTypes').DataTable();
+                    $('.srch').on('keyup change', function () {
+                        var indx = $(this).attr('data-indx');
+                        var txt = this.value;
+                        table
+                               .column(indx)
+                               .search(txt)
+                               .draw();
+                        RowHtmlRender();
+                    });
+                });
+        });
+    }
+    function RowHtmlRender() {
+
+        //$('#projectcontacts_filter').css('display', 'none');
+        $('#ProjectContactTypes tbody tr').find("td:eq(0)").each(function () {
+                        
+            var pid = $(this).next().html(); // $(this).html(); //$(this).prev("td").html(); //
+            //var zz = $(this).html();
+            var html = '';
+            html = '<input type="button" class="buttonedit"  onclick="EditProjectType(this,\'' + pid + '\');" style="margin-bottom:6px;" data-id="' + pid + '" value="Edit" />';
+            //html = '<input type="button" value="" onclick="EditProjectContact(this,\'' + pid + '\');" style="margin-bottom:6px;" data-id="' + pid + '" class="buttonedit" />';
+            //html += '<input type="button" value="" onclick="DeleteProjectContact(this,\'' + pid + '\');" style="margin-bottom:6px;" data-id="' + pid + '" class="buttondelete" />';
+            $(this).html(html);
+        });
+    }
+    function ResetSearch() {
+        var table = $('#ProjectContactTypes').DataTable();
+        $('.srch').each(function () {
+            this.value = '';
+            var indx = $(this).attr('data-indx');
+            var txt = this.value;
+            table
+                   .column(indx)
+                   .search(txt)
+                   .draw();
+        });
+        RowHtmlRender();
+    }
+    function EditProjectType(obj, ProjectContactTypeId) {        
+        $('#txt_ProjectContactTypeNameEdt').val($(obj).parent().next("td").next("td").html());
+        $('#Hdn_ContactTypeID').val(ProjectContactTypeId);
+        $('#popup').bPopup();
+    }
+    function UpdateContactType()
+    {
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/Project/UpdateContactType';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'Project/UpdateContactType';
+        }
+        var pid = $('#Hdn_ContactTypeID').val();
+
+        if (pid == '') {
+            return;
+        }
+
+        var ContactType = $('#txt_ProjectContactTypeNameEdt').val();
+
+        url1 += "?ProjectContactID=" + pid + "&ContactType=" + ContactType;
+
+        $.get(url1)
+                .success(function (response) {
+                    if (response == 'SUCCESS') {
+                        alert('Contact Type Updated successfully !!');
+                        $('#txt_ProjectContactTypeNameEdt').val('');
+                        window.location.reload();
+                    }
+                    else {
+                        alert('Some Error occured !!');
+                    }
+                });
+    }
+    function CreateContactType() {
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/Project/CreateContactType';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'Project/CreateContactType';
+        }
+
+        var ContactType = $('#txt_ProjectContactTypeName').val();
+
+        if (ContactType == '') {
+            
+            return;
+        }
+        url1 += "?ContactType=" + ContactType;
+        
+        $.get(url1)
+                .success(function (response) {
+                    if (response == 'SUCCESS') {
+                        alert('Contact Type Added successfully !!');
+                        $('#txt_ProjectContactTypeName').val('');
+                        window.location.reload();
+                    }
+                    else {
+                        alert('Some Error occured !!');
+                    }
+        });
+
+    }
+</script>
+
+</html>

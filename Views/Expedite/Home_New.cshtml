@@ -1,0 +1,4953 @@
+﻿@{
+    ViewBag.Title = "Expedite Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Home</title>
+    <link href='http://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+
+     <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+     <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+   
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+   
+
+    <script src="~/Scripts/GlobalJS.js"></script>
+
+  
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
+   
+
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+
+
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+    <script src="~/Scripts/multiaccordion.jquery.min.js"></script>
+    <link rel="stylesheet" href="~/css/multiaccordion.jquery.min.css">
+
+
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet">
+
+    <style>
+
+        .ui-accordion .ui-accordion-header .ui-accordion-header-icon {
+            top : 30% !important;
+        }
+
+        /*.display_0 {
+            display: none;
+        }*/
+          .displayoff {
+            display:none;
+        }
+
+      .displayon {
+            display:block;
+        }
+
+
+        .ui-accordion-content-active{
+
+
+            height : auto !important;
+        } 
+        .searchbox {
+            background-image: url('../images/magnifying-glass.gif');
+            background-repeat: no-repeat;
+            padding-left: 20px;
+            background-position-y: 3px;
+            background-position-x: 3px;
+        }
+
+
+        .choosefile {
+            width: 84px;
+            border-radius: 5px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        //$(document).ready(function () {
+        //    $(".accordion").multiaccordion();
+        //});
+
+
+
+        $(function () {
+
+        });
+
+
+    </script>
+    <script type="text/javascript">
+        function OpenHistoryPopUp(obj, obj2) {
+
+
+
+            var url1 = '';
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = 'http://www.thebridgebytcg.com/PurchaseOrder/isManager';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                //url1 = urlsuffix + "/" + 'Project/getAllProjectList';
+                url1 = 'PurchaseOrder/isManager';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                sync: false,
+                contentType: "application/json; charset=utf-8",
+                url: url1,
+                data: "{ 'PurchaseOrderID': '" + obj2 + "'}",
+                success: function (data) {
+
+                    $('#hdn_isManager').val(data);
+                }
+
+            });
+
+
+
+            $('#Hdn_POLineItemID').val(obj);
+            $('#Hdn_PurchaseOrderID').val(obj2);
+
+            approvallist();
+
+            jQuery('#popupforHistory').bPopup({
+                easing: 'easeOutBack', //uses jQuery easing plugin
+                speed: 450,
+                transition: 'slideDown',
+                modalColor: 'rgb(18, 54, 65)',
+                position: [0, 0]
+            });
+
+
+
+
+        }
+    </script>
+
+    <script type="text/javascript">
+
+
+
+        function loadBudgetPart() {
+            var url1 = '';
+            //var pid = $('#PrjtDdl option:selected').attr('data-id');
+
+            var pid = $('#PrjtDdl').val();
+            pid = pid == null ? "" : pid.toString();
+
+
+            if (pid.toString() == null || pid.toString() == undefined || pid.toString() == 'undefined') {
+                return;
+            }
+
+
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = 'http://www.thebridgebytcg.com/Expedite/getAllProjectSection';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                //url1 = urlsuffix + "/" + 'Project/getAllProjectList';
+                url1 = 'Expedite/getAllProjectSection';
+            }
+            url1 += "?projectid=" + pid;
+            var totdata;
+            // alert(url1);
+
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: url1,
+                data: {},
+                success: function (response) {
+
+                    var html = '';//"<div class='sections'>";
+                    totdata = response;
+                    totdata = JSON.parse(totdata).data;
+                    var totlen = totdata.length;
+                    var biggercnt = 0;
+
+                    $('#bsectioncount').html(' (' + totlen + ')');
+                    //html += "Total " + totdata.length + " result(s) found";
+
+                    for (var a = 0; a < totdata.length; a++) {
+                        var cnt = 0;
+                        var id = totdata[a].id;
+                        var name = totdata[a].sectionname;
+                        var order = totdata[a].Sectionnumber;
+                        var item = totdata[a].item;
+                        var item_ln = item.length;
+                        //html += "<div class='sectiondiv security-title'  id='" + id + "'>";
+                        //html += "<i onclick='sectionclicked(this);' class='fa fa-pencil-square-o'></i>&nbsp;&nbsp;";
+                        //html += "<span>" + order + "-" + name + "</span>";
+                        //html += "</div>";
+                        var displayflag = '';
+                        if (item_ln == 0) {
+                            displayflag = 'displaynone';
+
+                        }
+                        else {
+
+                            for (var i = 0; i < item.length ; i++) {
+
+                                var des = item[i].Description;
+                                var deslen = des.length;
+                                if (deslen > 0) { cnt++; }
+                            }
+
+                            
+                        }
+
+                        if (cnt == 0) {
+                            displayflag = 'displaynone';
+                        }
+                        else {
+                            biggercnt++;
+                        }
+
+                        html += '<div class="accordion odd display_' + item_ln + ' ' + displayflag + '">';
+
+
+
+                        html += "<h3><div class='row'>";
+
+                        html += "<div class='col-sm-2'><span style='color:#03539A;'>Number: </span>" + order;
+                        html += "</div>";
+
+                        html += "<div class='col-sm-2'><span style='color:#03539A;'>Name: </span>" + name;
+                        html += "</div>";
+
+                        html += "<div class='col-sm-2'>" + " (" + cnt + ")";
+                        html += "</div></h3>";
+
+                        //html += "<h3>" + order + "    " + name + " (" + item_ln + ")</h3>";
+
+
+
+
+                        html += "<div class='content'>";
+
+
+                        var html1 = '';
+                        for (var i = 0; i < item.length ; i++) {
+
+                            var des = item[i].Description;
+                            var deslen = des.length;
+
+                            var displayflag = '';
+                            if (deslen == 0) {
+                                displayflag = 'displaynone';
+
+                            }
+
+
+                            html += '<div class="accordion odd display_' + deslen + ' ' + displayflag + '" style="font-size:0.75em;">'
+                            //return;
+                            html += "<h3 style='height:80px;'>"
+
+                               
+
+                                 + "<table class='display makedisable no-footer table dataTable' style='width:100%;color:black;' ><thead>"
+                                 + "<tr>"
+                                 + "<th>Item#</th>"
+                                 + "<th>Spec</th>"
+                                 + "<th>Desc</th>"
+                                 + "<th>(" + deslen + ")</th>"
+                                 + "</tr>"
+                                 + "<tr></thead><tbody>"
+
+                                 + "<td>"
+                                 + item[i].ItemNumber
+                                 + "</td>"
+
+                                  + "<td>"
+                                 + item[i].SpecNum
+                                 + "</td>"
+
+                                  + "<td>"
+                                 + item[i].ItemDescription.substring(0, 30)
+                                 + "</td>"
+
+                                  + "<td>"
+                                 + ""
+                                 + "</td>"
+
+                                 + "</tr></tbody>"
+                                 + "</table>"
+
+
+                                   //+ "<div class='col-sm-3'>"
+                                   //+ item[i].ItemNumber
+                                   //+ "</div>"
+
+                                   //+ "<div class='col-sm-3'>" //width: 100px;
+                                   //+ item[i].SpecNum
+                                   //+ "</div>"
+
+                                   //+ "<div class='col-sm-3'>"  // width: 100px;
+                                   //+ item[i].ItemDescription.substring(0, 30)
+                                   //+ "</div>"
+
+                                   //+ "<div  class='col-sm-3'>"
+                                   //+ " (" + deslen + ")"
+                                   //+ "</div>"
+
+
+
+
+
+
+                                  
+
+                                   + "</h3>";
+
+
+
+                            html += "<div class='content' style='font-size:0.75em;height:50px;'><table class='display makedisable no-footer table dataTable' style='width:100%;color:black;' >"
+                            html += "<tr>"
+                                    + "<th>Action</th>"
+                                    + "<th>PO Number</th>"
+                                    + "<th>Vendor</th>"
+                                    + "<th>Buyer</th>"
+                                    + "<th>Terms</th>"
+                                    + "<th>Curr</th>"
+                                    + "<th>Conv</th>"
+                                    + "<th>Item Approvals</th>"
+                                    + "<th>FOB</th>"
+                                    + "<th>Arrival Date</th>"
+                                    + "<th>Check back</th>"
+                                    + "<th>Item Status</th>"
+                                    + "<th>Inv</th>"
+                                    + "<th>PO Qty</th>"
+                                    + "<th>R-Qty</th>"
+                                    + "<th>Ship Via</th>"
+                                    + "<th>Ship To</th>"
+                                    + "<th>Freight</th>"
+                                    + "<th>Remarks</th>"
+                                    + "<th>IsCommitted</th>"
+                                    + "</tr>";
+
+
+                            for (var k = 0; k < des.length; k++) {
+
+                                var POLineItemID = des[k].POLineItemID;
+
+                                var innerhtml = "";
+                                var actiontype = des[k].ActionType;
+
+                                for (var l = 0; l < actiontype.split(',').length; l++) {
+
+                                    color = actiontype.split(',')[l].split('^')[1];
+                                    if (color == "Approve") {
+                                        color = "rgb(3, 148, 43)";
+
+                                    }
+                                    else if (color == "Receive" || color == "Send") {
+                                        color = "rgb(136, 144, 142)";
+                                    }
+                                    else if (color == "Added") {
+                                        color = "#242224";
+                                    }
+
+
+                                    else {
+                                        color = "red";
+                                    }
+
+
+
+
+
+
+                                    innerhtml += "<span title='" + actiontype.split(',')[l].split('^')[1] + "'   name='" + color + "' style='color:" + color + ";'>";
+                                    innerhtml += actiontype.split(',')[l].split('^')[0];
+                                    innerhtml += "</span><br/>";
+
+                                }
+
+
+                                var rqtypoqty = des[k].ReceivedQuantity + '^' + des[k].Qty;
+
+                                html += "<tr>"
+                                        + "<td>"
+                                        + '<i class="fa fa-pencil-square-o" onclick="ExpediteNotesByPOLineItems(\'' + POLineItemID + '\',\'' + rqtypoqty + '\',this);"></i>'
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].POID.split('#')[1]
+                                        + "</td>"
+                                        + "<td>"
+
+                                        + des[k].VendorName
+
+
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].BuyerName
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].Terms
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].Currency
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].Conv
+                                        + "</td>"
+                                        + "<td>"
+                                        //+ des[k].Approved
+                                        //+ '<strong>Type: </strong>' + des[k].Statustype + ', <strong>Status : </strong>' + des[k].Status + ', <strong>Date: ' + des[k].Statusdate + '</strong>'
+                                        + '<p style="cursor:pointer;" onclick="OpenHistoryPopUp(\'' + POLineItemID + '\',\'' + des[k].POID.split('#')[0] + '\')">' + innerhtml + '</p>'
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].FOB
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].ArrivalDate
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].CheckBackDate
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].ItemStatus
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].Inv
+                                        + "</td>"
+                                        + "<td>"
+                                        + numberWithCommas(formatNumber(parseFloat(des[k].Qty)))
+                                        + "</td>"
+                                        + "<td>"
+                                        + numberWithCommas(formatNumber(parseFloat(des[k].ReceivedQuantity)))
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].ShipMethod
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].ShipTo
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].Freight
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].Remarks
+                                        + "</td>"
+
+
+                               + "<td>"
+                               + des[k].IsCommitted
+                               + "</td>"
+
+
+                                        + "</tr>";
+                            }
+                            html += "</table></div></div>";
+                        }
+                        html += '</div>';
+                        html += "</div>";
+                    }
+                    //html += "</div>";
+                    //                    html = "<div class='accordion odd'>"
+                    //+ "<h3>Nested Accordion 2.1</h3>"
+                    //+ "<div class='content'>"
+                    //+ "<div class='accordion odd'>"
+                    //+ "<h3>Nested Accordion 2.1</h3>"
+                    //+ "<div class='content'>"
+                    //+ "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in facilisis orci. Vivamus dapibus feugiat."
+                    //+ "</div>"
+                    //+ "</div>"
+                    //+ "</div>"
+                    //+ "</div>";
+                    $('#bsectioncount').html(' (' + biggercnt + ')');
+                    $('#BdgtSctn').html(html);
+                    $(".accordion").multiaccordion("close");
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+        function loadVendorPart() {
+
+            var url1 = '';
+
+            var pid = $('#PrjtDdl').val();
+            pid = pid == null ? "" : pid.toString();
+
+            if (pid.toString() == null || pid.toString() == undefined || pid.toString() == 'undefined') {
+                return;
+            }
+
+
+
+            //alert(pid);
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = 'http://www.thebridgebytcg.com/Expedite/getAllVendors';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Expedite/getAllVendors';
+            }
+            url1 += "?projectid=" + pid;
+
+            var totdata;
+
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: {},
+                success: function (response) {
+                    // //console.log(response);
+                    var html = '';//"<div class='sections'>";
+                    totdata = response;
+                    totdata = JSON.parse(totdata).data;
+
+                    var totlen = totdata.length;
+                    $('#vsectioncount').html(' (' + totlen + ')');
+
+                    var biggercnt = 0;
+
+                    for (var a = 0; a < totdata.length; a++) {
+                        var VendorID = totdata[a].VendorID;
+                        var VendorCommonName = totdata[a].VendorCommonName;
+                        var Contactname = totdata[a].Contactname;
+                        var Title = totdata[a].Title;
+                        var City = totdata[a].City;
+                        var Phone = totdata[a].Phone;
+                        var Fax = totdata[a].Fax;
+                        var Email = totdata[a].Email;
+                        var PurchaseOrders = totdata[a].PurchaseOrders;
+                        var PurchaseOrders_len = PurchaseOrders.length;
+
+                        var cnt = 0;
+
+                        var displayflag = '';
+                        if (PurchaseOrders_len == 0) {
+                            displayflag = 'displaynone';
+                        }
+                        else {
+                            
+
+                            for (var b = 0; b < PurchaseOrders.length; b++) {
+
+                                var LineItems_len = PurchaseOrders[b].LineItems.length;
+
+                                if (LineItems_len != 0) {
+                                    cnt++;
+                                }
+                            }
+
+                            if (cnt == 0) {
+                                displayflag = 'displaynone';
+                            }
+                        }
+
+                        if (cnt > 0) {
+                            biggercnt++;
+                        }
+
+
+                        html += '<div class="accordion odd ' + displayflag + '">';
+
+
+                        html += "<h3>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;display:none;'>" + VendorID + "</div>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;'><span style='color:#03539A;'>Vendor:</span> " + VendorCommonName + "</div>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;'><span style='color:#03539A;'>Contact:</span> " + Contactname + "</div>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;display:none;'>" + Title + "</div>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;display:none;'>" + City + "</div>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;display:none;'>" + Phone + "</div>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;display:none;'>" + Fax + "</div>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px; '><span style='color:#03539A;'>Email:</span> " + Email + "</div>"
+                        html += "<div class='mrg10L;'>   (" + cnt + ")</div>"
+                        html += "</h3>";
+                        html += "<div class='content'>";
+
+
+                        for (var b = 0; b < PurchaseOrders.length; b++) {
+
+                            var PONUMBER = PurchaseOrders[b].TotalPOID;
+                            var Buyer = PurchaseOrders[b].Buyer;
+                            var Terms = PurchaseOrders[b].Terms;
+                            var Currency = PurchaseOrders[b].Currency;
+                            var ConversionRate = PurchaseOrders[b].ConversionRate;
+                            var FOB = PurchaseOrders[b].FOB;
+                            var ArrivalDate = PurchaseOrders[b].ArrivalDate;
+                            var CheckBackDate = PurchaseOrders[b].CheckBackDate;
+                            var POStatus = PurchaseOrders[b].POStatus;
+                            var NumOfUserToAprv_PO = PurchaseOrders[b].NumOfUserToAprv_PO;
+                            var ShipTo = PurchaseOrders[b].ShipTo;
+                            var ShipMethod = PurchaseOrders[b].ShipMethod;
+                            var Freight = PurchaseOrders[b].Freight;
+                            var Remarks = PurchaseOrders[b].Remarks;
+                            var Confirmation = PurchaseOrders[b].Confirmation;
+
+
+                            var LineItems = PurchaseOrders[b].LineItems;
+                            var LineItems_len = LineItems.length;
+
+                            var displayflag = '';
+
+                            if (LineItems_len == 0) {
+                                displayflag = 'displaynone';
+                            }
+
+
+                            html += '<div class="accordion odd ' + displayflag + '" style="font-size:0.75em;">'
+                            html += "<h3 style='height:70px;'>"
+
+                            html += "<table class='display makedisable no-footer dataTable'>"
+                                + "<thead>"
+                                + "<th>PO#</th>"
+                                + "<th>Buyer</th>"
+                                + "<th>Currency</th>"
+                                + "<th>ConversionRate</th>"
+                                + "<th>ArrivalDate</th>"
+                                + "<th>ShipMethod</th>"
+
+                                + "<th>Freight</th>"
+                                + "<th>ShipTo</th>"
+                                + "<th class='right-position'>(" + LineItems_len + ")</th>"
+
+                                + "<thead>"
+                                + "<tbody><tr>"
+                                    + "<td>" + PONUMBER + "</td>"
+                                    + "<td>" + Buyer + "</td>"
+                                    + "<td>" + Currency + "</td>"
+                                    + "<td>" + ConversionRate + "</td>"
+                                    + "<td>" + ArrivalDate + "</td>"
+                                    + "<td>" + ShipMethod + "</td>"
+
+                                    + "<td>" + Freight + "</td>"
+                                    + "<td>" + ShipTo + "</td>"
+                                    + "<td>Approved " + POStatus + " Out of " + NumOfUserToAprv_PO + "</td>"
+                                    + "</tr></table>";
+
+                            html += "</h3>";
+                            html += "<div class='content'>";
+
+
+                            html += "<table class='display makedisable no-footer dataTable' style='width:100%;color:black;'>"
+                                       + "<tr>"
+                                        + "<th>Action</th>"
+                                       + "<th>POLineItemID</th>"
+                                       + "<th>SpecNum</th>"
+                                       + "<th>ItemDescription</th>"
+                                       + "<th>ItemApprovals</th>"
+                                       + "<th>ItemStatus</th>"
+                                       + "<th>Quantity</th>"
+                                       + "<th>Invoice</th>"
+                                       + "<th>ReceivedQuantity</th>"
+                               + "</tr>";
+
+
+
+                            for (var ii = 0; ii < LineItems.length; ii++) {
+
+
+                                var POLineItemID = LineItems[ii].POLineItemID.split('#')[0];
+                                var POLineItemIDShow = LineItems[ii].POLineItemID.split('#')[1];
+
+                                var SpecNum = LineItems[ii].SpecNum;
+                                var ItemDescription = LineItems[ii].ItemDescription;
+                                var ItemApprovals = LineItems[ii].ItemApprovals;
+                                var NumOfUserToAprv_PO = LineItems[ii].NumOfUserToAprv_PO;
+                                var ItemStatus = LineItems[ii].ItemStatus;
+                                var ActionType = LineItems[ii].ActionType;
+                                // var ReceivedQuantity = LineItems[ii].ReceivedQuantity;
+
+                                var ReceivedQuantity = isNaN(parseFloat(LineItems[ii].ReceivedQuantity)) ? '0' : LineItems[ii].ReceivedQuantity;
+
+
+                                var Invoice = LineItems[ii].Invoice;
+                                var Quantity = LineItems[ii].Quantity;
+
+
+                                var innerhtml = "";
+                                var actiontype = LineItems[ii].ActionType;
+
+                                for (var l = 0; l < actiontype.split(',').length; l++) {
+
+                                    color = actiontype.split(',')[l].split('^')[1];
+                                    if (color == "Approve") {
+                                        color = "rgb(3, 148, 43)";
+
+                                    }
+                                    else if (color == "Receive" || color == "Send") {
+                                        color = "rgb(136, 144, 142)";
+                                    }
+                                    else if (color == "Added") {
+                                        color = "#242224";
+                                    }
+                                    else {
+                                        color = "red";
+                                    }
+
+                                    innerhtml += "<span title='" + actiontype.split(',')[l].split('^')[1] + "' style='color:" + color + ";'>";
+                                    innerhtml += actiontype.split(',')[l].split('^')[0];
+                                    innerhtml += "</span><br/>";
+
+                                }
+
+                                var rqtypoqty = ReceivedQuantity + '^' + Quantity;
+
+
+                                html += "<tr>";
+                                html += "<td>" + '<i class="fa fa-pencil-square-o" onclick="ExpediteNotesByPOLineItems(\'' + POLineItemID + '\',\'' + rqtypoqty + '\',this);"></i>' + "</td>";
+                                html += "<td>" + POLineItemIDShow + "</td>";
+                                html += "<td>" + SpecNum + "</td>";
+                                html += "<td>" + ItemDescription + "</td>";
+                                html += "<td>" + '<p style="cursor:pointer;" onclick="OpenHistoryPopUp(\'' + POLineItemID + '\',\'' + PurchaseOrders[b].PONUMBER + '\')">' + innerhtml + '</p>' + "</td>";
+                                html += "<td>" + ItemStatus + "</td>";
+                                html += "<td>" + numberWithCommas(formatNumber(parseFloat(Quantity))) + "</td>";
+                                html += "<td>" + Invoice + "</td>";
+                                html += "<td>" + numberWithCommas(formatNumber(parseFloat(ReceivedQuantity))) + "</td>";
+                                html += "</tr>";
+                            }
+                            html += "</table>";
+                            html += "</div>";
+                            html += "</div>";
+                        }
+                        html += "</div>";//content
+                        html += "</div>";//accord
+                    }
+
+                    $('#vsectioncount').html(' (' + biggercnt + ')');
+
+                    $('#VndrPrt').html(html);
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+
+
+
+
+        function loadBudgetPartNew(obj) {
+            var url1 = '';
+            //var pid = $('#PrjtDdl option:selected').attr('data-id');
+            var pid = $('#PrjtDdl').val();
+            pid = pid == null ? "" : pid.toString();
+
+            if (pid.toString() == null || pid.toString() == undefined || pid.toString() == 'undefined') {
+                return;
+            }
+
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = 'http://www.thebridgebytcg.com/Expedite/getAllProjectSectionNew';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                //url1 = urlsuffix + "/" + 'Project/getAllProjectList';
+                url1 = 'Expedite/getAllProjectSectionNew';
+            }
+            url1 += "?projectid=" + pid;
+            url1 += "&WhereClause=" + obj;
+            var totdata;
+            // alert(url1);
+
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: url1,
+                data: {},
+                success: function (response) {
+
+                    var html = '';//"<div class='sections'>";
+                    totdata = response;
+                    totdata = JSON.parse(totdata).data;
+                    var totlen = totdata.length;
+                    var biggercnt = 0;
+
+                    $('#bsectioncount').html(' (' + totlen + ')');
+                    //html += "Total " + totdata.length + " result(s) found";
+
+                    for (var a = 0; a < totdata.length; a++) {
+                        var cnt = 0;
+                        var id = totdata[a].id;
+                        var name = totdata[a].sectionname;
+                        var order = totdata[a].Sectionnumber;
+                        var item = totdata[a].item;
+                        var item_ln = item.length;
+                        //html += "<div class='sectiondiv security-title'  id='" + id + "'>";
+                        //html += "<i onclick='sectionclicked(this);' class='fa fa-pencil-square-o'></i>&nbsp;&nbsp;";
+                        //html += "<span>" + order + "-" + name + "</span>";
+                        //html += "</div>";
+                        var displayflag = '';
+                        if (item_ln == 0) {
+                            displayflag = 'displaynone';
+
+                        }
+                        else {
+
+                            for (var i = 0; i < item.length ; i++) {
+
+                                var des = item[i].Description;
+                                var deslen = des.length;
+                                if (deslen > 0) { cnt++; }
+                            }
+
+
+                        }
+
+                        if (cnt == 0) {
+                            displayflag = 'displaynone';
+                        }
+                        else {
+                            biggercnt++;
+                        }
+
+                        html += '<div class="accordion odd display_' + item_ln + ' ' + displayflag + '">';
+
+
+
+                        html += "<h3><div class='row'>";
+
+                        html += "<div class='col-sm-2'><span style='color:#03539A;'>Number: </span>" + order;
+                        html += "</div>";
+
+                        html += "<div class='col-sm-2'><span style='color:#03539A;'>Name: </span>" + name;
+                        html += "</div>";
+
+                        html += "<div class='col-sm-2'>" + " (" + cnt + ")";
+                        html += "</div></h3>";
+
+                        //html += "<h3>" + order + "    " + name + " (" + item_ln + ")</h3>";
+
+
+
+
+                        html += "<div class='content'>";
+
+
+                        var html1 = '';
+                        for (var i = 0; i < item.length ; i++) {
+
+                            var des = item[i].Description;
+                            var deslen = des.length;
+
+                            var displayflag = '';
+                            if (deslen == 0) {
+                                displayflag = 'displaynone';
+
+                            }
+
+
+                            html += '<div class="accordion odd display_' + deslen + ' ' + displayflag + '" style="font-size:0.75em;">'
+                            //return;
+                            html += "<h3 style='height:80px;'>"
+
+
+
+                                 + "<table class='display makedisable no-footer table dataTable' style='width:100%;color:black;' ><thead>"
+                                 + "<tr>"
+                                 + "<th>Item#</th>"
+                                 + "<th>Spec</th>"
+                                 + "<th>Desc</th>"
+                                 + "<th>(" + deslen + ")</th>"
+                                 + "</tr>"
+                                 + "<tr></thead><tbody>"
+
+                                 + "<td>"
+                                 + item[i].ItemNumber
+                                 + "</td>"
+
+                                  + "<td>"
+                                 + item[i].SpecNum
+                                 + "</td>"
+
+                                  + "<td>"
+                                 + item[i].ItemDescription.substring(0, 30)
+                                 + "</td>"
+
+                                  + "<td>"
+                                 + ""
+                                 + "</td>"
+
+                                 + "</tr></tbody>"
+                                 + "</table>"
+
+
+                                   //+ "<div class='col-sm-3'>"
+                                   //+ item[i].ItemNumber
+                                   //+ "</div>"
+
+                                   //+ "<div class='col-sm-3'>" //width: 100px;
+                                   //+ item[i].SpecNum
+                                   //+ "</div>"
+
+                                   //+ "<div class='col-sm-3'>"  // width: 100px;
+                                   //+ item[i].ItemDescription.substring(0, 30)
+                                   //+ "</div>"
+
+                                   //+ "<div  class='col-sm-3'>"
+                                   //+ " (" + deslen + ")"
+                                   //+ "</div>"
+
+
+
+
+
+
+
+
+                                   + "</h3>";
+
+
+
+                            html += "<div class='content' style='font-size:0.75em;height:50px;'><table class='display makedisable no-footer table dataTable' style='width:100%;color:black;' >"
+                            html += "<tr>"
+                                    + "<th>Action</th>"
+                                    + "<th>PO Number</th>"
+                                    + "<th>Vendor</th>"
+                                    + "<th>Buyer</th>"
+                                    + "<th>Terms</th>"
+                                    + "<th>Curr</th>"
+                                    + "<th>Conv</th>"
+                                    + "<th>Item Approvals</th>"
+                                    + "<th>FOB</th>"
+                                    + "<th>Arrival Date</th>"
+                                    + "<th>Check back</th>"
+                                    + "<th>Item Status</th>"
+                                    + "<th>Inv</th>"
+                                    + "<th>PO Qty</th>"
+                                    + "<th>R-Qty</th>"
+                                    + "<th>Ship Via</th>"
+                                    + "<th>Ship To</th>"
+                                    + "<th>Freight</th>"
+                                    + "<th>Remarks</th>"
+                                    + "<th>IsCommitted</th>"
+                                    + "</tr>";
+
+
+                            for (var k = 0; k < des.length; k++) {
+
+                                var POLineItemID = des[k].POLineItemID;
+
+                                var innerhtml = "";
+                                var actiontype = des[k].ActionType;
+
+                                for (var l = 0; l < actiontype.split(',').length; l++) {
+
+                                    color = actiontype.split(',')[l].split('^')[1];
+                                    if (color == "Approve") {
+                                        color = "rgb(3, 148, 43)";
+
+                                    }
+                                    else if (color == "Receive" || color == "Send") {
+                                        color = "rgb(136, 144, 142)";
+                                    }
+                                    else if (color == "Added") {
+                                        color = "#242224";
+                                    }
+
+
+                                    else {
+                                        color = "red";
+                                    }
+
+
+
+
+
+
+                                    innerhtml += "<span title='" + actiontype.split(',')[l].split('^')[1] + "'   name='" + color + "' style='color:" + color + ";'>";
+                                    innerhtml += actiontype.split(',')[l].split('^')[0];
+                                    innerhtml += "</span><br/>";
+
+                                }
+
+
+                                var rqtypoqty = des[k].ReceivedQuantity + '^' + des[k].Qty;
+
+                                html += "<tr>"
+                                        + "<td>"
+                                        + '<i class="fa fa-pencil-square-o" onclick="ExpediteNotesByPOLineItems(\'' + POLineItemID + '\',\'' + rqtypoqty + '\',this);"></i>'
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].POID.split('#')[1]
+                                        + "</td>"
+                                        + "<td>"
+
+                                        + des[k].VendorName
+
+
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].BuyerName
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].Terms
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].Currency
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].Conv
+                                        + "</td>"
+                                        + "<td>"
+                                        //+ des[k].Approved
+                                        //+ '<strong>Type: </strong>' + des[k].Statustype + ', <strong>Status : </strong>' + des[k].Status + ', <strong>Date: ' + des[k].Statusdate + '</strong>'
+                                        + '<p style="cursor:pointer;" onclick="OpenHistoryPopUp(\'' + POLineItemID + '\',\'' + des[k].POID.split('#')[0] + '\')">' + innerhtml + '</p>'
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].FOB
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].ArrivalDate
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].CheckBackDate
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].ItemStatus
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].Inv
+                                        + "</td>"
+                                        + "<td>"
+                                        + numberWithCommas(formatNumber(parseFloat(des[k].Qty)))
+                                        + "</td>"
+                                        + "<td>"
+                                        + numberWithCommas(formatNumber(parseFloat(des[k].ReceivedQuantity)))
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].ShipMethod
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].ShipTo
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].Freight
+                                        + "</td>"
+                                        + "<td>"
+                                        + des[k].Remarks
+                                        + "</td>"
+
+
+                               + "<td>"
+                               + des[k].IsCommitted
+                               + "</td>"
+
+
+                                        + "</tr>";
+                            }
+                            html += "</table></div></div>";
+                        }
+                        html += '</div>';
+                        html += "</div>";
+                    }
+                    //html += "</div>";
+                    //                    html = "<div class='accordion odd'>"
+                    //+ "<h3>Nested Accordion 2.1</h3>"
+                    //+ "<div class='content'>"
+                    //+ "<div class='accordion odd'>"
+                    //+ "<h3>Nested Accordion 2.1</h3>"
+                    //+ "<div class='content'>"
+                    //+ "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in facilisis orci. Vivamus dapibus feugiat."
+                    //+ "</div>"
+                    //+ "</div>"
+                    //+ "</div>"
+                    //+ "</div>";
+                    $('#bsectioncount').html(' (' + biggercnt + ')');
+                    $('#BdgtSctn').html(html);
+                    $('#loaderspinner').hide();
+
+
+                    $(".accordion").multiaccordion("init");
+                    $(".accordion").multiaccordion("close");
+                    $(".accordion").multiaccordion({ defaultIcon: 'ui-icon-plusthick' });
+
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+        function loadVendorPartNew(obj) {
+            var url1 = '';
+            //var pid = $('#PrjtDdl option:selected').attr('data-id');
+            var pid = $('#PrjtDdl').val();
+            pid = pid == null ? "" : pid.toString();
+
+            if (pid.toString() == null || pid.toString() == undefined || pid.toString() == 'undefined') {
+                return;
+            }
+
+
+            //alert(pid);
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = 'http://www.thebridgebytcg.com/Expedite/getAllVendorsNew';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Expedite/getAllVendorsNew';
+            }
+            url1 += "?projectid=" + pid;
+            url1 += "&WhereClause=" + obj;
+            var totdata;
+
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                
+                data: {},
+                success: function (response) {
+                    // //console.log(response);
+                    var html = '';//"<div class='sections'>";
+                    totdata = response;
+                    totdata = JSON.parse(totdata).data;
+                    // html += "Total " + totdata.length + " result(s) found";
+
+                    var biggercnt = 0;
+
+                    for (var a = 0; a < totdata.length; a++) {
+                        var cnt = 0;
+                        var VendorID = totdata[a].VendorID;
+                        var VendorCommonName = totdata[a].VendorCommonName;
+                        var Contactname = totdata[a].Contactname;
+                        var Title = totdata[a].Title;
+                        var City = totdata[a].City;
+                        var Phone = totdata[a].Phone;
+                        var Fax = totdata[a].Fax;
+                        var Email = totdata[a].Email;
+                        var PurchaseOrders = totdata[a].PurchaseOrders;
+                        var PurchaseOrders_len = PurchaseOrders.length;
+                        var displayflag = '';
+                        if (PurchaseOrders_len == 0) {
+                            displayflag = 'displaynone';
+                        }
+                        else {
+                            
+
+                            for (var b = 0; b < PurchaseOrders.length; b++) {
+                                
+                                var LineItems_len = PurchaseOrders[b].LineItems.length;
+
+                                if (LineItems_len != 0) {
+                                    cnt++;
+                                }
+                            }
+
+                            if (cnt == 0) {
+                                displayflag = 'displaynone';
+                            }
+                        }
+
+                        if (cnt > 0) {
+                            biggercnt++;
+                        }
+
+                        html += '<div class="accordion odd ' + displayflag + '">';
+
+
+                        html += "<h3>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;display:none;'>" + VendorID + "</div>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;'><span style='color:#03539A;'>Vendor:</span> " + VendorCommonName + "</div>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;'><span style='color:#03539A;'>Contact:</span> " + Contactname + "</div>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;display:none;'>" + Title + "</div>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;display:none;'>" + City + "</div>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;display:none;'>" + Phone + "</div>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;display:none;'>" + Fax + "</div>"
+                        html += "<div style='position: relative;width: auto;float: left;margin-left: 15px; '><span style='color:#03539A;'>Email:</span> " + Email + "</div>"
+                        html += "<div class='mrg10L;'>   (" + cnt + ")</div>"
+                        html += "</h3>";
+                        html += "<div class='content'>";
+
+                        //html += "<h3>"
+                        //html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;display:none;'>" + VendorID + "</div>"
+                        //html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;'>" + VendorCommonName + "</div>"
+                        //html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;'>" + Contactname + "</div>"
+                        //html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;'>" + Title + "</div>"
+                        //html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;'>" + City + "</div>"
+                        //html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;'>" + Phone + "</div>"
+                        //html += "<div style='position: relative;width: auto;float: left;margin-left: 15px;'>" + Fax + "</div>"
+                        //html += "<div style='position: relative;width: auto;float: left;margin-left: 15px; '>" + Email + "</div>"
+                        //html += "<div >   (" + PurchaseOrders_len + ")</div>"
+                        //html += "</h3>";
+                        //html += "<div class='content'>";
+
+                        //html += '<div class="accordion odd">'
+                        //html += "<h3>Test"
+                        //html += "</h3>";
+                        //html += "<div class='content'>";
+
+                        //html += "Testqq";
+                        //html += "</div>";
+                        //html += "</div>";
+
+
+
+
+
+
+                        for (var b = 0; b < PurchaseOrders.length; b++) {
+
+                            var PONUMBER = PurchaseOrders[b].PONUMBER;
+                            var Buyer = PurchaseOrders[b].Buyer;
+                            var Terms = PurchaseOrders[b].Terms;
+                            var Currency = PurchaseOrders[b].Currency;
+                            var ConversionRate = PurchaseOrders[b].ConversionRate;
+                            var FOB = PurchaseOrders[b].FOB;
+                            var ArrivalDate = PurchaseOrders[b].ArrivalDate;
+                            var CheckBackDate = PurchaseOrders[b].CheckBackDate;
+                            var POStatus = PurchaseOrders[b].POStatus;
+                            var NumOfUserToAprv_PO = PurchaseOrders[b].NumOfUserToAprv_PO;
+                            var ShipTo = PurchaseOrders[b].ShipTo;
+                            var ShipMethod = PurchaseOrders[b].ShipMethod;
+                            var Freight = PurchaseOrders[b].Freight;
+                            var Remarks = PurchaseOrders[b].Remarks;
+                            var Confirmation = PurchaseOrders[b].Confirmation;
+
+                            var LineItems = PurchaseOrders[b].LineItems;
+                            var LineItems_len = LineItems.length;
+
+                            var displayflag = '';
+
+                            if (LineItems_len == 0) {
+                                displayflag = 'displaynone';
+                            }
+
+                            html += '<div class="accordion odd ' + displayflag + '" style="font-size:0.75em;">'
+                            html += "<h3 style='height:70px;'>"
+
+
+                            html += "<table class='display makedisable no-footer dataTable'>"
+                                + "<thead>"
+                                + "<th>PO#</th>"
+                                + "<th>Buyer</th>"
+                                + "<th>Currency</th>"
+                                + "<th>ConversionRate</th>"
+                                + "<th>ArrivalDate</th>"
+                                + "<th>ShipMethod</th>"
+
+                                + "<th>Freight</th>"
+                                + "<th>ShipTo</th>"
+                                + "<th class='right-position'>(" + LineItems_len + ")</th>"
+
+                                + "<thead>"
+                                + "<tbody><tr>"
+                                    + "<td>" + PONUMBER + "</td>"
+                                    + "<td>" + Buyer + "</td>"
+                                    + "<td>" + Currency + "</td>"
+                                    + "<td>" + ConversionRate + "</td>"
+                                    + "<td>" + ArrivalDate + "</td>"
+                                    + "<td>" + ShipMethod + "</td>"
+
+                                    + "<td>" + Freight + "</td>"
+                                    + "<td>" + ShipTo + "</td>"
+                                    + "<td>Approved " + POStatus + " Out of " + NumOfUserToAprv_PO + "</td>"
+                                    + "</tr></table>";
+
+
+                            //html += "<div style='position: relative;width : auto; margin-left: 10px;float: left;display:none;'>" + PONUMBER + "</div>"
+                            //html += "<div style='position: relative;width : auto; margin-left: 10px;float: left;'>" + Buyer + "</div>"
+                            //html += "<div style='position: relative;width : auto; margin-left: 10px;float: left;'>" + Terms + "</div>"
+                            //html += "<div style='position: relative;width : auto; margin-left: 10px;float: left;'>" + Currency + "</div>"
+                            //html += "<div style='position: relative;width : auto; margin-left: 10px;float: left;'>" + ConversionRate + "</div>"
+                            //html += "<div style='position: relative;width : auto; margin-left: 10px;float: left;'>" + FOB + "</div>"
+                            //html += "<div style='position: relative;width : auto; margin-left: 10px;float: left;'>" + ArrivalDate + "</div>"
+                            //html += "<div style='position: relative;width : auto; margin-left: 10px;float: left;'>" + CheckBackDate + "</div>"
+                            //html += "<div style='position: relative;width : auto; margin-left: 10px;float: left;'>" + POStatus + "</div>"
+                            //html += "<div style='position: relative;width : auto; margin-left: 10px;float: left;'>" + NumOfUserToAprv_PO + "</div>"
+                            //html += "<div style='position: relative;width : auto; margin-left: 10px;float: left;'>" + ShipTo + "</div>"
+                            //html += "<div style='position: relative;width : auto; margin-left: 10px;float: left;'>" + ShipMethod + "</div>"
+                            //html += "<div style='position: relative;width : auto; margin-left: 10px;float: left;'>" + Freight + "</div>"
+                            //html += "<div style='position: relative;wiwidth : auto; margin-left: 10px;dth: auto;float: left;'>" + Remarks + "</div>"
+                            //html += "<div style='position: relative;wiwidth : auto; margin-left: 10px;dth: auto;float: left;'>" + Confirmation + "</div>"
+                            //html += "<div>(" + LineItems_len + ")</div>"
+
+                            html += "</h3>";
+                            html += "<div class='content'>";
+
+
+
+                            html += "<table class='display makedisable no-footer dataTable' style='width:100%;color:black;'>"
+                                       + "<tr>"
+                                        + "<th>Action</th>"
+                                       + "<th>POLineItemID</th>"
+                                       + "<th>SpecNum</th>"
+                                       + "<th>ItemDescription</th>"
+                                       + "<th>ItemApprovals</th>"
+                                       + "<th>ItemStatus</th>"
+                                       + "<th>Quantity</th>"
+                                       + "<th>Invoice</th>"
+                                       + "<th>ReceivedQuantity</th>"
+                               + "</tr>";
+
+
+
+                            for (var ii = 0; ii < LineItems.length; ii++) {
+
+
+                                var POLineItemID = LineItems[ii].POLineItemID.split('#')[0];
+                                var POLineItemIDShow = LineItems[ii].POLineItemID.split('#')[1];
+
+                                var SpecNum = LineItems[ii].SpecNum;
+                                var ItemDescription = LineItems[ii].ItemDescription;
+                                var ItemApprovals = LineItems[ii].ItemApprovals;
+                                var NumOfUserToAprv_PO = LineItems[ii].NumOfUserToAprv_PO;
+                                var ItemStatus = LineItems[ii].ItemStatus;
+                                var ActionType = LineItems[ii].ActionType;
+                                // var ReceivedQuantity = LineItems[ii].ReceivedQuantity;
+
+                                var ReceivedQuantity = isNaN(parseFloat(LineItems[ii].ReceivedQuantity)) ? '0' : LineItems[ii].ReceivedQuantity;
+
+
+                                var Invoice = LineItems[ii].Invoice;
+                                var Quantity = LineItems[ii].Quantity;
+
+
+                                var innerhtml = "";
+                                var actiontype = LineItems[ii].ActionType;
+                                actiontype = actiontype == undefined ? "" : actiontype;
+                                //console.log(actiontype + "***");
+                                for (var l = 0; l < actiontype.split(',').length; l++) {
+
+                                    color = actiontype.split(',')[l].split('^')[1];
+                                    if (color == "Approve") {
+                                        color = "rgb(3, 148, 43)";
+
+                                    }
+                                    else if (color == "Receive" || color == "Send") {
+                                        color = "rgb(136, 144, 142)";
+                                    }
+                                    else if (color == "Added") {
+                                        color = "#242224";
+                                    }
+                                    else {
+                                        color = "red";
+                                    }
+
+                                    innerhtml += "<span title='" + actiontype.split(',')[l].split('^')[1] + "' style='color:" + color + ";'>";
+                                    innerhtml += actiontype.split(',')[l].split('^')[0];
+                                    innerhtml += "</span><br/>";
+
+                                }
+
+                                var rqtypoqty = ReceivedQuantity + '^' + Quantity;
+
+
+                                html += "<tr>";
+                                html += "<td>" + '<i class="fa fa-pencil-square-o" onclick="ExpediteNotesByPOLineItems(\'' + POLineItemID + '\',\'' + rqtypoqty + '\',this);"></i>' + "</td>";
+                                html += "<td>" + POLineItemIDShow + "</td>";
+                                html += "<td>" + SpecNum + "</td>";
+                                html += "<td>" + ItemDescription + "</td>";
+                                html += "<td>" + '<p style="cursor:pointer;" onclick="OpenHistoryPopUp(\'' + POLineItemID + '\',\'' + PurchaseOrders[b].PONUMBER + '\')">' + innerhtml + '</p>' + "</td>";
+                                html += "<td>" + ItemStatus + "</td>";
+                                html += "<td>" + numberWithCommas(formatNumber(parseFloat(Quantity))) + "</td>";
+                                html += "<td>" + Invoice + "</td>";
+                                html += "<td>" + numberWithCommas(formatNumber(parseFloat(ReceivedQuantity))) + "</td>";
+                                html += "</tr>";
+                            }
+                            html += "</table>";
+                            html += "</div>";
+                            html += "</div>";
+                        }
+                        html += "</div>";//content
+                        html += "</div>";//accord
+                    }
+
+                    $('#vsectioncount').html(' (' + biggercnt + ')');
+
+                    $('#VndrPrt').html(html);
+
+                   $('#loaderspinner').hide();
+
+                    $(".accordion").multiaccordion("init");
+                    $(".accordion").multiaccordion("close");
+                    $(".accordion").multiaccordion({ defaultIcon: 'ui-icon-plusthick' });
+
+
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+
+        function GetDataOnProjectChange(obj) {
+            //var pid = $('#PrjtDdl option:selected').attr('data-id');
+            var pid = $('#PrjtDdl').val();
+            pid = pid == null ? "" : pid.toString();
+
+            if (pid.toString() == null || pid.toString() == undefined || pid.toString() == 'undefined') {
+                $('#lbl_ProjectName').html('No project has been selected.');
+                return;
+            }
+
+            if (pid.toString() == '0') {
+                $('#lbl_ProjectName').html('No project has been selected.');
+                $('#GlobalMonitoringFilter').hide();
+            }
+            else {
+                $('#lbl_ProjectName').html('Selected Project : ' + $('#PrjtDdl option:selected').text());
+                $('#GlobalMonitoringFilter').show();
+            }
+
+
+
+
+            loadBudgetPart();
+            loadVendorPart();
+            resetAccordian();
+
+
+            $(".accordion").multiaccordion();
+            $(".accordion").multiaccordion("close");
+            $(".accordion").multiaccordion({ defaultIcon: 'ui-icon-plusthick' });
+
+            ForToolTip();
+        }
+
+
+        function resetAccordian() {
+            // //Initialising Accordion
+            // $(".accordion").tabs(".pane", {
+            //     tabs: '> h2',
+            //     effect: 'slide',
+            //     initialIndex: null
+            // });
+
+            ////The click to hide function
+            //$(".accordion > h2").click();
+        }
+
+        $(document).ready(function () {
+            $("#PrjtDdl").multiselect({
+
+                multiple: false
+                //,header: "Select an option"
+                , noneSelectedText: "Select a Project"
+                //,selectedList: 1
+
+            }).multiselectfilter();
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+
+
+        });
+
+
+
+        $(document).ready(function () {
+            //
+
+
+
+
+            loadBudgetPart();
+            loadVendorPart();
+            resetAccordian();
+
+
+            $(".accordion").multiaccordion();
+            $(".accordion").multiaccordion("close");
+            $(".accordion").multiaccordion({ defaultIcon: 'ui-icon-plusthick' });
+
+
+            ForToolTip();
+
+        });
+
+
+        $(document).ready(function () {
+
+            ForToolTip();
+
+        });
+
+        function ForToolTip() {
+            $('.tooltip').mouseover(function () {
+
+
+                // $(this).find("span").text($(this).attr('data-id'));
+                var obj = $(this);
+                $(obj).find("span").text('Loading .....');
+
+                var ContactID = $(this).attr('data-id');
+
+
+                if (ContactID == '0' || ContactID == '' || ContactID == 'undefined') {
+                    return;
+                }
+                else {
+
+                    var url = "";
+
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url = 'http://www.thebridgebytcg.com/Expedite/getVendorContactData';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url = 'Expedite/getVendorContactData';
+                    }
+                    url += "?ContactID=" + ContactID;
+
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: {},
+                        success: function (data) {
+                            if (data != "") {
+                                //  $('#tblPOExpediteHistoryBody').html(data);
+
+
+                                var xx = JSON.parse(data);
+
+
+                                var html = "";
+
+                                html += "<div class='user_panel_container'>"
+                                //html += "<div class='edit_vendor_half'>"
+                                //html += "</div>"
+                                html += "<div>" + "<b>Parent Vendor Name : </b>" + xx.ParentVendorName + "</div>";
+                                html += "<div>" + "<b>Contact Name : </b>" + xx.ContactFname + " " + xx.ContactLname + "</div>";
+                                html += "<div>" + "<b>Contact Address : </b>" + xx.Address1 + "</div>";
+                                html += "<div>" + "<b>Country : </b>" + xx.Country + "</div>";
+                                html += "<div>" + "<b>State : </b>" + xx.State + "</div>";
+                                html += "<div>" + "<b>City : </b>" + xx.City + "</div>";
+                                html += "<div>" + "<b>Postal Code : </b>" + xx.ZipCode + "</div>";
+                                html += "<div>" + "<b>Phone : </b>" + xx.Phone + "</div>";
+                                html += "<div>" + "<b>Fax : </b>" + xx.Fax + "</div>";
+                                html += "<div>" + "<b>Title : </b>" + xx.ContactTitle + "</div>";
+                                html += "<div>" + "<b>Email : </b>" + xx.Email + "</div>";
+                                html += "<div>" + "<b>Website : </b>" + xx.Website + "</div>";
+                                html += "</div>";
+
+
+                                $(obj).find("span").html(html);
+
+                            }
+                        },
+                        failed: function () { //console.log('failed'); }
+                    });
+
+                }
+
+            })
+            .mouseout(function () {
+                //alert(2);
+                // $(this).find("span").text( "mouse out " );
+            });
+        }
+    </script>
+    <script>
+
+
+        function formatNumber(number) {
+            number = parseFloat(number);
+            var number = number.toFixed(2) + '';
+            var x = number.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+
+        function numberWithCommas(x) {
+            var parts = x.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
+    </script>
+    <style type="text/css">
+        /* root element for accordion. decorated with rounded borders and gradient background image */
+        .accordion {
+            background: #FFF7F7;
+            width: 100%;
+            border: 1px solid #333;
+            -background: #666;
+        }
+
+            /* accordion header */
+            .accordion h2 {
+                background: #ccc url('http://static.flowplayer.org/img/global/gradient/h30.png');
+                margin: 0;
+                padding: 5px 15px;
+                font-size: 14px;
+                font-weight: normal;
+                border: 1px solid #fff;
+                border-bottom: 1px solid #ddd;
+                cursor: pointer;
+                color: #000;
+            }
+
+                /* currently active header */
+                .accordion h2.current {
+                    cursor: default;
+                    background-color: #2BA6BE;
+                }
+
+            /* accordion pane */
+            .accordion .pane {
+                display: none;
+                padding: 15px;
+                color: #fff;
+                font-size: 12px;
+            }
+
+                /* a title inside pane */
+                .accordion .pane h3 {
+                    font-weight: normal;
+                    margin: 0 0 -5px 0;
+                    font-size: 16px;
+                    color: #999;
+                }
+    </style>
+
+    <style type="text/css">
+        #POExpeditepopuplineitems .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 6px 0px;
+            width: 96%;
+            height: 20px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        function ViewPOExpediteHistory(obj) {
+            POID = obj;
+            var url = "";
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/Expedite/getPOExpediteHistory';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Expedite/getPOExpediteHistory';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'POID': POID },
+                success: function (data) {
+                    if (data != "") {
+                        // $('#tblPOExpediteHistory').html(data);
+                        $('#tblPOExpediteHistoryBody').html(data);
+
+                    }
+                }
+            });
+
+        }
+
+        function ViewPOLineItemExpediteHistory(obj) {
+            POID = obj;
+            var url = "";
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/Expedite/getPOLineItemExpediteHistory';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Expedite/getPOLineItemExpediteHistory';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'POID': POID },
+                success: function (data) {
+                    if (data != "") {
+                        // $('#tblPOLineItemExpediteHistory').html(data);
+                        $('#tblPOLineItemExpediteHistoryBody').html(data);
+
+
+                    }
+                }
+            });
+
+        }
+
+        function AvoidKeyPress(e) {
+            return true;
+            var keyCode = e.which ? e.which : e.keyCode
+            if (keyCode == 8) {
+                return true;
+            }
+            else {
+                alert('Use Calender');
+                return false;
+            }
+        }
+
+        $(function () {
+            var date = new Date();
+            var currentMonth = date.getMonth();
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+
+            $('#txt_RecvdDate').datepickercustom({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy.mm.dd',
+                minDate: new Date(currentYear, currentMonth, currentDate)
+            });
+
+            $('#btn_AddPOItemExpdNote').click(function () {
+
+                // var POLineItemID = 2;      // Dynamic         
+
+                var POLineItemID = $('#Hdn_POLineItemID').val();
+
+                var ItemStatus = $('#ddl_ItemStatus').val();
+
+
+
+
+                if (ItemStatus == 0) {
+                    $('#ddl_ItemStatus').focus();
+                    alert('Select Item Status');
+                    return false;
+                }
+
+
+
+
+                //if(CheckExpediteNoteEntry() == false)
+                //{
+                //    return false;
+                //}
+
+
+
+
+
+
+
+                var recvddt = $('#txt_RecvdDate').val();
+               
+                //if (recvddt == "") {
+                //    errorfunc('txt_RecvdDate', 'You must enter Received Date');
+                //    return false;
+                //}
+
+
+                var recvdQty = $('#txt_ReturnQty').val();
+                //if (recvdQty == "") {
+                //    errorfunc('txt_ReturnQty', 'You must enter Received Quantity Value');
+                //    return false;
+                //}
+
+                var refrnc = $('#txt_Reference').val();
+                //if (refrnc == "") {
+                //    errorfunc('txt_Reference', 'You must enter Reference Value');
+                //    return false;
+                //}
+
+                var expdtnt = $('#ItemExpediteNote').val();
+                //if (expdtnt == "") {
+                //    errorfunc('ItemExpediteNote', 'You must enter Expedite Note');
+                //    return false;
+                //}
+
+                //alert(1111111);
+
+                var recvdDate = $('#txt_RecvdDate').val();
+
+                if (recvdQty.trim() != "") {
+                    if (recvdDate == "") {
+                        notify("You must enter Receieved date");
+                        return;
+                    }
+                }
+
+
+                if (recvdDate.trim() != "") {
+                    if (recvdQty == "") {
+                        notify("You must enter Receieved Quantity");
+                        return;
+                    }
+                }
+
+
+
+                var reference = $('#txt_Reference').val();
+                var POLineItemNote = $('#ItemExpediteNote').val();
+                var Note = $('#ItemExpediteNote').val();
+
+                if (Note == "") {
+                    if (confirm('Are you sure want to receive quantity without Any Note?')) {
+                        saveNoteDetail(POLineItemID, ItemStatus, Note, recvdQty, recvdDate, reference);
+                    }        // Confirm             
+                }           // Note 
+                else {
+                    if (confirm('Do you want to receive Qunatity?')) {
+                        saveNoteDetail(POLineItemID, ItemStatus, Note, recvdQty, recvdDate, reference);
+                    }
+                }
+
+            });
+
+
+            $('#btn_AddExpNote').click(function () {
+
+                var POID = $('#Hdn_POLineItemID').val();
+
+                // alert(POID);
+                //var POID = 2;  // Dynamic
+                var Notes = $('#POItemExpediteNote').val().trim();
+
+                if (Notes == "") {
+                    errorfunc('POItemExpediteNote', 'You must enter Expedite Note');
+                    return false;
+                }
+
+                if (Notes != "") {
+
+                    if (confirm('Do you want to save Note?')) {
+                        var url = "";
+
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = 'http://www.thebridgebytcg.com/Expedite/SavePOExpediteNotes';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'Expedite/SavePOExpediteNotes';
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'Notes': Notes, 'POID': POID },
+                            success: function (data) {
+                                if (data != "") {
+                                    $('#POItemExpediteNote').val('');
+                                    //$('#tblPOExpediteHistory').html(data);
+                                    $('#tblPOExpediteHistoryBody').html(data);
+
+                                    notify('Note added Successfully', 'green');
+                                    $('.notification').fadeOut(3000);
+                                    //$('.b-close').trigger('click');
+                                }
+                            }
+                        });
+                    }
+                }
+                else {
+                    $('#POItemExpediteNote').val('');
+                    notify('Note cannot be Empty');
+                    $('.notification').fadeOut(3000);
+                }
+
+            });
+
+
+        });
+
+        function CheckExpediteNoteEntry() {
+            var expdtnt = $('#ItemExpediteNote').val();
+            var recvdQty = $('#txt_ReturnQty').val();
+
+            if (expdtnt == "" && recvdQty == "") {
+                errorfunc('ItemExpediteNote', 'Either you need to enter Expedite Note or you need to enter R-Qty');
+                return false;
+            }
+            else if (expdtnt != "") {
+                return true;
+            }
+            else if (recvdQty != "") {
+                var recvddt = $('#txt_RecvdDate').val();
+                var refrnc = $('#txt_Reference').val();
+
+                if (recvddt == "") {
+                    errorfunc('txt_RecvdDate', 'You must enter Received Date');
+                    return false;
+                }
+                else if (refrnc == "") {
+                    errorfunc('txt_Reference', 'You must enter Reference Value');
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+
+        function saveNoteDetail(POLineItemID, ItemStatus, Note, recvdQty, recvdDate, reference) {
+            var url = "";
+            if (isNaN(recvdQty)) {
+                recvdQty = "0.00";
+            }
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/Expedite/SaveNots';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Expedite/SaveNots';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'POLineItemID': POLineItemID, 'ItemStatus': ItemStatus, 'Notes': Note, 'ReceivedQty': recvdQty, 'RcvdDate': recvdDate, 'Reference': reference },
+                success: function (data) {
+
+
+                    if (data != "") {
+
+                        var totalrows = $('.currentlyediting').find('td').length;
+
+                        var ststuscellnumber;
+                        var receivedqtycellnumber;
+
+                        if (totalrows <= 9) {
+                            ststuscellnumber = 5;
+                            receivedqtycellnumber = 6;
+                        }
+                        else {
+                            ststuscellnumber = 11;
+                            receivedqtycellnumber = 14;
+
+                        }
+
+                        var prev = parseFloat($('.currentlyediting').find('td:eq(' + receivedqtycellnumber + ')').html());
+                        var curr = parseFloat(isNaN(recvdQty) || recvdQty == "" ? 0 : recvdQty);
+
+                        $('.currentlyediting').find('td:eq(' + ststuscellnumber + ')').html($('#ddl_ItemStatus option:selected').text());
+                        $('.currentlyediting').find('td:eq(' + receivedqtycellnumber + ')').html(Math.round(parseFloat(prev + curr) * 100) / 100);
+
+                        $('#statusdiv').find('progress').attr('value', prev + curr);
+                        var progressbar = $('#statusdiv').find('progress');
+                        var newtxt = "Received " + Math.round(parseFloat(prev + curr) * 100) / 100 + " Out of " + $('#statusdiv').find('progress').attr('max');
+
+
+                        $('#statusdiv').find('label').text(newtxt);
+                        $('#statusdiv').find('label').append("<br/>");
+                        $('#statusdiv').find('label').append(progressbar);
+
+                        var ivar = $('.currentlyediting').find('td:eq(0) i');
+                        var onclickattr = $(ivar).attr('onclick');
+                        var newv = "'" + Math.round(parseFloat(prev + curr) * 100) / 100 + '^' + onclickattr.split(',')[1].split('^')[1];
+
+
+                        var newonclick = onclickattr.split(',')[0] + ',' + newv + ',' + onclickattr.split(',')[2];
+
+                        $(ivar).attr('onclick', newonclick);
+
+
+                        $('#ddl_ItemStatus').val('0');
+                        $('#ItemExpediteNote').val('');
+                        $('#txt_ReturnQty').val('');
+                        $('#txt_RecvdDate').val('');
+                        $('#txt_Reference').val('');
+
+                        //$('#tblPOLineItemExpediteHistory').html(data);
+                        $('#tblPOLineItemExpediteHistoryBody').html(data);
+
+                        notify('Expedite Note added Successfully', 'green');
+                        $('.notification').fadeOut(3000);
+                        //$('.b-close').trigger('click');
+
+                        DdlLineItemStatusByProjectID(POLineItemID);
+                    }
+                }
+            });
+        }
+
+
+
+    </script>
+
+    <script type="text/javascript">
+        function ExpediteNotesByPOLineItems(obj, rqtypoqty, thisobj) {
+
+            $('.currentlyediting').each(function () {
+                $(this).removeClass('currentlyediting');
+            });
+
+
+            $(thisobj).parent().parent().addClass('currentlyediting');
+
+            var rqty = rqtypoqty.split('^')[0];
+            var poqty = rqtypoqty.split('^')[1];
+
+
+            var html = '<label>Received : ' + rqty + ' Out of ' + poqty + '<br><progress value="' + rqty + '" max="' + poqty + '"></progress></label>';
+
+            $('#statusdiv').html(html);
+
+            $('#Hdn_POLineItemID').val(obj);
+
+            var POLineItemID = obj; // Dynamic
+
+            DdlLineItemStatusByProjectID(POLineItemID);
+            ViewPOExpediteHistory(POLineItemID);
+            ViewPOLineItemExpediteHistory(POLineItemID);
+
+            $('#txt_RecvdDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $("#txt_RecvdDate").trigger('onSelect');
+
+            $('#POExpeditepopuplineitems').modal('show');
+
+            //jQuery('#POExpeditepopuplineitems').bPopup({
+            //    easing: 'easeOutBack', //uses jQuery easing plugin
+            //    speed: 450,
+            //    transition: 'slideDown',
+            //    modalColor: 'rgb(18, 54, 65)'
+            //});
+
+        }
+        function DdlLineItemStatusByProjectID(obj) {
+            var url = "";
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/Expedite/getPOLineItemStatusByProjectID';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Expedite/getPOLineItemStatusByProjectID';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'POID': obj },
+                success: function (data) {
+                    if (data != "") {
+                        // $('#tblPOLineItemExpediteHistory').html(data);
+                        $('#ddl_ItemStatus').val(data);
+                    }
+                }
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+
+
+
+
+        $(function () {
+
+
+
+            $('#btn_AddNotes').click(function () {
+                var Notes = $('#txt_Note').val();
+                if (Notes != "") {
+
+                    var url = "";
+
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url = 'http://www.thebridgebytcg.com/Expedite/SaveNots';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url = 'Expedite/SaveNots';
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: { 'Notes': Notes, 'POID': POID },
+                        success: function (data) {
+                            if (data.d != "") {
+                                notify('Note added Successfully', 'green');
+                                $('.notification').fadeOut(3000);
+                                $('.b-close').trigger('click');
+                            }
+                        }
+                    });
+                }
+                else {
+                    notify('Note cannot be Empty');
+                    $('.notification').fadeOut(3000);
+                }
+
+            });
+
+
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        //$(function () {
+        //    $("#filename").change(function (e) {
+        //        var Track = 0;
+
+        //        var ext = $("input#filename").val().split(".").pop().toLowerCase();
+        //        if ($.inArray(ext, ["csv"]) == -1) {
+        //            alert('Upload CSV File');
+        //            return false;
+        //        }
+        //        if (e.target.files != undefined) {
+        //            var reader = new FileReader();
+        //            reader.onload = function (e) {
+        //                var csvval = e.target.result.split("\n");
+        //                var inputrad = "";
+        //                // Validate Column Name First
+        //                var csvvalue = csvval[0].split(",");  // Get only first Column Name
+        //                for (var v = 0; v < csvvalue.length; v++) {
+        //                    if (v == 0) {
+        //                        var val = csvvalue[v];
+        //                        val = val.substring(1, val.length);
+        //                        if (!(val == 'Item#')) {
+        //                            alert('Invalid Column Name.Valid One "Item#"');
+        //                            Track = 1;
+        //                            break;
+        //                        }
+        //                    }
+        //                    else if (v == 1) {
+        //                        if (!(csvvalue[v] == 'Expedite Notes')) {
+        //                            alert('Invalid Column Name.Valid One "Expedite Notes"');
+        //                            Track = 1;
+        //                            break;
+        //                        }
+        //                    }
+        //                    else if (v == 2) {
+        //                        if (!(csvvalue[v] == 'Received Quantity')) {
+        //                            alert('Invalid Column Name.Valid One "Received Quantity"');
+        //                            Track = 1;
+        //                            break;
+        //                        }
+        //                    }
+        //                    else if (v == 3) {
+        //                        if (!(csvvalue[v] == 'Received Date')) {
+        //                            alert('Invalid Column Name.Valid One "Received Date"');
+        //                            Track = 1;
+        //                            break;
+        //                        }
+        //                    }
+        //                    else if (v == 4) {
+        //                        var val = csvvalue[v];
+        //                        val = val.substring(0, val.length - 2);
+        //                        if (!(val == 'Reference#')) {
+        //                            alert('Invalid Column Name.Valid One "Reference#"');
+        //                            Track = 1;
+        //                            break;
+        //                        }
+        //                    }
+        //                }
+        //                // Column Name Validation Part End
+        //                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //                // Validate Cell value is Empty or not..
+
+
+
+
+
+        //                if (Track == 0) {
+        //                    if (confirm("Do you want to Upload file Information?")) {
+        //                        for (var v = 1; v < csvval.length - 1; v++) {
+        //                            var csvvalue = csvval[v].split(",");
+        //                            var url = "";
+        //                            if (LOCALORSERVERNEW == 'LOCAL') {
+        //                                url = 'http://www.thebridgebytcg.com/Expedite/SaveBulkRecord?Bulk=' + csvvalue;
+        //                            }
+        //                            else if (LOCALORSERVERNEW == 'SERVER') {
+        //                                url = 'Expedite/SaveBulkRecord?Bulk=' + csvvalue;
+        //                            }
+        //                            var POID = $('#PrjtDdl option:selected').attr('data-id');
+        //                            url += "&POID=" + POID;
+
+        //                            $.ajax({
+        //                                type: "POST",
+        //                                url: url,
+        //                                //data: { 'Bulk': csvvalue },
+        //                                success: function (data) {
+        //                                    if (data != "") {
+        //                                        //alert('Bulk Updt');
+        //                                    }
+        //                                }
+        //                            });
+        //                        }
+
+        //                        notify("Information uploaded successfully");
+        //                        $('.notification').fadeOut(3000);
+        //                    }
+        //                }
+
+        //                $('#filename').val('');
+
+        //            };
+        //            reader.readAsText(e.target.files.item(0));
+        //        }
+        //        return false;
+        //    });
+        //});
+
+        $(function () {
+
+            $("#filename").change(function (e) {
+
+                var ext = $("input#filename").val().split(".").pop().toLowerCase();
+
+                if ($.inArray(ext, ["csv"]) == -1) {
+                    alert('Upload CSV File');
+                    $('#filename').on(e);
+                    return false;
+                }
+
+                if (e.target.files != undefined) {
+
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var csvval = e.target.result.split("\n");
+                        var inputrad = "";
+
+                        var Track = 0;
+
+                        for (var rowIndex = 0; rowIndex < csvval.length - 1; rowIndex++) {
+
+                            var rowVal = csvval[rowIndex].split(",");   // get Entire row value one by one                          
+
+                            for (var j = 0; j < rowVal.length; j++) {
+
+                                if (rowIndex == 0) {              // If rowIndex==0 then it will for first Row which is column                   
+
+                                    // Below code is for Column name validation   
+
+                                    if (j == 0) {
+                                        var val = rowVal[j];
+                                        val = val.substring(1, val.length);
+                                        if (!(val == 'Item#')) {
+                                            alert('Invalid Column Name.Valid One "Item#"');
+                                            Track = 1;
+                                            break;
+                                        }
+                                    }
+                                    else if (j == 1) {
+                                        if (!(rowVal[j] == 'Expedite Notes')) {
+                                            alert('Invalid Column Name.Valid One "Expedite Notes"');
+                                            Track = 1;
+                                            break;
+                                        }
+                                    }
+                                    else if (j == 2) {
+                                        if (!(rowVal[j] == 'Received Quantity')) {
+                                            alert('Invalid Column Name.Valid One "Received Quantity"');
+                                            Track = 1;
+                                            break;
+                                        }
+                                    }
+                                    else if (j == 3) {
+                                        if (!(rowVal[j] == 'Received Date')) {
+                                            alert('Invalid Column Name.Valid One "Received Date"');
+                                            Track = 1;
+                                            break;
+                                        }
+                                    }
+                                    else if (j == 4) {
+                                        var val = rowVal[j];
+                                        val = val.substring(0, val.length - 2);
+                                        if (!(val == 'Reference#')) {
+                                            alert('Invalid Column Name.Valid One "Reference#"');
+                                            Track = 1;
+                                            break;
+                                        }
+                                    }
+
+                                    // Column Name Validation Part closed
+
+                                }
+                                else {    // Below code validate Cell value
+
+                                    if (rowVal.length == 5) {
+                                        var cellVal = rowVal[j];
+
+                                        if (j == 0) {
+                                            cellVal = cellVal.substring(1, cellVal.length);
+                                            if (cellVal == "") {
+                                                Track = 1;
+                                                alert(rowIndex + ' Row, Items# column value cannot be empty');
+                                                break;
+                                            }
+                                        }
+                                        else if (j == 1) {
+                                            if (cellVal == "") {
+                                                Track = 1;
+                                                alert(rowIndex + ' Row,Expedite Notes column value cannot be empty');
+                                                break;
+                                            }
+                                        }
+                                        else if (j == 2) {
+                                            if (cellVal == "") {
+                                                Track = 1;
+                                                alert(rowIndex + ' Row, Receive Quantity column value cannot be empty');
+                                                break;
+                                            }
+                                        }
+                                        else if (j == 3) {
+                                            if (cellVal == "") {
+                                                Track = 1;
+                                                alert(rowIndex + ' Row, Receive Date column value cannot be empty');
+                                                break;
+                                            }
+                                        }
+                                        else if (j == 4) {
+                                            cellVal = cellVal.substring(0, cellVal.length - 2);
+                                            if (cellVal == "") {
+                                                Track = 1;
+                                                alert(rowIndex + ' Row, #Refernce column value cannot be empty');
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        Track = 1;
+                                        alert(rowIndex + ' Column does not contain appropriate value');
+                                        break;
+                                    }
+                                }
+                            }    // inner for loop is closed........
+
+                        }
+
+                        ////////////////////////////////////////////////
+
+                        if (Track == 0) {
+
+                            if (confirm("Do you want to Upload file Information?")) {
+
+                                for (var v = 1; v < csvval.length - 1; v++) {
+                                    var csvvalue = csvval[v].split(",");
+
+                                    var url = "";
+                                    if (LOCALORSERVERNEW == 'LOCAL') {
+                                        url = 'http://www.thebridgebytcg.com/Expedite/SaveBulkRecord?Bulk=' + csvvalue;
+                                    }
+                                    else if (LOCALORSERVERNEW == 'SERVER') {
+                                        url = 'Expedite/SaveBulkRecord?Bulk=' + csvvalue;
+                                    }
+                                    //var POID = $('#PrjtDdl option:selected').attr('data-id');
+                                    var POID = $('#PrjtDdl').val();
+                                    POID = POID == null ? "" : POID.toString();
+
+                                    if (POID.toString() == null || POID.toString() == undefined || POID.toString() == 'undefined') {
+                                        return;
+                                    }
+
+                                    url += "&POID=" + POID;
+                                    $.ajax({
+                                        type: "POST",
+                                        url: url,
+                                        //data: { 'Bulk': csvvalue },
+                                        success: function (data) {
+                                            if (data != "") {
+
+                                            }
+                                        }
+                                    });
+                                }
+                                notify("Information uploaded successfully", 'green');
+                                $('.notification').fadeOut(3000);
+                            }
+                        }
+                        $('#filename').val('');
+                    };
+                    reader.readAsText(e.target.files.item(0));
+                    return false;
+                }
+                // return false;
+            });
+
+        });
+    </script>
+
+    <script type="text/javascript">
+        function ViewOnlyProjectScreen() {
+
+            //var ProjectID = $('#PrjtDdl option:selected').attr('data-id');
+            var ProjectID = $('#PrjtDdl').val();
+            ProjectID = ProjectID == null ? "" : ProjectID.toString();
+
+            if (ProjectID.toString() == null || ProjectID.toString() == undefined || ProjectID.toString() == 'undefined') {
+                return;
+            }
+
+
+            if (ProjectID.trim() != "" && ProjectID.trim() != null && ProjectID.trim() != undefined) {
+                var url = "";
+
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = 'http://www.thebridgebytcg.com/Project/ViewProject';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Project/ViewProject';
+                }
+
+                url += "/" + ProjectID;
+
+                OpenInNewTab(url);
+            }
+        }
+
+        function OpenInNewTab(url) {
+            var win = window.open(url, '_blank');
+            win.focus();
+        }
+    </script>
+
+    <script type="text/javascript">
+        function LoadAsPerBudgetVendor(obj) {
+
+            if (obj == 'B') {
+                //alert('By Budget Section');
+                $('#Hdn_Filter').val('B');
+
+                LoadBudgetDropDown();
+                $('#ByBudget').css('display', 'block');
+                $('#ByVendor').css('display', 'none');
+
+            }
+            else if (obj == 'V') {
+                //alert('By Vendor');
+
+                $('#Hdn_Filter').val('V');
+                LoadVendorDropDown();
+                $('#ByBudget').css('display', 'none');
+                $('#ByVendor').css('display', 'block');
+
+            }
+            else if (obj == 'N') {
+
+                $('#Hdn_Filter').val('');
+                $('#ByBudget').css('display', 'block');
+                $('#ByVendor').css('display', 'block');
+                ResetFilterState();
+
+                $(".accordion").multiaccordion();
+                $(".accordion").multiaccordion("close");
+                $(".accordion").multiaccordion({ defaultIcon: 'ui-icon-plusthick' });
+
+                ForToolTip();
+            }
+        }
+        function ResetFilterState() {
+            $('#FirstSearchDdlLeft').html('');
+            $('#SecondSearchDdlLeft').html('');
+            $('#ThirdSearchDdlLeft').html('');
+
+
+
+            ResetFirstSearchDdlLeft();
+            ResetSecondSearchDdlLeft();
+            ResetThirdSearchDdlLeft();
+
+
+
+            $('#FirstSearchDdlRight').html('');
+            $('#SecondSearchDdlRight').html('');
+            $('#ThirdSearchDdlRight').html('');
+
+            ResetFirstSearchDdlRight();
+            ResetSecondSearchDdlRight();
+            ResetThirdSearchDdlRight();
+
+        }
+        function ResetFirstSearchDdlLeft() {
+            $('#FirstSearchDdlLeft').removeClass('TakeVal');
+            $('#FirstSearchDdlLeft').removeClass('displayon');
+            $('#FirstSearchDdlLeft').removeClass('displayoff');
+
+            $('#FirstSearchDdlLeft').addClass('TakeVal');
+            $('#FirstSearchDdlLeft').addClass('displayon');
+
+
+            ResetSecondSearchDdlLeft();
+        }
+
+        function ResetSecondSearchDdlLeft() {
+            $('#SecondSearchDdlLeft').removeClass('TakeVal');
+            $('#SecondSearchDdlLeft').removeClass('displayon');
+            $('#SecondSearchDdlLeft').removeClass('displayoff');
+
+            $('#SecondSearchDdlLeft').addClass('displayoff');
+
+            ResetThirdSearchDdlLeft();
+        }
+        function ResetThirdSearchDdlLeft() {
+
+            $('#ThirdSearchDdlLeft').val('');
+            $('#ThirdSearchDdlLeftDtPckr').val('');
+
+
+            $('#ThirdSearchDdlLeft').removeClass('TakeVal');
+            $('#ThirdSearchDdlLeft').removeClass('displayon');
+            $('#ThirdSearchDdlLeft').addClass('displayoff');
+
+
+
+            $('#ThirdSearchDdlLeftDtPckr').removeClass('TakeVal');
+            $('#ThirdSearchDdlLeftDtPckr').removeClass('displayon');
+            $('#ThirdSearchDdlLeftDtPckr').addClass('displayoff');
+
+
+        }
+
+
+
+        function ResetFirstSearchDdlRight() {
+            $('#FirstSearchDdlRight').removeClass('TakeVal');
+            $('#FirstSearchDdlRight').removeClass('displayon');
+            $('#FirstSearchDdlRight').removeClass('displayoff');
+
+            $('#FirstSearchDdlRight').addClass('TakeVal');
+            $('#FirstSearchDdlRight').addClass('displayon');
+
+
+            ResetSecondSearchDdlRight();
+        }
+        function ResetSecondSearchDdlRight() {
+            $('#SecondSearchDdlRight').removeClass('TakeVal');
+            $('#SecondSearchDdlRight').removeClass('displayon');
+            $('#SecondSearchDdlRight').removeClass('displayoff');
+
+            $('#SecondSearchDdlRight').addClass('displayoff');
+
+            ResetThirdSearchDdlRight();
+        }
+        function ResetThirdSearchDdlRight() {
+
+            $('#ThirdSearchDdlRight').val('');
+            $('#ThirdSearchDdlRightDtPckr').val('');
+
+            $('#ThirdSearchDdlRight').removeClass('TakeVal');
+            $('#ThirdSearchDdlRight').removeClass('displayon');
+            $('#ThirdSearchDdlRight').addClass('displayoff');
+
+
+
+            $('#ThirdSearchDdlRightDtPckr').removeClass('TakeVal');
+            $('#ThirdSearchDdlRightDtPckr').removeClass('displayon');
+            $('#ThirdSearchDdlRightDtPckr').addClass('displayoff');
+        }
+
+
+
+
+
+        function LoadBudgetDropDown() {
+            var html = "";
+
+            html += "<option value='0'>Select</option>";
+            html += "<option value='BPOVAL'>PO Number</option>";
+            html += "<option value='BISCOMMITTED'>Is Committed</option>";
+            html += "<option value='BVENDR'>Vendor</option>";
+            html += "<option value='BBUYR'>Buyer</option>";
+            html += "<option value='BTRMS'>Terms</option>";
+            html += "<option value='BCRRNCY'>Currency</option>";
+            html += "<option value='BCONVRT'>Conversion Rate</option>";
+            html += "<option value='BITMAPPRVL'>Item Approvals</option>";
+            html += "<option value='BFOB'>FOB</option>";
+            html += "<option value='BARRVLDT'>Arrival Date</option>";
+            html += "<option value='BCHKBCK'>Check back</option>";
+            html += "<option value='BITMSTTS'>Item Status</option>";
+            html += "<option value='BINV'>Invoice</option>";
+            html += "<option value='BPOQTY'>PO Qty</option>";
+            html += "<option value='BRQTY'>R-Qty</option>";
+            html += "<option value='BSHPVIA'>Ship via</option>";
+            html += "<option value='BSHPTO'>Ship To</option>";
+            html += "<option value='BFRGHT'>Freight</option>";
+            html += "<option value='BRMRKS'>Remarks</option>";
+
+            $('#FirstSearchDdlLeft').html(html);
+
+            $('#FirstSearchDdlRight').html(html);
+
+        }
+        function LoadVendorDropDown() {
+            var html = "";
+
+            html += "<option value=''>Select</option>";
+            html += "<option value='VPOLNITMNMBR'>PO LineItem Number</option>";
+            html += "<option value='VSPCNMBR'>Spec Number</option>";
+            html += "<option value='VITMDESC'>Item Description</option>";
+            html += "<option value='VITMAPPRVL'>Item Approvals</option>";
+            html += "<option value='VITMSTTS'>ItemStatus</option>";
+            html += "<option value='VRQTY'>R-Qty</option>";
+            html += "<option value='VINV'>Invoice</option>";
+            html += "<option value='VPOQTY'>PO Qty</option>";
+
+            $('#FirstSearchDdlLeft').html(html);
+
+            $('#FirstSearchDdlRight').html(html);
+
+        }
+
+        function FirstSearchDdlOnChangeLeft(obj) {
+
+            if ($('#Hdn_Filter').val() == 'B') {
+                if ($(obj).val().trim() != '') {
+                    ForBudgetSelectionLeft($(obj).val());
+                }
+                else {
+                    ResetSecondSearchDdlLeft();
+                }
+            }
+            else if ($('#Hdn_Filter').val() == 'V') {
+                if ($(obj).val().trim() != '') {
+                    ForVendorSelectionLeft($(obj).val());
+                }
+                else {
+                    ResetSecondSearchDdlLeft();
+                }
+            }
+            else if ($('#Hdn_Filter').val() == '') {
+
+            }
+        }
+        function ForBudgetSelectionLeft(obj) {
+
+            var optionhtml = "";
+            ResetSecondSearchDdlLeft();
+            if (obj == 'BPOVAL') {
+
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BVENDR') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BBUYR') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BISCOMMITTED') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BTRMS') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BCRRNCY') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BCONVRT') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BITMAPPRVL') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BFOB') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BARRVLDT') {
+                optionhtml = SecondDdlHtml('FIRSTTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BCHKBCK') {
+                optionhtml = SecondDdlHtml('FIRSTTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BITMSTTS') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BINV') {
+
+            }
+            else if (obj == 'BPOQTY') {
+                optionhtml = SecondDdlHtml('FIRSTTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BRQTY') {
+                optionhtml = SecondDdlHtml('FIRSTTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BSHPVIA') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BSHPTO') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BFRGHT') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'BRMRKS') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+        }
+
+
+        function ForVendorSelectionLeft(obj) {
+
+            var optionhtml = "";
+            ResetSecondSearchDdlLeft();
+
+            if (obj == 'VPOLNITMNMBR') {
+                optionhtml = SecondDdlHtml('FIRSTTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'VSPCNMBR') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'VITMDESC') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'VITMAPPRVL') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'VITMSTTS') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'VRQTY') {
+                optionhtml = SecondDdlHtml('FIRSTTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+            else if (obj == 'VINV') {
+            }
+            else if (obj == 'VPOQTY') {
+                optionhtml = SecondDdlHtml('FIRSTTYPE');
+                $('#SecondSearchDdlLeft').html(optionhtml);
+
+                $('#SecondSearchDdlLeft').removeClass('displayoff');
+                $('#SecondSearchDdlLeft').addClass('TakeVal');
+                $('#SecondSearchDdlLeft').addClass('displayon');
+            }
+
+               
+
+
+
+        }
+
+        function SecondSearchDdlOnChangeLeft(obj) {
+            var optionhtml = "";
+            ResetThirdSearchDdlLeft();
+
+
+
+            var selectedFirstddlLeft = $('#FirstSearchDdlLeft').val();
+            //alert(selectedFirstddlLeft);
+            if ($(obj).val().trim() == "") {
+                ResetThirdSearchDdlLeft();
+                return;
+            }
+
+
+            if (selectedFirstddlLeft.trim() == 'BARRVLDT' || selectedFirstddlLeft.trim() == 'BCHKBCK') {
+
+
+                $('#ThirdSearchDdlLeftDtPckr').removeClass('displayoff');
+                $('#ThirdSearchDdlLeftDtPckr').addClass('TakeVal');
+                $('#ThirdSearchDdlLeftDtPckr').addClass('displayon');
+
+
+
+
+                $('#ThirdSearchDdlLeft').removeClass('TakeVal');
+                $('#ThirdSearchDdlLeft').removeClass('displayon');
+                $('#ThirdSearchDdlLeft').addClass('displayoff');
+
+
+            }
+           
+
+            else {
+
+                if ((selectedFirstddlLeft.trim() == 'VITMAPPRVL') || (selectedFirstddlLeft.trim() == 'VITMSTTS')
+                    || (selectedFirstddlLeft.trim() == 'BPOVAL') || (selectedFirstddlLeft.trim() == 'BBUYR')
+                    || (selectedFirstddlLeft.trim() == 'BTRMS') || (selectedFirstddlLeft.trim() == 'BCRRNCY')
+                    || (selectedFirstddlLeft.trim() == 'BITMAPPRVL') || (selectedFirstddlLeft.trim() == 'BITMSTTS')
+                    || (selectedFirstddlLeft.trim() == 'BISCOMMITTED'))
+                {
+                    $('.ThirdSearchDdlLefttxt').removeAttr('id');
+                    $('.ThirdSearchDdlLeftddl').attr('id', 'ThirdSearchDdlLeft');
+                    makedropdown(selectedFirstddlLeft.trim(),'L');
+                }
+                else {
+                    $('.ThirdSearchDdlLefttxt').attr('id', 'ThirdSearchDdlLeft');
+                    $('.ThirdSearchDdlLeftddl').removeAttr('id');
+                }
+
+                $('#ThirdSearchDdlLeft').removeClass('displayoff');
+                $('#ThirdSearchDdlLeft').addClass('TakeVal');
+                $('#ThirdSearchDdlLeft').addClass('displayon');
+
+
+
+                $('#ThirdSearchDdlLeftDtPckr').removeClass('TakeVal');
+                $('#ThirdSearchDdlLeftDtPckr').removeClass('displayon');
+                $('#ThirdSearchDdlLeftDtPckr').addClass('displayoff');
+
+
+
+            }
+
+
+
+
+
+
+            if (obj == 'GREATERTHAN') {
+
+            }
+            else if (obj == 'LESSTHAN') {
+
+            }
+            else if (obj == 'EQUALS') {
+
+            }
+            else if (obj == 'MATCH') {
+
+            }
+            else if (obj == 'NOTMATCH') {
+
+            }
+
+        }
+        function ThirdSearchDdlOnChangeLeft(obj) {
+
+        }
+
+
+        function FirstSearchDdlOnChangeRight(obj) {
+
+
+            if ($('#Hdn_Filter').val() == 'B') {
+                if ($(obj).val().trim() != '') {
+                    ForBudgetSelectionRight($(obj).val());
+                }
+                else {
+                    ResetSecondSearchDdlRight();
+                }
+            }
+            else if ($('#Hdn_Filter').val() == 'V') {
+                if ($(obj).val().trim() != '') {
+                    ForVendorSelectionRight($(obj).val());
+                }
+                else {
+                    ResetSecondSearchDdlRight();
+                }
+            }
+            else if ($('#Hdn_Filter').val() == '') {
+
+            }
+
+
+
+            //if (obj = 'BPOVAL') {
+
+            //}
+            //else if (obj = 'BVENDR') {
+
+            //}
+            //else if (obj = 'BBUYR') {
+
+            //}
+            //else if (obj = 'BTRMS') {
+
+            //}
+            //else if (obj = 'BCRRNCY') {
+
+            //}
+            //else if (obj = 'BCONVRT') {
+
+            //}
+            //else if (obj = 'BITMAPPRVL') {
+
+            //}
+            //else if (obj = 'BFOB') {
+
+            //}
+            //else if (obj = 'BARRVLDT') {
+
+            //}
+            //else if (obj = 'BCHKBCK') {
+
+            //}
+            //else if (obj = 'BITMSTTS') {
+
+            //}
+            //else if (obj = 'BINV') {
+
+            //}
+            //else if (obj = 'BPOQTY') {
+
+            //}
+            //else if (obj = 'BRQTY') {
+
+            //}
+            //else if (obj = 'BSHPVIA') {
+
+            //}
+            //else if (obj = 'BSHPTO') {
+
+            //}
+            //else if (obj = 'BFRGHT') {
+
+            //}
+            //else if (obj = 'BRMRKS') {
+
+            //}
+        }
+
+
+        function ForBudgetSelectionRight(obj) {
+
+            var optionhtml = "";
+            ResetSecondSearchDdlRight();
+            if (obj == 'BPOVAL') {
+
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BVENDR') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BISCOMMITTED') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+
+            else if (obj == 'BBUYR') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BTRMS') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BCRRNCY') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BCONVRT') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BITMAPPRVL') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BFOB') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BARRVLDT') {
+                optionhtml = SecondDdlHtml('FIRSTTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BCHKBCK') {
+                optionhtml = SecondDdlHtml('FIRSTTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BITMSTTS') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BINV') {
+
+            }
+            else if (obj == 'BPOQTY') {
+                optionhtml = SecondDdlHtml('FIRSTTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BRQTY') {
+                optionhtml = SecondDdlHtml('FIRSTTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BSHPVIA') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BSHPTO') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BFRGHT') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'BRMRKS') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+        }
+
+        function ForVendorSelectionRight(obj) {
+
+            var optionhtml = "";
+            ResetSecondSearchDdlRight();
+
+            if (obj == 'VPOLNITMNMBR') {
+                optionhtml = SecondDdlHtml('FIRSTTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'VSPCNMBR') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'VITMDESC') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'VITMAPPRVL') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'VITMSTTS') {
+                optionhtml = SecondDdlHtml('SECONDTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'VRQTY') {
+                optionhtml = SecondDdlHtml('FIRSTTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+            else if (obj == 'VINV') {
+            }
+            else if (obj == 'VPOQTY') {
+                optionhtml = SecondDdlHtml('FIRSTTYPE');
+                $('#SecondSearchDdlRight').html(optionhtml);
+
+                $('#SecondSearchDdlRight').removeClass('displayoff');
+                $('#SecondSearchDdlRight').addClass('TakeVal');
+                $('#SecondSearchDdlRight').addClass('displayon');
+            }
+        }
+
+
+        function SecondSearchDdlOnChangeRight(obj) {
+            var optionhtml = "";
+            ResetThirdSearchDdlRight();
+
+
+
+            var selectedFirstddlRight = $('#FirstSearchDdlRight').val();
+            //alert(selectedFirstddlRight);
+            if ($(obj).val().trim() == "") {
+                ResetThirdSearchDdlRight();
+                return;
+            }
+
+
+            if (selectedFirstddlRight.trim() == 'BARRVLDT' || selectedFirstddlRight.trim() == 'BCHKBCK') {
+
+
+                $('#ThirdSearchDdlRightDtPckr').removeClass('displayoff');
+                $('#ThirdSearchDdlRightDtPckr').addClass('TakeVal');
+                $('#ThirdSearchDdlRightDtPckr').addClass('displayon');
+
+
+
+
+                $('#ThirdSearchDdlRight').removeClass('TakeVal');
+                $('#ThirdSearchDdlRight').removeClass('displayon');
+                $('#ThirdSearchDdlRight').addClass('displayoff');
+
+
+            }
+            else {
+
+
+                if ((selectedFirstddlRight.trim() == 'VITMAPPRVL') || (selectedFirstddlRight.trim() == 'VITMSTTS')                    
+                    || (selectedFirstddlRight.trim() == 'BPOVAL') || (selectedFirstddlRight.trim() == 'BBUYR')
+                    || (selectedFirstddlRight.trim() == 'BTRMS') || (selectedFirstddlRight.trim() == 'BCRRNCY')
+                    || (selectedFirstddlRight.trim() == 'BITMAPPRVL') || (selectedFirstddlRight.trim() == 'BITMSTTS')
+                    || (selectedFirstddlRight.trim() == 'BISCOMMITTED'))
+               {
+                    $('.ThirdSearchDdlRighttxt').removeAttr('id');
+                    $('.ThirdSearchDdlRightddl').attr('id', 'ThirdSearchDdlRight');
+                    makedropdown(selectedFirstddlRight.trim(), 'R');
+                }
+                else {
+                    $('.ThirdSearchDdlRighttxt').attr('id', 'ThirdSearchDdlRight');
+                    $('.ThirdSearchDdlRightddl').removeAttr('id');
+                }
+
+
+                $('#ThirdSearchDdlRight').removeClass('displayoff');
+                $('#ThirdSearchDdlRight').addClass('TakeVal');
+                $('#ThirdSearchDdlRight').addClass('displayon');
+
+
+
+                $('#ThirdSearchDdlRightDtPckr').removeClass('TakeVal');
+                $('#ThirdSearchDdlRightDtPckr').removeClass('displayon');
+                $('#ThirdSearchDdlRightDtPckr').addClass('displayoff');
+
+            }
+
+
+        }
+        function ThirdSearchDdlOnChangeRight(obj) {
+
+        }
+
+        function SecondDdlHtml(obj) {
+            var html = '';
+
+            if (obj == 'FIRSTTYPE') {
+                html += "<option value='0'>Select</option>"
+                html += "<option value='GREATERTHAN'>greater than</option>"
+                html += "<option value='LESSTHAN'>less than</option>"
+                html += "<option value='EQUALS'>equals</option>"
+
+            }
+            else if (obj == 'SECONDTYPE') {
+                html += "<option value='0'>Select</option>"
+                html += "<option value='MATCH'>match</option>"
+                html += "<option value='NOTMATCH'>notmatch</option>"
+            }
+            else if (obj == 'THIRDTYPE') {
+
+            }
+
+            return html;
+
+        }
+
+        function FilterAndShow() {
+          
+            $('#loaderspinner').css('display', '');
+            window.setTimeout(function () {
+                FilterAndShowCalled();
+            }, 500);
+        }
+
+
+        function FilterAndShowCalled() {
+
+            
+
+            var FieldNameLeft = $('#FirstSearchDdlLeft').val();
+
+            var SearchOptionLeft = $('#SecondSearchDdlLeft').val();
+
+            var SearchVal = "";
+
+            if ($('#ThirdSearchDdlLeft').hasClass('displayoff')) {
+                SearchVal = $('#ThirdSearchDdlLeftDtPckr').val();
+
+            }
+            else {
+                SearchVal = $('#ThirdSearchDdlLeft').val();
+            }
+
+
+            if (FieldNameLeft == "BPOVAL") {
+                FieldNameLeft = "POID";
+            }//PO Number</option) { }//
+            if (FieldNameLeft == "BISCOMMITTED") {
+                FieldNameLeft = "IsCommitted";
+            }//PO Number</option) { }//
+            else if (FieldNameLeft == "BVENDR") {
+                FieldNameLeft = "VendorName";
+            }//Vendor</option) { }//
+            else if (FieldNameLeft == "BBUYR") {
+                FieldNameLeft = "BuyerName";
+            }
+
+                //Buyer</option) { }//
+            else if (FieldNameLeft == "BTRMS") {
+                FieldNameLeft = "Terms";
+            }//Terms</option) { }//
+            else if (FieldNameLeft == "BCRRNCY") {
+                FieldNameLeft = "Currency";
+            }//Currency</option) { }//
+            else if (FieldNameLeft == "BCONVRT") {
+                FieldNameLeft = "Conv";
+            }//Conversion Rate</option) { }//
+            else if (FieldNameLeft == "BITMAPPRVL") {
+                FieldNameLeft = "ActionType";
+            }//Item Approvals</option) { }//
+            else if (FieldNameLeft == "BFOB") {
+                FieldNameLeft = "FOB";
+            }//FOB</option) { }//
+            else if (FieldNameLeft == "BARRVLDT") {
+                FieldNameLeft = "ArrivalDate";
+            }//Arrival Date</option) { }//
+            else if (FieldNameLeft == "BCHKBCK") {
+                FieldNameLeft = "CheckBackDate";
+            }//Check back</option) { }//
+            else if (FieldNameLeft == "BITMSTTS") {
+
+                FieldNameLeft = "ItemStatus";
+            }//Item Status</option) { }//
+            else if (FieldNameLeft == "BINV") {
+                FieldNameLeft = "Inv";
+            }//Invoice</option) { }//
+            else if (FieldNameLeft == "BPOQTY") {
+
+                FieldNameLeft = "Qty";
+            }//PO Qty</option) { }//
+            else if (FieldNameLeft == "BRQTY") {
+                FieldNameLeft = "ReceivedQuantity";
+            }//R-Qty</option) { }//
+            else if (FieldNameLeft == "BSHPVIA") {
+                FieldNameLeft = "ShipMethod";
+            }//Ship via</option) { }//
+            else if (FieldNameLeft == "BSHPTO") {
+                FieldNameLeft = "ShipTo";
+            }//Ship To</option) { }//
+            else if (FieldNameLeft == "BFRGHT") {
+                FieldNameLeft = "Freight";
+            }//Freight</option) { }//
+            else if (FieldNameLeft == "BRMRKS") {
+                FieldNameLeft = "Remarks";
+            }//Remarks</option) { }//
+
+            else if (FieldNameLeft == "VPOLNITMNMBR") { FieldNameLeft = "POLineItemID"; }//PO LineItem Number</option) { }//
+            else if (FieldNameLeft == "VSPCNMBR") { FieldNameLeft = "SpecNum"; }//Spec Number</option) { }//
+            else if (FieldNameLeft == "VITMDESC") { FieldNameLeft = "ItemDescription"; }//Item Description</option) { }//
+            else if (FieldNameLeft == "VITMAPPRVL") { FieldNameLeft = "ActionType"; }//Item Approvals</option) { }//
+            else if (FieldNameLeft == "VITMSTTS") { FieldNameLeft = "ItemStatus"; }//ItemStatus</option) { }//
+            else if (FieldNameLeft == "VRQTY") { FieldNameLeft = "ReceivedQuantity"; }//R-Qty</option) { }//
+            else if (FieldNameLeft == "VINV") { FieldNameLeft = "Invoice"; }//Invoice</option) { }//
+            else if (FieldNameLeft == "VPOQTY") { FieldNameLeft = "Quantity"; }//PO Qty</option) { }//
+
+            if (FieldNameLeft == null || FieldNameLeft == '0') {
+                notify("Please Select search field crieteria");
+                return;
+            }
+            if (SearchOptionLeft == null || SearchOptionLeft == '0') {
+                notify("Please Select search operator");
+                return;
+            }
+
+            if (SearchVal == null || SearchVal.trim() == '') {
+                notify("Please Select search value");
+                return;
+            }
+
+
+
+
+            if (SearchOptionLeft == "GREATERTHAN") {
+                SearchOptionLeft = ">";
+            }
+            else if (SearchOptionLeft == "LESSTHAN") {
+                SearchOptionLeft = "<";
+            }
+            else if (SearchOptionLeft == "EQUALS") {
+                SearchOptionLeft = "=";
+            }
+            else if (SearchOptionLeft == "MATCH") {
+                SearchOptionLeft = "like";
+            }
+            else if (SearchOptionLeft == "NOTMATCH") {
+                SearchOptionLeft = "not like";
+            }
+
+
+            var wclause = "";
+
+            if ($('#ThirdSearchDdlLeft').hasClass('displayoff')) {
+                wclause = "convert(datetime," + FieldNameLeft + ",103)" + " " + SearchOptionLeft + " convert(datetime,'" + SearchVal + "',103)";
+            }
+
+            else if (SearchOptionLeft == "like" || SearchOptionLeft == "not like") {
+                wclause = FieldNameLeft + " " + SearchOptionLeft + " '" + "^" + SearchVal + "^" + "'";
+
+            }
+            else {
+                wclause = FieldNameLeft + " " + SearchOptionLeft + " " + SearchVal;
+            }
+
+
+
+            if ($('#chk_and').is(':checked')) {
+                wclause += " and " + FilterAndShowRight();
+            }
+            else if ($('#chk_or').is(':checked')) {
+                wclause += " or " + FilterAndShowRight();
+
+            }
+            else {
+
+            }
+
+            //console.log(wclause);
+            // return;
+
+            if ($('#Hdn_Filter').val() == 'B') {
+                loadBudgetPartNew(wclause);
+            }
+            else if ($('#Hdn_Filter').val() == 'V') {
+                loadVendorPartNew(wclause);
+            }
+
+            $(".accordion").multiaccordion();
+            //$(".accordion").multiaccordion("open");
+            $(".accordion").multiaccordion({ defaultIcon: 'ui-icon-plusthick' });
+
+            ForToolTip();
+
+        }
+        function FilterAndShowRight() {
+
+            var FieldNameRight = $('#FirstSearchDdlRight').val();
+
+            var SearchOptionRight = $('#SecondSearchDdlRight').val();
+
+            var SearchVal = "";
+
+            if ($('#ThirdSearchDdlRight').hasClass('displayoff')) {
+                SearchVal = $('#ThirdSearchDdlRightDtPckr').val();
+            }
+            else {
+                SearchVal = $('#ThirdSearchDdlRight').val();
+            }
+
+
+            if (FieldNameRight == "BPOVAL") {
+                FieldNameRight = "POID";
+            }//PO Number</option) { }//
+            else if (FieldNameRight == "BVENDR") {
+                FieldNameRight = "VendorName";
+            }//Vendor</option) { }//
+            if (FieldNameRight == "BISCOMMITTED") {
+                FieldNameRight = "IsCommitted";
+            }
+            else if (FieldNameRight == "BBUYR") {
+                FieldNameRight = "BuyerName";
+            }
+
+                //Buyer</option) { }//
+            else if (FieldNameRight == "BTRMS") {
+                FieldNameRight = "Terms";
+            }//Terms</option) { }//
+            else if (FieldNameRight == "BCRRNCY") {
+                FieldNameRight = "Currency";
+            }//Currency</option) { }//
+            else if (FieldNameRight == "BCONVRT") {
+                FieldNameRight = "Conv";
+            }//Conversion Rate</option) { }//
+            else if (FieldNameRight == "BITMAPPRVL") {
+                FieldNameRight = "ActionType";
+            }//Item Approvals</option) { }//
+            else if (FieldNameRight == "BFOB") {
+                FieldNameRight = "FOB";
+            }//FOB</option) { }//
+            else if (FieldNameRight == "BARRVLDT") {
+                FieldNameRight = "ArrivalDate";
+            }//Arrival Date</option) { }//
+            else if (FieldNameRight == "BCHKBCK") {
+                FieldNameRight = "CheckBackDate";
+            }//Check back</option) { }//
+            else if (FieldNameRight == "BITMSTTS") {
+
+                FieldNameRight = "ItemStatus";
+            }//Item Status</option) { }//
+            else if (FieldNameRight == "BINV") {
+                FieldNameRight = "Inv";
+            }//Invoice</option) { }//
+            else if (FieldNameRight == "BPOQTY") {
+
+                FieldNameRight = "Qty";
+            }//PO Qty</option) { }//
+            else if (FieldNameRight == "BRQTY") {
+                FieldNameRight = "ReceivedQuantity";
+            }//R-Qty</option) { }//
+            else if (FieldNameRight == "BSHPVIA") {
+                FieldNameRight = "ShipMethod";
+            }//Ship via</option) { }//
+            else if (FieldNameRight == "BSHPTO") {
+                FieldNameRight = "ShipTo";
+            }//Ship To</option) { }//
+            else if (FieldNameRight == "BFRGHT") {
+                FieldNameRight = "Freight";
+            }//Freight</option) { }//
+            else if (FieldNameRight == "BRMRKS") {
+                FieldNameRight = "Remarks";
+            }//Remarks</option) { }//
+
+            else if (FieldNameRight == "VPOLNITMNMBR") { FieldNameRight = "POLineItemID"; }//PO LineItem Number</option) { }//
+            else if (FieldNameRight == "VSPCNMBR") { FieldNameRight = "SpecNum"; }//Spec Number</option) { }//
+            else if (FieldNameRight == "VITMDESC") { FieldNameRight = "ItemDescription"; }//Item Description</option) { }//
+            else if (FieldNameRight == "VITMAPPRVL") { FieldNameRight = "ActionType"; }//Item Approvals</option) { }//
+            else if (FieldNameRight == "VITMSTTS") { FieldNameRight = "ItemStatus"; }//ItemStatus</option) { }//
+            else if (FieldNameRight == "VRQTY") { FieldNameRight = "ReceivedQuantity"; }//R-Qty</option) { }//
+            else if (FieldNameRight == "VINV") { FieldNameRight = "Invoice"; }//Invoice</option) { }//
+            else if (FieldNameRight == "VPOQTY") { FieldNameRight = "Quantity"; }//PO Qty</option) { }//
+
+
+            if (SearchOptionRight == "GREATERTHAN") {
+                SearchOptionRight = ">";
+            }
+            else if (SearchOptionRight == "LESSTHAN") {
+                SearchOptionRight = "<";
+            }
+            else if (SearchOptionRight == "EQUALS") {
+                SearchOptionRight = "=";
+            }
+            else if (SearchOptionRight == "MATCH") {
+                SearchOptionRight = "like";
+            }
+            else if (SearchOptionRight == "NOTMATCH") {
+                SearchOptionRight = "not like";
+            }
+
+            if (FieldNameRight == null || FieldNameRight == '0') {
+                notify("Please Select search field crieteria");
+                return;
+            }
+            if (SearchOptionRight == null || SearchOptionRight == '0') {
+                notify("Please Select search operator");
+                return;
+            }
+
+            if (SearchVal == null || SearchVal.trim() == '') {
+                notify("Please Select search value");
+                return;
+            }
+
+            var wclause = "";
+
+
+            if ($('#ThirdSearchDdlRight').hasClass('displayoff')) {
+                wclause = "convert(datetime," + FieldNameRight + ",103)" + " " + SearchOptionRight + " convert(datetime,'" + SearchVal + "',103)";
+            }
+
+
+            else if (SearchOptionRight == "like" || SearchOptionRight == "not like") {
+                wclause = FieldNameRight + " " + SearchOptionRight + " '^" + SearchVal + "^'";
+
+            }
+            else {
+                wclause = FieldNameRight + " " + SearchOptionRight + " " + SearchVal;
+            }
+
+            return wclause;
+
+
+        }
+
+
+        function ResetFilter() {
+
+            $('#SecondSearchDdlLeft').addClass('displayoff');
+
+            $('#ThirdSearchDdlLeft').addClass('displayoff');
+
+            $('#ThirdSearchDdlLeftDtPckr').addClass('displayoff');
+
+            $('#SecondSearchDdlRight').addClass('displayoff');
+
+
+            $('#ThirdSearchDdlRight').addClass('displayoff');
+
+            $('#ThirdSearchDdlRightDtPckr').addClass('displayoff');
+
+
+            LoadAsPerBudgetVendor('N');
+
+            $('input[type=radio]').prop('checked', false);
+
+            loadBudgetPartNew(' 1 > 0 ');
+
+            loadVendorPartNew(' 1 > 0 ');
+
+            $(".accordion").multiaccordion();
+            $(".accordion").multiaccordion("close");
+            $(".accordion").multiaccordion({ defaultIcon: 'ui-icon-plusthick' });
+
+            ForToolTip();
+
+            if ($('#Hdn_IsVendor').val().trim() == 'Y') {
+                $('#ByBudget').css('display', 'none');
+                $('#rad_Bdgt').css('display', 'none');
+                $('#rad_None').css('display', 'none');
+                $('#rad_Bdgtspn').css('display', 'none');
+                $('#rad_Nonespn').css('display', 'none');
+            }
+            else if ($('#Hdn_IsVendor').val().trim() == 'N') {
+                $('#ByBudget').css('display', '');
+                $('#rad_Bdgt').css('display', '');
+                $('#rad_None').css('display', '');
+                $('#rad_Bdgtspn').css('display', '');
+                $('#rad_Nonespn').css('display', '');
+            }
+
+
+        }
+
+
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            var date = new Date();
+            var currentMonth = date.getMonth();
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+
+
+            $('#ThirdSearchDdlLeftDtPckr').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd/mm/yy'
+            });
+            $('#ThirdSearchDdlRightDtPckr').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd/mm/yy'
+            });
+        });
+        $(function () {
+
+            if ($('#Hdn_IsVendor').val().trim() == 'Y') {
+                $('#ByBudget').css('display', 'none');
+                $('#rad_Bdgt').css('display', 'none');
+                $('#rad_None').css('display', 'none');
+                $('#rad_Bdgtspn').css('display', 'none');
+                $('#rad_Nonespn').css('display', 'none');
+            }
+            else if ($('#Hdn_IsVendor').val().trim() == 'N') {
+                $('#ByBudget').css('display', '');
+                $('#rad_Bdgt').css('display', '');
+                $('#rad_None').css('display', '');
+                $('#rad_Bdgtspn').css('display', '');
+                $('#rad_Nonespn').css('display', '');
+            }
+        });
+    </script>
+
+    <script type="text/javascript">
+
+        function EditExpediteNote(obj, objself) {
+
+            var rw = $(objself).parent().parent();
+            ////console.log(rw);
+
+            var status = $(rw).find('td').eq('0').html();
+            var note = $(rw).find('td').eq('2').html();
+            var rqty = $(rw).find('td').eq('3').html();
+            var rdate = $(rw).find('td').eq('4').html();
+            var ref = $(rw).find('td').eq('5').html();
+
+            var newddl = $('#ddl_ItemStatus').clone();
+            $(newddl).attr('id', 'newddl_ItemStatus');
+
+            var html = "";
+
+            html += "<div class='row'>";
+            html += "<div class='form-group col-sm-12'>";
+
+            html += "<label>Note</label><input class='form-control mrg5T' type='text' id='edtnote' value='" + note + "'/>";
+            html += "<label>Qty</label><input class='form-control mrg5T' type='text' id='edtrqty' value='" + rqty + "'/>";
+            html += "<label>R-Date</label><input class='form-control mrg5T' type='text' id='edtrdate' value='" + rdate + "'/>";
+            html += "<label>Ref</label><input class='form-control mrg5T' type='text' id='edtref' value='" + ref + "'/>";
+            html += "<button class='btn btn-poms mrg5T' type='button' id='edtbtn' data-id='" + obj + "' onclick='editexpeditenote(this);'>Save</button>";
+
+            html += "</div>";
+            html += "</div>";
+
+
+
+
+
+
+            $('#popupforeditexpediteinner').html('');
+            $('#popupforeditexpediteinner').append(newddl);
+            $('#popupforeditexpediteinner').append(html);
+
+
+            var currentDate = new Date();
+
+            $('#edtrdate').datepicker();
+
+            $('#edtrdate').datepicker({ dateFormat: 'dd-mm-yy' });
+
+
+            $("#newddl_ItemStatus option").each(function () {
+                if ($(this).text() == status) {
+                    $(this).attr('selected', 'selected');
+                }
+            });
+
+            $('.modal').modal('hide');
+
+
+
+            $('#popupforeditexpedite').modal('show');
+
+            //jQuery('#popupforeditexpedite').bPopup({
+            //    easing: 'easeOutBack', //uses jQuery easing plugin
+            //    speed: 450,
+            //    transition: 'slideDown',
+            //    modalColor: 'rgb(18, 54, 65)',
+            //    position: [0, 0]
+            //});
+
+
+        }
+
+        function editexpeditenote(obj) {
+
+            var FldID = $(obj).attr('data-id');
+            var ItemStatus = $('#newddl_ItemStatus').val();
+            var POLineItemExpediteNote = $('#edtnote').val();
+            var ReceiveQty = $('#edtrqty').val();
+            var ReceiveDate = $('#edtrdate').val();
+            var Reference = $('#edtref').val();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/Expedite/UpdateExpediteNotes';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url = 'Expedite/UpdateExpediteNotes';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                url: url,
+                data: "{ 'FldID': '" + FldID + "','POLineItemID' : '" + '' + "','ItemStatus' : '" + ItemStatus + "','POLineItemExpediteNote' : '"
+                    + POLineItemExpediteNote + "','ReceiveQty' : '" + ReceiveQty + "','ReceiveDate' : '" + ReceiveDate + "','Reference' : '" + Reference + "'}",
+                success: function (data) {
+
+                    $('#popupforeditexpedite').modal('hide');
+                    $('#POExpeditepopuplineitems').modal('show');
+                    window.location.reload();
+
+                    var POLineItemID = $('#Hdn_POLineItemID').val(); // Dynamic
+
+                    DdlLineItemStatusByProjectID(POLineItemID);
+                    ViewPOExpediteHistory(POLineItemID);
+                    ViewPOLineItemExpediteHistory(POLineItemID);
+
+                }
+
+            });
+
+
+
+        }
+
+    </script>
+
+    <style type="text/css">
+            a.tooltip {outline:none; }
+            a.tooltip strong {line-height:30px;}
+            a.tooltip:hover {text-decoration:none;} 
+            a.tooltip span {
+            z-index:10;display:none; padding:14px 20px;
+            margin-top:-30px; margin-left:28px;
+            width:300px; line-height:16px;
+            }
+            a.tooltip:hover span{
+            display:inline; position:absolute; color:#111;
+            border:1px solid #DCA; background:#fffAF0;}
+            .callout {z-index:20;position:absolute;top:30px;border:0;left:-12px;}
+    
+            /*CSS3 extras*/
+            a.tooltip span
+            {
+            border-radius:4px;
+            box-shadow: 5px 5px 8px #CCC;
+            }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //$("#PrjtDdl").multiselect().multiselectfilter();
+
+            //var width = '100%';
+            //$('.ui-multiselect').css('width', width);
+            ////$('.ui-multiselect-menu').css('width', '39.5%');
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            //$('.ui-state-default').css('color', '#C31001');
+            //$('.ui-multiselect').css('height', '34px');
+            //$('.ui-multiselect').css('margin-top', '5px');
+        });
+    </script>
+</head>
+<body>
+
+    <div class="container-fluid" >
+        
+
+        <input type="hidden" id="Hdn_POLineItemID" />
+        <input type="hidden" id="Hdn_PurchaseOrderID" />
+        <input type="hidden" id="hdn_isManager" />
+        <input type="hidden" id="Hdn_Filter" value="" />
+        <input type="hidden" id="Hdn_IsVendor" value="@ViewBag.IsVendor" />
+
+         <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header">Expedite</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            
+
+            <div class="col-sm-12 centerposition">
+
+               
+
+                <div class="form-group">
+                     <label>Select Project</label>
+                <select id="PrjtDdl" onchange="GetDataOnProjectChange(this);" multiple="multiple" >
+                    <option data-id="0" value="0">--Select Project--</option>
+                    @Html.Raw(ViewData["getAllProjectName"])
+                </select>
+                <a href="javascript:void(0);" onclick="ViewOnlyProjectScreen();"><i style="color: #2980B9; margin-top: 7px;" class="fa fa-info-circle"></i></a>
+                <label id="lbl_ProjectName">No project has been selected.</label>
+                </div>
+
+                
+
+                <div class="form-group">
+                    <label id="rad_Vndrspn"><input type="radio" class="mrg5L" name="vendorBudget" onclick="LoadAsPerBudgetVendor('V');" id="rad_Vndr" />By vendor </label> 
+                    <label id="rad_Bdgtspn"> <input type="radio" class="mrg5L" name="vendorBudget" onclick="LoadAsPerBudgetVendor('B');" id="rad_Bdgt" />By Budget Section</label>
+                                               
+                    <label id="rad_Nonespn"><input type="radio" class="mrg5L" name="vendorBudget" onclick="LoadAsPerBudgetVendor('N');" id="rad_None" />None</label>
+                    </div>
+
+                <div class="form-group mrg15T">
+
+
+                    <div class="col-sm-5">
+                    <select id="FirstSearchDdlLeft" class="TakeVal displayon form-control mrg10T" onchange="FirstSearchDdlOnChangeLeft(this);">
+                            </select>
+                   
+                 <select id="SecondSearchDdlLeft" class="displayoff form-control mrg10T" onchange="SecondSearchDdlOnChangeLeft(this);">
+                            </select>
+                    
+                     <input type="text" class="ThirdSearchDdlLefttxt displayoff form-control mrg10T" />@* onchange="ThirdSearchDdlOnChangeLeft(this);"*@
+
+                         <select class="ThirdSearchDdlLeftddl displayoff form-control mrg10T">
+                            </select>
+
+                    
+                           
+                    
+                     <input type="text" id="ThirdSearchDdlLeftDtPckr" class="displayoff form-control mrg10T" />
+
+                        </div>
+
+                    <div class="col-sm-2">
+                         <input type="radio" name="andor" id="chk_and"/>and
+                                <input type="radio" name="andor" id="chk_or"/>or
+                        </div>
+
+                     <div class="col-sm-5">
+                         <select id="FirstSearchDdlRight" class="TakeVal displayon form-control  mrg15T" onchange="FirstSearchDdlOnChangeRight(this);">
+                            </select>
+                            <select id="SecondSearchDdlRight" class="displayoff form-control  mrg15T" onchange="SecondSearchDdlOnChangeRight(this);">
+                            </select>
+                            @*<select id="ThirdSearchDdlRight" class="TakeVal displayoff" onchange="ThirdSearchDdlOnChangeRight(this);">
+                            </select>*@
+
+
+                         <input type="text" class="ThirdSearchDdlRighttxt displayoff form-control mrg10T" />@* onchange="ThirdSearchDdlOnChangeLeft(this);"*@
+
+                         <select class="ThirdSearchDdlRightddl displayoff form-control mrg10T">
+                            </select>
+
+
+                            @*<input type="text" id="ThirdSearchDdlRight" class="displayoff form-control  mrg15T" />*@@* onchange="ThirdSearchDdlOnChangeRight(this);"*@
+                            <input type="text" id="ThirdSearchDdlRightDtPckr" class="displayoff form-control  mrg15T" />
+
+                        </div>
+
+
+                    </div>
+
+               
+
+
+            </div>
+
+        </div>
+         <div class="row">
+
+          
+
+            <div class="col-sm-6 mrg10T">
+
+          <div class="form-group">
+                     
+              <div class="col-sm-12">
+                       <button type="button" onclick="FilterAndShow();" class="btn btn-poms" value="Search">Search</button>
+                    <button type="button" onclick="ResetFilter();" class="btn btn-poms" value="Reset">Reset</button>
+                
+                  <img class="mrg15L" src="~/Images/loader-blue-round.gif" id="loaderspinner" style="display:none;"/>
+                  </div>
+                        
+              </div>
+               
+
+
+            </div>
+
+
+            </div>
+       
+      <div class="row mrg15T">
+
+      <div class="col-sm-12">
+
+
+          <div class="accordion blue" id="ByVendor">
+                <h3>By Vendor <span id="vsectioncount"></span></h3>
+                <div class="content" id="VndrPrt">
+                    </div>
+              </div>
+          </div>
+
+
+              </div>
+
+
+  <div class="row mrg15T">
+
+      <div class="col-sm-12">
+
+
+      <div class="accordion blue" id="ByBudget">
+                <h3>By Budget Section <span id="bsectioncount"></span> </h3>
+                <div class="content" id="BdgtSctn">
+                </div>
+
+          </div>
+          
+
+      </div>
+
+  </div>
+      
+            
+
+
+
+       
+
+        <div class="user_panel_container displaynone">
+
+            <input type="file" name="filename" id="filename">
+            <div id="csvimporthint"></div>
+
+        </div>
+
+
+        <!-- Modal -->
+<div id="POExpeditepopuplineitems" class="modal fade" role="dialog">
+  <div class="modal-dialog  modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">PO Item Expedite Notes</h4>
+      </div>
+      <div class="modal-body">
+        
+          <div class="row">
+
+              <div class="col-sm-6">
+
+                  <div class="form-group">
+                       <div id="statusdiv"></div>
+                  </div>
+
+                   <div class="form-group">
+                       <label>Item Status</label>
+                        <select id="ddl_ItemStatus" class="form-control">
+                            @*<option value="0">--Select Status--</option>*@
+                            @Html.Raw(ViewData["getItemStatus"])
+                        </select>
+                       </div>
+
+                  <div class="form-group">
+                      <label>Expedite Notes</label>
+                        <textarea id="ItemExpediteNote" class="form-control no-resize" rows="3" placeholder="Current Expedite Note"></textarea>
+
+                  </div>
+
+              </div>
+
+               <div class="col-sm-6">
+
+                   <div class="form-group">
+                        <label>R-Qty</label>
+                        <input type="text" id="txt_ReturnQty" class="floatonly form-control"  placeholder="Enter Received Quantity" />
+                       </div>
+
+                    <div class="form-group">
+                         <label class="req">Received Date</label>
+                        <input type="text" class="form-control" id="txt_RecvdDate" onkeypress="return AvoidKeyPress(event);" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Reference#</label>
+                        <input type="text" class="form-control" id="txt_Reference" />
+                    </div>
+
+                </div>
+
+          </div>
+
+          <div class="row mrg10T">
+
+              <div class="col-sm-12" style="overflow-x:auto;">
+
+                  <table id="tblPOLineItemExpediteHistory" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Status</th>
+                                            <th>Name</th>
+                                            <th>Expedite Note</th>
+                                            <th>R-Qty</th>
+                                            <th>Received Date</th>
+                                            <th>Reference</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tblPOLineItemExpediteHistoryBody">
+                                    </tbody>
+                                </table>
+
+              </div>
+
+          </div>
+
+          <div class="row mrg10T">
+              <div class="col-sm-12">
+                  <button class="btn btn-block btn-primary" id="btn_AddPOItemExpdNote"><i class="fa fa-plus-square mrg5R"></i>Add PO Item Expedite Note</button>
+              </div>
+          </div>
+
+           <div class="row mrg10T">
+            <div class="col-sm-12">
+                <h3 class="section-header">PO Expedite Notes</h3>
+            </div>
+        </div>
+
+          <div class="row mrg10T">
+              <div class="col-sm-12" style="overflow-x:auto;">
+                  <table id="tblPOExpediteHistory" style="width: 100%; ">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Notes</th>
+                                            <th>Added on</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tblPOExpediteHistoryBody">
+                                    </tbody>
+                                </table>
+              </div>
+          </div>
+
+          <div class="row mrg10T">
+               <div class="col-sm-12">
+          <label>Expedite Notes</label>
+                        <textarea id="POItemExpediteNote" class="form-control no-resize" placeholder="Current Expedite Note"></textarea>
+                   </div>
+              </div>
+
+          <div class="row mrg10T">
+              <div class="col-sm-12">
+                  <button class="btn btn-block btn-primary" id="btn_AddExpNote"><i class="fa fa-plus-square mrg5R"></i>Add PO Expedite Note</button>
+
+              </div>
+              </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+       
+
+
+
+    </div>
+
+
+    <div id="popupforHistory" class="displaynone" style="top: 20px; width: 100%; height: auto; max-height: 650px; transform: scale(0.80); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+
+        <span class="button b-close"><span>X</span></span>
+        <div class="user_panel_container policy-items" style="max-height: 599px; overflow-y: auto;">
+            <table id="itemapprovals" style="margin-bottom: 30px; width: 100%; border-collapse: collapse;" class="display no-footer dataTable">
+                <thead style="background: rgb(32, 128, 147); color: white; border: 1px solid black; width: 150px;">
+                    <tr>
+                        <th></th>
+                        <th>Name<input type="text" class="searchbox" id="srchfrname" style="border-radius: 6px; color:#2E6DA4; height: 21px !important; font-size: 0.8em; border: 1px solid black; width: 150px; padding-left: 20px;" placeholder="Search By Name" onkeyup="searchtable();"></th>
+                        <th>Action</th>
+                        @*<th>Comment</th>
+                    <th>Attach File</th>*@
+                        <th>History</th>
+                        <th>Comment</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+        </div>
+
+
+    </div>
+
+
+    <div id="popupforeditexpedite" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Edit Expedite Notes</h4>
+      </div>
+      <div class="modal-body">
+        
+
+          <div id="popupforeditexpediteinner">
+
+
+            </div>
+         
+
+      </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+    
+        <div id="popupforeditexpedite1" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+            <span class="button b-close"><span>X</span></span>
+            
+
+            </div>
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+
+
+            //approvallist();
+
+            $('.choosefile').live('change', function (obj) {
+
+                ////console.log(obj.currentTarget);
+
+
+                var fname = $(obj.currentTarget)[0].files[0].name;
+                $(obj.currentTarget).next('span').text(fname);
+
+            });
+
+
+        });
+
+        function getallowedactions(id) {
+
+            var PurchaseOrderID = $('#Hdn_PurchaseOrderID').val();
+            var html = "";
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/PurchaseOrder/getAllowedActions';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url = 'PurchaseOrder/getAllowedActions';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                url: url,
+                data: "{ 'poapprovalid': '" + id + "','PurchaseOrderID' : '" + PurchaseOrderID + "'}",
+                success: function (data) {
+                    html = data;
+                }
+
+            });
+            return html;
+
+        }
+
+
+        function checkismanager(ItemApprovalID) {
+
+
+            var PurchaseOrderID = $('#Hdn_PurchaseOrderID').val();
+            var html = "";
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/PurchaseOrder/CheckManager';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url = 'PurchaseOrder/CheckManager';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                url: url,
+                data: "{ 'PurchaseOrderID' : '" + PurchaseOrderID + "', 'ItemApprovalID' : '" + ItemApprovalID + "'}",
+                success: function (data) {
+                    html = data;
+                }
+
+            });
+            return html;
+
+
+        }
+
+
+
+        function saveactionapproval(POLineItemApprovalID) {
+
+            var FileName = "";
+
+            if ($('#file_' + POLineItemApprovalID)[0].files[0] != undefined) {
+                FileName = $('#file_' + POLineItemApprovalID)[0].files[0].name;
+            }
+
+            //var len = $('#ddl_selectuser_' + POLineItemApprovalID).length();
+            var isManager = $('#hdn_isManager').val();
+
+            var ActionType = $('#ddl_actiontype_' + POLineItemApprovalID).val();
+            if (ActionType == 0) {
+                notify("Please select an Action");
+                return;
+            }
+
+            var ActionByProjectManager = "0";
+
+            if (isManager == "1") {
+
+                var ActionByProjectManager = $('#ddl_selectuser_' + POLineItemApprovalID).val();
+
+                if (isManager == "1" && ActionByProjectManager == "0" && (ActionType == "2" || ActionType == "3")) {
+                    notify("Please select  a user");
+                    return;
+                }
+
+            }
+
+            //alert(ActionByProjectManager);
+
+            //return;
+
+
+
+
+
+
+
+
+
+
+            var ActionDate = "";
+
+            if (ActionType == "1" || ActionType == "6") {
+
+                ActionDate = $('#datepicker_' + POLineItemApprovalID).find('input').val();
+
+            }
+
+
+            var Comment = $('#textarea_' + POLineItemApprovalID).val().trim();
+
+            if (Comment == "" && (ActionType == "3" || ActionType == "4")) {
+                notify("Please add comment");
+                return;
+            }
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/PurchaseOrder/AddPOApprovalItem';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url = 'PurchaseOrder/AddPOApprovalItem';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                url: url,
+                data: "{ 'POLineItemApprovalID': '" + POLineItemApprovalID + "','ActionType' : '" + ActionType + "','ActionDate' : '" + ActionDate + "','Comment' : '" + Comment + "','FileName' : '" + FileName + "','ActionByProjectManager' : '" + ActionByProjectManager + "'}",
+                success: function (data) {
+                    var lastinsertedid = data;
+                    //alert(data);
+
+
+
+
+                    var url2 = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url2 = 'http://www.thebridgebytcg.com/UploadFile/UploadForApprovals?fileid=';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+
+                        url2 = 'UploadFile/UploadForApprovals?fileid=';
+                    }
+
+                    url2 += lastinsertedid;
+                    var data = new FormData();
+
+                    data.append('file-1', $('#file_' + POLineItemApprovalID)[0].files[0]);
+
+
+                    $.ajax({
+                        type: "POST",
+                        async: false,
+                        dataType: "json",
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        url: url2,
+                        data: data,
+                        success: function (data) {
+                            approvallist();
+                        }
+
+                    });
+
+                    approvallist();
+                }
+
+            });
+
+        }
+
+        function ddl_actiontype_change(id, obj) {
+
+
+            var ddlid = $(obj).val();
+
+            if (ddlid == "1" || ddlid == "6") {
+
+
+
+                $('#datepicker_' + id).show();
+
+
+            }
+            else {
+                $('#datepicker_' + id).hide();
+            }
+
+
+            if (ddlid == "1") {
+
+                BindUserOnchange('GETUSERSFORRECEIVE', id);
+
+            }
+            else if (ddlid == "4") {
+                BindUserOnchange('GETUSERSFORCOMMENT', id);
+
+            }
+            else if (ddlid == "6") {
+                BindUserOnchange('GETUSERSFORSEND', id);
+
+            }
+            else {
+                BindUserOnchange('GETUSERSFORAPPROVEREJECT', id);
+            }
+
+
+
+
+        }
+
+        function BindUserOnchange(Mode, id) {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/PurchaseOrder/GetUsers';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url = 'PurchaseOrder/GetUsers';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                url: url,
+                data: "{ 'Mode': '" + Mode + "','ApprovalID' : '" + id + "'}",
+                success: function (data) {
+
+
+                    var html = '';
+                    var userddl = "";
+                    userddl = data;
+
+                    html += "<option value='0'>---Select User---</option>" + userddl + "</select>";
+
+                    $('#ddl_selectuser_' + id).html(html);
+
+
+
+                }
+
+            });
+
+        }
+
+        function BindUserOnchangeForApproveReject(ItemApprovalID) {
+
+
+            var PurchaseOrderID = $('#Hdn_PurchaseOrderID').val();
+            var html = "";
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/PurchaseOrder/CheckManager';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url = 'PurchaseOrder/CheckManager';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                url: url,
+                data: "{ 'PurchaseOrderID' : '" + PurchaseOrderID + "', 'ItemApprovalID' : '" + ItemApprovalID + "'}",
+                success: function (data) {
+                    var html = '';
+                    var userddl = "";
+                    userddl = data;
+                    html += "<option value='0'>---Select User---</option>" + userddl + "</select>";
+
+                    $('#ddl_selectuser_' + ItemApprovalID).html(html);
+                }
+
+            });
+            return html;
+
+
+        }
+
+
+        function searchtable() {
+            approvallist();
+        }
+
+        function approvallist() {
+
+            var ItemnameForSearch = $('#srchfrname').val();
+            if (ItemnameForSearch == undefined) {
+                ItemnameForSearch = "";
+            }
+
+            ItemnameForSearch = ItemnameForSearch.trim();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/PurchaseOrder/getApprovalItemsexpeditepage';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url = 'PurchaseOrder/getApprovalItemsexpeditepage';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                sync: false,
+                contentType: "application/json; charset=utf-8",
+                url: url,
+                data: "{ 'POLineitemID': '" + $('#Hdn_POLineItemID').val() + "','ItemnameForSearch' : '" + ItemnameForSearch + "'}",
+                success: function (data) {
+                    data = data.data;
+                    var html = "";
+
+
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        var itemid = data[i].ItemID;
+
+                        //$("#ddlItemApprovalType option[value='" + itemid + "']").remove();
+                        //$("#ddlItemApprovalType option[value='" + itemid + "']").attr('disabled', 'disabled');
+
+
+                        var id = data[i].ItemApprovalID;
+                        var approverstatus = Check_ApproverStatusPOItems(id);
+                        var approvedby = approverstatus.split('^')[0];
+                        var requiredby = approverstatus.split('^')[1];
+                        var progress = "Approved By: " + approvedby + " Out of " + requiredby + "</br><progress value='" + approvedby + "' max='" + requiredby + "'></progress>";
+                        var action = "<br /><label style='padding: 0px;'>Action: </label><select class='form-control' onchange='ddl_actiontype_change(\"" + id + "\",this);' id='ddl_actiontype_" + id + "'>";
+                        action += "<option value='0'>---Select Action---</option>" + getallowedactions(id) + "</select>";
+
+                        var isManager = $('#hdn_isManager').val();
+
+                        if (isManager == "1") {
+
+                            action += "<label style='padding: 0px;'>On Behalf of:</label><select class='form-control' onchange='ddl_userselectformanager_change(\"" + id + "\",this);' id='ddl_selectuser_" + id + "'></label>";
+                            var userddl = "";
+                            userddl = checkismanager(id);
+                            action += "<option value='0'>---Select User---</option>" + userddl + "</select>";
+                        }
+
+                        action += "<p id='datepicker_" + id + "' style='display:none;'>Date: <input type='text' readonly  class='dtpicker' data-mindate='" + data[i].ActionDate + "'></p>";
+
+
+                        var rspn = data[i].History.length + 1;
+
+                        html += "<tr>";
+                        html += "<td valign='top' rowspan='" + rspn + "'>" + "<button type='button' onclick='saveactionapproval(\"" + id + "\");' class='btn btn-poms' value='Save'>Save</button>" + "</td>";
+
+                        if (approvedby == requiredby) {
+                            html += "<td valign='top' style='text-align: center;'  rowspan='" + rspn + "'>" + data[i].ItemName + "</td>";
+                        }
+                        else {
+                            html += "<td style='text-align:center;' valign='top' style='text-align: center;'  rowspan='" + rspn + "'>" + data[i].ItemName + "</td>";
+
+                        }
+
+
+                        //html += "<td rowspan='" + rspn + "'>" + action + "</td>";
+                        //html += "<td rowspan='" + rspn + "'>" + "<textarea id='textarea_" + id + "'></textarea>" + "</td>";
+                        //html += "<td rowspan='" + rspn + "'>" + "<input class='choosefile' style='width: 84px;' type='file' id='file_" + id + "' />" + "<span style='float: left; color: rgb(32, 128, 147);'></span></td>";
+
+                        html += "<td valign='top' rowspan='" + rspn + "'>"
+                            + ""
+                            + progress
+                            + ""
+                            + "" + action + "";
+                        html += "<label>Comment :</label>" + "<textarea class='form-control no-resize' rows='4' id='textarea_" + id + "'></textarea>" + "";
+                        html += "Attachment :<br/>" + "<input onchange='filechange(this);' multiple type='file' id='file_" + id + "' />" + "<span style='float: left; color: rgb(32, 128, 147);'></span></td>";
+
+                        var action = data[i].ActionType;
+
+                        html += "<td>" + action + " on <span style='color:green'><strong>" + data[i].ShowDate + "</span></strong> by <span style='color:green'><strong>" + data[i].Username + "</strong></span></td>";
+                        html += "<td></td></tr>";
+
+                        for (var j = 0 ; j < data[i].History.length; j++) {
+
+                            var fname = '';
+                            if (LOCALORSERVERNEW == 'LOCAL') {
+                                fname = 'http://www.thebridgebytcg.com/Assets/Approvals/';
+                            }
+                            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                                fname = 'Assets/Approvals/';
+                            }
+
+                            var ManagerName = data[i].History[j].ManagerName;
+                            var username = data[i].History[j].Username;
+                            var finalusername = "";
+                            if (ManagerName.trim() == "") {
+                                finalusername = "<span style='color:green'><strong>" + username + "</strong>";
+                            }
+                            else {
+                                finalusername = "<span style='color:green'><strong>" + ManagerName + "</span></strong> On behalf of <span style='color:green'><strong>" + username + "</strong>";
+                            }
+
+                            fname += data[i].History[j].FileNamePhysical;
+                            var fnameshow = data[i].History[j].FileNameToShow;
+
+                            var action = data[i].History[j].ActionType;
+
+                            if (action == "Add Comment") {
+                                action = "Commented";
+                            }
+                            else if (action == "Approve") {
+                                action = "Approved";
+                            }
+                            else if (action == "Reject") {
+                                action = "Rejected";
+                            }
+                            else if (action == "Send") {
+                                action = "Sent";
+                            }
+                            else if (action == "Receive") {
+                                action = "Received";
+                            }
+
+                            html += "<tr>";
+
+                            html += "<td style='padding: 5px;'>" + action + " on <span style='color:green'><strong>"
+                                  + data[i].History[j].ShowDate
+                                  + "</strong></span> by " + finalusername + "&nbsp;<u><a target='_blank' href='" + fname + "'>" + fnameshow + "</a></u></span></td>";
+                            html += "<td>" + data[i].History[j].comment + "</td>"
+                            html += "</tr>";
+
+                        }
+                        // html += "</td></tr>";
+
+
+
+                    }
+
+                    if (html == "") {
+
+                        $('#itemapprovals tbody').html("<tr><td style='text-align: center;' colspan='6'>No data available</td></tr>");
+                    }
+                    else {
+                        $('#itemapprovals tbody').html(html);
+                    }
+
+
+
+
+                    $('.dtpicker').each(function () {
+
+                        var currentDate = new Date();
+                        var mindate = $(this).attr('data-mindate');
+
+                        $(this).datepicker({ minDate: mindate, maxDate: +0 });
+                        $(this).datepicker("setDate", currentDate);
+                        $(this).datepicker({ dateFormat: 'dd-mm-yy' });
+                    });
+
+                    //if (ItemnameForSearch != "") {
+
+                    //    $('#srchfrname').focus();
+
+                    //}
+
+                }
+
+            });
+
+        }
+
+
+
+        function Check_ApproverStatusPOItems(POLineItemApprovalID) {
+            var result = "";
+            var PurchaseOrderID = $('#Hdn_PurchaseOrderID').val();
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/PurchaseOrder/Check_ApproverStatusPOItems';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url = 'PurchaseOrder/Check_ApproverStatusPOItems';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                url: url,
+                data: "{ 'PurchaseOrderID': '" + PurchaseOrderID + "','POLineItemApprovalID' : '" + POLineItemApprovalID + "'}",
+                success: function (data) {
+
+                    result = data;
+                }
+
+            });
+
+
+            return result;
+        }
+    </script>
+
+    <script>
+
+
+        var ProjectDdlForPage = $('#PrjtDdl');
+
+
+        $(document).ready(function () {
+
+            var selectedpreferredpid = getProjectPreference();
+
+
+            if (selectedpreferredpid.split(',').length == 0) {
+                $(ProjectDdlForPage).find('option[value="' + selectedpreferredpid[i] + '"]').attr("selected", "true");
+            }
+
+            else {
+                for (var i = 0; i <= selectedpreferredpid.split(',').length; i++) {
+
+                    $(ProjectDdlForPage).find('option[value="' + selectedpreferredpid[i] + '"]').attr("selected", "true");
+
+                }
+            }
+
+
+
+
+            $(ProjectDdlForPage).multiselect('refresh');
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+            GetDataOnProjectChange(ProjectDdlForPage);
+
+
+
+        });
+
+
+
+        $(document).on('change', ProjectDdlForPage, function () {
+
+            setProjectPreference(ProjectDdlForPage);
+
+        });
+
+
+    </script>
+    <script>
+
+        $(document).ready(function (e) {
+            $('.search-panel .dropdown-menu').find('a').click(function (e) {
+                e.preventDefault();
+                var param = $(this).attr("href").replace("#", "");
+                var concept = $(this).text();
+                $('.search-panel span#search_concept').text(concept);
+                $('.input-group #search_param').val(param);
+            });
+        });
+
+        function supresszero() {
+            $('.display_0').toggle('displaynone');
+            //$('.display_0').removeClass('displaynone');
+        }
+
+    </script>
+
+    <script>
+        function makedropdown(ddval,side) {
+
+            var pid = $('#PrjtDdl').val();
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/Expedite/makedropdown';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url = 'Expedite/makedropdown';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                url: url,
+                data: "{ 'Mode': '" + ddval + "','PID' : '" + pid + "'}",
+                success: function (data) {
+                    if (side == 'L') {
+                        $('#ThirdSearchDdlLeft').html(data);
+                    }
+                    else {
+                        $('#ThirdSearchDdlRight').html(data);
+                    }
+                }
+
+            });
+
+
+
+        }
+    </script>
+
+</body>
+
+
+    
+</html>

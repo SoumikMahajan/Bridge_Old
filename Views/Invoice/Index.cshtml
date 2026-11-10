@@ -1,0 +1,187 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index1</title>
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    @* <script src="~/Scripts/angular.min.js"></script>*@
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    @*<script src="~/Scripts/AddUser.js"></script>*@
+    <script src="~/Scripts/Project.js"></script>
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/swfupload.js"></script>
+    <script src="~/Scripts/jquery.swfupload.js"></script>
+    <link href="~/css/stylesForFileUpload.css" rel="stylesheet" />
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            var date = new Date();
+            var currentMonth = date.getMonth();
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+
+            $('#txt_InvoiceDate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'MM dd yy'
+                //,minDate: new Date(currentYear, currentMonth, currentDate)
+            });
+            $('#txt_InvoiceDate').datepicker("setDate", date);
+        });
+    </script>
+</head>
+<body>
+    <div class="main_container" id="angulardiv">
+        <div class="edit_vendor_full">
+            
+                  <div class="edit_vendor_full">
+                       <div class="edit_vendor_half">
+                            <div class="user_panel_container">
+                                <label>Invoice Date</label>
+                                <input type="text" id="txt_InvoiceDate"  style="width:50%;"/>
+                            </div> 
+                            <div class="user_panel_container">
+                                <label>Invoice Number</label>
+                                <input type="text" id="txt_InvoiceNumber"  style="width:50%;"/>
+                            </div> 
+                            <div class="user_panel_container">
+                                <label>Total Invoice Amount</label>
+                                <input type="text" id="txt_TotalInvoiceAmount"  style="width:50%;"/>
+                            </div> 
+                       </div>
+                       <div class="edit_vendor_half">
+                           <div class="user_panel_container">
+                                <label>Terms</label>
+                                <select id="txt_Terms" style="width:50%;">
+                                    <option value="0">--Select Terms--</option>
+                                    @Html.Raw(ViewData["getAllTerms"])
+                                </select>
+                            </div> 
+                           <div class="user_panel_container">
+                                <label>Project Account</label>
+                                <input type="text" id="txt_ProjectAccount"  style="width:50%;"/>
+                            </div> 
+                           <div class="user_panel_container">
+                                <label>Invoice Memo</label>
+                                <textarea style="width:50%;"></textarea>
+                            </div> 
+                       </div>
+                  </div>
+             <div class="edit_vendor_full">
+                        <div class="edit-vendor-half">
+                            
+                        </div>
+                        <div class="edit-vendor-half">
+                            <div class="user_panel_container">
+                                <label>Subtotal Invoice</label>
+                                <input type="text" id="txt_SubtotalInvoice" />
+                            </div> 
+                            <div class="user_panel_container">
+                                <label>Total Tax 1</label>
+                                <input type="text" id="txt_TotalTax1" />
+                            </div> 
+                             <div class="user_panel_container">
+                                <label>Total Tax 2</label>
+                                <input type="text" id="txt_TotalTax2" />
+                            </div> 
+                             <div class="user_panel_container">
+                                <label>Total Tax 3</label>
+                                <input type="text" id="txt_TotalTax3" />
+                            </div> 
+                             <div class="user_panel_container">
+                                <label>Total Invoice</label>
+                                <input type="text" id="txt_TotalInvoice" />
+                            </div> 
+                        </div>
+                 </div>
+
+
+            <div class="edit_vendor_full">
+                <table>
+                    <tr>
+                        <td>InvoiceID</td>
+                        <td>PurchaseOrderID</td>
+                        <td>POLineItemID</td>
+                        <td>Percent</td>
+                        <td>PO#</td>
+                        <td>Item#</td>
+                        <td>Spec</td>
+                        <td>Description</td>
+                        <td>Note</td>
+                        <td>Qty</td>
+                        <td>Amount</td>
+                        <td>Tax</td>
+                        <td>Line Item Total</td>
+                        <td>Project Account</td>
+                        
+                    </tr>
+                    <tr>
+                        <td><input type="text" id="txt1" /></td>
+                        <td><input type="text" id="txt2" /></td>
+                        <td><input type="text" id="txt3" /></td>
+                        <td><input type="text" id="txt4" /></td>
+                        <td><input type="text" id="txt5" /></td>
+                        <td><input type="text" id="txt6" /></td>
+                        <td><input type="text" id="txt7" /></td>
+                        <td><input type="text" id="txt8" /></td>
+                        <td><input type="text" id="txt9" /></td>
+                        <td><input type="text" id="txt10"/></td>
+                        <td><input type="text" id="txt11"/></td>
+                        <td><input type="text" id="txt12"/></td>
+                        <td><input type="text" id="txt13"/></td>
+                        <td><input type="text" id="txt14"/></td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="text" id="txtnew1" /></td>
+                        <td><input type="text" id="txtnew2" /></td>
+                        <td><input type="text" id="txtnew3" /></td>
+                        <td><input type="text" id="txtnew4" /></td>
+                        <td><input type="text" id="txtnew5" /></td>
+                        <td><input type="text" id="txtnew6" /></td>
+                        <td><input type="text" id="txtnew7" /></td>
+                        <td><input type="text" id="txtnew8" /></td>
+                        <td><input type="text" id="txtnew9" /></td>
+                        <td><input type="text" id="txtnew10"/></td>
+                        <td><input type="text" id="txtnew11"/></td>
+                        <td><input type="text" id="txtnew12"/></td>
+                        <td><input type="text" id="txtnew13"/></td>
+                        <td><input type="text" id="txtnew14"/></td>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="edit_vendor_full">
+                <input type="button" id="btn" value="Save" />
+            </div>
+        </div>        
+    </div>
+</body>
+</html>

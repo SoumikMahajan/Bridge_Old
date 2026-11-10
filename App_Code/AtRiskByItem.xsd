@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="AtRiskByItem" targetNamespace="http://tempuri.org/AtRiskByItem.xsd" xmlns:mstns="http://tempuri.org/AtRiskByItem.xsd" xmlns="http://tempuri.org/AtRiskByItem.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="AtRiskByItem" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="AtRiskByItem" msprop:Generator_UserDSName="AtRiskByItem">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="AtRiskByItem" msprop:Generator_TableClassName="AtRiskByItemDataTable" msprop:Generator_TableVarName="tableAtRiskByItem" msprop:Generator_RowChangedName="AtRiskByItemRowChanged" msprop:Generator_TablePropName="_AtRiskByItem" msprop:Generator_RowDeletingName="AtRiskByItemRowDeleting" msprop:Generator_RowChangingName="AtRiskByItemRowChanging" msprop:Generator_RowEvHandlerName="AtRiskByItemRowChangeEventHandler" msprop:Generator_RowDeletedName="AtRiskByItemRowDeleted" msprop:Generator_RowClassName="AtRiskByItemRow" msprop:Generator_UserTableName="AtRiskByItem" msprop:Generator_RowEvArgName="AtRiskByItemRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ItemNo" msprop:Generator_ColumnVarNameInTable="columnItemNo" msprop:Generator_ColumnPropNameInRow="ItemNo" msprop:Generator_ColumnPropNameInTable="ItemNoColumn" msprop:Generator_UserColumnName="ItemNo" type="xs:string" minOccurs="0" />
+              <xs:element name="ItemDesc" msprop:Generator_ColumnVarNameInTable="columnItemDesc" msprop:Generator_ColumnPropNameInRow="ItemDesc" msprop:Generator_ColumnPropNameInTable="ItemDescColumn" msprop:Generator_UserColumnName="ItemDesc" type="xs:string" minOccurs="0" />
+              <xs:element name="Spec" msprop:Generator_ColumnVarNameInTable="columnSpec" msprop:Generator_ColumnPropNameInRow="Spec" msprop:Generator_ColumnPropNameInTable="SpecColumn" msprop:Generator_UserColumnName="Spec" type="xs:string" minOccurs="0" />
+              <xs:element name="Qty" msprop:Generator_ColumnVarNameInTable="columnQty" msprop:Generator_ColumnPropNameInRow="Qty" msprop:Generator_ColumnPropNameInTable="QtyColumn" msprop:Generator_UserColumnName="Qty" type="xs:string" minOccurs="0" />
+              <xs:element name="Vendor" msprop:Generator_ColumnVarNameInTable="columnVendor" msprop:Generator_ColumnPropNameInRow="Vendor" msprop:Generator_ColumnPropNameInTable="VendorColumn" msprop:Generator_UserColumnName="Vendor" type="xs:string" minOccurs="0" />
+              <xs:element name="PurchaseOrder" msprop:Generator_ColumnVarNameInTable="columnPurchaseOrder" msprop:Generator_ColumnPropNameInRow="PurchaseOrder" msprop:Generator_ColumnPropNameInTable="PurchaseOrderColumn" msprop:Generator_UserColumnName="PurchaseOrder" type="xs:string" minOccurs="0" />
+              <xs:element name="Type" msprop:Generator_ColumnVarNameInTable="columnType" msprop:Generator_ColumnPropNameInRow="Type" msprop:Generator_ColumnPropNameInTable="TypeColumn" msprop:Generator_UserColumnName="Type" type="xs:string" minOccurs="0" />
+              <xs:element name="Sub" msprop:Generator_ColumnVarNameInTable="columnSub" msprop:Generator_ColumnPropNameInRow="Sub" msprop:Generator_ColumnPropNameInTable="SubColumn" msprop:Generator_UserColumnName="Sub" type="xs:string" minOccurs="0" />
+              <xs:element name="App" msprop:Generator_ColumnVarNameInTable="columnApp" msprop:Generator_ColumnPropNameInRow="App" msprop:Generator_ColumnPropNameInTable="AppColumn" msprop:Generator_UserColumnName="App" type="xs:string" minOccurs="0" />
+              <xs:element name="Recd" msprop:Generator_ColumnVarNameInTable="columnRecd" msprop:Generator_ColumnPropNameInRow="Recd" msprop:Generator_ColumnPropNameInTable="RecdColumn" msprop:Generator_UserColumnName="Recd" type="xs:string" minOccurs="0" />
+              <xs:element name="BO" msprop:Generator_ColumnVarNameInTable="columnBO" msprop:Generator_ColumnPropNameInRow="BO" msprop:Generator_ColumnPropNameInTable="BOColumn" msprop:Generator_UserColumnName="BO" type="xs:string" minOccurs="0" />
+              <xs:element name="RequiredDate" msprop:Generator_ColumnVarNameInTable="columnRequiredDate" msprop:Generator_ColumnPropNameInRow="RequiredDate" msprop:Generator_ColumnPropNameInTable="RequiredDateColumn" msprop:Generator_UserColumnName="RequiredDate" type="xs:string" minOccurs="0" />
+              <xs:element name="ApprivalDate" msprop:Generator_ColumnVarNameInTable="columnApprivalDate" msprop:Generator_ColumnPropNameInRow="ApprivalDate" msprop:Generator_ColumnPropNameInTable="ApprivalDateColumn" msprop:Generator_UserColumnName="ApprivalDate" type="xs:string" minOccurs="0" />
+              <xs:element name="Status" msprop:Generator_ColumnVarNameInTable="columnStatus" msprop:Generator_ColumnPropNameInRow="Status" msprop:Generator_ColumnPropNameInTable="StatusColumn" msprop:Generator_UserColumnName="Status" type="xs:string" minOccurs="0" />
+              <xs:element name="ProjectNumber" msprop:Generator_ColumnVarNameInTable="columnProjectNumber" msprop:Generator_ColumnPropNameInRow="ProjectNumber" msprop:Generator_ColumnPropNameInTable="ProjectNumberColumn" msprop:Generator_UserColumnName="ProjectNumber" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,108 @@
+﻿@{
+    ViewBag.Title = "FAQ Page";
+    Layout = null;
+}
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>FAQ</title>
+    @*<script src="~/Scripts/jquery.multiselect.js"></script>
+        <script src="~/Scripts/jquery.multiselect.filter.js"></script>*@
+    @*<link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">*@
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    @*<link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />*@
+    @*<script src="~/Scripts/jquery-1.7.1.js"></script>*@
+    @*<script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>*@
+    <script src="~/Scripts/jquery-1.12.0.js"></script>
+
+    <script src="~/Scripts/jquery.DB_PROC.js"></script>
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    @*<script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.js"></script>
+
+    <link href="~/Content/css/reset.css" rel="stylesheet" />
+    <link href="~/Content/css/style.css" rel="stylesheet" />
+    <link href="~/design/css/theme.css" rel="stylesheet" />
+    <script src="~/Content/js/modernizr.js"></script>
+    <style>
+        .displaynone {
+            display: none !important;
+        }
+        div
+        {
+            user-select: initial;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid" style="zoom: 0.95;">        
+        <h1 class="section-header" style="font-size: xx-large;">FAQ</h1>        
+        <section class="cd-faq">
+            <ul class="cd-faq-categories">
+            <script>
+                var obj = new Object();
+                obj.Mode = 'GetAllCategoryForUser';
+                //obj.CategoryID = Catid;             
+                //debugger;
+                var DBSP = new DB_SP_CONNECT();
+                DBSP.ProcedureName = "POMS_FAQALL";
+                DBSP.obj = obj;
+                DBSP.isasync = false;
+                var Categorylist = DBSP.call_DB_Procedure();
+                Categorylist = Categorylist.data;
+                console.log(Categorylist);
+                for (var i = 0; i < Categorylist.length; i++) {
+                    if (i==0) {
+                        document.write('<li><a class="selected" href="#' + Categorylist[i].Category + '">' + Categorylist[i].Category + '</a></li>');
+                    } else {
+                        document.write('<li><a href="#' + Categorylist[i].Category + '">' + Categorylist[i].Category + '</a></li>');
+
+                    }
+                }
+    </script>
+            </ul> <!-- cd-faq-categories -->
+
+            <div class="cd-faq-items">
+                <script>
+                    var obj = new Object();
+                    obj.Mode = 'GetAllFAQForUser';
+                    //obj.CategoryID = Catid;             
+                    debugger;
+                    var DBSP = new DB_SP_CONNECT();
+                    DBSP.ProcedureName = "POMS_FAQALL";
+                    DBSP.obj = obj;
+                    DBSP.isasync = false;
+                    var FAQList = DBSP.call_DB_Procedure();
+                    FAQList = FAQList.data;
+                    console.log(FAQList);
+                    var preCat = '';
+                    for (var i = 0; i < FAQList.length; i++) {
+                        if (preCat == '' || preCat != FAQList[i].Category) {
+                            preCat = FAQList[i].Category;
+                            if (i>0) {
+                                document.write('</ul>');
+                            }
+                            document.write('<ul id="' + FAQList[i].Category + '" class="cd-faq-group">');
+                            document.write('<li class="cd-faq-title"><h2>' + FAQList[i].Category + '</h2></li>');
+                        }
+                            document.write('<li><a class="cd-faq-trigger" href="#0">' + FAQList[i].Question + '</a>');
+                            document.write(' <div class="cd-faq-content"><p>' + FAQList[i].Answer + '</p></div></li>');                        
+                    }
+                </script>
+                                   
+                  <!-- cd-faq-group -->
+            </div> <!-- cd-faq-items -->
+            <a href="#0" class="cd-close-panel">Close</a>
+        </section> <!-- cd-faq -->
+        </div>
+    <script src="~/Scripts/jquery.mobile.custom.min.js"></script>
+    <script src="~/Scripts/main.js"></script>
+</body>

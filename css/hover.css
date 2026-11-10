@@ -1,0 +1,238 @@
+/*!
+ * Hover.css (http://ianlunn.github.io/Hover/)
+ * Version: 2.0.2
+ * Author: Ian Lunn @IanLunn
+ * Author URL: http://ianlunn.co.uk/
+ * Github: https://github.com/IanLunn/Hover
+
+ * Made available under a MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ *********************************************************** http://astronautweb.co/snippet/font-awesome/
+
+ * Hover.css Copyright Ian Lunn 2014. Generated with Sass.
+ */
+/* 2D TRANSITIONS */
+/* Grow */
+
+
+/* Icon Drop */
+@-webkit-keyframes hvr-icon-drop {
+ 0% {
+ opacity: 0;
+}
+ 50% {
+ opacity: 0;
+ -webkit-transform: translateY(-100%);
+ transform: translateY(-100%);
+}
+ 51%,  100% {
+ opacity: 1;
+}
+}
+ @keyframes hvr-icon-drop {
+ 0% {
+ opacity: 0;
+}
+ 50% {
+ opacity: 0;
+ -webkit-transform: translateY(-100%);
+ transform: translateY(-100%);
+}
+ 51%,  100% {
+ opacity: 1;
+}
+}
+/* Icon Drop */
+.hvr-icon-save,
+.hvr-icon-update,
+.hvr-icon-cancel {
+	display:list-item;
+	list-style-type:none;
+	position:relative;
+	width:80px;
+	height:20px;
+	background:#208093;
+	color:#FFF;
+	margin:0;
+	padding:4px 0px;
+	text-align:center;
+	margin-bottom:4px;
+}
+.hvr-icon-save:hover,
+.hvr-icon-update:hover,
+.hvr-icon-cancel:hover {
+	background:#556a77;
+}
+.hvr-icon-save:before,
+.hvr-icon-update:before,
+.hvr-icon-cancel:before {
+	position: absolute;
+	left:0;
+	right:0;
+	font-family: FontAwesome;
+	font-size:18px;
+}
+.hvr-icon-save:hover:before,
+.hvr-icon-update:hover:before,
+.hvr-icon-cancel:hover:before {
+	opacity: 0;
+	-webkit-transition-duration: 0.3s;
+	transition-duration: 0.3s;
+	-webkit-animation-name: hvr-icon-drop;
+	animation-name: hvr-icon-drop;
+	-webkit-animation-duration: 0.5s;
+	animation-duration: 0.5s;
+	-webkit-animation-delay: 0.3s;
+	animation-delay: 0.3s;
+	-webkit-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
+	-webkit-animation-timing-function: ease-in-out;
+	animation-timing-function: ease-in-out;
+	-webkit-animation-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
+	animation-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
+}
+.hvr-icon-save:before {
+	content: "\f0c7";
+}
+.hvr-icon-update:before {
+	content: "\f044";
+}
+.hvr-icon-cancel:before {
+	content: "\f00d";
+}
+
+.hvr-icon-add {
+	display:list-item;
+	list-style-type:none;
+	position:relative;
+	width:80px;
+	height:20px;
+	background:#208093;
+	color:#FFF;
+	margin:0;
+	padding:4px 0px;
+	text-align:center;
+	margin-bottom:4px;
+}
+.hvr-icon-add:hover {
+	background:#556a77;
+}
+.hvr-icon-add:before {
+	position: absolute;
+	left:0;
+	right:0;
+	font-family: FontAwesome;
+	font-size:18px;
+}
+.hvr-icon-add:hover:before {
+	opacity: 0;
+	-webkit-transition-duration: 0.3s;
+	transition-duration: 0.3s;
+	-webkit-animation-name: hvr-icon-drop;
+	animation-name: hvr-icon-drop;
+	-webkit-animation-duration: 0.5s;
+	animation-duration: 0.5s;
+	-webkit-animation-delay: 0.3s;
+	animation-delay: 0.3s;
+	-webkit-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
+	-webkit-animation-timing-function: ease-in-out;
+	animation-timing-function: ease-in-out;
+	-webkit-animation-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
+	animation-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
+}
+.hvr-icon-add:before {
+	content: "\f067";
+}
+
+
+
+
+.hvr-icon-newadd {
+	display:list-item;
+	list-style-type:none;
+	position:relative;
+	width:80px;
+	height:20px;
+	background:#208093;
+	color:#FFF;
+	margin:0;
+	padding:4px 0px;
+	text-align:center;
+	margin-bottom:4px;
+}
+.hvr-icon-newadd:hover {
+	background:#556a77;
+}
+.hvr-icon-newadd:before {
+	position: absolute;
+	left:0;
+	right:0;
+	font-family: FontAwesome;
+	font-size:18px;
+}
+.hvr-icon-newadd:hover:before {
+	opacity: 0;
+	-webkit-transition-duration: 0.3s;
+	transition-duration: 0.3s;
+	-webkit-animation-name: hvr-icon-drop;
+	animation-name: hvr-icon-drop;
+	-webkit-animation-duration: 0.5s;
+	animation-duration: 0.5s;
+	-webkit-animation-delay: 0.3s;
+	animation-delay: 0.3s;
+	-webkit-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
+	-webkit-animation-timing-function: ease-in-out;
+	animation-timing-function: ease-in-out;
+	-webkit-animation-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
+	animation-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
+}
+.hvr-icon-newadd:before {
+	content: "\f196";
+}
+
+
+.hvr-icon-database {
+	display:list-item;
+	list-style-type:none;
+	position:relative;
+	width:80px;
+	height:20px;
+	background:#208093;
+	color:#FFF;
+	margin:0;
+	padding:4px 0px;
+	text-align:center;
+	margin-bottom:4px;
+}
+.hvr-icon-database:hover {
+	background:#556a77;
+}
+.hvr-icon-database:before {
+	position: absolute;
+	left:0;
+	right:0;
+	font-family: FontAwesome;
+	font-size:18px;
+}
+.hvr-icon-database:hover:before {
+	opacity: 0;
+	-webkit-transition-duration: 0.3s;
+	transition-duration: 0.3s;
+	-webkit-animation-name: hvr-icon-drop;
+	animation-name: hvr-icon-drop;
+	-webkit-animation-duration: 0.5s;
+	animation-duration: 0.5s;
+	-webkit-animation-delay: 0.3s;
+	animation-delay: 0.3s;
+	-webkit-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
+	-webkit-animation-timing-function: ease-in-out;
+	animation-timing-function: ease-in-out;
+	-webkit-animation-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
+	animation-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
+}
+.hvr-icon-database:before {
+	content: "\f1c0";
+}

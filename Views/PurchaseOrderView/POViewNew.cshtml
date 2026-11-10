@@ -1,0 +1,1962 @@
+﻿@{    
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Purchase Order</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+    <style type="text/css">
+
+        .remove { /* width: 450px; */
+            border: 1px solid #060506;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            display: block;
+            padding: 5px;
+            text-decoration: none;
+            background: #B01000;
+            color: #E2E2E2;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-family: helvetica;
+            font-size: 13px;
+            position: relative;
+        }
+
+        .remove a {
+  cursor: pointer;
+  position: absolute;
+  top: -5px;
+  right: -6px;
+  font-size: 0.9em;
+  color: white;
+  background: black;
+  border-radius: 100px;
+  padding: 7px;
+  line-height: 9px;
+}
+
+         .ui-widget-header {
+            background : grey;
+
+        }
+
+        .ui-widget-overlay {
+            position: fixed;
+        }
+
+        .ui-dialog .ui-dialog-titlebar-close span {
+            margin: -8px;
+        }
+
+        #popupforvendorlist .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 6px 0px;
+            width: 96%;
+            height: 20px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+    </style>
+    <script type="text/javascript">
+
+        function alreadyconfirmed() {
+            notify("Already Confirmed");
+        }
+
+        function confirmpo() {
+            var POID = $('#Hdn_ID').val();
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrderView/VendorConfirmPO';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'PurchaseOrderView/VendorConfirmPO';
+            }
+
+
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: { 'POID': POID },
+                success: function (data) {
+
+                    $('#Vendorconfirmation').removeAttr('onclick');
+                    $('#Vendorconfirmation').attr('onclick', 'alreadyconfirmed();');
+
+                    $('#Vendorconfirmation').css('background', '#556A77');
+                    $('#Vendorconfirmation').val('Confirmed');
+
+                    notify("Vendor Confirmed");
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+        }
+
+        $(document).ready(function () {
+
+            var tmp = $('#Hdn_IsVendorConfirmation').val();
+            if (tmp == "0") {
+                $('#Vendorconfirmation').remove();
+            }
+            else if (tmp == "2") {
+
+                $('#Vendorconfirmation').removeAttr('onclick');
+                $('#Vendorconfirmation').attr('onclick', 'alreadyconfirmed();');
+                $('#Vendorconfirmation').css('background', '#556A77');
+                $('#Vendorconfirmation').val('Confirmed');
+
+            }
+        });
+
+    </script>
+
+
+    <script type="text/javascript">
+
+     
+
+        $(document).ready(function () {
+
+           
+
+            getpoexpeditenotes();
+
+
+            var POID = $('#Hdn_PurchaseOrderID').val();
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrderView/PO_GetRequiredAndAssignedApprovers';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'PurchaseOrderView/PO_GetRequiredAndAssignedApprovers';
+            }
+
+            
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: { 'POID' :  POID  },
+                success: function (data) {
+                    if (parseInt(data) > 0) {
+                        $('#btn_CommitPONSndApprvl').hide();
+                    }
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+
+        });
+
+
+
+        $(document).ready(function () {
+            SearchText();
+            
+
+            $('#txt_ArrivalDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_CheckDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+
+        });
+
+        function SearchText() {
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrderView/GetVendorList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrderView/GetVendorList';
+            }
+
+            $(function () {
+                $('#txt_VendorName').autocomplete({
+                    source: function (request, response) {
+                        $.getJSON("/PurchaseOrderView/GetVendorList?VendorName=" + request.term, function (data) {
+                            response(data);
+                        });
+                    },
+                    minLength: 1,
+                    delay: 100
+                });
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            var date = new Date();
+            var currentMonth = date.getMonth();
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+
+            $('#txt_ArrivalDate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'MM dd yy',
+                minDate: new Date(currentYear, currentMonth, currentDate)
+            });
+
+            $('#txt_CheckDate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'MM dd yy',
+                minDate: new Date(currentYear, currentMonth, currentDate)
+            });
+
+        });
+
+
+        function IsNumber(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            if ((keyCode > 47 && keyCode < 58) || (keyCode == 8) || (keyCode == 46)) {
+                return true;
+            }
+            else {
+                notify('Use Only Numeric value');
+                return false;
+            }
+        }
+
+
+
+    </script>
+
+    <script type="text/javascript">
+
+      
+
+    </script>
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+
+
+    <script type="text/javascript">
+
+        var selectedpopup;
+
+        $(document).ready(function () {
+
+            $(document).tooltip();
+
+            var classarray = new Array();
+            var clsearch = '';
+            var ddlfrcllsfictn;
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrderView/getClassification';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'PurchaseOrderView/getClassification';
+            }
+
+
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: {},
+                success: function (data) {
+
+                    ddlfrcllsfictn = "<select id='Ddl_Clftion' multiple='multiple'>"
+
+                    data = JSON.parse(data);
+                    ////console.log(data);
+                    classarray = data.data;
+
+                    for (var a = 0; a < classarray.length ; a++) {
+
+                        //ddlfrcllsfictn += "<opiton>" + 'test' + "</option>";
+                        ddlfrcllsfictn += "<option text='" + classarray[a].classname + "' value='" + classarray[a].classid + "'>" + deletespaces(classarray[a].classname) + "</option>";
+                    }
+
+                    ddlfrcllsfictn += "</select>";
+
+                    //notify(ddlfrcllsfictn);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+
+
+            url1 = '';
+
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrderView/getVendors';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'PurchaseOrderView/getVendors';
+            }
+
+
+            var totdata;
+
+            var vendors = new Array();
+
+            //$('#vendorlist tfoot th').each(function () {
+            //    var title = $('#example thead th').eq($(this).index()).text();
+            //    $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            //});
+
+            $.get(url1)
+                .success(function (response) {
+
+
+                    totdata = JSON.parse(response);
+                    totdata = totdata.data;
+
+                    for (i = 0; i < totdata.length ; i++) {
+                        vendors[i] = new Array();
+                        var id = totdata[i].Vendor_ID;
+                        var txt = 'Click to select ' + totdata[i].ContactFirstname + ' ' + totdata[i].ContactLastname + ' At ' + totdata[i].ParentVendorName;
+                        vendors[i][0] = '<i class="fa fa-hand-o-right" style="font-size: 1.5em;cursor:pointer;" data-id="' + id + '" title="' + txt + '" onclick="selectvendor(this);"></i>';
+                        vendors[i][1] = totdata[i].ParentVendorName;
+                        vendors[i][2] = totdata[i].ContactFirstname + ' ' + totdata[i].ContactLastname;
+                        vendors[i][3] = deletespaces(totdata[i].Classifications);
+                        vendors[i][4] = totdata[i].Currency;
+                        vendors[i][5] = totdata[i].City;
+                        vendors[i][6] = totdata[i].State;
+                        vendors[i][7] = totdata[i].CurrCode;
+                    }
+
+                    $('#vendorlist').dataTable({
+                        "processing": true,
+                        "data": vendors,
+                        "columns": [
+                            { "title": "Actions" },
+                            { "title": "Vendor" },
+                            { "title": "Contact Name" },
+                            { "title": "Vendor Category" },
+                            { "title": "Currency" },
+                            { "title": "City" },
+                            { "title": "State" },
+                            { "title": "Currcode", "class": "displaynone" }
+
+
+                        ],
+                        //"lengthMenu": [[5, 10, 50, -1], [5, 10, 50, "All"]],
+                        "initComplete": function () {
+
+                            //var ddl = "<select><option>1</option><option>2</option></select>";
+                            var html = "";
+                            html = "<tr>"
+                                + "<th><span onclick='resetsrch();' style='cursor:pointer;'><i class='fa fa-undo'></i></span></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='1' placeholder='Search Vendor'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='2' placeholder='Search Contact Name'></th>"
+                                //+ "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='3' placeholder='Search Vendor Category'></th>"
+                                + "<th rowspan='1' colspan='1'>" + ddlfrcllsfictn + "</th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='4' placeholder='Search Currency'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='5' placeholder='Search City'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='6' placeholder='Search State'></th>";
+
+
+                            $('#vendorlist thead').append(html);
+
+
+                            $("#Ddl_Clftion").multiselect({
+
+                                //click: function (event, ui) {
+                                //    //$callback.text(ui.value + ' ' + (ui.checked ? 'checked' : 'unchecked'));
+                                //    //alert(ui.value);
+                                //    //console.log(ui);
+                                //    alert(ui.title);
+                                //}
+
+                                close: function () {
+                                    var clsearch = $('#Ddl_Clftion').val();
+                                    if (clsearch == null)
+                                        clsearch = '';
+                                    var srchtxt = '';
+                                    var tmp = clsearch;
+
+                                    for (var i = 0; i < tmp.length; i++) {
+
+                                        var id = tmp[i];
+
+
+                                        for (var a = 0; a < classarray.length ; a++) {
+
+
+                                            if (classarray[a].classid == id) {
+                                                if (srchtxt == '') {
+                                                    srchtxt += deletespaces(classarray[a].classname);
+                                                }
+                                                else {
+                                                    srchtxt += '|' + deletespaces(classarray[a].classname);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    var table = $('#vendorlist').DataTable();
+                                    table.column(3).search(srchtxt, true).draw();
+                                }
+                            });
+
+
+                            var table = $('#vendorlist').DataTable();
+                            // table.column(2).search("fname|ff", true).draw();
+
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+                                table
+                                       .column(indx)
+                                       .search(txt)
+                                       .draw();
+                                //RowHtmlRender();
+                            });
+
+
+                            $('#vendorlist_filter').remove();
+                            $('#vendorlist_length').remove();
+
+                        },
+                        "pagingType": "full_numbers",
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0] }
+                        ]
+                    });
+                });
+
+            $('#Ddl_Project').change(function () {
+
+                var pid = $(this).val();
+
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/PurchaseOrderView/shiptoaddress';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+
+                    url1 = 'PurchaseOrderView/shiptoaddress';
+                }
+
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    data: { 'pid': pid },
+                    success: function (data) {
+                        var hoteladdress = data.split('^')[0];
+                        var legalname = data.split('^')[1];
+                        var projectname = data.split('^')[2];
+
+                        $('#txt_ShipTo').val(projectname);
+                        $('#txt_InvoiceTo').val(legalname);
+                        $('#txt_addr1').text(hoteladdress);
+
+
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+            });
+        });
+        function resetsrch() {
+            $("#Ddl_Clftion").multiselect("uncheckAll");
+
+            var table = $('#vendorlist').DataTable();
+            table.column(3).search('').draw();
+            $('.srch').each(function () {
+                this.value = '';
+                var indx = $(this).attr('data-indx');
+                var txt = this.value;
+                table
+                       .column(indx)
+                       .search(txt)
+                       .draw();
+            });
+        }
+
+        function openvendors(obj) {
+
+            resetsrch();
+
+            selectedpopup = obj;
+
+
+            $('#popupforvendorlist').bPopup({
+                easing: 'easeOutBack', //uses jQuery easing plugin
+                speed: 450,
+                transition: 'slideDown',
+                modalColor: 'rgb(18, 54, 65)'
+
+            });
+        }
+
+        function selectvendor(obj) {
+            var id = $(obj).attr('data-id');
+            var rw = $(obj).parent().parent();
+            // var cname = $(rw).find("td:eq(1)").html() + '-' + $(rw).find("td:eq(2)").html();
+
+            var cname = "";
+
+            if (selectedpopup == 'vendor') {
+                cname = $(rw).find("td:eq(1)").html() + '-' + $(rw).find("td:eq(2)").html();
+            }
+            else {
+                cname = $(rw).find("td:eq(2)").html();
+            }
+
+
+            var currency = $(rw).find("td:eq(4)").html();
+            var currencycode = $(rw).find("td:eq(7)").html();
+
+            //alert(rw);
+
+            $('#popupforvendorlist').bPopup().close();
+
+            if (selectedpopup == 'vendor') {
+
+                $('#txt_CurrencyCode').text(currency);
+                $('#txt_CurrencyCode').attr('data-id', currencycode);
+
+                $('#txt_VendorName').text(cname);
+                $('#txt_VendorName').attr('data-id', id);
+            }
+            else {
+
+                $('#txt_VendorCO').text(cname);
+                $('#txt_VendorCO').attr('data-id', id);
+                // notify('still working');
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/PurchaseOrderView/vendoraddress';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'PurchaseOrderView/vendoraddress';
+                }
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    data: { 'vendorid': id },
+                    success: function (data) {
+                        $('#txt_addr1').text(data);
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+            }
+        }
+
+
+        
+
+        function deletespaces(str) {
+            var newstr = '';
+            for (var i = 0; i < str.length; i++) {
+                if (str[i] != ' ') {
+                    newstr += str[i];
+                }
+            }
+            return newstr;
+        }
+
+    </script>
+    <script>
+
+        $(document).ready(function () {
+
+
+            var poid = $('#poid').val();
+
+
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrderView/getpobyid';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrderView/getpobyid';
+            }
+
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'poid': poid },
+                success: function (data) {
+
+                    var obj = JSON.parse(data).data[0];
+                    //console.log(obj);
+
+
+                    var iscommited = obj.IsCommited;
+                    var IsSentForApproval = obj.IsSentForApproval;
+
+                    
+
+                    if (iscommited == "0") {
+                        $('#Hdn_iscommited').val("0");
+                        $('#btn_RevisePO').hide();
+
+                        //$('.makedisable').removeAttr('disabled');
+
+                        $('#btn_ViewPOPDF').hide();
+                    }
+                    else {
+                        $('#Hdn_iscommited').val("1");
+                        $('#btn_CreatePO').hide();
+                        $('#btn_CommitPO').hide();
+                        $('#btn_CommitPONSndApprvl').hide();
+                        $('#btn_ProofPONSndApprvl').hide();
+
+                        $('#btn_ViewPOPDF').show();
+
+                        $('.makedisable').attr('disabled', 'disabled');
+
+                    }
+                    $('.makedisable').attr('disabled', 'disabled');
+                    //if (IsSentForApproval == "1") {
+                    //    $('#btn_RevisePO').hide();
+
+                    //    $('.makedisable').removeAttr('disabled');
+                    //}
+
+                    $('#Ddl_Project').val(obj.Project_ID);
+                    $('#Ddl_Project').attr('disabled', 'disabled');
+
+                    $('#txt_ShipTo').val(obj.ShipTo);
+                    $('#txt_VendorName').text(obj.VendorName);
+                    $('#txt_VendorName').attr('data-id', obj.Vendor_ID);
+                    $('#txt_VendorCO').text(obj.VendorCareOfName);
+                    $('#txt_VendorCO').attr('data-id', obj.VendorCO);
+
+                    $('#txt_ConversionRate').val(obj.ConversionRate);
+                    $('#txt_InvoiceTo').val(obj.InvoiceTo);
+                    $('#txt_addr1').text(obj.Address1);
+
+                    $('#txt_CurrencyCode').text(obj.Currency);
+                    $('#Ddl_Buyer').val(obj.Buyer_ID);
+                    $('#Ddl_Shipment').val(obj.ShipMethod);
+                    $('#txt_ArrivalDate').val(obj.ArrivalDate);
+                    $('#txt_CheckDate').val(obj.CheckBackDate);
+                    $('#txt_Terms').val(obj.Terms);
+                    $('#txt_FOB').val(obj.FOB);
+                    $('#txt_Freight').val(obj.Freight);
+                    //$('#txt_Notes').val(obj.Freight);
+                    $('#txt_Remarks').val(obj.Remarks);
+                    
+                    $('#txt_Notes').val(obj.Notes);
+                }
+            });
+
+        });
+
+
+    </script>
+
+
+
+    <style type="text/css">
+        .displayForTableHeader {
+            display: none;
+        }
+        .edit_vendor_full {
+            margin-bottom: 12px;
+        }
+        .user_panel_container label, .logo_container_heading {
+            padding: 4px 0px;
+        }
+    </style>
+
+
+    <script type="text/javascript">
+
+        function LoadPOLineItems(sectionid) {
+
+            $('#POLineItemsDetail tbody tr').css("opacity", "0.3");
+            var table = $('#POLineItemsDetail').DataTable();
+            table.clear().draw();
+
+            var POID = $('#Hdn_PurchaseOrderID').val();
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrderView/getPOlineitemsByPONo';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrderView/getPOlineitemsByPONo';
+            }
+            url1 += "?POID=" + POID;
+
+            var totdata;
+
+
+
+
+            $.get(url1)
+               .success(function (response) {
+                   totdata = JSON.parse(response);
+                   totdata = totdata.data;
+
+                   if (totdata.length == 0) {
+                       var table = $('#POLineItemsDetail').DataTable();
+                       table
+                           .clear()
+                           .draw();
+                       //$('#tableloader').hide();
+                       return;
+                   };
+                   POLineItems = [];
+                   for (i = 0; i < totdata.length ; i++) {
+                       POLineItems[i] = new Array();
+                       POLineItems[i][0] = totdata[i].POLineItemID;
+                       POLineItems[i][1] = "";
+                       POLineItems[i][2] = totdata[i].TotalID;
+                       POLineItems[i][3] = totdata[i].ProjectID;
+                       POLineItems[i][4] = totdata[i].BudgetSectionID;
+                       POLineItems[i][5] = totdata[i].LineItemID;
+                       POLineItems[i][6] = totdata[i].ItemOrder;
+                       POLineItems[i][7] = totdata[i].Item;
+                       POLineItems[i][8] = totdata[i].SpecNum;
+                       POLineItems[i][9] = totdata[i].ItemDescription;
+                       POLineItems[i][10] = totdata[i].Vendor;
+                       POLineItems[i][11] = totdata[i].Quantity;
+                       POLineItems[i][12] = totdata[i].UOM;
+                       POLineItems[i][13] = totdata[i].Cost;
+                       POLineItems[i][14] = totdata[i].Quantity * totdata[i].Cost;
+                       POLineItems[i][15] = totdata[i].Note;
+                       POLineItems[i][16] = totdata[i].ToWarehouse == 1 ? "<i class='fa fa-check'></i>" : "<i class='fa fa-times'></i>";
+                       POLineItems[i][17] = "0";//totdata[i].CommitAmountAdjust;
+                       POLineItems[i][18] = totdata[i].DateCreated;
+                       POLineItems[i][19] = totdata[i].CreatedBy_ID;
+                       POLineItems[i][20] = totdata[i].Status;
+                       POLineItems[i][21] = totdata[i].UOMID;
+                       POLineItems[i][22] = totdata[i].ToWarehouse;
+                       POLineItems[i][23] = totdata[i].Spacing;
+                       POLineItems[i][24] = totdata[i].Header;
+                       POLineItems[i][25] = totdata[i].ItemDtldDesc;
+                       POLineItems[i][26] = totdata[i].Extended;
+                       POLineItems[i][27] = totdata[i].ReceivedQuantity;
+                       POLineItems[i][28] = totdata[i].IsExceeded;
+                   }
+                   $('#POLineItemsDetail').dataTable().fnDestroy();
+                   $('#POLineItemsDetail').dataTable({
+                       "processing": true,
+                       "data": POLineItems,
+                       "columns": [
+                           { "title": "Actions", "class": "displaynone" },
+                           { "title": "Header", "class": "displaynone" },
+                           { "title": "Item#" },
+                           { "title": "ProjectID", "class": "displaynone" },
+                           { "title": "BudgetSectionID", "class": "displaynone" },
+                           { "title": "LineItemID", "class": "displaynone" },
+                           { "title": "ItemOrder", "class": "displaynone" },
+                           { "title": "Item", "class": "displaynone" },
+                           { "title": "Spec" },
+                           { "title": "Description" },
+                           { "title": "Vendor", "class": "displaynone" },
+                           { "title": "Qty" },
+                           { "title": "Units" },
+                           { "title": "Cost" },
+                           { "title": "Total", "class": "displaynone" },
+                           { "title": "Note", "class": "displaynone" },
+                           { "title": "ToWarehouse", "class": "displaynone" },
+                           { "title": "CommitAmountAdjust", "class": "displaynone" },
+                           { "title": "DateCreated", "class": "displaynone" },
+                           { "title": "CreatedBy_ID", "class": "displaynone" },
+                           { "title": "Status", "class": "displaynone" },
+                           { "title": "UPMID", "class": "displaynone" },
+                           { "title": "UPMID", "class": "displaynone" },
+                           { "title": "Spacing", "class": "displaynone" },
+                           { "title": "heading", "class": "displaynone" },
+                           { "title": "ItemDtldDesc", "class": "displaynone" },
+                           { "title": "Extended" },
+                           { "title": "R-Qty" },
+                           { "title": "IsExceeded", "class": "displaynone" }
+                       ],
+                       paging: false,
+                       "initComplete": function () {
+                           // $('#POLineItemsDetail_filter').find('input').hide();
+                           // $('#POLineItemsDetail_filter').find('label').text('Search Description::');
+                           // $('#POLineItemsDetail_filter').append('<input type="text" id="srchdsc" placeholder="Search"/>');
+
+                           // $('#tableloader').hide();
+
+                           // if (prevsrch != undefined) {
+                           //     var table = $('#POLineItemsDetail').DataTable();
+                           //     table.column(7)
+                           //                .search(prevsrch)
+                           //                .draw();
+                           //    // buildrows();
+                           //     $('#srchdsc').val(prevsrch);
+                           // }
+
+                           RowHtmlRender();
+                       },
+                       "order": [[6, "asc"]],
+                       "aoColumnDefs": [
+                           { 'bSortable': false, 'aTargets': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 22, 23] }
+                       ]
+                   });
+                   //$('#srchdsc').on('keyup change', function () {
+                   //    // cancelselections();
+                   //    var table = $('#POLineItemsDetail').DataTable();
+                   //    var txt = $(this).val().trim();
+                   //    table.column(7)
+                   //               .search(txt)
+                   //               .draw();
+                   //    buildrows();
+                   //    if (txt.length > 0) {
+                   //        $("#POLineItemsDetail tbody").addClass("disable-sort");
+                   //    }
+                   //    else {
+                   //        $("#POLineItemsDetail tbody").removeClass("disable-sort");
+                   //        for (var a = 0; a < offsecurity.length; a++) {
+                   //            if (offsecurity[a].Classname == "BDGTEDT") {
+                   //                $("#POLineItemsDetail tbody").addClass("disable-sort");
+                   //            }
+                   //        }
+                   //    }
+                   //});
+               });
+
+
+        }
+
+
+        $(document).ready(function () {
+
+            LoadPOLineItems('');
+
+           
+
+        });
+
+        function RowHtmlRender() {
+            var count = 1;
+            $('#POLineItemsDetail tbody tr').each(function () {
+                //var order = $(this).find("td:eq(6)").html();
+
+                $(this).attr('data-id', count++);
+
+            });
+            // notify(1);
+            //  $('#project_filter').css('display', 'none');
+            $('#POLineItemsDetail tbody tr').find("td:eq(0)").each(function () {
+
+
+                var pid = $(this).html();
+                $(this).html('<input type="button" class="buttonedit" onclick="EditPOLineItems(this,\'' + pid + '\');" style="margin-bottom:6px;" data-id="' + pid + '" /><input type="button" class="buttondelete" onclick="DeletePOLineItems(this,\'' + pid + '\');" style="margin-bottom:6px;" data-id="' + pid + '" />');
+
+            });
+
+            setTimeout(function(){
+                $('#POLineItemsDetail tbody tr').find("td:eq(28)").each(function () {
+
+                    var Isexceeded = $(this).html();
+
+                    if ($('#Hdn_iscommited').val() == '1') {
+                        if (Isexceeded == "1") {
+                            $(this).parent().css('background-color', 'rgba(10, 52, 205, 0.24)');
+                        }
+                        else {
+                            $(this).parent().css('background-color', '');
+                        }
+                    }
+                    else {
+                        $(this).parent().css('background-color', '');
+                    }
+                });
+            },100);
+
+            
+        }
+       
+    </script>
+
+    <script type="text/javascript">
+        function GoBack() {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrderView/POList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrderView/POList';
+            }
+            window.location.href = url1;
+        }
+    </script>
+
+    <script>
+
+
+        
+
+
+    </script>
+
+    <script type="text/javascript">
+        function OpenTaxComment() {
+
+            $('#popupforTaxComment').bPopup({
+                easing: 'easeOutBack', //uses jQuery easing plugin
+                speed: 450,
+                transition: 'slideDown',
+                modalColor: 'rgb(18, 54, 65)'
+
+            });
+            
+            //$('#txt_Comment').focus();
+
+        }
+
+        function OpenTax() {
+
+            $('#popupforTaxComment2').bPopup({
+                easing: 'easeOutBack', //uses jQuery easing plugin
+                speed: 450,
+                transition: 'slideDown',
+                modalColor: 'rgb(18, 54, 65)'
+
+            });
+
+            //$('#GSTHSTName').focus();
+
+        }
+
+
+
+
+        $(function () {
+            //$('#Ddl_CmntID').change(function () {
+            //    var CommentID = $('#Ddl_CmntID').val();
+            //    if (CommentID == "0") {
+            //        $('#txt_Title').val('');
+            //        $('#txt_Comment').val('');
+            //        $('#saveCommentTaxDtl').val('Add');
+            //    }
+            //    else {
+            //        $('#saveCommentTaxDtl').val('Update');
+            //        var url = '';
+            //        if (LOCALORSERVERNEW == 'LOCAL') {
+            //            url = '/PurchaseOrderView/GetCommentTitleByCommentID';
+            //        }
+            //        else if (LOCALORSERVERNEW == 'SERVER') {
+            //            url = 'PurchaseOrderView/GetCommentTitleByCommentID';
+            //        }
+            //        $.ajax({
+            //            type: "POST",
+            //            url: url,
+            //            data: { 'CommentID': CommentID },
+            //            success: function (data) {
+            //                if (data != '') {
+            //                    var val = jQuery.parseJSON(data);
+            //                    $('#txt_Title').val(val.Title);
+            //                    $('#txt_Comment').val(val.Comment);
+            //                }
+            //                else {
+            //                }
+            //            }
+            //        });
+            //    }
+            //});
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrderView/GetCommentsByPOID';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrderView/GetCommentsByPOID';
+            }
+            url += '/' + $('#Hdn_PurchaseOrderID').val();
+
+            $.get(url).success(function (data) {
+
+                if (data != '') {
+                    $('#txt_Comment').text(data);
+                }
+            });
+
+
+            $('#btn_TaxComment').click(function () {
+                var PONo = $('#Hdn_PurchaseOrderID').val();
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrderView/CheckGetCommentTaxByPoNo';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrderView/CheckGetCommentTaxByPoNo';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'PONo': PONo },
+                    success: function (data) {
+                        if (data != '') {
+                            var val = jQuery.parseJSON(data);
+                          
+                            $('#txt_GSTHST').val(val.GSTPSTValue);
+                            $('#txt_PSTValue').val(val.PSTTypeValue);
+                            $('#txt_StateTax').val(val.StateTaxValue);
+                            //$('#saveCommentTaxDtl').val('Update');
+                            $('#Ddl_GSTPST').val(val.GSTPSTType);
+                            $('#Ddl_PST').val(val.PSTType);
+                            $('#Ddl_StateTax').val(val.StateTaxType);
+
+                            
+
+                            $('#GSTHSTName').val(val.GSTHSTName);
+                            $('#PSTName').val(val.PSTName);
+                            $('#StateTaxName').val(val.StateTaxName);
+
+
+
+                            $('#BackGroundCng').show();
+                            $('#popupforTaxComment').show();
+                        }
+                        else {
+                            $('#BackGroundCng').show();
+                            $('#popupforTaxComment').show();
+                        }
+                    }
+                });
+            });
+
+            $('#btn_TaxComment2').click(function () {
+                var PONo = $('#Hdn_PurchaseOrderID').val();
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrderView/CheckGetCommentTaxByPoNo';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrderView/CheckGetCommentTaxByPoNo';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'PONo': PONo },
+                    success: function (data) {
+                        if (data != '') {
+                            var val = jQuery.parseJSON(data);
+                         
+                            $('#txt_GSTHST').val(val.GSTPSTValue);
+                            $('#txt_PSTValue').val(val.PSTTypeValue);
+                            $('#txt_StateTax').val(val.StateTaxValue);
+                            //$('#saveCommentTaxDtl').val('Update');
+                            $('#Ddl_GSTPST').val(val.GSTPSTType);
+                            $('#Ddl_PST').val(val.PSTType);
+                            $('#Ddl_StateTax').val(val.StateTaxType);
+
+                            $('#GSTHSTName').val(val.GSTHSTName);
+                            $('#PSTName').val(val.PSTName);
+                            $('#StateTaxName').val(val.StateTaxName);
+
+
+                            $('#BackGroundCng').show();
+                            $('#popupforTaxComment').show();
+                        }
+                        else {
+                            $('#BackGroundCng').show();
+                            $('#popupforTaxComment').show();
+                        }
+                    }
+                });
+            });
+            $('.b-close').click(function () {
+                $('#popupforTaxComment').hide();
+                $('#BackGroundCng').hide();
+            });
+            $('#saveCommentTaxDtl').click(function () {
+                var CommentID = 0;
+                var GSTPSTType = $('#Ddl_GSTPST').val();
+                var StateTaxType = $('#Ddl_StateTax').val();
+                var PSTType = $('#Ddl_PST').val();
+                var Title = '';
+
+                var Comment = $('#txt_Comment').val();
+                //if (Comment == "") {
+                //    $('#txt_Comment').attr("style", "height:332px;width: 537px;");
+                //    // $('#txt_Comment').attr("style", "width:538px");
+                //    errorfunc('txt_Comment', 'You must enter Comment before saving');
+                //    $('#txt_Comment').focus();
+                //    return;
+                //}
+                var GSTPSTValue = $('#txt_GSTHST').val();
+                //if (GSTPSTValue == "") {
+                //    $('#txt_GSTHST').attr("style", "height:40px");
+                //    $('#txt_GSTHST').attr("style", "width:538px");
+                //    errorfunc('txt_GSTHST', 'You must enter GSTPST Value before saving');
+                //    $('#txt_GSTHST').focus();
+                //    return;
+                //}
+                var PSTTypeValue = $('#txt_PSTValue').val();
+                //if (PSTTypeValue == "") {
+                //    $('#txt_PSTValue').attr("style", "height:40px");
+                //    $('#txt_PSTValue').attr("style", "width:538px");
+                //    errorfunc('txt_PSTValue', 'You must enter PSTType Value before saving');
+                //    $('#txt_PSTValue').focus();
+                //    return;
+                //}
+                var GSTPSTValue = $('#txt_GSTHST').val();
+                //if (GSTPSTValue == "") {
+                //    $('#txt_PSTValue').attr("style", "height:40px");
+                //    $('#txt_PSTValue').attr("style", "width:538px");
+                //    errorfunc('txt_PSTValue', 'You must enter GSTPST Value Value before saving');
+                //    notify('');
+                //    $('#txt_PSTValue').focus();
+                //    return;
+                //}
+                var StateTaxValue = $('#txt_StateTax').val();
+                //if (StateTaxValue == "") {
+                //    $('#txt_StateTax').attr("style", "height:40px");
+                //    $('#txt_StateTax').attr("style", "width:538px");
+                //    errorfunc('txt_StateTax', 'You must enter StateTax Value Value Value before saving');
+                //    $('#txt_StateTax').focus();
+                //    return;
+                //}
+                var PONo = $('#Hdn_PurchaseOrderID').val();
+
+
+
+
+                var GSTHSTName = $('#GSTHSTName').val();
+                var PSTName = $('#PSTName').val();
+                var StateTaxName = $('#StateTaxName').val();
+
+
+              //  alert(GSTHSTName);
+
+
+
+
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrderView/SaveUpdateCommentTax';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrderView/SaveUpdateCommentTax';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        'CommentID': CommentID, 'Title': Title, 'Comment': Comment, 'GSTPSTType': GSTPSTType,
+                        'GSTPSTValue': GSTPSTValue, 'PSTType': PSTType, 'PSTTypeValue': PSTTypeValue,
+                        'StateTaxType': StateTaxType, 'StateTaxValue': StateTaxValue, 'PONo': PONo,
+                        'GSTHSTName': GSTHSTName, 'PSTName': PSTName, 'StateTaxName': StateTaxName
+                    },
+                    success: function (data) {
+                        if (data != '') {
+                            notify('Updated.');
+                            // $('#popupforTaxComment').hide();
+                            // $('#BackGroundCng').hide();
+
+                            $('.b-close').trigger('click');
+
+                        }
+                        else {
+                            notify('Fail');
+                        }
+                    }
+                });
+            });
+
+            $('#saveCommentTaxDtl2').click(function () {
+                var CommentID = 0;
+                var GSTPSTType = $('#Ddl_GSTPST').val();
+                var StateTaxType = $('#Ddl_StateTax').val();
+                var PSTType = $('#Ddl_PST').val();
+                var Title = '';
+
+                var Comment = $('#txt_Comment').val();
+                //if (Comment == "") {
+                //    $('#txt_Comment').attr("style", "height:332px;width: 537px;");
+                //    // $('#txt_Comment').attr("style", "width:538px");
+                //    errorfunc('txt_Comment', 'You must enter Comment before saving');
+                //    $('#txt_Comment').focus();
+                //    return;
+                //}
+                var GSTPSTValue = $('#txt_GSTHST').val();
+                if (GSTPSTValue == "") {
+                    GSTPSTValue == "0";
+                }
+                //if (GSTPSTValue == "") {
+                //    $('#txt_GSTHST').attr("style", "height:40px");
+                //    $('#txt_GSTHST').attr("style", "width:538px");
+                //    errorfunc('txt_GSTHST', 'You must enter GSTPST Value before saving');
+                //    $('#txt_GSTHST').focus();
+                //    return;
+                //}
+                var PSTTypeValue = $('#txt_PSTValue').val();
+                if (PSTTypeValue == "") {
+                    PSTTypeValue == "0";
+                }
+                //if (PSTTypeValue == "") {
+                //    $('#txt_PSTValue').attr("style", "height:40px");
+                //    $('#txt_PSTValue').attr("style", "width:538px");
+                //    errorfunc('txt_PSTValue', 'You must enter PSTType Value before saving');
+                //    $('#txt_PSTValue').focus();
+                //    return;
+                //}
+                var GSTPSTValue = $('#txt_GSTHST').val();
+                if (GSTPSTValue == "") {
+                    GSTPSTValue == "0";
+                }
+                //if (GSTPSTValue == "") {
+                //    $('#txt_PSTValue').attr("style", "height:40px");
+                //    $('#txt_PSTValue').attr("style", "width:538px");
+                //    errorfunc('txt_PSTValue', 'You must enter GSTPST Value Value before saving');
+                //    notify('');
+                //    $('#txt_PSTValue').focus();
+                //    return;
+                //}
+                var StateTaxValue = $('#txt_StateTax').val();
+                if (StateTaxValue == "") {
+                    StateTaxValue == "0";
+                }
+                //if (StateTaxValue == "") {
+                //    $('#txt_StateTax').attr("style", "height:40px");
+                //    $('#txt_StateTax').attr("style", "width:538px");
+                //    errorfunc('txt_StateTax', 'You must enter StateTax Value Value Value before saving');
+                //    $('#txt_StateTax').focus();
+                //    return;
+                //}
+
+                var GSTHSTName = $('#GSTHSTName').val();
+                var PSTName = $('#PSTName').val();
+                var StateTaxName = $('#StateTaxName').val();
+
+                var PONo = $('#Hdn_PurchaseOrderID').val();
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrderView/SaveUpdateCommentTax';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrderView/SaveUpdateCommentTax';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        'CommentID': CommentID, 'Title': Title, 'Comment': Comment, 'GSTPSTType': GSTPSTType,
+                        'GSTPSTValue': GSTPSTValue, 'PSTType': PSTType, 'PSTTypeValue': PSTTypeValue,
+                        'StateTaxType': StateTaxType, 'StateTaxValue': StateTaxValue, 'PONo': PONo,
+                        'GSTHSTName': GSTHSTName, 'PSTName': PSTName, 'StateTaxName': StateTaxName
+                    },
+                    success: function (data) {
+                        if (data != '') {
+                            notify('Updated.');
+                            // $('#popupforTaxComment').hide();
+                            // $('#BackGroundCng').hide();
+
+                            $('.b-close').trigger('click');
+
+                        }
+                        else {
+                            notify('Fail');
+                        }
+                    }
+                });
+            });
+        });
+        function onlyAmount(myfield, e, dec) {
+            var str = myfield.value;
+            var decPos = str.split('.');
+
+            var key;
+            var keychar;
+
+            if (window.event)
+                key = window.event.keyCode;
+            else if (e)
+                key = e.which;
+            else
+                return true;
+
+            keychar = String.fromCharCode(key);
+
+            if ((key == null) || (key == 0) || (key == 8) || (key == 9) || (key == 13) || (key == 27)) // control keys
+                return true;
+            else if ((decPos.length > 1) && ((key > 47 && key < 58))) {
+                decPos = decPos[1];
+                if (decPos.length >= 4) return false;
+            }
+            else if ((("0123456789.").indexOf(keychar) > -1)) // numbers
+                return true;
+            else if (dec && (keychar == ".")) // decimal point jump
+            {
+                myfield.form.elements[dec].focus();
+                return false;
+            }
+            else
+                return false;
+        }
+
+    </script>
+    <script type="text/javascript">
+
+
+        //function RevisePO() {
+        //    var isnewversion = confirm("Create New Version?");
+        //    var IsNewVersion;
+        //    var poid = $("#Hdn_PurchaseOrderID").val();
+        //    if (isnewversion) {
+        //        IsNewVersion = "1";
+        //    }
+        //    else {
+        //        IsNewVersion = "0";
+        //    }
+        //    var url1 = '';
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url1 = '/PurchaseOrderView/PORevise';
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+        //        url1 = 'PurchaseOrderView/PORevise';
+        //    }
+        //    $.ajax({
+        //        type: "POST",
+        //        url: url1,
+        //        async: false,
+        //        data: { 'poid': poid, 'IsNewVersion': IsNewVersion },
+        //        success: function (data) {
+        //            if (data == "SUCCESS") {
+        //                window.location.reload();
+        //            }
+        //            //notify(ddlfrcllsfictn);
+        //        },
+        //        error: function () { notify('Something went wrong'); }
+        //    });
+        //}
+
+        
+
+
+       
+       
+
+        
+    </script>
+    <script type="text/javascript">
+        function ProofPO()
+        {
+            var poid = $("#Hdn_PurchaseOrderID").val();
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Reports/PurchaseOrderReportGeneration';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Reports/PurchaseOrderReportGeneration';
+            }
+            url1 += "?ProjectID=" + "";
+            url1 += "&SectionID=" + "";
+            url1 += "&PurchaseOrder=" + poid;
+
+            var totdata = '';
+
+            $.get(url1)
+                .success(function (response) {
+
+                    if (response == '0') {
+                        notify('No records found!!!');
+                        return;
+                    }
+
+                    var html = "";
+                    var url2 = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        totdata = response;
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        totdata = "POMS/POMS/" + response;
+                    }
+                    setTimeout(function () {
+                        window.open(totdata, '_blank');
+                    }, 1000);
+                });
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        function ExpediteNotesTwistee(obj) {
+            if ($(obj).hasClass('collapsed') == true) {
+                $('#txt_ExpediteNotes').show();
+                $('#btn_ExpediteNotes').show();
+                $('#expeditenotelist').show();
+                $(obj).removeClass('collapsed');
+                $(obj).addClass('opened');
+
+                $(obj).html('<i class="fa fa-minus-circle"></i>  ' + 'Expedite Notes');
+
+            }
+            else {
+                $('#txt_ExpediteNotes').hide();
+                $('#btn_ExpediteNotes').hide();
+                $('#expeditenotelist').hide();
+                $(obj).removeClass('opened');
+                $(obj).addClass('collapsed');
+
+                $(obj).html('<i class="fa fa-plus-circle"></i>  ' + 'Expedite Notes');
+            }
+        }
+    </script>
+    <style type="text/css">
+        .collapsed::before{
+            /*content: '';/*url(image.jpg);*/*/
+        }
+        /*.name::before {
+  content: "Name: ";
+}*/
+    </style>
+
+    <style type="text/css">
+        .ui-dialog .ui-dialog-titlebar-close span {
+            margin: -8px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="dialog-confirm"></div>
+    <input type="hidden" value="@ViewData["POID"]" id="poid" />
+    <input type="hidden" id="Hdn_PurchaseOrderID" value="@ViewBag.PurchaseOrderID" />
+    <input type="hidden" id="Hdn_IsVendorConfirmation" value="@ViewBag.IsVendorConfirmation" />
+    <input type="hidden" id="Hdn_iscommited" />
+
+    <div id="popupforvendorlist" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+        <span class="button b-close"><span>X</span></span>
+
+        <table id="vendorlist" class="display  compact">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+
+
+                </tr>
+            </thead>
+
+
+
+
+
+
+        </table>
+
+    </div>
+
+
+    <div id="popupforTaxComment" class="displaynone" style="width:590px;transform: scale(0.80); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+        <span class="button b-close"><span>X</span></span>
+        <div class="main_container" id="angulardiv" ng-app="Project" ng-controller="PO">
+
+            
+
+            <div class="edit_vendor_full">
+                <div class="edit_vendor_half">
+                    <div class="user_panel_container req">
+                        <label>Comments</label>
+                        <textarea id="txt_Comment" ng-model="PO.Comment" style="height: 332px; width: 500px;" class="makedisable"></textarea>
+                    </div>
+
+
+                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="popupforTaxComment2" class="displaynone" style="  width: 593px;transform: scale(0.70); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+        <span class="button b-close"><span>X</span></span>
+        <div class="main_container" >
+
+            <div class="logo_container_heading" style="text-align: center; width: 590px;">PO Tax</div>
+
+            <div class="edit_vendor_full">
+                <div class="edit_vendor_half">
+                    <div class="user_panel_container policy-items " style="width: 10%; padding-top: 7px;">
+                    </div>
+                    <div class="user_panel_container policy-items " style="width: 50%; margin-left: 1%; text-align: center;">
+                        <label>Tax Name</label>
+                    </div>
+                    <div class="user_panel_container policy-items " style="width: 10%; margin-left: 2%; text-align: center;">
+                        <label>Type</label>
+                    </div>
+                    <div class="user_panel_container " style="width: 15%; margin-left: 6%; text-align: center;">
+                        <label>Value</label>
+                    </div>
+                    <div class="user_panel_container policy-items " style="width: 10%; padding-top: 7px;">
+                     <label>Tax1 :</label>
+                     </div>
+                    <div class="user_panel_container policy-items " style="width: 50%; margin-left: 1%;">
+                         <input type="text" id="GSTHSTName" class="makedisable">
+                     </div>
+                    <div class="user_panel_container policy-items " style="width:10%;margin-left:2%;">
+                         <select id="Ddl_GSTPST" style="height: 32px;" class="makedisable">
+                             <option value="%">%</option>
+                             <option value="$">$</option>
+                         </select>
+                     </div>
+                    <div class="user_panel_container " style="width: 15%; margin-left: 6%;">
+                                <input type="text" id="txt_GSTHST" ng-model="PO.GST/HST" class="makedisable"/>
+                            </div>
+                    <div class="user_panel_container policy-items " style="width: 10%; padding-top: 7px;">
+                        <label>Tax2 :</label>
+                    </div>
+                    <div class="user_panel_container policy-items " style="width: 50%; margin-left: 1%;">
+                        <input type="text" id="PSTName" class="makedisable">
+                    </div>
+                    <div class="user_panel_container policy-items " style="width:10%;margin-left:2%;">
+                        <select id="Ddl_PST" style="height: 32px;" class="makedisable">
+                            <option value="%">%</option>
+                            <option value="$">$</option>
+                        </select>
+                    </div>
+                    <div class="user_panel_container " style="width: 15%; margin-left: 6%;">
+                        <input type="text" id="txt_PSTValue" ng-model="PO.GST/HST" class="makedisable" />
+                    </div>
+                    <div class="user_panel_container policy-items " style="width: 10%; padding-top: 7px;">
+                        <label>Tax3 :</label>
+                    </div>
+                    <div class="user_panel_container policy-items " style="width: 50%; margin-left: 1%;">
+                        <input type="text" id="StateTaxName" class="makedisable">
+                    </div>
+                    <div class="user_panel_container policy-items " style="width:10%;margin-left:2%;">
+                        <select id="Ddl_StateTax" style="height: 32px;" class="makedisable">
+                            <option value="%">%</option>
+                            <option value="$">$</option>
+                        </select>
+                    </div>
+                    <div class="user_panel_container " style="width: 15%; margin-left: 6%;">
+                        <input type="text" id="txt_StateTax" ng-model="PO.GST/HST" class="makedisable"/>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="main_container" id="angulardiv" ng-app="Project" ng-controller="PO">
+
+       
+
+        <div class="logo_container_heading">View Purchase Order</div>
+        
+
+        <div class="edit_vendor_full">
+            
+            <div class="user_panel_container policy-items" style="float:right;width:20%;margin-left:2%; display:none;">
+                <fieldset style="">
+                    <legend>Invoice Received Completely ?</legend>
+                    <input type="radio" name="InvRcvdComp" style="" class="makedisable" />Yes
+                    <input type="radio" name="InvRcvdComp" style="margin-left:44px;" class="makedisable" checked />No
+                </fieldset>
+            </div>
+            <div class="user_panel_container" style="float:right;width:21%;margin-left:2%;">
+                <fieldset style="">
+                    <legend>Invoice Received?</legend>
+                    <input type="radio" name="InvRcvdPartial" style="" class="makedisable"  value="partial" />Partial
+                    <input type="radio" name="InvRcvdPartial" style="margin-left:44px;" class="makedisable" value="complete" checked />Complete
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="edit_vendor_full">
+            <div class="user_panel_container policy-items req" style="width:32%;">
+                <label>Project</label>
+                <select id="Ddl_Project" style="background: rgb(235, 235, 228);padding:7px 0px 6px;" tabindex=1 class="makedisable">
+                    <option value="0">--Select Project--</option>
+                    @Html.Raw(ViewData["getAllProjectName"])
+                </select>
+            </div>
+            <div class="user_panel_container req" style="width:32%;margin-left:2%;">
+                <label><span  >Vendor</span></label>
+                <span id="txt_VendorName" class="spn" data-id="0" tabindex=2 ></span>
+            </div>
+            <div class="user_panel_container policy-items req" style="width:32%;margin-left:2%;">
+                <label>Buyer</label>
+                <select id="Ddl_Buyer" class="makedisable" style="padding:7px 0px 6px;" tabindex=3 >
+                    <option value="0">--Select Buyer--</option>
+                    @Html.Raw(ViewData["GetBuyerDetail"])
+                </select>
+            </div>
+        </div>
+
+        <div class="edit_vendor_full">
+            <div class="user_panel_container policy-items" style="width:23.5%;">
+                <label>Ship Via</label>
+                <select id="Ddl_Shipment" class="makedisable" style="padding:7px 0px 6px;" tabindex=4>
+                    <option value="0">--Select Shipping Method--</option>
+                    @Html.Raw(ViewData["GetShipmentMethod"])
+                </select>
+            </div>
+            <div class="user_panel_container" style="width:23.5%;margin-left:2%;">
+                <label>Invoice Terms</label>
+                <select id="txt_Terms" class="makedisable" style="padding:7px 0px 6px;" tabindex=5 >
+                    <option value="0">--Select Terms--</option>
+                    @Html.Raw(ViewData["getAllTerms"])
+                </select>
+            </div>
+            <div class="user_panel_container" style="width:23.5%;margin-left:2%;">
+                <label>FOB</label>
+                <input type="text" id="txt_FOB" ng-model="PO.FOB" class="makedisable" tabindex=6  />
+            </div>
+            <div class="user_panel_container" style="width:23.5%;margin-left:2%;">
+                <label>Freight</label>
+                <input type="text" id="txt_Freight" ng-model="PO.Freight" class="makedisable"  tabindex=7/>
+            </div>
+        </div>
+
+        <div class="edit_vendor_full">
+            <div class="user_panel_container req" style="width:23.5%;">
+                <label>Currency</label>
+                <span id="txt_CurrencyCode" class="spn" data-id="0" ></span>
+                @*<input type="text" id="txt_CurrencyCode" ng-model="PO.CurrencyCode">*@
+            </div>
+            <div class="user_panel_container" style="width:23.5%;margin-left:2%;">
+                <label>Conversion Rate</label>
+                <input type="text" id="txt_ConversionRate" ng-model="PO.ConversionRate" class="makedisable floatonly"  tabindex=8/>
+            </div>
+            <div class="user_panel_container" style="width:49%;margin-left:2%;">
+                <label>Remarks</label>
+                <input type="text" id="txt_Remarks" ng-model="PO.Remarks" class="makedisable"  tabindex=9/>
+            </div>
+        </div>
+        
+        <div class="edit_vendor_full">
+            <div class="user_panel_container" style="width:23.5%;">
+                <label>Arrival Date</label>
+                <input type="text" id="txt_ArrivalDate" ng-model="PO.ArrivalDate" onkeypress="return IsNumber(event);" placeholder="Select Arrival Date" class="makedisable"  tabindex=10/>
+            </div>
+
+            <div class="user_panel_container" style="width:23.5%;margin-left:2%;">
+                <label>Check Back Date</label>
+                <input type="text" id="txt_CheckDate"  ng-model="PO.CheckDate" onkeypress="return IsNumber(event);" placeholder="Select CheckBack Date" class="makedisable"  tabindex=11/>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="edit_vendor_full">
+            <div style="width:32%;margin-right:2%;float:left;">
+                <div class="user_panel_container policy-items req">
+                    <label>Ship to</label>
+                    <input type="text" id="txt_ShipTo" ng-model="PO.ShipTo" class="makedisable"  tabindex=12/>
+                </div>
+                <div class="user_panel_container policy-items">
+                    <label class="makedisable"><span  >Vendor(C/O):</span></label>
+                    <span id="txt_VendorCO" class="spn" data-id="0"></span>
+                </div>
+                <div class="user_panel_container req">
+                    <label>Invoice To</label>
+                    <input type="text" id="txt_InvoiceTo" ng-model="PO.InvoiceTo" class="makedisable"  tabindex=13/>
+                </div>
+            </div>
+            <div style="width:32%;margin-right:2%;float:left;">
+                <div class="user_panel_container req">
+                    <label>Address</label>
+                    <textarea id="txt_addr1" class="makedisable" rows="12" style="margin-top:6px;" tabindex=14></textarea>
+                </div>
+            </div>
+            <div style="width:32%;float:left;">
+                <div style="width:48%;margin-right:4%;float:left;margin-top:27px;">                    
+                    <div class="user_panel_container">
+                        <input type="button" value="PO Tax" id="btn_TaxComment2"  onclick="OpenTax();" style="width:100%" />
+                    </div>
+                    <div class="user_panel_container">
+                        <input type="button" value="Comment" id="btn_TaxComment" onclick="OpenTaxComment();" style="width:100%">
+                    </div>
+                </div>
+                <div style="width:48%;float:left;margin-top:27px;">
+                    <div class="user_panel_container">
+                        <input type="text" class="spn" id="txt_CalculatedTaxAmount" disabled value="@ViewBag.CalculatedTaxAmount" ng-model="PO.CalculatedTaxAmount" class="makedisable" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="edit_vendor_full">
+            <div class="user_panel_container">
+                <label>Notes</label>
+                <textarea id="txt_Notes" ng-model="PO.Notes" rows="8" class="makedisable" tabindex=15></textarea>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="edit_vendor_full">
+            
+            <div style="width:99%;float:left;margin-right:2%;">
+                <div class="user_panel_container">
+                    <label onclick="ExpediteNotesTwistee(this);" class="collapsed" style="background: #208093;color:white;text-align:center;margin-bottom:10px;cursor:pointer;"><i class="fa fa-plus-circle"></i>  Expedite Notes</label>
+                    <div id="expeditenotelist" style="border: 1px solid rgb(32, 128, 147);padding: 10px;  margin-top: 27px;display:none;">
+
+
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+
+
+        <a style="display: none;" href="~/PurchaseOrder"><b><u>Back to Purchase Order Page</u></b></a>
+
+        <div class="edit_vendor_full">
+            <div class="edit_vendor_half">
+  
+                <div class="user_panel_container">
+                    
+                    <input type="button" value="Proof PO" id="btn_ProofPONSndApprvl" onclick="ProofPO();">
+                    <input type="button" value="View PDF" id="btn_ViewPOPDF" onclick="ProofPO();" style="display:none;">
+                </div>
+
+
+
+            </div>
+
+            <div class="edit_vendor_half">
+
+                <div class="user_panel_container" style="display: none;">
+                    <label>Vendor Address</label>
+                    <input type="text" id="txt_ProjectScope" ng-model="PO.VendorAddress" placeholder="Enter Vendor Address">
+                </div>
+
+                <div class="user_panel_container" style="display: none;">
+                    <label>Address 3</label>
+                    <input type="text" id="txt_OwnerName" ng-model="PO.Address3" />
+                </div>
+
+                <div class="user_panel_container" style="display: none;">
+                    <label>Address 4</label>
+                    <input type="text" id="txt_OwnerAddr" ng-model="PO.OwnerAddr">
+                </div>
+
+                <div class="user_panel_container policy-items" style="display:none;">
+                    <fieldset style="height: 70px">
+                        <legend>PO Confirm ? </legend>
+                        <input type="radio" name="POConfirm" style="margin: 17px" class="makedisable" />Yes
+                        <input type="radio" name="POConfirm" style="margin: 17px" class="makedisable" checked />No
+                    </fieldset>
+                </div>
+
+
+            </div>
+        </div>
+
+        <hr />
+
+
+        <div class="logo_container_heading" style="margin-top: 30px;">Line Items under Purchase Order</div>
+        <div class="edit_vendor_full">
+            
+           
+            <div class="user_panel_container1" style="margin-top: 2%;">
+                <fieldset>
+                    <legend>Line Items Under Purchase Order</legend>
+                    <div>
+                        <table cellpadding="0" cellspacing="0" border="0"  id="POLineItemsDetail" style="text-align: center;">@*class="makedisable"*@
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        
+        
+
+
+        function getpoexpeditenotes() {
+
+            var POID = $('#Hdn_PurchaseOrderID').val();
+
+           
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrderView/getPOExpediteNote';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'PurchaseOrderView/getPOExpediteNote';
+            }
+
+
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: { 'POID': POID  },
+                success: function (data) {
+                    if (data == "") {
+                        $('#expeditenotelist').html("No Notes available.");
+                        return;
+                    }
+                    var html = "";
+              
+                    for (var i = 0; i < data.split(',').length; i++) {
+                        html += "<span class='remove'>" + data.split(',')[i].split('^')[0] + "( " + data.split(',')[i].split('^')[1] + " )</span>";
+                    }
+
+                   
+
+                    $('#expeditenotelist').html(html);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+
+        }
+
+        
+
+    </script>
+</body>
+    
+
+</html>

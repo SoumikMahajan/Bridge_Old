@@ -1,0 +1,1853 @@
+﻿@{    
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create Project</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+  
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+
+    <script src="~/Scripts/jquery.autosize.js"></script>
+
+   
+    <script src="~/Scripts/Project.js"></script>
+
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/swfupload.js"></script>
+    <script src="~/Scripts/jquery.swfupload.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+
+
+    <link href="~/css/stylesForFileUpload.css" rel="stylesheet" />
+
+   
+
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+    <script type="text/javascript">
+        // var formData = new FormData();
+        var filedata = {};
+        var filedatacount = 0;
+        var filedata2 = {};
+        var filedatacount2 = 0;
+        var filedata3 = {};
+        var filedatacount3 = 0;
+        $(function () {
+            var formData = new FormData();
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = 'https://www.thebridgebytcg.com/UploadFile/Upload';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'UploadFile/Upload';
+            }
+            url1 += "?id=1";
+            $('#fileupload2').fileupload({
+                url: url1,
+                //redirect: url,
+                //replaceFileInput: false,
+                dataType: 'json',
+                send: function (e, data) {
+                    $('#fileupload2').parent().find('.filelist').text('Please Wait...');
+                    //$('#files2').text('Please Wait...');
+                },
+                progress: function (e, data) {
+                    //debugger
+                    // Update the progress bar while files are being uploaded
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress2 .bar').css(
+                            'width',
+                            progress + '%'
+                                            );
+                    //console.log(progress);
+                },
+                done: function (e, data) {
+                    //console.log(data);
+                    $('#fileupload2').parent().find('.filelist')
+                    if ($('#fileupload2').parent().find('.filelist').text() != 'Please Wait...') {
+                        $('#fileupload2').parent().find('.filelist').text($('#fileupload2').parent().find('.filelist') + ',' + data.result.name);
+                    }
+                    else {
+                        $('#fileupload2').parent().find('.filelist').text(data.result.name);
+                    }
+                }
+            });
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = 'https://www.thebridgebytcg.com/UploadFile/Upload';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'UploadFile/Upload';
+            }
+            url1 += "?id=2";
+            $('#fileupload').fileupload({
+                url: url1,
+                //redirect: url,
+                //replaceFileInput: false,
+                dataType: 'json',
+                send: function (e, data) {
+                    $('#files').text('Please Wait...');
+                },
+                progress: function (e, data) {
+                    //debugger
+                    // Update the progress bar while files are being uploaded
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .bar').css(
+                            'width',
+                            progress + '%'
+                                            );
+                    //console.log(progress);
+                },
+                done: function (e, data) {
+                    //console.log(data);
+                    if ($('#files').text() != 'Please Wait...') {
+                        $('#files').text($('#files').text() + ',' + data.result.name);
+                    }
+                    else {
+                        $('#files').text(data.result.name);
+                    }
+                }
+            });
+
+
+
+            //-------------------------------
+
+
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = 'https://www.thebridgebytcg.com/UploadFile/Upload';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'UploadFile/Upload';
+            }
+            url1 += "?id=3";
+            $('#fileupload3').fileupload({
+                url: url1,
+                //redirect: url,
+                //replaceFileInput: false,
+                dataType: 'json',
+                send: function (e, data) {
+                    // $('#files').text('Please Wait...');
+                    $('#fileupload3').parent().find('.filelist').text('Please Wait...');
+                },
+                progress: function (e, data) {
+                    //debugger
+                    // Update the progress bar while files are being uploaded
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .bar').css(
+                            'width',
+                            progress + '%'
+                                            );
+                    //console.log(progress);
+                },
+                done: function (e, data) {
+                    //console.log(data);
+                    $('#fileupload3').parent().find('.filelist')
+                    if ($('#fileupload3').parent().find('.filelist').text() != 'Please Wait...') {
+                        $('#fileupload3').parent().find('.filelist').text($('#fileupload3').parent().find('.filelist') + ',' + data.result.name);
+                    }
+                    else {
+                        $('#fileupload3').parent().find('.filelist').text(data.result.name);
+                    }
+                }
+            });
+
+            //-------------------------------
+
+
+
+
+
+        });
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('textarea').autosize();
+
+            $('#txt_GST').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_PST').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_StateTax').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_InstallDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_CompletionDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_WareHouseReqDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_OpeningDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+        });
+
+
+        function DelImage(obj) {
+
+            var confirmSt = confirm('Do You want to delete this file??');
+            if (confirmSt) {
+                $(obj).parent().remove();
+            }
+        }
+
+        function AvoidKeyPress(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            if (keyCode == 8) {
+                return true;
+            }
+            else {
+                alert('Use Calender');
+                return false;
+            }
+        }
+
+        function IsNumber(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            if ((keyCode > 47 && keyCode < 58) || (keyCode == 8) || (keyCode == 46)) {
+                return true;
+            }
+            else {
+                alert('Use Only Numeric value');
+                return false;
+            }
+        }
+
+
+    </script>
+
+    <style>
+        .ui-autocomplete {
+            cursor: pointer;
+            height: 120px;
+            overflow-y: scroll;
+        }
+
+         input[type="file"] {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+
+    </style>
+
+
+    <style type="text/css">
+        #sortable-8 {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            width: 25%;
+            float: left;
+        }
+
+            #sortable-8 li {
+                margin: 0 3px 3px 3px;
+                padding: 0.4em;
+                padding-left: 1.5em;
+                font-size: 17px;
+                height: 16px;
+            }
+
+        .default {
+            /*background: #cedc98;
+            border: 1px solid #DDDDDD;
+            color: #333333;*/
+            
+        }
+
+         .ui-multiselect-menu{
+            width : 370px !important;
+        }
+    </style>
+    <script>
+        $(function () {
+            $('#sortable-8').sortable({
+                update: function (event, ui) {
+                    var productOrder = $(this).sortable('toArray').toString();
+                    $("#sortable-9").text(productOrder);
+                }
+            });
+            $('.b-close').click(function () {
+                $('#popupforvendorlist').hide();
+                $('#BackGroundCng').hide();
+            });
+        });
+        function openvendors(obj) {
+           // resetsrch();
+            //selectedpopup = obj;
+            //$('#popupforvendorlist').bPopup({
+            //    easing: 'easeOutBack', //uses jQuery easing plugin
+            //    speed: 450,
+            //    transition: 'slideDown',
+            //    modalColor: 'rgb(18, 54, 65)'
+            //});
+
+            $('#popupforvendorlist').modal('show');
+        }
+       
+   </script>
+
+    <style type="text/css">
+
+        .remove { /* width: 450px; */
+            border: 1px solid #060506;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            display: block;
+            padding: 5px;
+            text-decoration: none;
+            background: #B01000;
+            color: #E2E2E2;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-family: helvetica;
+            font-size: 13px;
+            position: relative;
+        }
+
+        .remove a {
+  cursor: pointer;
+  position: absolute;
+  top: -5px;
+  right: -6px;
+  font-size: 0.9em;
+  color: white;
+  background: black;
+  border-radius: 100px;
+  padding: 7px;
+  line-height: 9px;
+}
+
+         .ui-widget-header {
+            background : grey;
+
+        }
+
+        .ui-widget-overlay {
+            position: fixed;
+        }
+
+        .ui-dialog .ui-dialog-titlebar-close span {
+            margin: -8px;
+        }
+
+        #popupforvendorlist .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 6px 0px;
+            width: 96%;
+            height: 20px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+
+        #sortable-8 {
+            width:auto;
+        }
+    </style>
+    
+    <style type="text/css">
+        /** { margin: 0; padding: 0; }
+        body { font: 14px/1.4 Georgia, serif; }
+        #page-wrap { width: 600px; margin: 15px auto; }
+        p { margin: 0 0 15px 0; }
+        p:first-child { background: #fffcde; padding: 10px; }
+        #sidebar ul { background: #eee; padding: 10px; }
+        li { margin: 0 0 0 20px; }
+        #main { width: 390px; float: left; }*/
+        /*#sidebar { width: 190px; float: right; }*/
+        #sidebar {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+        }
+        /*#sidebar ul { background: #eee; padding: 10px; }*/
+        /*li { margin: 0 0 0 20px; }*/
+    </style>
+
+
+    <style>
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+
+        label {
+            color: #333333;
+            font-weight: 500;
+            margin-bottom: 1px;
+        }
+
+        .section-header {
+            padding: 2px 4px;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .nav > li > a {
+            position: relative !important;
+            display: block !important;
+            padding: 4px 15px !important;
+        }
+
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+            color: rgb(246, 251, 252) !important;
+            cursor: default;
+            background-color: #7792a8;
+            border: 1px solid #ddd;
+            border-bottom-color: transparent;
+            color: #7792a8;
+            font-size: 16.5px;
+        }
+          .container-fluid {
+            padding-right: 22px;
+        }
+    </style>
+
+
+    <script type="text/javascript">
+        function OpenPOLists(obj) {
+            $("#poListPopUp").modal("show");
+        }
+    </script>
+    <script type="text/javascript">
+       
+        $(function () {
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/getAllPurchaseOrderComments';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                //url1 = urlsuffix + "/" + 'Project/getAllProjectList';
+                url1 = 'Project/getAllPurchaseOrderComments';
+            }
+
+            // alert(url1);
+            var totdata;
+            $.get(url1)
+                .success(function (response) {
+
+
+                    var project;
+                    totdata = JSON.parse(response).data;
+                    //console.log(totdata);
+                    var project = new Array();
+                    for (i = 0; i < totdata.length ; i++) {
+                        project[i] = new Array();
+                        // project[i][0] = '<input type="button" class="buttonedit btnhover" onclick="GetThisComment(this);" style="margin-bottom:6px;" />';
+                        project[i][0] = '<i class="fa fa-hand-o-right" style="cursor:pointer;" title="Select this Comment" onclick="GetThisComment(this);" aria-hidden="true"></i>';
+
+                        project[i][1] = totdata[i].ProjectNumber;
+                        project[i][2] = totdata[i].ProjectName;
+                        project[i][3] = unescape(totdata[i].Comment); //totdata[i].Comment;
+                    }
+                    //console.log(project);
+                    $('#POLists').dataTable({
+                        "processing": true,
+                        "data": project,
+                        "columns": [
+                            { "title": "" },
+                            { "title": "Project Number" },
+                            { "title": "Project Name" },
+                            { "title": "Comment" }
+                        ]
+                        ,
+                        "initComplete": function () {
+                            //RowHtmlRender();
+
+                            var html = "";
+                            html = "<tr>"
+                                + '<th></th>'
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='1' placeholder='Search Project'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='2' placeholder='Search Project Name'></th>"
+                                + "<th></th>"
+                                + "</tr>";
+
+                            $('#POLists thead').append(html);
+                            var table = $('#POLists').DataTable();
+
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+                                table
+                                       .column(indx)
+                                       .search(txt)
+                                       .draw();
+                                RowHtmlRender();
+                            });
+                            RowHtmlRender();
+                        },
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0, 3] }
+                        ]
+                    });
+
+                });
+        });
+
+        function RowHtmlRender() {
+            $('#POLists_filter').css('display', 'none');
+            //$('#POLists tbody tr').find("td:eq(0)").each(function () {
+            //    $(this).html('<input type="button" class="buttonedit btnhover" onclick="GetThisComment(this);" style="margin-bottom:6px;" />');
+            //});
+        }
+        function GetThisComment(obj) {
+            $('#txt_PrchsOrdrCmmnts').val('');
+
+            var elem = document.createElement('textarea');
+            elem.innerHTML = $(obj).parent("td").parent("tr").find("td:eq(3)").html();
+            var decoded = elem.value;
+            elem.remove();
+
+            //$('#txt_PrchsOrdrCmmnts').val($(obj).parent("td").parent("tr").find("td:eq(3)").html().toString());
+            $('#txt_PrchsOrdrCmmnts').val(decoded);
+
+            auto_grow($('#txt_PrchsOrdrCmmnts'));
+            $('#txt_PrchsOrdrCmmnts').focus();
+            $("#poListPopUp").modal("hide");
+        }
+        function auto_grow(element) {
+            $(element).css("height", "60px");
+            $(element).css("height", (document.getElementById("txt_PrchsOrdrCmmnts").scrollHeight + "px"));
+
+
+           // element.style.height = "5px";
+           // element.style.height = (element.scrollHeight) + "px";
+        }
+       
+
+       
+    </script>
+    
+</head>
+<body>
+
+
+    <div id="popupforvendorlist" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg" style="width:85%;">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Order Vendors</h4>
+      </div>
+      <div class="modal-body">
+          <div style="overflow:auto; max-height:400px;">
+        <table id="vendorlist" class="display  compact">
+            <thead>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </thead>
+        </table>
+              </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+    
+
+
+     <div id="poListPopUp" class="modal fade" role="dialog">
+
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">PO Comment List</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid" style="zoom: 0.95;">
+                        <div class="row">
+                            <div class="col-sm-12" style="max-height:400px;overflow: scroll;">
+                                <table id="POLists" class="display  compact" style="width:auto;">
+                                    <thead>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </thead>
+                                </table>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @*<button type="button" class="btn btn-default" onclick="sendmailtovendor();" id="mailsendvendorbtn">Send Mail</button>*@
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+    @*<div id="popupforPOLists" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+        <span class="button b-close"><span>X</span></span>
+        <table id="POLists" class="display  compact" style="width:auto;">
+            <thead>
+                <tr>
+                    <td></td>
+                    <td></td>                    
+                </tr>
+            </thead>
+        </table>
+       
+    </div>*@
+
+
+    <div class="container-fluid" id="angulardiv" ng-app="Project" ng-controller="Project" style="zoom:0.95;">
+
+        
+
+         <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header">Create Project</h3>
+            </div>
+        </div>
+
+
+       
+
+        <div class="row">
+
+            <div class="col-sm-4">
+                <div class="col-sm-6 req">
+                    <label>Project Name</label>
+                    <input type="text" class="form-control text-uppercase" id="txt_ProjectName" ng-model="User.ProjectName" tabindex="1" />
+                </div>
+
+                <div class="col-sm-6">
+                    <label>Legal Name</label>
+                    <input type="text" class="form-control text-uppercase" id="txt_LegalName" ng-model="User.LegalName" tabindex="2" />
+                </div>
+            </div>
+           
+           
+            <div class="col-sm-4">
+                <div class="col-sm-12">
+
+                    <label>&nbsp;</label>
+                    <button style="height: 25px;margin-top: 0px;padding: 2px;" class="btn btn-block btn-primary" onclick="openvendors(this);"><i class="fa fa-bars mrg5R"></i>Alternative C/O Vendors</button>
+
+                </div>
+
+                </div>
+               <div class="col-sm-4" style="margin-top: 22px;padding-left: 20px;">
+                   <input type="checkbox" id="bridgesupporter" checked="checked" />
+                   <label for="bridgesupporter">Bridge Supporter Project</label>
+                   
+               </div>
+
+            </div>
+
+
+
+          <div class="row">
+
+              <div class="col-sm-4">
+
+
+
+                  <div class="col-sm-12">
+                      <h3 class="section-header mrg15T">Hotel</h3>
+                  </div>
+
+
+
+
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                          <label>Address</label>
+                          <textarea class="form-control no-resize" style="height:69px;" id="txt_HotelAddr" ng-model="User.HotelAddr"></textarea>
+                      </div>
+
+                  </div>
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                          <label>Country</label>
+
+                          <select id="Ddl_HotelCountry" name="Ddl_HotelState" onchange="GetCtryIDForProject(this);" class="form-control">
+                              @Html.Raw(ViewData["GetAllCountry"])
+                          </select>
+
+                      </div>
+                      <div class="form-group">
+                          <label>State/Prov</label>
+
+                          <select id="Ddl_HotelState" class="form-control">
+                              <option value="0">--Select State/Prov--</option>
+                          </select>
+
+                      </div>
+
+                  </div>
+
+                  <div class="col-sm-6">
+                      <label>City</label>
+                      <input type="text" class="form-control" id="txt_HotelCity" ng-model="User.HotelCity">
+                  </div>
+
+                  <div class="col-sm-6">
+                      <label>Postal/Zip Code</label>
+                      <input type="text" class="form-control postalcode" id="txt_HotelZipCode" ng-model="User.HotelZipCode">
+                  </div>
+
+
+
+              </div>
+
+              <div class="col-sm-4" style="">
+                  <div class="col-sm-12">
+                      <h3 class="section-header mrg15T">Owner</h3>
+                  </div>
+
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                          <label>Address</label>
+                          <textarea class="form-control no-resize" style="height:69px;" id="txt_OwnerAddr" ng-model="User.OwnerAddr"></textarea>
+                      </div>
+
+
+
+                  </div>
+
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                          <label>Country</label>
+                          <select id="Ddl_OwnerCountry" name="Ddl_OwnerState" onchange="GetCtryIDForProject(this);" class="form-control">
+                              @Html.Raw(ViewData["GetAllCountry"])
+                          </select>
+                      </div>
+                      <div class="form-group">
+                          <label>State/Prov</label>
+                          <select id="Ddl_OwnerState" class="form-control">
+                              <option value="0">--Select State/Prov--</option>
+                          </select>
+                      </div>
+
+
+                  </div>
+
+                  <div class="col-sm-6">
+                      <label>City</label>
+                      <input type="text" class="form-control" id="txt_OwnerCity" ng-model="User.OwnerCity">
+                  </div>
+                  <div class="col-sm-6">
+
+                      <label>Postal/Zip Code</label>
+                      <input type="text" class="form-control postalcode" id="txt_OwnerZipCode" ng-model="User.OwnerZipCode">
+                  </div>
+
+
+
+                  <div class="col-sm-5">
+                      <div class="form-group">
+                          <label>Telephone</label>
+                          <input type="text" class="form-control phonenumber" id="txt_OwnerMobile" ng-model="User.AccountingPhone" />
+                      </div>
+                  </div>
+                  <div class="col-sm-2">
+                      <div class="form-group">
+                          <label>Ext.</label>
+                          <input type="text" class="form-control" id="txt_OwnerPhoneExtension" ng-model="User.AccountingPhoneExtension">
+                      </div>
+                  </div>
+                  <div class="col-sm-5">
+
+                      <label>Fax</label>
+                      <input type="text" class="form-control" id="txt_OwnerFax" ng-model="User.AccountingFax">
+                  </div>
+
+              </div>
+
+              <div class="col-sm-4">
+                  <div class="col-sm-12">
+                      <h3 class="section-header mrg15T">Key Dates</h3>
+                  </div>
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                          <label>WareHouse Required Date</label>
+                          <input type="text" class="form-control" id="txt_WareHouseReqDate" ng-model="User.WareHouseReqDate" placeholder="YYYY.MM.DD" onkeypress="return AvoidKeyPress(event);">
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                          <label>Install Date</label>
+                          <input type="text" class="form-control" id="txt_InstallDate" onblur="setdates(3,this);" ng-model="User.InstallDate" placeholder="YYYY.MM.DD" onkeypress="return AvoidKeyPress(event);">
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                          <label>Completion Date</label>
+                          <input type="text" class="form-control" id="txt_CompletionDate" onblur="setdates(2,this);" ng-model="User.CompletionDate" placeholder="YYYY.MM.DD" onkeypress="return AvoidKeyPress(event);">
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                          <label>Opening Date</label>
+                          <input type="text" class="form-control" id="txt_OpeningDate" onblur="setdates(1,this);" ng-model="User.OpeningDate" placeholder="MM DD YYYY" onkeypress="return AvoidKeyPress(event);">
+                      </div>
+                  </div>
+
+                  <div class="col-sm-12">
+                      <label>Reporting Requirements</label>
+                      <input type="text" class="form-control" id="txt_OwnerReqmnt"   ng-model="User.ProjectCmt"></input>
+                  </div>
+
+
+              </div>
+
+          </div>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Invoice</h3>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea class="form-control no-resize" style="height:70px;" id="txt_InvAddr" ng-model="User.InvAddr"></textarea>
+                    </div>
+                   
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Country</label>
+                        <select class="form-control" id="Ddl_InvCountry" name="Ddl_InvState" onchange="GetCtryIDForProject(this);">
+                            @Html.Raw(ViewData["GetAllCountry"])
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>State/Prov</label>
+                        <select id="Ddl_InvState" class="form-control">
+                            <option value="0">--Select State/Prov--</option>
+                        </select>
+                    </div>
+                  
+                </div>
+
+                <div class="col-sm-6">
+                    <label>City</label>
+                    <input type="text" class="form-control" id="txt_InvCity" ng-model="User.InvCity">
+                </div>
+                <div class="col-sm-6">
+                    <label>Postal/Zip Code</label>
+                    <input type="text" class="form-control postalcode" id="txt_InvZipCode" ng-model="User.InvZipCode">
+                </div>
+
+            </div>
+            <div class="col-sm-4">
+                <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Accounting</h3>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Contact</label>
+                        <input type="text" class="form-control" id="txt_AccountingContact" ng-model="User.AccountingContact">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" class="form-control" id="txt_AccountingEmail" ng-model="User.AccountingEmail">
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label>Telephone</label>
+                        <input type="text" class="form-control phonenumber" id="txt_AccountingPhone" ng-model="User.AccountingPhone">
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Ext.</label>
+                        <input type="text" class="form-control" id="txt_AccountingPhoneExtension" ng-model="User.AccountingPhoneExtension">
+                    </div>
+                </div>
+
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label>Fax</label>
+                        <input type="text" class="form-control" id="txt_AccountingFax" ng-model="User.AccountingFax">
+                    </div>
+
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Federal ID</label>
+                        <input type="text" class="form-control" id="txt_FederalID" ng-model="User.FederalID">
+                    </div>
+
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Currency Code</label>
+                        <select id="ddl_CurrencyCode" class="form-control">
+                            @Html.Raw(ViewData["GetAllCurency"])
+                        </select>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+            <div class="col-sm-4">
+                <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Taxes</h3>
+                </div>
+                <div class="col-sm-6">
+                    <label>Name</label>
+                    <input type="text" class="form-control" id="txt_GSTLblShw" maxlength="12">
+                </div>
+                <div class="col-sm-6">
+                    <label>Rate (%)</label>
+                    <input type="text" class="form-control floatonly" id="txt_GST" ng-model="User.GST" onkeypress="return IsNumber(event);">
+                </div>
+                <div class="col-sm-6">
+                    <label>Name</label>
+                    <input type="text" class="form-control" id="txt_PSTLblShw" maxlength="12">
+                </div>
+                <div class="col-sm-6">
+                    <label>Rate (%)</label>
+                    <input type="text" class="form-control floatonly" id="txt_PST" ng-model="User.PST" onkeypress="return IsNumber(event);">
+                </div>
+                <div class="col-sm-6">
+                    <label>Name</label>
+                    <input type="text" class="form-control" id="txt_StateTxLblShw" maxlength="12">
+                </div>
+                <div class="col-sm-6" >
+                    <label>Rate (%)</label>
+                    <input type="text" class="form-control floatonly" id="txt_StateTax" ng-model="User.StateTax" onkeypress="return IsNumber(event);">
+                </div>
+            </div>
+        </div>
+
+      
+        <div class="row">
+
+           
+
+            <div class="col-sm-6">
+                <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Purchase Order Comments</h3>
+                </div>
+
+
+
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>Comment</label>
+                        <label class="pull-right" onclick="OpenPOLists(this);"><a href="javascript:void(0);">PO Comment List</a></label>
+                        <textarea class="form-control no-resize" id="txt_PrchsOrdrCmmnts" placeholder="Purchase Order Comments" rows="4"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+               
+                <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Project Files</h3>
+                </div>
+
+                <div class="col-sm-12" style="max-height:230px;overflow-y:auto; zoom:0.9">
+
+                    <div class="col-sm-12">
+
+
+                        <fieldset>
+                            <legend>Installation Schedule File</legend>
+                            <div class="upload-verify-container">
+                                <div class="button-container">
+                                    <span class="btn fileinput-button">
+                                        <!-- The file input field used as target for the file upload widget -->
+                                        Drop a file or click here to upload!
+
+                                        <input id="fileupload3" type="file" name="files[]" multiple class="upload-button-drag-style" />
+                                    </span>
+                                    <p style="float: left; clear: left;">
+                                        Files selected&nbsp;:&nbsp;
+                                    </p>
+                                    <ul class="filelist" style="float: left;"></ul>
+                                    <p style="float: left; clear: left;">
+                                        Files previously selected&nbsp;:&nbsp;
+                                    </p>
+                                    <ul class="previousfilelist" style="float: left;"></ul>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-12">
+                        <fieldset>
+                            <legend align="left">Project Attachments</legend>
+
+                            <div class="upload-verify-container">
+                                <div class="button-container">
+                                    <!-- Button to select & upload files -->
+                                    <span class="btn fileinput-button">
+                                        <!-- The file input field used as target for the file upload widget -->
+                                        Drop a file or click here to upload!
+                                        <input id="fileupload" type="file" name="files[]" multiple class="upload-button-drag-style" />
+                                    </span>
+                                    <!-- The global progress bar -->
+                                    <!-- The list of files uploaded -->
+                                    <p style="float: left; clear: left;">
+                                        Files selected&nbsp;:&nbsp;
+                                    </p>
+                                    <ul class="filelist" style="float: left;"></ul>
+
+                                    <p style="float: left; clear: left;">
+                                        Files previously selected&nbsp;:&nbsp;
+                                    </p>
+                                    <ul class="previousfilelist" style="float: left;"></ul>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                </div>
+
+                    <div class="col-sm-12 mrg10T">
+                        <label style="color:#526779;">Default Terms and Conditions File will be Uploaded. That can be changed during editing the project.</label>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+     
+
+     
+       
+
+
+
+           <div class="row">
+            
+            <div class="col-md-6 col-sm-12 displaynone">
+                <fieldset>
+                    <legend align="left">Terms Files</legend>
+
+                    <div class="upload-verify-container">
+                        <div class="button-container">
+                            <!-- Button to select & upload files -->
+                            <span class="btn fileinput-button">
+                                <!-- The file input field used as target for the file upload widget -->
+                                Drop a file or click here to upload!
+                                    <input id="fileupload2" type="file" name="files[]" multiple class="upload-button-drag-style" />
+                            </span>
+                            <!-- The global progress bar -->
+                            <!-- The list of files uploaded -->
+                            <p style="float: left; clear: left;">
+                                Files selected&nbsp;:&nbsp;
+                            </p>
+                            <ul class="filelist" style="float: left;">
+                            </ul>
+                            <p style="float: left; clear: left;" >
+                                Files previously selected&nbsp;:&nbsp;
+                            </p>
+                            <ul class="previousfilelist" style="float: left;">
+                            </ul>
+                        </div>
+                    </div>
+                </fieldset>
+                @*<fieldset>
+                <legend>Installation Schedule File:</legend>
+                <div class="form-group mrg0B">
+                    <div id="file-dropzone2" drop-zone="" class="dropzone dz-clickable image-drop" action="/upload">
+                        <div class="dz-default dz-message"><span>Drop a file or click here to upload!</span></div>
+                    </div>
+                    <label class="font_12">Files selected :</label>
+                    <br>
+                    <label class="font_12 mrg0B">Files previously selected :</label>
+                </div>
+            </fieldset>*@
+            </div>
+            
+      
+        
+        </div>
+
+      
+
+
+        @*<div class="edit_vendor_full">
+            <div class="user_panel_container" style="width: 10%;">
+                <label>Project Files : </label>
+            </div>
+            <div class="user_panel_container" style="width: 90%;">
+                <div class="user_panel_container">
+                    <div class="user_panel_container1" style="margin-top: 20px; width: 50%;">
+
+
+                        <fieldset>
+                            <legend align="left">Installation Schedule File</legend>
+                            <div class="upload-verify-container" style="padding: 12px;">
+                                <div class="button-container">
+                                    <span class="btn btn-success fileinput-button">
+                                        <!-- The file input field used as target for the file upload widget -->
+                                        Drop a file or click here to upload!
+                                    <input id="fileupload3" type="file" name="files[]" multiple class="upload-button-drag-style" />
+                                    </span>
+                                    <p style="float: left; clear: left;">
+                                        Files selected&nbsp;:&nbsp;
+                                    </p>
+                                    <ul class="filelist" style="float: left;">
+                                    </ul>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="user_panel_container1" style="margin-top: 20px; width: 50%;">
+
+                        <fieldset>
+                            <legend align="left">Terms Files</legend>
+                            <div class="upload-verify-container" style="padding: 12px;">
+                                <div class="button-container">
+                                    <!-- Button to select & upload files -->
+                                    <span class="btn btn-success fileinput-button">
+                                        <!-- The file input field used as target for the file upload widget -->
+                                        Drop a file or click here to upload!
+                                    <input id="fileupload2" type="file" name="files[]" multiple class="upload-button-drag-style" />
+                                    </span>
+                                    <!-- The global progress bar -->
+                                    <!-- The list of files uploaded -->
+                                    <p style="float: left; clear: left;">
+                                        Files selected&nbsp;:&nbsp;
+                                    </p>
+                                    <ul class="filelist" style="float: left;">
+                                    </ul>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="user_panel_container">
+                    <div class="user_panel_container1" style="margin-top: 20px; width: 50%;">
+
+                        <fieldset>
+                            <legend align="left">Project Attachments</legend>
+                            <div class="upload-verify-container" style="padding: 12px;">
+                                <div class="button-container">
+                                    <!-- Button to select & upload files -->
+                                    <span class="btn btn-success fileinput-button">
+                                        <!-- The file input field used as target for the file upload widget -->
+                                        Drop a file or click here to upload!
+                                            <input id="fileupload" type="file" name="files[]" multiple class="upload-button-drag-style" />
+                                    </span>
+                                    <!-- The global progress bar -->
+                                    <!-- The list of files uploaded -->
+                                    <p style="float: left; clear: left;">
+                                        Files selected&nbsp;:&nbsp;
+                                    </p>
+                                    <ul class="filelist" style="float: left;">
+                                    </ul>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="user_panel_container1" style="margin-top: 20px; width: 50%;">
+                    </div>
+                </div>
+                <div class="user_panel_container">
+                </div>
+            </div>
+        </div>*@
+
+        <div class="edit_vendor_full">
+            <div style="display: none;">
+                <div class="user_panel_container">
+                    <label>Number of User Approve Budget</label>
+                    <select id="ddl_NoUserAppvBdgt">
+                        <option value="1">01</option>
+                        <option value="2">02</option>
+                        <option value="3">03</option>
+                        <option value="4">04</option>
+                        <option value="5">05</option>
+                        <option value="6">06</option>
+                        <option value="7">07</option>
+                        <option value="8">08</option>
+                        <option value="9">09</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Number of User Approve PO</label>
+                    <select id="ddl_NoUserAppvPO">
+                        <option value="1">01</option>
+                        <option value="2">02</option>
+                        <option value="3">03</option>
+                        <option value="4">04</option>
+                        <option value="5">05</option>
+                        <option value="6">06</option>
+                        <option value="7">07</option>
+                        <option value="8">08</option>
+                        <option value="9">09</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+
+
+                <div class="user_panel_container">
+                    <label>Client</label>
+                    <select id="txt_Client">
+                        @*result = "<option value="0" name="txt_Client_0">--Select Client/Operator--</option>";*@
+                        <option value="0" name="txt_Client_0">--Select Client/Operator--</option>
+                        @Html.Raw(ViewData["getClientOpt"])
+                    </select>
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Manager</label>
+                    <select id="txt_Manager">
+                        <option value="0" name="txt_Client_0">--Select PC Staff--</option>
+                        @Html.Raw(ViewData["getPCStaff"])
+                    </select>
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Development Information</label>
+                    <input type="text" id="txt_DevInfo" ng-model="User.DevInfo" />
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Project Scope</label>
+                    <textarea id="txt_ProjectScope" ng-model="User.ProjectScope"></textarea>
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Owner Name</label>
+                    <input type="text" id="txt_OwnerName" ng-model="User.OwnerName" />
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Owner Contact</label>
+                    <input type="text" id="txt_OwnerContact" ng-model="User.OwnerContact" />
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Owner Notes</label>
+                    <textarea id="txt_OwnerNote" ng-model="User.OwnerNote"></textarea>
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Owner Fax</label>
+                    <input type="text" id="txt_OwnerFax1" ng-model="User.OwnerFax" />
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Owner Email</label>
+                    <input type="text" id="txt_OwnerEmail" ng-model="User.OwnerEmail" />
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Owner Mobile</label>
+                    <input type="text" id="txt_OwnerMobile1" ng-model="User.OwnerMobile" />
+                </div>
+
+            </div>
+            <div class="user_panel_container" style="display: none;">
+                <label>Project Comment</label>
+                <textarea id="txt_ProjectCmt" ng-model="User.ProjectCmt"></textarea>
+            </div>
+
+        </div>
+
+        <div class="edit_vendor_full">
+            <div class="edit_vendor_half">
+
+                @*<div class="user_panel_container">
+                    <input type="button" value="Save Project" id="btn_CreateProject">
+                    <img id="loader_CreateProject" style="display: none;" src="~/Images/load.gif" />
+                </div>*@
+
+                
+
+            </div>
+
+
+            <div class="edit_vendor_half">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="user_panel_container1">
+                </div>
+
+
+                <div class="user_panel_container1" style="margin-top: 20px;">
+                </div>
+
+                <div class="user_panel_container1" style="margin-top: 20px;">
+                    @*<span>Terms File</span>
+          <input type="checkbox" id="txt_Actv" style="margin-left: 1%; margin-top: 1.5%;" />*@
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="sidebar_btn" style="margin-top:13%;">
+                    <ul>
+                        <li>
+                            <a href="javascript:void(0);" class="hvr-icon-save" title="Save Project" id="btn_CreateProject"></a>
+                        </li>                                                          
+                    </ul>
+                </div>*@
+
+    <div class="float-panel-container">
+        <ul>
+            <li id="btn_CreateProject" title="Save Project" ><a href="javascript:void(0);"><i class="fa fa-save mrg5R" data-toggle="tooltip"></i><span class="tooltip-toggle">Save Project</span></a></li>
+           
+        </ul>
+    </div>
+
+
+
+    @*<input type="button" value="upload" onclick="uploadfiles();" />*@
+
+</body>
+
+@*<script src="~/Scripts/filedrag.js"></script>*@
+<script type="text/javascript">
+    function delobject1(val, obj) {
+        delete filedata[val];
+        $(obj).parent().remove();
+    }
+    function delobject2(val, obj) {
+        delete filedata2[val];
+        $(obj).parent().remove();
+    }
+    function delobject3(val, obj) {
+        delete filedata3[val];
+        $(obj).parent().remove();
+    }
+
+    function uploadfiles(projectid, mode) {
+        //projectid = 1;
+        //mode = "TC";
+        var formData = new FormData();
+        if (mode == "TC") {
+            for (var key in filedata2) {
+                formData.append(key, filedata2[key]);
+            }
+        }
+        else if (mode == "PF") {
+            for (var key in filedata) {
+                formData.append(key, filedata[key]);
+            }
+        }
+        else if (mode == "ISF") {
+            for (var key in filedata3) {
+                formData.append(key, filedata3[key]);
+            }
+        }
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/UploadFile/Upload';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'UploadFile/Upload';
+        }
+        url1 += "?projectid=" + projectid + "&mode=" + mode;
+        $.ajax({
+            type: "POST",
+            url: url1,
+            data: formData,
+            //async:false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                // alert('success!!');
+            },
+            error: function (error) {
+                //alert("errror");
+            }
+        });
+    }
+</script>
+    @*-------------------------------------Script Added By Subhabrata Mondal 9_11_2015-----------------------------------------------*@
+<link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.10.10/api/fnFilterClear.js"></script>
+<script type="text/javascript">
+
+    var vendorco = new Array();
+    var vendorcocount = 0;
+    $(document).ready(function () {
+        var ddlVendorClassification;
+        var urltemp = '';
+
+        bindVendorClassification();
+        getVenderDetails();
+
+        $('.b-close').click(function () {
+            var table = $('#vendorlist').dataTable();
+            table.fnFilterClear();
+            $("#Ddl_Vendor_Clftion").multiselect("uncheckAll");
+
+
+
+        });
+
+
+
+    });
+
+    function checkPrevCheckVendor(Vendor_ID) {
+
+        if (vendorcocount != 0) {
+            for (i = 0; i < vendorcocount; i++) {
+                if (vendorco[i] == Vendor_ID) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else {
+            return false;
+        }
+    }
+
+    function getVenderDetails() {
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Project/getVendors';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+
+            urltemp = 'Project/getVendors';
+        }
+        var totdata;
+        var vendors = new Array();
+        $.get(urltemp)
+
+            .success(function (response) {
+                totdata = JSON.parse(response);
+                totdata = totdata.data;
+
+                for (i = 0; i < totdata.length ; i++) {
+                    vendors[i] = new Array();
+                    var id = totdata[i].Vendor_ID;
+
+                    if (checkPrevCheckVendor(totdata[i].Vendor_ID))
+
+                        vendors[i][0] = '<input type="checkbox" name="vendor" value="' + totdata[i].Vendor_ID + '" data-index="' + totdata[i].Vendor_ID + '" class="chkVendor" onclick=addVendor(this); checked="true">';
+                    else
+                        vendors[i][0] = '<input type="checkbox" name="vendor" value="' + totdata[i].Vendor_ID + '" data-index="' + totdata[i].Vendor_ID + '" class="chkVendor" onclick=addVendor(this);>';
+
+                    vendors[i][1] = totdata[i].ParentVendorName;
+                    vendors[i][2] = totdata[i].ContactFirstname + ' ' + totdata[i].ContactLastname;
+                    vendors[i][3] = deletespaces(totdata[i].Classifications);
+                    vendors[i][4] = totdata[i].Currency;
+                    vendors[i][5] = totdata[i].City;
+                    vendors[i][6] = totdata[i].State;
+                    vendors[i][7] = totdata[i].CurrCode;
+                }
+
+                //$('#vendorlist').not("tr:first").remove();
+
+                $('#vendorlist').dataTable({
+                    "data": vendors,
+                    "paging": true,
+                    "columns": [
+                        { "title": "Actions" },
+                        { "title": "Vendor" },
+                        { "title": "Contact Name" },
+                        { "title": "Vendor Category" },
+                        { "title": "Currency" },
+                        { "title": "City" },
+                        { "title": "State/Prov" },
+                        { "title": "Currcode", "class": "displaynone" }
+
+
+                    ],
+                    //"lengthMenu": [[ 10, 50, -1], [ 10, 50, "All"]],
+                    "initComplete": function () {
+
+                        //var ddl = "<select><option>1</option><option>2</option></select>";
+                        var html = "";
+                        html = "<tr>"
+                            + "<th><span onclick='resetsrch();' style='cursor:pointer;'><i class='fa fa-undo'></i></span></th>"
+                            + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='1' placeholder='Search Vendor'></th>"
+                            + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='2' placeholder='Search Contact Name'></th>"
+                            //+ "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='3' placeholder='Search Vendor Category'></th>"
+                            + "<th rowspan='1' colspan='1'>" + ddlVendorClassification + "</th>"
+                            + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='4' placeholder='Search Currency'></th>"
+                            + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='5' placeholder='Search City'></th>"
+                            + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='6' placeholder='Search State/Prov'></th>";
+                        $('#vendorlist thead').append(html);
+
+
+                        $("#Ddl_Vendor_Clftion").multiselect().multiselectfilter();
+
+                        $("#Ddl_Vendor_Clftion").multiselect({
+                            close: function () {
+                                var clsearch = $('#Ddl_Vendor_Clftion').val();
+                                if (clsearch == null)
+                                    clsearch = '';
+                                var srchtxt = '';
+                                var tmp = clsearch;
+
+                                for (var i = 0; i < tmp.length; i++) {
+                                    var id = tmp[i];
+                                    for (var a = 0; a < classarray.length ; a++) {
+                                        if (classarray[a].classid == id) {
+                                            if (srchtxt == '') {
+                                                srchtxt += deletespaces(classarray[a].classname);
+                                            }
+                                            else {
+                                                srchtxt += '|' + deletespaces(classarray[a].classname);
+                                            }
+                                        }
+                                    }
+                                }
+                                var table = $('#vendorlist').DataTable();
+                                table.column(3).search(srchtxt, true).draw();
+
+                            }
+                        });
+                        var table = $('#vendorlist').DataTable();
+                        // table.column(2).search("fname|ff", true).draw();
+                        $('.srch').on('keyup change', function () {
+                            var indx = $(this).attr('data-indx');
+                            var txt = this.value;
+                            table
+                                   .column(indx)
+                                   .search(txt)
+                                   .draw();
+                            //RowHtmlRender();
+                        });
+                        $('#vendorlist_filter').remove();
+                        $('#vendorlist_length').remove();
+                    },
+                    "pagingType": "full_numbers",
+                    "aoColumnDefs": [
+                        { 'bSortable': false, 'aTargets': [0] }
+                    ]
+                });
+
+
+            });
+
+    }
+
+
+
+
+    function bindVendorClassification() {
+        var urltemp = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Project/getClassification';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            urltemp = 'Project/getClassification';
+        }
+        $.ajax({
+            type: "POST",
+            url: urltemp,
+            async: false,
+            data: {},
+            success: function (data) {
+
+                ddlVendorClassification = "<select id='Ddl_Vendor_Clftion' multiple='multiple'>"
+                data = JSON.parse(data);
+                ////console.log(data);
+
+                classarray = data.data;
+
+                for (var a = 0; a < classarray.length ; a++) {
+
+                    //ddlfrcllsfictn += "<opiton>" + 'test' + "</option>";
+                    ddlVendorClassification += "<option text='" + classarray[a].classname + "' value='" + classarray[a].classid + "'>" + deletespaces(classarray[a].classname) + "</option>";
+                }
+
+                ddlVendorClassification += "</select>";
+                //alert(ddlfrcllsfictn);
+
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+    }
+
+    function deletespaces(str) {
+        var newstr = '';
+        for (var i = 0; i < str.length; i++) {
+            if (str[i] != ' ') {
+                newstr += str[i];
+            }
+        }
+        return newstr;
+
+    }
+
+    function addVendor(obj) {
+
+        if ($(obj).is(":checked")) {
+
+            vendorco[vendorcocount] = $(obj).val();
+
+            vendorcocount++;
+        }
+        else {
+            for (i = 0; i < vendorcocount; i++) {
+                if (vendorco[i] == $(obj).val()) {
+                    vendorco[i] = "-1";
+                }
+            }
+        }
+
+
+    }
+
+    function saveVendorCODetails(mode, project_code) {
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Project/SaveVendorCODetails';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+
+            urltemp = 'Project/SaveVendorCODetails';
+        }
+        //alert(mode);
+        if (mode == "SaveProjectDetail") {
+            $.ajax({
+                type: "POST",
+                url: urltemp,
+                async: false,
+                data: { 'vedor_details': JSON.stringify(vendorco), 'project_id': project_code },
+                success: function (data) {
+
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+    }
+</script>
+
+<script>
+
+    $(document).ready(function () {
+
+        GetInvoiceAddressData();
+    });
+
+    function GetInvoiceAddressData() {
+        var url = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/SystemAdmin/SelectInvoiceAddress';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'SystemAdmin/SelectInvoiceAddress';
+        }
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {},
+            success: function (data) {
+                if (data != "") {
+                    var InvoiceAddress = data.split('^')[0];
+                    $('#txt_InvAddr').val(InvoiceAddress);
+
+                    var CountryID = data.split('^')[1];
+                    $('#Ddl_InvCountry').val(CountryID);
+                    GetCtryIDForProject($('#Ddl_InvCountry'));
+
+                    var StateID = data.split('^')[3];
+                    $('#Ddl_InvState').val(StateID);
+
+
+                    var City = data.split('^')[5];
+                    $('#txt_InvCity').val(City);
+
+                    var PostalCode = data.split('^')[6];
+                    $('#txt_InvZipCode').val(PostalCode);
+
+                }
+
+
+            }  // function block is closed
+        });
+
+    }
+
+    function setdates(val, obj) {
+        var dt = $(obj).val();
+
+        //console.log(dt);
+        return;
+    }
+</script>
+
+@*-------------------------------------Script End By Subhabrata Mondal 9_11_2015-----------------------------------------------*@
+
+    
+
+</html>

@@ -1,0 +1,3626 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Purchase Order</title>
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+    @*<script src="~/Scripts/editor_plugin.js"></script>*@
+    <script src="~/Scripts/tinymce/js/tinymce/plugins/textcolor/plugin.min.js"></script>
+
+    <script src="~/Scripts/jquery.DB_PROC.js"></script>
+
+
+    <script src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
+    <style>
+        table.fixedHeader-floating {
+            top: 43px !important;
+            position: fixed !important;
+            background-color: white;
+        }
+
+            table.fixedHeader-floating.no-footer {
+                border-bottom-width: 0;
+            }
+
+        table.fixedHeader-locked {
+            position: absolute !important;
+            background-color: white;
+        }
+
+
+        .leftaligned {
+            text-align: left;
+        }
+
+        .widercolumn {
+            width: 110px !important;
+        }
+
+        table.dataTable thead th, table.dataTable thead td {
+            padding: 2px !important;
+        }
+
+        .checked {
+            cursor: pointer;
+            font-size: 0.9em !important;
+            border: 5px solid #0a4e02;
+            border-radius: 16px;
+            height: 22px;
+            width: 22px;
+            text-align: center;
+            background: #0a4e02;
+            color: white;
+            padding: 1px;
+        }
+
+        .ui-multiselect span {
+            width: 80% !important;
+            white-space: nowrap;
+            /*font-weight: normal;*/
+            font-size: 13px;
+        }
+
+            .ui-multiselect span.ui-icon {
+                width: 15px !important;
+                display: block;
+            }
+
+        .ui-multiselect {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-direction: row-reverse;
+            overflow: hidden;
+        }
+    </style>
+
+    <style>
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        #popupforvendorlist .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 6px 0px;
+            width: 96%;
+            height: 20px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+
+        .nav-tabs > li > a {
+            background-color: rgba(238, 238, 238, 0.43);
+            border-color: #eee #eee #ddd;
+            text-transform: uppercase;
+        }
+
+            .nav-tabs > li > a:hover {
+                background-color: #ddd;
+            }
+    </style>
+
+    <style>
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+
+        label {
+            color: #333333;
+            font-weight: 500;
+            margin-bottom: 1px;
+        }
+
+        .section-header {
+            padding: 2px 4px;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .nav > li > a {
+            position: relative !important;
+            display: block !important;
+            padding: 4px 15px !important;
+        }
+
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+            color: rgb(246, 251, 252) !important;
+            cursor: default;
+            background-color: #7792a8;
+            border: 1px solid #ddd;
+            border-bottom-color: transparent;
+            color: #7792a8;
+            font-size: 16.5px;
+        }
+
+        .remove {
+            /*width: 450px;*/
+            border: 1px solid #060506;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            display: block;
+            padding: 1px;
+            text-decoration: none;
+            background: #526779;
+            color: #E2E2E2;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-family: helvetica;
+            font-size: 13px;
+            position: relative;
+        }
+
+            .remove a {
+                /*cursor: pointer;
+                position: absolute;
+                top: -2px;
+                right: -2px;
+                font-size: 1.2em;
+                color:white;
+                background: black;
+                border-radius:100px;
+                padding: 3px;*/
+                cursor: pointer;
+                position: absolute;
+                top: -5px;
+                right: -6px;
+                font-size: 0.9em;
+                color: white;
+                background: black;
+                border-radius: 100px;
+                padding: 7px;
+                line-height: 9px;
+            }
+    </style>
+
+
+    <script type="text/javascript">
+
+        var selectedpoids = new Array();
+        var selectedponumber = new Array();
+
+
+
+        var selectedpoidsvendor = new Array();
+        var selectedemailvendor = new Array();
+
+        var selectedpoidsatt = new Array();
+        var selectedponumberatt = new Array();
+
+        function bindSection(project_id) {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Reports/getAllProjectSectionByProjectID';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Reports/getAllProjectSectionByProjectID';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'projectid': '" + project_id + "'}",
+                success: function (data) {
+                    var sections = JSON.parse(data);
+                    var total_section = sections.data.length;
+                    if (count > 0) {
+                        count++;
+                    }
+                    else if (count == 0) {
+                        count++;
+                    }
+                    var html = '';
+                    for (i = 0; i < total_section; i++) {
+                        var option = '<option value="' + sections.data[i].id + '" data-id="' + sections.data[i].id + '">' + sections.data[i].Sectionnumber + '-' + sections.data[i].sectionname + '</option>';
+                        html += option;
+                    }
+                    $(".txt_Section").html(html);
+                    ////console.log(html);
+                    $(".txt_Section").multiselect(
+                        {
+                            click: function (e) {
+                            },
+                            maxTextWrapSize: 40
+                        }
+                        ).multiselectfilter();
+                    $(".txt_Section").multiselect("refresh");
+                    var width = '100%';
+                    $('.ui-multiselect').css('width', width);
+                    $('.ui-multiselect-menu').css('width', '39.5%');
+                    $('.ui-state-default').css('color', '#C31001');
+                    $('.ui-multiselect').css('height', '34px');
+                    $('.ui-multiselect').css('margin-top', '50px');
+                },
+                error: function () {
+                    notify('Something went wrong.');
+                }
+            });
+        }
+
+
+        function sendmailtovendor(obj) {
+
+            var mailbody = escape(tinyMCE.get('vendormailbody').getContent());
+            var mailto = $('#vendormailto').val();
+            var contactids = $(obj).attr('data-vendorid');
+            var mailsubject = $('#vendormailsubject').val();
+
+            if (mailto.trim() == "") {
+                notify("Add recipient");
+                return;
+            }
+
+            if (mailbody.trim() == "") {
+                notify("Add Body");
+                return;
+            }
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Home/VendorMailSend';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Home/VendorMailSend';
+            }
+            var mailtonew = '';
+
+            var conspoid = '';
+            var poids = $(obj).attr('data-poid');
+
+            var vendormail = $('#vendormailto').attr('data-emails');
+
+            for (var a = 0; a < mailto.split(',').length; a++) {
+                var mailtonew = '';
+                var poidnew = '';
+                var poall = '';
+
+                poids = $(obj).attr('data-vendorid').split('%%')[a].split('$')[1];
+                conspoid = poids;
+
+                var rm = $(obj).attr('data-vendorid').split('%%')[a].split('$')[0];
+                poall = replaceAll(poids, '^', ',');
+
+                mailtonew = mailto.split(',')[a].trim();
+                var addcc = $('#sendaddcc').is(':checked') ? "1" : "0";
+                
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    data: "{ \"mailto\" : \"" + mailtonew + "\",\"mailsubject\" : \"" + mailsubject + "\",\"mailbody\": \"" + mailbody
+                        + "\",\"poid\":\"" + poall + "\",\"Project_ID\" : \"" + "" + "\",\"realmail\" : \"" + rm
+                        + "\",\"addcc\" : \"" + addcc + "\"}",
+                    async: false,
+                    dataType: 'text',
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+
+
+
+                    },
+                    error: function (error) {
+
+                        $('#sendmailtovendor').modal('show');
+                    }
+                });
+
+                notify("Mail sent to " + mailto, 'green');
+             //   continue;
+
+                //refreshtask();
+                var url2 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url2 = '/Home/markPOAsVendorSent';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url2 = 'Home/markPOAsVendorSent';
+                }
+
+                var poid = $(obj).attr('data-vendorid');
+                //console.log(conspoid);
+                
+                $.ajax({
+                    type: "POST",
+                    url: url2,
+                    data: "{ \"POID\" : \"" + conspoid + "\"}",
+
+                    dataType: 'text',
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        window.setTimeout(function () { $('#sendmailtovendor').modal('hide'); getVal(); }, 2000);
+                        $('.fa-paper-plane').removeClass('checked');
+                        selectedpoidsvendor = [];
+                        selectedemailvendor = [];
+                        $('#btn_sendbatchvendor').hide();
+                        conspoid = '';
+                    },
+                    error: function (error) {
+
+
+                    }
+                });
+
+
+
+            }
+
+
+
+            // sendmailtovendorForSingle();
+        }
+
+
+        function openpopupformailtovendor(obj) {
+
+            var poids = '';
+            var emails = $(obj).attr('data-email');
+            var poid = $(obj).attr('data-poid').split('#')[0];
+
+            $(obj).toggleClass('checked');
+            var ischecked = $(obj).hasClass('checked');
+
+            if (ischecked) {
+                selectedpoidsvendor.push(poid);
+                selectedemailvendor.push(emails.toLowerCase());
+            }
+            else {
+                var index = selectedpoidsvendor.indexOf(poid);
+
+                if (index > -1) {
+                    selectedpoidsvendor.splice(index, 1);
+                }
+
+                index = selectedemailvendor.indexOf(emails);
+
+                if (index > -1) {
+                    selectedemailvendor.splice(index, 1);
+                }
+
+
+
+            }
+
+
+            if (selectedpoidsvendor.length > 0) {
+                $('#btn_sendbatchvendor').show();
+                $('#btn_sendbatchvendor').find('.badge').html(selectedpoidsvendor.length);
+            }
+            else {
+                $('#btn_sendbatchvendor').hide();
+
+            }
+
+
+        }
+
+        function sendtovendorsbatch() {
+            //console.log(selectedpoidsvendor)
+            //console.log(selectedemailvendor)
+
+            var poids = '';
+            var emails = '';
+            //var poid = $(obj).attr('data-poid').split('#')[0];
+
+            var uniquemails = [];
+            $.each(selectedemailvendor, function (i, el) {
+                if ($.inArray(el, uniquemails) === -1) uniquemails.push(el);
+            });
+
+            uniquemails.sort();
+
+
+            emails = '';
+            for (var a = 0; a < uniquemails.length; a++) {
+                emails += emails == '' ? uniquemails[a] : '^' + uniquemails[a];
+            }
+
+            $('#vendormailto').attr('data-emails', emails);
+
+
+
+            var poids = '';
+            for (var a = 0; a < selectedpoidsvendor.length; a++) {
+                poids += poids == '' ? selectedpoidsvendor[a] : '^' + selectedpoidsvendor[a];
+            }
+
+
+            var url111 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url111 = '/PurchaseOrder/GetVendorIdFromMail';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url111 = 'PurchaseOrder/GetVendorIdFromMail';
+            }
+            $.ajax({
+                type: "POST",
+                url: url111,
+                data: "{ \"mailids\" : \"" + poids + "\"}",
+                async: false,
+                dataType: 'text',
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    $('#mailsendvendorbtn').attr('data-vendorid', response);
+                    $('#mailsendvendorbtn').attr('data-poid', "");
+                },
+                error: function (error) {
+                    //alert("errror");
+                }
+            });
+
+
+
+
+
+
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Home/VendorMailBuildMulti';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Home/VendorMailBuildMulti';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                data: "{ \"poid\" : \"" + '' + "\"}",
+                async: false,
+                dataType: 'text',
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    $('#vendormailto').val(emails.replace(/\^/g, ', '));
+                    $(window).scrollTop(0);
+                    $('#vendormailsubject').val(response.split('$#^%*!&~')[2]);
+
+                    response = unescape(response.split('$#^%*!&~')[0]);
+
+                    var editor = tinymce.get('vendormailbody');
+                    $('#sendmailtovendor').modal('show');
+                    if (editor == null) {
+                        tinymce.init({
+                            selector: "#vendormailbody",
+                            plugins: "textcolor",
+                            toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent| forecolor backcolor"
+                            , menubar: false
+                            , height: "300px"
+                            , init_instance_callback: function () { tinyMCE.get('vendormailbody').setContent(response); }
+                        });
+                    }
+                    else {
+                        var content = editor.getContent();
+                        editor.setContent(response);
+                    }
+
+                    // tinyMCE.get('vendormail').setContent(data);
+                },
+                error: function (error) {
+                    //alert("errror");
+                }
+            });
+
+
+
+        }
+
+        function sendselectedforbatchapproval() {
+
+            var poids = selectedpoids.toString() + '';
+            //console.log(poids);
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/sendforbatchapproval';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/sendforbatchapproval';
+            }
+            var c = confirm("Do you want to send the approvers a notification email? OK for yes, cancel for no.");
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: { 'poids': poids, 'mailsend': c },
+                success: function (data) {
+
+                    irrrrr = 0;
+                    var str = '';
+                    for (var a = 0; a < data.split(',').length; a++) {
+                        str += str == '' ? ' ' + data.split(',')[a].split('^')[1] : ',' + ' ' + data.split(',')[a].split('^')[1];
+                    }
+
+                    if (c) {
+                        notify("PO sent for approval. Mail sent to " + str, 'green');
+                    }
+                    else {
+                        notify("PO sent for approval. ", 'green');
+                    }
+                    window.setTimeout(function () {
+
+
+                        $('.fa-share-square').removeClass('checked');
+                        selectedpoids = [];
+
+                        selectedponumber = [];
+
+                        $('#btn_sendbatchapproval').hide();
+
+                        $('#pobatchapprovalpopup').modal('hide');
+
+                        window.location.reload();
+
+                    }, 4000);
+
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+
+        }
+        function deletepoforbatch(obj) {
+            var poid = $(obj).parent().attr('data-id');
+
+            var index = selectedpoids.indexOf(poid);
+
+            if (index > -1) {
+                selectedpoids.splice(index, 1);
+                selectedponumber.splice(index, 1);
+            }
+
+            if (selectedpoids.length > 0) {
+                $('#btn_sendbatchapproval').show();
+                $('#btn_sendbatchapproval').find('.badge').html(selectedpoids.length);
+            }
+            else {
+                $('#btn_sendbatchapproval').hide();
+
+            }
+
+
+
+            $('#batchchk_' + poid).removeClass('checked');
+            $(obj).parent().remove();
+
+
+        }
+
+        function sendforapprovalbatch() {
+            //console.log(selectedpoids);
+            //console.log(selectedponumber);
+            $('#pobatchapprovalpopup').modal('show');
+            var html = '';
+            for (var a = 0; a < selectedpoids.length; a++) {
+
+
+
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/PurchaseOrder/getpodetailsforapproval';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'PurchaseOrder/getpodetailsforapproval';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    data: { 'poid': selectedpoids[a] },
+                    success: function (data) {
+                        html += data;
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+
+
+
+
+
+
+
+            }
+
+            $('#batchselectorfinal').html(html);
+        }
+
+        function checkuncheckapproval(obj) {
+
+            $(obj).toggleClass('checked');
+
+            var poid = $(obj).attr('data-poid');
+            var ponumber = $(obj).attr('data-ponumber');
+            var ischecked = $(obj).hasClass('checked');
+
+            var iscommit = $(obj).attr('data-id');
+
+            //if (iscommit == '0' && ischecked) {
+            //    var c = confirm("This is an uncommitted PO. This will be commited automatically before sending for approval. Do you still want to select this?");
+            //    if (!c) {
+            //        return;
+            //    }
+            //}
+            if (ischecked) {
+
+                selectedpoids.push(poid);
+                selectedponumber.push(ponumber);
+            }
+            else {
+                var index = selectedpoids.indexOf(poid);
+
+                if (index > -1) {
+                    selectedpoids.splice(index, 1);
+                }
+
+                index = selectedponumber.indexOf(ponumber);
+
+                if (index > -1) {
+                    selectedponumber.splice(index, 1);
+                }
+
+
+
+            }
+
+
+            if (selectedpoids.length > 0) {
+                $('#btn_sendbatchapproval').show();
+                $('#btn_sendbatchapproval').find('.badge').html(selectedpoids.length);
+            }
+            else {
+                $('#btn_sendbatchapproval').hide();
+
+            }
+
+        }
+
+        function checkuncheckatt(obj, poid, ponumber) {
+
+            $(obj).toggleClass('checked');
+
+            //var poid = $(obj).attr('data-poid');
+            //var ponumber = $(obj).attr('data-ponumber');
+            var ischecked = $(obj).hasClass('checked');
+
+
+            if (ischecked) {
+
+                selectedpoidsatt.push(poid);
+                selectedponumberatt.push(ponumber);
+            }
+            else {
+                var index = selectedpoidsatt.indexOf(poid);
+
+                if (index > -1) {
+                    selectedpoidsatt.splice(index, 1);
+                }
+
+                index = selectedponumberatt.indexOf(ponumber);
+
+                if (index > -1) {
+                    selectedponumberatt.splice(index, 1);
+                }
+
+
+
+            }
+
+
+            if (selectedpoidsatt.length > 0) {
+                $('#btn_sendbatchatt').show();
+                $('#btn_sendbatchatt').find('.badge').html(selectedpoidsatt.length);
+            }
+            else {
+                $('#btn_sendbatchatt').hide();
+
+            }
+
+        }
+
+        function opendownloadpospopup() {
+
+            var html = '';
+
+            for (var a = 0; a < selectedpoidsatt.length; a++) {
+
+                if (html != "") { html += "<br />"; }
+
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/PurchaseOrder/getpodetailsfordownload';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'PurchaseOrder/getpodetailsfordownload';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    data: { 'poid': selectedpoidsatt[a] },
+                    success: function (data) {
+                        html += data;
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+
+                //html += "<input data-poid='" + selectedpoidsatt[a] + "' type='checkbox' class='downloadablepopdfs mrg5L mrg5R' style='margin-top:1px;' />"
+                //    + "<span>" + selectedponumberatt[a].split('-')[0] + "-" + selectedponumberatt[a].split('-')[2] + "</span>";//data.files[0].name;
+
+
+
+            }
+
+
+            $('#popdfstodownload').html(html);
+
+
+
+            var poid = '';
+            for (var a = 0; a < selectedpoidsatt.length; a++) {
+                poid += poid == '' ? selectedpoidsatt[a] : '^' + selectedpoidsatt[a];
+            }
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/getFilesForDownload';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/getFilesForDownload';
+            }
+
+            var dataTable = "";
+            var dt = "";
+            var us = new Array();
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: "{ 'poids': '" + poid + "' }",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+
+                    //data = JSON.parse(data);
+                    data = data.data;
+
+                    var baseurl = '';
+
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        baseurl = '../../Assets/';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        baseurl = 'Assets/';
+                    }
+                    html = '';
+
+
+                    var urlw = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        urlw = '/PurchaseOrder/checkterms';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        urlw = 'PurchaseOrder/checkterms';
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: urlw,
+                        async: false,
+                        data: "{ 'poids': '" + poid + "' }",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "JSON",
+                        success: function (data) {
+
+                            data = data.data;
+                            //      html = '<div class="col-sm-12">'
+                            //    + '<label>'
+                            //        + '<input type="checkbox" class="mrg5R" style="margin-left:1px;" checked style="margin-top:1px;" id="includetermsfordownload" />'
+                            //        + 'Terms & Conditions'
+                            //   + '</label>'
+                            //+ '</div>';
+
+                            var baseurl2 = '';
+
+                            if (LOCALORSERVERNEW == 'LOCAL') {
+                                baseurl2 = '../../Assets/';
+                            }
+                            else if (LOCALORSERVERNEW == 'SERVER') {
+                                baseurl2 = 'Assets/';
+                            }
+
+                            for (var a = 0 ; a < data.length ; a++) {
+
+                                var filename = data[a].FileName;
+                                var FileNameshow = data[a].FileNameshow;
+                                var ProjectID = data[a].ProjectID;
+
+                                if (html != "") { html += "<br />"; }
+                                var isvalid = doesFileExist(baseurl2 + "TermsConditionFiles/" + filename);
+                                if (isvalid) {
+                                    html += "<input checked data-projectid='" + ProjectID + "' data-filename='" + filename + "' type='checkbox' class='downloadabletermsfile mrg5L mrg5R' style='margin-top:1px;' />" + "<a target='_blank' href ='" + baseurl2 + "TermsConditionFiles/" + filename + "' title='Download this file'>" + FileNameshow + "</a>";//data.files[0].name;
+                                }
+                                else {
+                                    html += "<input checked data-projectid='" + ProjectID + "' data-filename='" + filename + "' type='checkbox' class='downloadabletermsfile mrg5L mrg5R' style='margin-top:1px;' />" + "<a target='_blank' href ='" + baseurl2 + "SystemTermsFiles/" + filename + "' title='Download this file'>" + FileNameshow + "</a>";//data.files[0].name;
+                                }
+                            }
+
+
+
+
+
+
+                        }
+                    });
+
+
+
+
+
+
+
+
+                    for (var a = 0 ; a < data.length ; a++) {
+
+
+
+
+
+                        var filename = data[a].FileName;
+                        if (html != "") { html += "<br />"; }
+                        html += "<input data-filename='" + filename + "' type='checkbox' class='downloadablepoattachments mrg5L mrg5R' style='margin-top:1px;' />" + "<a target='_blank' href ='" + baseurl + "ProjectFiles/" + filename + "' title='Download this file'>" + filename + "</a>";//data.files[0].name;
+
+
+                    }
+
+                    if (html == "") {
+                        html = "There are no files selected for download";
+                    }
+
+                    $('#poattachmentstodownload').html(html);
+
+                }
+            });
+
+
+            $('#checkuncheckallpdfs').prop('checked', true);
+            $('#checkuncheckallattachments').prop('checked', true);
+            checkuncheckallpdfs($('#checkuncheckallpdfs'));
+            checkuncheckallattachments($('#checkuncheckallattachments'));
+
+
+            $('#forpodownload').modal('show');
+
+        }
+        ///Added by avi from Esolz at 13-04-2020
+        function doesFileExist(urlToFile) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('HEAD', urlToFile, false);
+            xhr.send();
+
+            if (xhr.status == "404") {
+                console.log("File doesn't exist");
+                return false;
+            } else {
+                console.log("File exists");
+                return true;
+            }
+        }
+
+        /// End function
+
+        function unselectpos(obj) {
+            selectedpoidsatt = [];
+            selectedponumberatt = [];
+            $('#btn_sendbatchatt').hide();
+            $('.fa-download').removeClass('checked');
+            $('#forpodownload').modal('hide');
+
+        }
+        function downloadfilesfinal(obj) {
+
+            var tmp1 = 0;
+            var tmp2 = 0;
+
+            $('.downloadablepoattachments').each(function () {
+
+                if ($(this).is(':checked')) {
+                    tmp1++;
+                }
+            });
+
+            $('.downloadablepopdfs').each(function () {
+
+                if ($(this).is(':checked')) {
+                    tmp2++;
+                }
+            });
+
+
+            if (tmp1 == 0 && tmp2 == 0 && !$('#includetermsfordownload').is(':checked')) {
+                notify("There are no files selected for download");
+
+                return;
+            }
+
+
+
+
+            $(obj).html('Please wait' + '<i class="fa fa-spinner fa-spin mrg10L" aria-hidden="true"></i>');
+            $(obj).removeAttr('onclick');
+
+
+            notify("Generating/Creating Zip file", 'YELLOW-LOAD');
+
+            setTimeout(function () {
+
+                var attachments = '';
+                $('.downloadablepoattachments').each(function () {
+                    if ($(this).is(':checked')) {
+                        var filename = $(this).attr('data-filename');
+                        attachments += attachments == "" ? filename : "^" + filename;
+                    }
+
+                });
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/inserttofolder';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/inserttofolder';
+                }
+
+                var dataTable = "";
+                var dt = "";
+                var us = new Array();
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    async: false,
+                    data: "{ 'attachments': '" + attachments + "' }",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "JSON",
+                    success: function (data) {
+
+                        //data = JSON.parse(data);
+
+
+                    }
+                });
+
+
+
+                var projectid = '';
+                $('.downloadabletermsfile').each(function () {
+                    if ($(this).is(':checked')) {
+                        projectid += projectid == '' ? $(this).attr('data-projectid') : '^' + $(this).attr('data-projectid');
+                    }
+                });
+
+
+
+                var urls = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    urls = '/PurchaseOrder/insertterms';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    urls = 'PurchaseOrder/insertterms';
+                }
+
+
+
+                $.ajax({
+                    type: "POST",
+                    url: urls,
+                    async: false,
+                    data: "{ 'poids': '" + projectid + "' }",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "JSON",
+                    success: function (data) {
+
+                    }
+                });
+
+
+
+
+
+
+
+
+
+
+                var showImageFlag = '0';// $('#includetermsfordownload').is(':checked');
+
+                if (showImageFlag) {
+                    showImageFlag = 1;
+                }
+                else {
+                    showImageFlag = 0;
+                }
+
+                $('.downloadablepopdfs').each(function () {
+
+                    if ($(this).is(':checked')) {
+                        var poid = $(this).attr('data-poid');
+                        var obj = $(this);
+
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = '/Reports/PurchaseOrderReportGenerationNew';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'Reports/PurchaseOrderReportGenerationNew';
+                        }
+
+
+                        var dataTable = "";
+                        var dt = "";
+                        var us = new Array();
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            async: false,
+                            data: "{ 'ProjectID': '','SectionID' : '','PurchaseOrder' :'" + poid + "','showImageFlag' : '" + '0' + "'}",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "JSON",
+                            success: function (data) {
+
+                                //data = JSON.parse(data);
+
+
+                            }
+                        });
+
+
+
+                    }
+
+
+                });
+
+
+
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/generatezipfolder';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/generatezipfolder';
+                }
+
+
+                var dataTable = "";
+                var dt = "";
+                var us = new Array();
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    async: false,
+                    data: "{}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "text",
+                    success: function (data) {
+
+                        var urldownload = '';
+
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            urldownload = '/Assets/';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            urldownload = 'Assets/';
+                        }
+                        notify("Zip file created", "green");
+
+                        $(obj).html('DOWNLOAD SELECTED FILES');
+                        $(obj).attr('onclick', 'downloadfilesfinal(this);');
+
+                        $('#forpodownload').modal('hide');
+
+                        selectedpoidsatt = [];
+                        selectedponumberatt = [];
+
+                        $('#btn_sendbatchatt').hide();
+                        $('.fa-download').removeClass('checked');
+
+                        setTimeout(function () {
+                            window.open(urldownload + data);
+                        }, 2000);
+
+                    }
+                });
+
+
+            }, 500);
+
+
+
+        }
+
+
+        function checkuncheckallpdfs(obj) {
+
+            if ($(obj).is(':checked')) {
+                $('.downloadablepopdfs').each(function () {
+                    $(this).prop('checked', true);
+                });
+            }
+            else {
+                $('.downloadablepopdfs').each(function () {
+                    $(this).prop('checked', false);
+                });
+            }
+
+        }
+
+
+
+
+
+
+        function checkuncheckallattachments(obj) {
+
+            if ($(obj).is(':checked')) {
+                $('.downloadablepoattachments').each(function () {
+                    $(this).prop('checked', true);
+                });
+
+                $('.downloadabletermsfile').each(function () {
+                    $(this).prop('checked', true);
+                });
+
+
+            }
+            else {
+                $('.downloadablepoattachments').each(function () {
+                    $(this).prop('checked', false);
+                });
+
+                $('.downloadabletermsfile').each(function () {
+                    $(this).prop('checked', false);
+                });
+
+
+            }
+
+        }
+
+
+
+        function getValForNew() {
+            $('#UnCommittedPODetail thead').html('');
+            var table1 = $('#UnCommittedPODetail').DataTable();
+            table1.clear().draw();
+            var poid = $('#prev_poid').val();
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/getAllPONew_PO';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/getAllPONew_PO';
+            }
+            var dataTable = "";
+            var dt = "";
+            var us = new Array();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'POID': '" + poid + "' }",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+                    if (data != '') {
+                        dt = data.data;
+                        if (dt.length == 0) {
+                            return;
+                        }
+                        $('#UnCommittedPODetail').dataTable().fnDestroy();
+                        if (dt.length > 0) {
+                            for (i = 0; i < dt.length ; i++) {
+                                us[i] = new Array();
+                                var flag_confirmed = 0;
+                                if ($('#hdn_usertype').val() == '6') {
+                                    //var url1 = '';
+                                    //if (LOCALORSERVERNEW == 'LOCAL') {
+                                    //    url1 = '/PurchaseOrder/checkisconfirmed';
+                                    //}
+                                    //else if (LOCALORSERVERNEW == 'SERVER') {
+                                    //    url1 = 'PurchaseOrder/checkisconfirmed';
+                                    //}
+                                    //$.ajax({
+                                    //    type: "POST",
+                                    //    url: url1,
+                                    //    async: false,
+                                    //    data: { 'POID': dt[i].PurchaseOrderID },
+                                    //    success: function (data) {
+                                    //        flag_confirmed = data;
+                                    //    },
+                                    //    error: function () { notify('Something went wrong'); }
+                                    //});
+                                    if (dt[i].IsConfirmed == '0' && dt[i].IsVendorSent == '1') {
+                                        flag_confirmed = 0;
+                                    }
+                                    else {
+                                        flag_confirmed = 1;
+                                    }
+
+                                }
+                                var poeditable = '';
+
+                                if ($('#hdn_usertype').val() != '6') {
+                                    if ($('#poeditpermission').val() == "1") {
+                                        us[i][0] = '<i class="fa fa-history"style="font-size: 1.5em;cursor:pointer;" onclick="ViewPurchaseOrderHistory(\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                            //+ '<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;margin-left:5px;" onclick="editpurchaseOrder(\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                            + '<i class="fa fa-trash-o fa-fw" style="font-size: 1.3em;cursor:pointer;" onclick="deletepurchaseOrder(\'' + dt[i].PurchaseOrderID + '\');"></i>';
+                                        poeditable = '<a href="javascript:void(0)" onclick="editpurchaseOrder(\'' + PurchaseOrderID + '\');">'
+                                        + PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2] + '</a>';
+
+                                    }
+                                    else {
+                                        us[i][0] = '<i class="fa fa-download mrg10R" style="cursor:pointer;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                        + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>';
+                                        poeditable = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+                                    }
+                                }
+                                else {
+                                    if (flag_confirmed == "0") {
+                                        us[i][0] = '<i class="fa fa-download mrg10R" style="cursor:pointer;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                        + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                        '<i class="fa fa-pencil-square" style="cursor:pointer;" title="Confirm/Reject PO" onclick="RejectApprovePO(\'' + dt[i].PurchaseOrderID + '\');"></i>';
+                                        poeditable = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+
+                                    }
+                                    else {
+                                        us[i][0] = '<i class="fa fa-download mrg10R" style="cursor:pointer;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                        + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>';
+                                        poeditable = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+
+                                    }
+                                }
+                                var pcstaff = dt[i].PCStaff;
+                                us[i][1] = dt[i].PurchaseOrderID;
+                                us[i][2] = dt[i].ProjectNumber;
+                                us[i][3] = dt[i].VendorName;
+                                us[i][4] = dt[i].BuyerName;
+                                us[i][5] = dt[i].ArrivalDate == '1900.01.01' ? '-' : dt[i].ArrivalDate;
+                                us[i][6] = dt[i].CheckBackDate == '1900.01.01' ? '-' : dt[i].CheckBackDate;
+                                us[i][7] = dt[i].IsCommited;
+                                us[i][8] = us[i][8] = dt[i].IsApproved == 0 ? "NO" : "YES";
+                            }
+                            $('#UnCommittedPODetail').dataTable({
+                                fixedHeader: true,
+                                "processing": true,
+                                "data": us,
+                                "columns":
+                                  [
+                                    { "title": "Action", "class": "widercolumn,leftaligned" },
+                                    { "title": "PO Number", "class": "leftposition" },
+                                    { "title": "Project", "class": "leftposition" },
+                                    { "title": "Vendor Common", "class": "leftposition" },
+                                    { "title": "Buyer", "class": "leftposition" },
+                                    { "title": "Arrival Date", "class": "leftposition" },
+                                    { "title": "CheckBack Date", "class": "leftposition" },
+                                    { "title": "Commit", "class": "leftposition" },
+                                    { "title": "Approved", "class": "leftposition" },
+                                  { "title": "Status", "class": "leftposition" }
+                                  ],
+                                "order": [1, "asc"],
+                                "initComplete": function () {
+                                    $('#UnCommittedPODetail thead').find('tr:eq(0)').find('th:eq(0)').removeClass('sorting_asc');
+                                },
+                                "aoColumnDefs": [
+      { 'bSortable': false, 'aTargets': [0] }
+                                ]
+                            });
+                            var html = "";
+                            html = "<tr>"
+                                  + "<th class='Resetth' rowspan='1' colspan='1'>"
+                                  + "<a><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px;width:110px;' /></a>"
+                                  + "</th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='3' type='text'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='4' type='text'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='5' type='text'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='6' type='text'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='7' type='text'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='8' type='text'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='9' type='text'></th>"
+                                  + "</tr>";
+                            $('#UnCommittedPODetail thead').append(html);
+                            var table = $('#UnCommittedPODetail').DataTable();
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+                                table
+                                       .column(indx)
+                                       .search(txt)
+                                       .draw();
+                                //RowHtmlRendernew();
+                            });
+                        }
+                        else {
+                            var table = $('#UnCommittedPODetail').DataTable();
+                            table.clear().draw();
+                        }
+                        $('#UnCommittedPODetail').show();
+                    }
+                    else {
+                        alert('Wrong');
+                    }
+                }
+            });
+        }
+        $(document).ready(function () {
+            debugger;
+            $('#master_content').removeClass('displaynone');
+            if ($('#hdn_usertype').val() != '3' && $('#hdn_usertype').val() != '2') {
+                $('#btn_NvgtToDeletedPO').remove();
+            }
+
+            var table = $('#UnCommittedPODetail').DataTable();
+            table.clear().draw();
+            var poid = $('#prev_poid').val();
+            //console.log("&&&&&*****");
+            //console.log(poid);
+
+            // $('#txtPurchaseOrder').val($('#prev_poid').val());
+            console.log(poid);
+            if (poid != "") {
+
+                // $("#btnSearchByPO").click();
+                getValforloading();
+                // getValForNew();
+            }
+        });
+        function ResetSearch() {
+            var table = $('#UnCommittedPODetail').DataTable();
+            $('.srch').each(function () {
+                this.value = '';
+                var indx = $(this).attr('data-indx');
+                var txt = this.value;
+                table
+                       .column(indx)
+                       .search(txt)
+                       .draw();
+            });
+        }
+
+
+        function getValforloading() {
+            debugger;
+            $('#UnCommittedPODetail thead').html('');
+            var table1 = $('#UnCommittedPODetail').DataTable();
+            table1.clear().draw();
+            var ProjectID = $('#prev_poid').val();
+            var txtItrmSpc = $('#txtItrmSpc').val();
+            var VendorID = '';
+            if ($('#hdn_VendorID').val() != '') {
+                //VendorID = $('#hdn_VendorID').val();
+                //$('#txt_Project').val(ProjectID);
+                //$("#txt_Project").multiselect('refresh');
+                //$('#txt_Project3').val(VendorID);
+                //$("#txt_Project3").multiselect('refresh');
+
+                getVal('load');
+                return;
+            }
+            var url = '';
+            if ($('#prev_poid').val() == '') {
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/getAllPONewloading';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/getAllPONewloading';
+                }
+            }
+            else {
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/getAllPONewloadingPO';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/getAllPONewloadingPO';
+                }
+            }
+            var dataTable = "";
+            var dt = "";
+            var us = new Array();
+            notify("Loading PO(s). Please wait...", "YELLOW-LOAD");
+            setTimeout(function () {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: "{ 'ProjectID': '" + ProjectID + "', 'VendorName': '" + VendorID + "','ItemSpc':'" + '' + "' }",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "JSON",
+                    success: function (data) {
+                        console.log("*******************");
+                        console.log(data);
+                        if (data != '') {
+                            dt = data.data;
+                            if (dt.length == 0) {
+                                return;
+                            }
+                            $('#UnCommittedPODetail').dataTable().fnDestroy();
+                            if (dt.length > 0) {
+
+                                if ($('#hdn_usertype').val() == '4' || $('#hdn_usertype').val() == '5') {
+                                    var newdt = new Array();
+                                    var ind = 0;
+                                    for (i = 0; i < dt.length ; i++) {
+                                        if (dt[i].IsSentForApproval != 0 || dt[i].IsCommited != "N" || dt[i].IsApproved != 0) {
+                                            newdt.push(dt[i]);
+                                        }
+                                    }
+
+                                    //console.log(newdt);
+                                    dt = newdt;
+
+
+                                }
+
+
+
+
+                                for (i = 0; i < dt.length ; i++) {
+                                    var PurchaseOrderID = dt[i].PurchaseOrderID.split('#')[0];
+                                    var PurchaseOrderIDShow = dt[i].PurchaseOrderID.split('#')[1];
+                                    us[i] = new Array();
+                                    var flag_confirmed = 0;
+                                    if ($('#hdn_usertype').val() == '6') {
+                                        //var url1 = '';
+                                        //if (LOCALORSERVERNEW == 'LOCAL') {
+                                        //    url1 = '/PurchaseOrder/checkisconfirmed';
+                                        //}
+                                        //else if (LOCALORSERVERNEW == 'SERVER') {
+                                        //    url1 = 'PurchaseOrder/checkisconfirmed';
+                                        //}
+                                        //$.ajax({
+                                        //    type: "POST",
+                                        //    url: url1,
+                                        //    async: false,
+                                        //    data: { 'POID': PurchaseOrderID },
+                                        //    success: function (data) {
+                                        //        flag_confirmed = data;
+                                        //    },
+                                        //    error: function () { notify('Something went wrong'); }
+                                        //});
+
+                                        if (dt[i].IsConfirmed == '0' && dt[i].IsVendorSent == '1') {
+                                            flag_confirmed = 0;
+                                        }
+                                        else {
+                                            flag_confirmed = 1;
+                                        }
+
+                                    }
+                                    var poeditable = '';
+                                    if ($('#hdn_usertype').val() != '6') {
+                                        //console.log("HHHIIIIIIIIII");
+
+
+                                        if ($('#poeditpermission').val() == "1") {
+                                            us[i][0] = '<i title="View Purchase Order History" class="forstaff fa fa-history"style="font-size: 1.25em;cursor:pointer;" onclick="ViewPurchaseOrderHistory(\'' + PurchaseOrderID + '\');"></i>'
+                                               // + '<i title="Edit Purchase Order" class="fa fa-pencil-square-o" style="font-size: 1.4em;cursor:pointer;margin-left:5px;" onclick="editpurchaseOrder(\'' + PurchaseOrderID + '\');"></i>'
+                                                + '<i title="Delete Purchase Order" class="forstaff fa fa-trash-o fa-fw" style="font-size: 1.4em;cursor:pointer;" onclick="deletepurchaseOrder(\'' + PurchaseOrderID + '\');"></i>'
+                                                + '<i class="fa fa-download" id="dwnload_' + PurchaseOrderID + '"  style="cursor:pointer;font-size: 1.2em;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                                + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                            + '<i class="fa displaynone mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View Attachment" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>';//<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+                                            poeditable = '<a href="javascript:void(0)" onclick="editpurchaseOrder(\'' + PurchaseOrderID + '\');">'
+                                             + PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2] + '</a>';
+
+                                        }
+                                        else {
+                                            us[i][0] = '<i title="View Purchase Order History" class="forstaff fa fa-history mrg10R" style="font-size: 1.25em;cursor:pointer;" onclick="ViewPurchaseOrderHistory(\'' + PurchaseOrderID + '\');"></i>'
+                                             + '<i class="fa fa-download " style="font-size: 1.2em;cursor:pointer;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                             + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                              + '<i class="fa displaynone mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View Attachment" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>';//<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+                                            poeditable = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+
+                                        }
+                                    }
+                                    else {
+                                        if (flag_confirmed == 0) {
+                                            var vendoraccept = '';
+                                            if (dt[i].IsVendorCO != "1") {
+                                                vendoraccept = '<i class="fa fa-check mrg5L" style="cursor:pointer;font-size: 1.2em;" title="Accept/Reject PO" onclick="RejectApprovePO(\'' + dt[i].PurchaseOrderID + '\');"></i>';
+                                            }
+
+                                            us[i][0] = '<i class="fa fa-download" id="dwnload_' + PurchaseOrderID + '"  style="cursor:pointer;font-size: 1.2em;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                            + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                               + vendoraccept
+                                            + '<i class="fa displaynone mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View Attachment" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>';//<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+                                            poeditable = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+
+
+                                        }
+                                        else {
+                                            us[i][0] = '<i class="fa fa-download" id="dwnload_' + PurchaseOrderID + '"  style="cursor:pointer;font-size: 1.2em;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                                + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                              + '<i class="fa displaynone mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>';//<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+                                            poeditable = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+
+                                        }
+                                    }
+                                    var pcstaff = dt[i].PCStaff;
+                                    if (dt[i].Permission == 'Y' && dt[i].IsApproved == 1 && dt[i].IsConfirmed != 1) {
+                                        us[i][0] += '<i onclick="openpopupformailtovendor(this);" data-email="' + dt[i].VendorEmail + '" id="batchmailvendor_' + PurchaseOrderID + '" class="fa fa-paper-plane mrg5L" style="cursor:pointer;font-size: 1.2em;" title="Send Mail to ' + dt[i].VendorEmail + '" data-poid="' + dt[i].PurchaseOrderID + '"></i>';
+
+                                    }
+                                    //console.log(dt[i]);
+                                    var issent = '';
+                                    if (dt[i].IsApproved == "0") {
+                                        if (dt[i].IsSentForApproval == "1") {
+                                            issent = "*";
+                                        }
+                                    }
+
+
+                                    var isaccepted = '';
+                                    if (dt[i].IsVendorSent == "1") {
+                                        if (dt[i].IsConfirmed == "0") {
+                                            isaccepted = "*";
+                                        }
+                                    }
+
+
+                                    us[i][1] = poeditable;
+                                    us[i][2] = dt[i].ProjectNumber;
+                                    us[i][3] = dt[i].VendorName;
+
+
+                                    us[i][4] = dt[i].Remarks;
+                                    us[i][5] = dt[i].BuyerName;
+                                    us[i][6] = dt[i].ArrivalDate == '1900.01.01' ? '-' : dt[i].ArrivalDate;
+                                    us[i][7] = dt[i].CheckBackDate == '1900.01.01' ? '-' : dt[i].CheckBackDate;
+                                    us[i][8] = dt[i].IsCommited;
+                                    us[i][9] = us[i][9] = dt[i].IsApproved == 0 ? "N" : "Y";
+                                    us[i][9] += issent;
+                                    us[i][10] = dt[i].IsConfirmed == 0 ? "N" : "Y";
+                                    us[i][10] += isaccepted;
+                                    if (dt[i].InvoiceStatus == "Full")
+                                        us[i][11] = "F";
+                                    else if (dt[i].InvoiceStatus == "Partial")
+                                        us[i][11] = "P";
+                                    else
+                                        us[i][11] = "-";
+                                    if (dt[i].IsVendorCO == "1") {
+                                        us[i][10] = "";
+                                    }
+
+                                }
+                                $('#UnCommittedPODetail').dataTable({
+                                    "processing": true,
+                                    fixedHeader: true,
+                                    "data": us,
+                                    //"autoWidth": false,
+                                    "columns":
+                                      [
+                                        { "title": "Action", "class": "leftaligned" },
+                                        { "title": "PO Number", "class": "leftposition" },
+                                        { "title": "Project", "class": "leftposition" },
+                                        { "title": "Vendor Common", "class": "leftposition" },
+                                        { "title": "Remarks", "class": "leftposition" },
+                                        { "title": "Buyer", "class": "leftposition" },
+                                        { "title": "Arrival Date", "class": "leftposition" },
+                                        { "title": "CheckBack Date", "class": "leftposition notforvendors" },
+                                        { "title": "Commit", "class": "leftposition notforvendors" },
+                                        { "title": "Approved", "class": "leftposition notforvendors" }
+                                       , { "title": "Accepted", "class": "leftposition notforvendors" }
+                                       , { "title": "Status", "class": "leftposition notforvendors" }
+
+                                      ],
+                                    "order": [1, "asc"],
+                                    "initComplete": function () {
+                                        $('#UnCommittedPODetail thead').find('tr:eq(0)').find('th:eq(0)').removeClass('sorting_asc');
+
+                                        if ($('#hdn_usertype').val() == '6') {
+
+                                            $('.notforvendors').hide();
+                                        }
+                                        else {
+                                            $('.notforvendors').show();
+                                        }
+
+                                        if ($('#hdn_usertype').val() != "3" && $('#hdn_usertype').val() != "2" && $('#hdn_usertype').val() != "1" && $('#hdn_usertype').val() != "4") {
+                                            $('.forstaff').remove();
+                                        }
+
+
+                                    },
+                                    "aoColumnDefs": [
+                                        { 'bSortable': false, 'aTargets': [0] }
+                                    ]
+                                });
+                                var html = "";
+                                html = "<tr>"
+                                      + "<th style='width:15%;' class='Resetth'>"
+                                      + "<a><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px; width:100%;;' /></a>"
+                                      + "</th>"
+                                      + "<th style='width:9%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text' tabindex=5></th>"
+                                      + "<th style='width:23%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text' tabindex=6></th>"
+                                      + "<th style='width:20%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='3' type='text'  tabindex=7></th>"
+                                      + "<th style='width:15%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='4' type='text'  tabindex=7></th>"
+                                      + "<th style='width:16%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='5' type='text' tabindex=8></th>"
+                                      + "<th style='width:8%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='6' type='text' tabindex=9></th>"
+                                      + "<th style='width:8%;' class='notforvendors'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='7' type='text' tabindex=10></th>"
+                                      + "<th style='width:3%;' class='notforvendors'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='8' type='text' tabindex=11></th>"
+                                      + "<th style='width:3%;' class='notforvendors'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='9' type='text' tabindex=11></th>"
+                                      + "<th style='width:3%;' class='notforvendors'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='10' type='text' tabindex=11></th>"
+                                      + "<th style='width:3%;' class='notforvendors'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='11' type='text' tabindex=11></th>"
+                                      + "</tr>";
+
+                                if ($('#UnCommittedPODetail thead tr').length > 1) {
+                                    var i = 0;
+                                    $('#UnCommittedPODetail thead tr').each(function () {
+                                        if (i != 0) {
+                                            $(this).remove();
+                                        }
+                                        i++;
+                                    });
+                                }
+
+
+                                $('#UnCommittedPODetail thead').append(html);
+
+                                if ($('#hdn_usertype').val() == '6') {
+
+                                    $('.notforvendors').hide();
+                                }
+                                else {
+                                    $('.notforvendors').show();
+                                }
+
+                                var table = $('#UnCommittedPODetail').DataTable();
+                                $('.srch').on('keyup change', function () {
+                                    var indx = $(this).attr('data-indx');
+                                    var txt = this.value;
+                                    table.column(indx)
+                                           .search(txt)
+                                           .draw();
+                                });
+                            }
+                            else {
+                                var table = $('#UnCommittedPODetail').DataTable();
+                                table.clear().draw();
+                            }
+                            $('#UnCommittedPODetail').show();
+                        }
+                        else {
+                            alert('Wrong');
+                        }
+                    }
+                });
+            }, 200);
+        }
+
+        function getUrlVars() {
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        function getVal(st) {
+            debugger;
+            $('#UnCommittedPODetail thead').html('');
+            var table1 = $('#UnCommittedPODetail').DataTable();
+            table1.clear().draw();
+            var ProjectID = $('#txt_Project').val();
+            var txtItrmSpc = $('#txtItrmSpc').val();
+            var VendorID = $('#txt_Project3').val();
+
+            var PONumber = $('#txtPurchaseOrder').val();
+            var Remarks = $('#remarks').val();
+            var SectionID = $("#ddlSections").val();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/getAllPONew';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/getAllPONew';
+            }
+            var dataTable = "";
+            var dt = "";
+            var us = new Array();
+            if ($('#hdn_VendorID').val() != '' && st == 'load') {
+                debugger;
+                //VendorID = $('#hdn_VendorID').val();
+                //ProjectID = $('#prev_poid').val();
+
+                ProjectID = getUrlVars()["id"];
+                VendorID = getUrlVars()["VendorID"];
+                PONumber = '';
+                Remarks = '';
+                SectionID = '';
+            }
+            notify("Loading PO(s). Please wait...", "YELLOW-LOAD");
+            setTimeout(function () {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: "{ 'ProjectID': '" + ProjectID + "', 'VendorName': '" + VendorID + "','ItemSpc':'" + txtItrmSpc
+                        + "','PONumber' :'" + PONumber + "','Remarks':'" + Remarks + "', 'SectionID': '" + SectionID + "' }",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "JSON",
+                    async: false,
+                    success: function (data) {
+
+                        //console.log(data);
+                        if (data != '') {
+                            dt = data.data;
+                            if (dt.length == 0) {
+                                return;
+                            }
+                            $('#UnCommittedPODetail').dataTable().fnDestroy();
+                            if (dt.length > 0) {
+
+
+
+                                if ($('#hdn_usertype').val() == '4' || $('#hdn_usertype').val() == '5') {
+                                    var newdt = new Array();
+                                    var ind = 0;
+                                    for (i = 0; i < dt.length; i++) {
+                                        if (dt[i].IsSentForApproval != 0 || dt[i].IsCommited != "N" || dt[i].IsApproved != 0) {
+                                            newdt.push(dt[i]);
+                                        }
+                                    }
+
+                                    //console.log(newdt);
+                                    dt = newdt;
+
+
+                                }
+                                for (i = 0; i < dt.length; i++) {
+
+                                    //var conflag = true;
+                                    //if ($('#hdn_usertype').val() == '4') {
+                                    //    if (dt[i].IsSentForApproval == 0 && dt[i].IsCommited == "N" && dt[i].IsApproved == 0) {
+                                    //        conflag = false;
+                                    //    }
+                                    //}
+                                    //if (!conflag) {
+                                    //    continue;
+                                    //}
+
+                                    var PurchaseOrderID = dt[i].PurchaseOrderID.split('#')[0];
+                                    var PurchaseOrderIDShow = dt[i].PurchaseOrderID.split('#')[1];
+                                    us[i] = new Array();
+                                    var flag_confirmed = 0;
+                                    var sendforApprovalString = '';
+                                    var potempshow = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+
+                                    if (dt[i].ShowSendForApproval == "1") {
+                                        console.log(dt[i].TotalPOCOST + "   " + "TotalPOCOST");
+
+                                        if (dt[i].IsAllowSentForApproval == 1 && dt[i].TotalPOCOST > 0) {
+                                            if (dt[i].IsApproved == 0) {
+                                                if (dt[i].IsSentForApproval == 0) {
+
+                                                    if (dt[i].IsCommited == "Y") {
+
+                                                        //sendforApprovalString = '<i class="fa fa-share-square mrg5L" style="cursor:pointer;font-size: 1.2em;" title="Send for approval" onclick="sendforarroval( 1,' + PurchaseOrderID + ',this);"></i>';
+                                                        sendforApprovalString = '<i class="fa fa-share-square mrg5L" style="cursor:pointer;font-size: 1.2em;" title="Send for approval" id="batchchk_' + PurchaseOrderID + '" data-ponumber="' + potempshow + '" data-poid="' + PurchaseOrderID + '" data-id="1" onclick="checkuncheckapproval(this);"></i>';
+                                                        // sendforApprovalString = '<input class="mrg5L" id="batchchk_' + PurchaseOrderID + '" data-ponumber="' + potempshow + '" data-poid="' + PurchaseOrderID + '" data-id="1" onclick="checkuncheckapproval(this);" type="checkbox" />';
+
+                                                    }
+                                                    else {
+                                                        //sendforApprovalString = '<i class="fa fa-share-square mrg5L" style="cursor:pointer;font-size: 1.2em;" title="Send for approval" onclick="sendforarroval( 2,' + PurchaseOrderID + ',this);"></i>';
+                                                        sendforApprovalString = '<i class="fa fa-share-square mrg5L" style="cursor:pointer;font-size: 1.2em;" title="Send for approval" id="batchchk_' + PurchaseOrderID + '" data-ponumber="' + potempshow + '" data-poid="' + PurchaseOrderID + '" data-id="0" onclick="checkuncheckapproval(this);"></i>';
+
+                                                        //sendforApprovalString = '<input class="mrg5L"  id="batchchk_' + PurchaseOrderID + '" data-ponumber="' + potempshow + '"  data-poid="' + PurchaseOrderID + '"  data-id="0" onclick="checkuncheckapproval(this);" type="checkbox" />';
+
+
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if ($('#hdn_usertype').val() == '6') {
+                                        //var url1 = '';
+                                        //if (LOCALORSERVERNEW == 'LOCAL') {
+                                        //    url1 = 'http://www.thebridgebytcg.com/PurchaseOrder/checkisconfirmed';
+                                        //}
+                                        //else if (LOCALORSERVERNEW == 'SERVER') {
+                                        //    url1 = 'PurchaseOrder/checkisconfirmed';
+                                        //}
+                                        //$.ajax({
+                                        //    type: "POST",
+                                        //    url: url1,
+                                        //    async: false,
+                                        //    data: { 'POID': PurchaseOrderID },
+                                        //    success: function (data) {
+                                        //        flag_confirmed = data;
+                                        //    },
+                                        //    error: function () { notify('Something went wrong'); }
+                                        //});
+                                        if (dt[i].IsConfirmed == '0' && dt[i].IsVendorSent == '1') {
+                                            flag_confirmed = 0;
+                                        }
+                                        else {
+                                            flag_confirmed = 1;
+                                        }
+                                    }
+                                    var poeditable = "";
+
+                                    if ($('#hdn_usertype').val() != '6') {
+                                        if ($('#poeditpermission').val() == "1") {
+                                            us[i][0] = '<i title="View Purchase Order History" class="forstaff fa fa-history"style="font-size: 1.25em;cursor:pointer;" onclick="ViewPurchaseOrderHistory(\'' + PurchaseOrderID + '\');"></i>'
+                                                // + '<i title="Edit Purchase Order" class="fa fa-pencil-square-o" style="font-size: 1.4em;cursor:pointer;margin-left:5px;" onclick="editpurchaseOrder(\'' + PurchaseOrderID + '\');"></i>'
+                                                + '<i title="Delete Purchase Order" class="forstaff fa fa-trash-o fa-fw" style="font-size: 1.4em;cursor:pointer;" onclick="deletepurchaseOrder(\'' + PurchaseOrderID + '\');"></i>'
+                                                + '<i class="fa fa-download" id="dwnload_' + PurchaseOrderID + '"  style="cursor:pointer;font-size: 1.2em;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                                + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                                + '<i class="fa displaynone mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View Attachment" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                                + sendforApprovalString;
+
+                                            poeditable = '<a href="javascript:void(0)" onclick="editpurchaseOrder(\'' + PurchaseOrderID + '\');">'
+                                                + PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2] + '</a>';
+                                            //<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+                                        }
+                                        else {
+                                            //change this lile 26-02-2019 Author Gudu Singh 
+                                            //us[i][0] = '<i title="View Purchase Order History" class="forstaff fa fa-history mrg10R" style="font-size: 1.25em;cursor:pointer;" onclick="ViewPurchaseOrderHistory(\'' + PurchaseOrderID + '\');"></i>'
+                                            us[i][0] = '<i class="fa fa-download " style="font-size: 1.2em;cursor:pointer;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                                + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                                + '<i class="fa displaynone mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View Attachment" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                                + sendforApprovalString;
+
+                                            poeditable = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+
+
+                                            //<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+
+                                        }
+                                    }
+                                    else {
+                                        if (flag_confirmed == 0) {
+                                            var vendoraccept = '';
+                                            if (dt[i].IsVendorCO != "1") {
+                                                vendoraccept = '<i class="fa fa-check mrg5L" style="cursor:pointer;font-size: 1.2em;" title="Accept/Reject PO" onclick="RejectApprovePO(\'' + dt[i].PurchaseOrderID + '\');"></i>';
+                                            }
+
+                                            us[i][0] = '<i class="fa fa-download" id="dwnload_' + PurchaseOrderID + '"  style="cursor:pointer;font-size: 1.2em;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                                + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                                + vendoraccept
+                                                + '<i class="fa displaynone mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View Attachment" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>' +
+                                                sendforApprovalString;
+                                            poeditable = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+                                            //<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+
+                                        }
+                                        else {
+                                            us[i][0] = '<i class="fa fa-download" id="dwnload_' + PurchaseOrderID + '"  style="cursor:pointer;font-size: 1.2em;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                                + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                                + '<i class="fa displaynone mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View Attachment" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                                + sendforApprovalString;
+                                            poeditable = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+                                            ;//<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+
+                                        }
+                                    }
+                                    var pcstaff = dt[i].PCStaff;
+                                    if (dt[i].Permission == 'Y' && dt[i].IsApproved == 1 && dt[i].IsConfirmed != 1) {
+                                        us[i][0] += '<i onclick="openpopupformailtovendor(this);" data-email="' + dt[i].VendorEmail + '"  id="batchmailvendor_' + PurchaseOrderID + '" class="fa fa-paper-plane mrg5L" style="cursor:pointer;font-size: 1.2em;" title="Send Mail to ' + dt[i].VendorEmail + '" data-poid="' + dt[i].PurchaseOrderID + '"></i>';
+                                    }
+                                    //console.log(dt[i]);
+
+                                    var issent = '';
+                                    if (dt[i].IsApproved == "0") {
+                                        if (dt[i].IsSentForApproval == "1") {
+                                            issent = "*";
+                                        }
+                                    }
+
+
+                                    var isaccepted = '';
+                                    if (dt[i].IsVendorSent == "1") {
+                                        if (dt[i].IsConfirmed == "0") {
+                                            isaccepted = "*";
+                                        }
+                                    }
+
+
+                                    us[i][1] = poeditable;
+                                    us[i][2] = dt[i].ProjectNumber;
+                                    us[i][3] = dt[i].VendorName;
+                                    us[i][4] = dt[i].Remarks;
+
+
+                                    us[i][5] = dt[i].BuyerName;
+                                    us[i][6] = dt[i].ArrivalDate == '1900.01.01' ? '-' : dt[i].ArrivalDate;
+                                    us[i][7] = dt[i].CheckBackDate == '1900.01.01' ? '-' : dt[i].CheckBackDate;
+                                    //console.log(poeditable + ">>" + dt[i].IsCommited);
+                                    us[i][8] = dt[i].IsCommited;
+                                    us[i][9] = dt[i].IsApproved == 0 ? "N" : "Y";
+                                    us[i][9] += issent;
+                                    us[i][10] = dt[i].IsConfirmed == 0 ? "N" : "Y";
+                                    us[i][10] += isaccepted;
+                                    if (dt[i].InvoiceStatus != "-" && $('#hdn_usertype').val() != '6') {
+                                        us[i][11] = "<a href='../../Invoice/invoicesearch/" + PurchaseOrderID + "' target='_blank'>" + dt[i].InvoiceStatus + "</a>";
+                                    } else {
+                                        us[i][11] = dt[i].InvoiceStatus;
+                                    }
+
+                                    if (dt[i].IsVendorCO == "1") {
+                                        us[i][10] = '-';
+                                    }
+                                }
+                                $('#UnCommittedPODetail').dataTable({
+                                    "processing": true,
+                                    fixedHeader: true,
+                                    "data": us,
+                                    //"autoWidth": false,
+                                    "columns":
+                                        [
+                                            { "title": "Action", "class": "leftaligned" },
+                                            { "title": "PO Number", "class": "leftposition" },
+                                            { "title": "Project", "class": "leftposition" },
+                                            { "title": "Vendor Common", "class": "leftposition" },
+                                            { "title": "Remarks", "class": "leftposition" },
+                                            { "title": "Buyer", "class": "leftposition" },
+                                            { "title": "Arrival Date", "class": "leftposition" },
+                                            { "title": "CheckBack Date", "class": "leftposition notforvendors" },
+                                            { "title": "Commit", "class": "leftposition notforvendors" },
+                                            { "title": "Approved", "class": "leftposition notforvendors" },
+                                            { "title": "Accepted", "class": "leftposition" },
+                                            { "title": "Status", "class": "leftposition" }
+                                        ],
+                                    "order": [1, "asc"],
+                                    "initComplete": function () {
+                                        $('#UnCommittedPODetail thead').find('tr:eq(0)').find('th:eq(0)').removeClass('sorting_asc');
+
+                                        if ($('#hdn_usertype').val() == '6') {
+
+                                            $('.notforvendors').hide();
+                                        }
+                                        else {
+                                            $('.notforvendors').show();
+                                        }
+                                        if ($('#hdn_usertype').val() != "3" && $('#hdn_usertype').val() != "2" && $('#hdn_usertype').val() != "1" && $('#hdn_usertype').val() != "4") {
+                                            $('.forstaff').remove();
+                                        }
+                                    },
+                                    "aoColumnDefs": [
+                                        { 'bSortable': false, 'aTargets': [0] }
+                                    ]
+                                });
+                                var html = "";
+                                html = "<tr>"
+                                    + "<th style='width:15%;' class='Resetth'>"
+                                    + "<a><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px; width:100%;;' /></a>"
+                                    + "</th>"
+                                    + "<th style='width:9%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text' tabindex=5></th>"
+                                    + "<th style='width:23%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text' tabindex=6></th>"
+                                    + "<th style='width:20%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='3' type='text'  tabindex=7></th>"
+                                    + "<th style='width:15%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='4' type='text'  tabindex=7></th>"
+                                    + "<th style='width:16%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='5' type='text' tabindex=8></th>"
+                                    + "<th style='width:8%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='6' type='text' tabindex=9></th>"
+                                    + "<th style='width:8%;'  class='notforvendors'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='7' type='text' tabindex=10></th>"
+                                    + "<th style='width:3%;' class='notforvendors'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='8' type='text' tabindex=11></th>"
+                                    + "<th style='width:3%;' class='notforvendors'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='9' type='text' tabindex=11></th>"
+                                    + "<th style='width:3%;'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='10' type='text' tabindex=11></th>"
+                                    + "<th style='width:3%;'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='11' type='text' tabindex=11></th>"
+                                    + "</tr>";
+                                if ($('#UnCommittedPODetail thead tr').length > 1) {
+                                    var i = 0;
+                                    $('#UnCommittedPODetail thead tr').each(function () {
+                                        if (i != 0) {
+                                            $(this).remove();
+                                        }
+                                        i++;
+                                    });
+                                }
+                                $('#UnCommittedPODetail thead').append(html);
+
+                                if ($('#hdn_usertype').val() == '6') {
+
+                                    $('.notforvendors').hide();
+                                }
+                                else {
+                                    $('.notforvendors').show();
+                                }
+
+                                var table = $('#UnCommittedPODetail').DataTable();
+                                $('.srch').on('keyup change', function () {
+                                    var indx = $(this).attr('data-indx');
+                                    var txt = this.value;
+                                    table.column(indx)
+                                        .search(txt)
+                                        .draw();
+                                });
+                            }
+                            else {
+                                var table = $('#UnCommittedPODetail').DataTable();
+                                table.clear().draw();
+                            }
+                            $('#UnCommittedPODetail').show();
+                        }
+                        else {
+                            alert('Wrong');
+                        }
+                    }
+                });
+            }, 100);
+        }
+        function sendforarroval(option, poid, obj) {
+            var ponumber = $(obj).parent().parent().find('td:eq(1)').html();
+            if (option == '2') {
+                if (!confirm("This is an uncommited PO (" + ponumber + ")." + " Do you want commit it and send for approval?")) {
+                    return;
+                }
+            }
+
+
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/POCommitSend';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/POCommitSend';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: { 'poid': poid },
+                success: function (data) {
+                    irrrrr = 0;
+                    var str = '';
+                    for (var a = 0; a < data.split(',').length; a++) {
+                        str += str == '' ? ' ' + data.split(',')[a].split('^')[1] : ',' + ' ' + data.split(',')[a].split('^')[1];
+                    }
+
+                    notify("PO sent for approval. Mail sent to " + str, 'green');
+                    window.setTimeout(function () {
+                        window.location.reload();
+                    }, 4000);
+
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+
+        function getVal2() {
+            $('#UnCommittedPODetail thead').html('');
+            var table1 = $('#UnCommittedPODetail').DataTable();
+            table1.clear().draw();
+            var ProjectID = $('#txtPurchaseOrder').val();
+            var txtItrmSpc = $('#txtItrmSpc').val();
+            var VendorID = $('#txt_Project3').val();
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/getAllPONew2';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/getAllPONew2';
+            }
+            var dataTable = "";
+            var dt = "";
+            var us = new Array();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'ProjectID': '" + ProjectID + "', 'VendorName': '" + VendorID + "','ItemSpc':'" + txtItrmSpc + "' }",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+                    //console.log(data);
+                    if (data != '') {
+                        dt = data.data;
+                        if (dt.length == 0) {
+                            return;
+                        }
+                        $('#UnCommittedPODetail').dataTable().fnDestroy();
+                        if (dt.length > 0) {
+
+                            if ($('#hdn_usertype').val() == '4' || $('#hdn_usertype').val() == '5') {
+                                var newdt = new Array();
+                                var ind = 0;
+                                for (i = 0; i < dt.length ; i++) {
+                                    if (dt[i].IsSentForApproval != 0 || dt[i].IsCommited != "N" || dt[i].IsApproved != 0) {
+                                        newdt.push(dt[i]);
+                                    }
+                                }
+
+                                //console.log(newdt);
+                                dt = newdt;
+
+
+                            }
+
+
+
+
+
+                            for (i = 0; i < dt.length ; i++) {
+                                var PurchaseOrderID = dt[i].PurchaseOrderID.split('#')[0];
+                                var PurchaseOrderIDShow = dt[i].PurchaseOrderID.split('#')[1];
+                                us[i] = new Array();
+                                var flag_confirmed = 0;
+                                if ($('#hdn_usertype').val() == '6') {
+                                    //var url1 = '';
+                                    //if (LOCALORSERVERNEW == 'LOCAL') {
+                                    //    url1 = '/PurchaseOrder/checkisconfirmed';
+                                    //}
+                                    //else if (LOCALORSERVERNEW == 'SERVER') {
+                                    //    url1 = 'PurchaseOrder/checkisconfirmed';
+                                    //}
+                                    //$.ajax({
+                                    //    type: "POST",
+                                    //    url: url1,
+                                    //    async: false,
+                                    //    data: { 'POID': PurchaseOrderID },
+                                    //    success: function (data) {
+                                    //        flag_confirmed = data;
+                                    //    },
+                                    //    error: function () { notify('Something went wrong'); }
+                                    //});
+                                    if (dt[i].IsConfirmed == '0' && dt[i].IsVendorSent == '1') {
+                                        flag_confirmed = 0;
+                                    }
+                                    else {
+                                        flag_confirmed = 1;
+                                    }
+
+
+                                }
+                                var poeditable = '';
+                                if ($('#hdn_usertype').val() != '6') {
+                                    if ($('#poeditpermission').val() == "1") {
+                                        us[i][0] = '<i title="View Purchase Order History" class="forstaff fa fa-history"style="font-size: 1.25em;cursor:pointer;" onclick="ViewPurchaseOrderHistory(\'' + PurchaseOrderID + '\');"></i>'
+                                            //+ '<i title="Edit Purchase Order" class="fa fa-pencil-square-o" style="font-size: 1.4em;cursor:pointer;margin-left:5px;" onclick="editpurchaseOrder(\'' + PurchaseOrderID + '\');"></i>'
+                                            + '<i title="Delete Purchase Order" class="forstaff fa fa-trash-o fa-fw" style="font-size: 1.4em;cursor:pointer;" onclick="deletepurchaseOrder(\'' + PurchaseOrderID + '\');"></i>'
+                                            + '<i class="fa fa-download" id="dwnload_' + PurchaseOrderID + '"  style="cursor:pointer;font-size: 1.2em;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                            + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                        + '<i class="fa displaynone mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>';//<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+
+                                        poeditable = '<a href="javascript:void(0)" onclick="editpurchaseOrder(\'' + PurchaseOrderID + '\');">'
+                                         + PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2] + '</a>';
+
+                                    }
+                                    else {
+                                        us[i][0] = '<i title="View Purchase Order History" class="forstaff fa fa-history mrg10R" style="font-size: 1.25em;cursor:pointer;" onclick="ViewPurchaseOrderHistory(\'' + PurchaseOrderID + '\');"></i>'
+                                         + '<i class="fa fa-download " style="font-size: 1.2em;cursor:pointer;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                         + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                          + '<i class="fa displaynone mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>';//<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+                                        poeditable = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+
+                                    }
+                                }
+                                else {
+                                    if (flag_confirmed == 0) {
+                                        var vendoraccept = '';
+                                        if (dt[i].IsVendorCO != "1") {
+                                            vendoraccept = '<i class="fa fa-check mrg5L" style="cursor:pointer;font-size: 1.2em;" title="Accept/Reject PO" onclick="RejectApprovePO(\'' + dt[i].PurchaseOrderID + '\');"></i>';
+                                        }
+
+
+
+                                        us[i][0] = '<i class="fa fa-download" id="dwnload_' + PurchaseOrderID + '"  style="cursor:pointer;font-size: 1.2em;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                            + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                            + vendoraccept
+                                          + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>';//<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+                                        poeditable = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+
+                                    }
+                                    else {
+                                        us[i][0] = '<i class="fa fa-download" id="dwnload_' + PurchaseOrderID + '"  style="cursor:pointer;font-size: 1.2em;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                          + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>';//<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+                                        poeditable = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+
+                                    }
+                                }
+                                var pcstaff = dt[i].PCStaff;
+                                if (dt[i].Permission == 'Y' && dt[i].IsApproved == 1 && dt[i].IsConfirmed != 1) {
+                                    us[i][0] += '<i onclick="openpopupformailtovendor(this);" data-email="' + dt[i].VendorEmail + '"  id="batchmailvendor_' + PurchaseOrderID + '" class="fa fa-paper-plane mrg5L" style="cursor:pointer;font-size: 1.2em;" title="Send Mail to ' + dt[i].VendorEmail + '" data-poid="' + dt[i].PurchaseOrderID + '"></i>';
+                                }
+                                //console.log(dt[i]);
+                                var issent = '';
+                                if (dt[i].IsApproved == "0") {
+                                    if (dt[i].IsSentForApproval == "1") {
+                                        issent = "*";
+                                    }
+                                }
+
+
+                                var isaccepted = '';
+                                if (dt[i].IsVendorSent == "1") {
+                                    if (dt[i].IsConfirmed == "0") {
+                                        isaccepted = "*";
+                                    }
+                                }
+
+
+                                us[i][1] = poeditable;
+                                us[i][2] = dt[i].ProjectNumber;
+                                us[i][3] = dt[i].VendorName;
+                                us[i][4] = dt[i].BuyerName;
+                                us[i][5] = dt[i].ArrivalDate == '1900.01.01' ? '-' : dt[i].ArrivalDate;
+                                us[i][6] = dt[i].CheckBackDate == '1900.01.01' ? '-' : dt[i].CheckBackDate;
+                                us[i][7] = dt[i].IsCommited;
+                                us[i][8] = us[i][8] = dt[i].IsApproved == 0 ? "N" : "Y";
+                                us[i][8] += issent;
+                                us[i][9] = dt[i].IsConfirmed == 0 ? "N" : "Y";
+                                us[i][9] += isaccepted;
+                                if (dt[i].IsVendorCO == "1") {
+                                    us[i][9] = "";
+                                }
+
+
+
+                            }
+                            $('#UnCommittedPODetail').dataTable({
+                                "processing": true,
+                                fixedHeader: true,
+                                "data": us,
+                                //"autoWidth": false,
+                                "columns":
+                                  [
+                                    { "title": "Action", "class": "leftaligned" },
+                                    { "title": "PO Number", "class": "leftposition" },
+                                    { "title": "Project", "class": "leftposition" },
+                                    { "title": "Vendor Common", "class": "leftposition" },
+                                    { "title": "Buyer", "class": "leftposition" },
+                                    { "title": "Arrival Date", "class": "leftposition" },
+                                    { "title": "CheckBack Date", "class": "leftposition notforvendors" },
+                                    { "title": "Commit", "class": "leftposition notforvendors" },
+                                    { "title": "Approved", "class": "leftposition notforvendors" }
+                                    , { "title": "Accepted", "class": "leftposition" }
+                                    , { "title": "Status", "class": "leftposition" }
+
+                                  ],
+                                "order": [1, "asc"],
+                                "initComplete": function () {
+                                    $('#UnCommittedPODetail thead').find('tr:eq(0)').find('th:eq(0)').removeClass('sorting_asc');
+
+                                    if ($('#hdn_usertype').val() == '6') {
+
+                                        $('.notforvendors').hide();
+                                    }
+                                    else {
+                                        $('.notforvendors').show();
+                                    }
+
+                                    if ($('#hdn_usertype').val() != "3" && $('#hdn_usertype').val() != "2" && $('#hdn_usertype').val() != "1" && $('#hdn_usertype').val() != "4") {
+                                        $('.forstaff').remove();
+                                    }
+
+
+
+                                },
+                                "aoColumnDefs": [
+                                    { 'bSortable': false, 'aTargets': [0] }
+                                ]
+                            });
+                            var html = "";
+                            html = "<tr>"
+                                  + "<th style='width:10%;' class='Resetth'>"
+                                  + "<a><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px; width:100%;;' /></a>"
+                                  + "</th>"
+                                  + "<th style='width:9%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text' tabindex=5></th>"
+                                  + "<th style='width:23%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text' tabindex=6></th>"
+                                  + "<th style='width:20%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='3' type='text'  tabindex=7></th>"
+                                  + "<th style='width:16%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='4' type='text' tabindex=8></th>"
+                                  + "<th style='width:8%;'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='5' type='text' tabindex=9></th>"
+                                  + "<th style='width:8%;' class='notforvendors'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='6' type='text' tabindex=10></th>"
+                                  + "<th style='width:3%;' class='notforvendors'><input class='srch' style='width:100%;padding: 2px; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='7' type='text' tabindex=11></th>"
+                                  + "<th style='width:3%;' class='notforvendors'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='8' type='text' tabindex=11></th>"
+                                  + "<th style='width:3%;'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='9' type='text' tabindex=11></th>"
+                                  + "<th style='width:3%;'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='10' type='text' tabindex=11></th>"
+                                  + "</tr>";
+                            if ($('#UnCommittedPODetail thead tr').length > 1) {
+                                var i = 0;
+                                $('#UnCommittedPODetail thead tr').each(function () {
+                                    if (i != 0) {
+                                        $(this).remove();
+                                    }
+                                    i++;
+                                });
+                            }
+
+                            $('#UnCommittedPODetail thead').append(html);
+
+                            if ($('#hdn_usertype').val() == '6') {
+
+                                $('.notforvendors').hide();
+                            }
+                            else {
+                                $('.notforvendors').show();
+                            }
+
+                            var table = $('#UnCommittedPODetail').DataTable();
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+                                table.column(indx)
+                                       .search(txt)
+                                       .draw();
+                            });
+                        }
+                        else {
+                            var table = $('#UnCommittedPODetail').DataTable();
+                            table.clear().draw();
+                        }
+                        $('#UnCommittedPODetail').show();
+                    }
+                    else {
+                        alert('Wrong');
+                    }
+                }
+            });
+        }
+
+
+
+        function editpo(poid) {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/POlineitems/' + poid;
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/POlineitems/' + poid;
+            }
+            // alert(url);
+            window.location.href = url;
+        }
+        function editpurchaseOrder(poid) {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/POEdit/' + poid;
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = '/PurchaseOrder/POEdit/' + poid;
+            }
+            window.open(url);
+        }
+        function deletepurchaseOrder(poid) {
+
+            var obj = new Object();
+            //obj.curr = curr;
+            obj.POID = poid;
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_CheckInvExistece";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            if (o[0].Num > 0) {
+                notify("Cannot delete this PO because it has one or more invoices written against it");
+                return;
+            }
+
+
+
+            $("#dialog-confirm").html("Want to delete the Purchase Order ?");
+            // Define the Dialog and its properties.
+            $("#dialog-confirm").dialog({
+                resizable: false,
+                modal: true,
+                // title: "Modal",
+                height: 200,
+                width: 340,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog('close');
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = '/PurchaseOrder/DeletePO/' + poid;
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'PurchaseOrder/DeletePO/' + poid;
+                        }
+                        // alert(url);
+                        $.get(url).success(function (data) {
+                            if (data == 'SUCCESS') {
+                                getVal();
+                                //window.location.reload();
+                            }
+                        });
+                    },
+                    "No": function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+        }
+        function ViewPurchaseOrderHistory(poid) {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/ViewPOHistory/' + poid;
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/ViewPOHistory/' + poid;
+            }
+            // alert(url);
+            //window.location.href = url;
+            window.open(url);
+        }
+        function getValcheck(e) {
+            var k = e.which;
+            if (k == 13) {
+                getVal();
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function NvgtToDeletedPO() {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/DeletedPOLIST';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/DeletedPOLIST';
+            }
+            window.location.href = url1;
+        }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#txt_Project3").multiselect({ header: true }).multiselectfilter();
+            $("#ddlSections").multiselect({ header: true }).multiselectfilter();
+
+            $("#txt_Project").multiselect({
+                header: true
+            }).multiselectfilter();
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+        });
+    </script>
+</head>
+<body>
+    <input type="hidden" id="poeditpermission" />
+    <input type="hidden" id="prev_poid" value="@ViewData["poidprev"]" />
+    <input type="hidden" id="vendor_poid" value="@ViewData["POID"]" />
+    <input type="hidden" id="hdn_usertype" value="@ViewData["usertype"]" />
+    <input type="hidden" id="hdn_Status" value="@ViewData["Status"]" />
+    <input type="hidden" id="hdn_VendorID" value="@ViewData["VendorID"]" />
+    <input type="hidden" id="hdn_projectid" value="@ViewData["ProjectID"]" />
+    <div id="sendmailtovendor" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Send Mail</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid" style="zoom:0.95;">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label>To:</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="vendor@vendor.com" id="vendormailto" />
+                            </div>
+                        </div>
+                        <div class="row mrg10T">
+                            <div class="col-sm-3">
+                                <label>Subject:</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" value="Approved Purchase Order Reminder" id="vendormailsubject" />
+                            </div>
+                        </div>
+                        <div class="row mrg15T">
+                            <div class="col-sm-3">
+                                <label>Add Dynamic field :</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <select class="form-control" onchange="setdynamicfieldformail(this);">
+                                    <option value="1">Link to Home</option>
+                                    <option value="PROJECTNAME">Project Name</option>
+                                    <option value="PROJECTNUMBER">Project Number</option>
+                                    <option value="PONUMBER">PO Number</option>
+                                    <option value="VENDORNAME">Vendor Name</option>
+                                    <option value="CONTACTNAME">Contact Name</option>
+                                    <option value="USERNAME">User Name</option>
+                                    <option value="USERADDRESS">User Address</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mrg15T">
+                            <div class="col-sm-12">
+                                <textarea rows="20" class="form-control no-resize" id="vendormailbody"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <label for="sendaddcc" style="float:left;">Add self to CC</label>
+                    <input type="checkbox" style="float:left;" checked id="sendaddcc" />
+                    <button type="button" class="btn btn-default" onclick="sendmailtovendor(this);" id="mailsendvendorbtn">Send Mail</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid" id="angulardiv" ng-app="Project" ng-controller="PO">
+        <div class="row" style=" margin-top : -30px;">
+            <div class="col-sm-3 ">
+                <button style="height:25px;padding:2px;" class="btn btn-block btn-primary mrg10T" id="btn_NvgtToDeletedPO" onclick="NvgtToDeletedPO();"><i class="fa fa-list-ul mrg5R"></i>Show deleted PO</button>
+            </div>
+        </div>
+
+
+        <div class="row">
+
+            <div class="col-md-12 col-xs-12 mrg10T">
+                <div class="form-group">
+                    <h3 class="section-header">
+                        PURCHASE ORDER Search
+                    </h3>
+                </div>
+                <div class="form-group col-md-2 col-xs-12">
+                    <label>Purchase Order Number</label>
+                    <input type="text" id="txtPurchaseOrder" onkeyup="searchtriggertext(event);" placeholder="Enter Purchase Order" onkeyup="checkInput(this);" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-2 col-xs-12">
+                    <label>Project Number</label>
+                    <select id="txt_Project" multiple="multiple" class="form-control" onchange="projectddlchange();">
+                        @*<option value="0">--Select Project--</option>*@
+                        @Html.Raw(ViewData["getAllProjectNameNumber"])
+                    </select>
+                </div>
+                <div class="form-group col-md-2 col-xs-12">
+                    <label>Section</label>
+                    <select class="txt_Section form-control" id="ddlSections" multiple="multiple">
+                        @Html.Raw(ViewData["getSectionNameByPurchsOrdrID"])
+                    </select>
+                </div>
+                <div class="form-group col-md-2 col-xs-12">
+                    <label>Vendor</label>
+                    <select id="txt_Project3" multiple="multiple" class="form-control" >
+                        @*<option value="0">--Select Project--</option>*@
+                        @Html.Raw(ViewData["parentVendor"])
+                    </select>
+                </div>
+                <div class="form-group col-md-2 col-xs-12">
+                    <label>Item/Spec</label>
+                    <input type="text" id="txtItrmSpc" ng-model="PO.PO_No" class="form-control" placeholder="Enter Text" onkeyup="getValcheck(event);" />
+                </div>
+
+                <div class="form-group col-md-2 col-xs-12">
+                    <label>Remarks</label>
+                    <input type="text" id="remarks" ng-model="PO.Remarks" class="form-control" placeholder="Enter Text" />
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-2 col-xs-12">
+                <label></label>
+                <button class="btn btn-block btn-primary" onclick="getVal('click');" style="height:25px;padding:2px;"><i class="fa fa-search mrg5R"></i>Search</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <hr class="mrg10T" />
+
+            <div class="col-md-12">
+                <h3 class="section-header">
+                    Purchase Orders List
+                </h3>
+            </div>
+
+            <div class="col-sm-12">
+                <div style="width:100%; overflow-x:auto;">
+                    <table cellpadding="0" cellspacing="0" border="0" class="display" id="UnCommittedPODetail" style="text-align: center;">
+                        <thead>
+                            <tr>
+                                <th style="width:20%;">Action</th>
+                                <th style="width:13%;">PO Number</th>
+                                <th style="width:24%;">Project</th>
+
+                                <th style="width:20%;">Vendor Common</th>
+                                <th style="width:15%;">Remarks</th>
+                                <th style="width:16%;">Buyer</th>
+                                <th style="width:8%;">Arrival Date</th>
+                                <th style="width:8%;">CheckBack Date</th>
+                                <th style="width:3%;">Commit</th>
+                                <th style="width:3%;">Approved</th>
+                                <th style="width:3%;">Accepted</th>
+                                <th style="width:3%;">Invoice Status</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="dialog-confirm"></div>
+    </div>
+    <div id="forvendorpopup" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Accept/Decline PO</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @*<label>Comment</label>*@
+                            <input type="text" class="form-control displaynone" id="approverejectcomment" placeholder="Enter Comment" />
+                            <p style="font-weight: bold;">By accepting this Purchaseorder the vendor agrees to the Terms and Conditions and accepts all associated documents included.</p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="hdn_aprvrjctpoid" />
+                    <button type="button" class="btn btn-poms" onclick="approverejectsave('APPROVEPO');">Accept</button>
+                    <button type="button" class="btn btn-poms displaynone" onclick="approverejectsave('REJECTPO');">Decline</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div id="forpodownload" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="width:75%;">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">DOWNLOAD SELECTED FILES</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+
+
+                        <div class="col-sm-6">
+                            <h3 class="section-header"><input type="checkbox" style="float:left;" id="checkuncheckallpdfs" onchange="checkuncheckallpdfs(this);" />PURCHASE ORDER PDF(s)</h3>
+                            <div id="popdfstodownload" style="max-height:450px;overflow-y:auto">
+
+                            </div>
+
+
+
+                        </div>
+                        <div class="col-sm-6">
+                            <h3 class="section-header"><input type="checkbox" style="float:left;" id="checkuncheckallattachments" onchange="checkuncheckallattachments(this);" />ATTACHMENTS</h3>
+
+
+
+                            <div id="poattachmentstodownload" style="max-height:450px;overflow-y:auto">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-poms" onclick="unselectpos(this);">CANCEL AND REMOVE UNSELECTED</button>
+
+                    <button type="button" class="btn btn-poms" onclick="downloadfilesfinal(this);">DOWNLOAD SELECTED FILES</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div id="pobatchapprovalpopup" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">SEND PO FOR APPROVAL</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="batchselectorfinal"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="sendselectedforbatchapproval();">Send For Approval</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <script type="text/javascript">
+
+        function setdynamicfieldformail(obj) {
+            var vl = $(obj).val();
+
+            if (vl == '1') {
+                var poid = $('#poid').val();
+                var url = "THESERVERLINKBASEURL" + "<<\(" + "POID" + "\)>>";
+                tinymce.activeEditor.execCommand('mceInsertContent', true, "<a data-mce-href=\"" + url + "\" href=\"" + url + "\"><input type='button' style='border-radius: 4px;color: white;background: grey;cursor: pointer;' value='Go to Purchase Order' /></a>");
+            }
+            else if (vl != '0') {
+                insertTextAtCursor(vl);
+            }
+
+        }
+
+
+        function insertTextAtCursor(text) {
+            tinymce.activeEditor.execCommand('mceInsertContent', true, "<a><<\(" + text + "\)>></a>");
+        }
+
+
+        function projectddlchange() {
+            setProjectPreference($("#txt_Project"));
+            var project_id = $("#txt_Project").val();
+            console.log("working");
+            if (project_id == null) {
+                project_id = '';
+            }
+            if (project_id == '')
+                return;
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/getAllParentVendorsByProject';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/getAllParentVendorsByProject';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: true,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'ProjectID': '" + project_id + "'}",
+                success: function (data) {
+                    //return;
+                    var sections = JSON.parse(data);
+                    var total_section = sections.data.length;
+                    //$("#txt_Project3").multiselect('destroy');
+                    var html = '';
+                    for (i = 0; i < total_section; i++) {
+                        var option = '<option value="' + sections.data[i].ParentVendor_ID + '" data-id="' + sections.data[i].ParentVendor_ID + '">' + sections.data[i].VendorName + '</option>';
+                        html += option;
+                    }
+                    $("#txt_Project3").html(html);
+                    $("#txt_Project3").multiselect('refresh');//.multiselectfilter();
+                    var width = '100%';
+                    $('.ui-multiselect').css('width', width);
+                    //$('.ui-multiselect-menu').css('width', '39.5%');
+                    $('.ui-multiselect-menu').css('width', '39.5%');
+                    $('.ui-state-default').css('color', '#C31001');
+                    $('.ui-multiselect').css('height', '34px');
+                    $('.ui-multiselect').css('margin-top', '5px');
+                },
+                error: function () {
+                    notify('Something went wrong.');
+                }
+            });
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/getAllSectionsByProjectID';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/getAllSectionsByProjectID';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: true,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'projectID': '" + project_id + "'}",
+                success: function (data) {
+                    //return;
+                    console.log(data);
+                    var sections = JSON.parse(data);
+                    console.log(sections);
+                    var total_section = sections.data.length;
+                    //$("#txt_Project3").multiselect('destroy');
+                    var html = '';
+                    for (i = 0; i < total_section; i++) {
+                        var option = '<option value="' + sections.data[i].BudgetSectionID + '" data-id="' + sections.data[i].BudgetSectionID + '">' + sections.data[i].displayValue + '</option>';
+                        html += option;
+                    }
+                    $("#ddlSections").html(html);
+                    $("#ddlSections").multiselect('refresh');//.multiselectfilter();
+                    //var width = '100%';
+                    //$('.ui-multiselect').css('width', width);
+                    ////$('.ui-multiselect-menu').css('width', '39.5%');
+                    //$('.ui-multiselect-menu').css('width', '39.5%');
+                    //$('.ui-state-default').css('color', '#C31001');
+                    //$('.ui-multiselect').css('height', '34px');
+                    //$('.ui-multiselect').css('margin-top', '5px');
+                },
+                error: function () {
+                    notify('Something went wrong.');
+                }
+            });
+        }
+        $(document).ready(function () {
+            debugger;
+            $("#txt_Project").multiselect(
+        {
+            header: "Select all",
+            maxTextWrapSize: 50
+            //,close: projectddlchange()
+        }).multiselectfilter();
+
+            //getVal();
+            setTimeout(function () {
+                var projectid = $('#txt_Project').val();
+                if (projectid != undefined && projectid != '') {
+                    if ($('#prev_poid').val().trim() == "") {
+                        getVal();
+                    }
+                }
+            }, 100);
+
+
+            $("#btnSearchByPO").on("click", function () {
+
+                if ($("#txtPurchaseOrder").val() == '') {
+                    errorfunc('txtPurchaseOrder', 'Please Enter Purchase Order Number');
+                    return;
+                }
+                var tot = $("#txtPurchaseOrder").val();
+                var purchaseOrder = '';
+                var project = '';
+                if (tot.indexOf('-') === -1) {
+                    purchaseOrder = tot;
+                    project = '';
+                }
+                else {
+                    purchaseOrder = tot.split('-')[1];;
+                    project = tot.split('-')[0];
+                }
+                if (purchaseOrder == '' && project == '') {
+                    purchaseOrder = '0';
+                }
+                if (purchaseOrder == '' && project != '') {
+                    purchaseOrder = project;
+                    project = '';
+                }
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/getPurchaseOrderInfoByNumber';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/getPurchaseOrderInfoByNumber';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    async: false,
+                    dataType: "text",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ 'PurchaseOrder': '" + purchaseOrder + "','ProjectNumber' : '" + project + "'}",
+                    success: function (data) {
+                        if (data != '') {
+                            var dt = JSON.parse(data).data;
+                            if (dt.length == 0) {
+                                notify("No Data Found");
+                                var table = $('#UnCommittedPODetail').DataTable();
+                                table.clear().draw();
+                                // $('#UnCommittedPODetail').dataTable().clear().draw();
+                                //window.location.reload();
+                                return;
+                            }
+                            var us = new Array();
+                            //var table = $('#UnCommittedPODetail').DataTable();
+                            //table.clear().draw();
+                            $('#UnCommittedPODetail thead').find('tr:eq(0)').remove();
+                            $('#UnCommittedPODetail').dataTable().fnDestroy();
+                            if (dt.length > 0) {
+                                for (i = 0; i < dt.length ; i++) {
+                                    var PurchaseOrderID = dt[i].PurchaseOrderID.split('#')[0];
+                                    var PurchaseOrderIDShow = dt[i].PurchaseOrderID.split('#')[1];
+                                    us[i] = new Array();
+                                    var flag_confirmed = 0;
+                                    if ($('#hdn_usertype').val() == '6') {
+                                        //var url1 = '';
+                                        //if (LOCALORSERVERNEW == 'LOCAL') {
+                                        //    url1 = '/PurchaseOrder/checkisconfirmed';
+                                        //}
+                                        //else if (LOCALORSERVERNEW == 'SERVER') {
+                                        //    url1 = 'PurchaseOrder/checkisconfirmed';
+                                        //}
+                                        //$.ajax({
+                                        //    type: "POST",
+                                        //    url: url1,
+                                        //    async: false,
+                                        //    data: { 'POID': PurchaseOrderID },
+                                        //    success: function (data) {
+                                        //        flag_confirmed = data;
+                                        //    },
+                                        //    error: function () { notify('Something went wrong'); }
+                                        //});
+                                        if (dt[i].IsConfirmed == '0' && dt[i].IsVendorSent == '1') {
+                                            flag_confirmed = 0;
+                                        }
+                                        else {
+                                            flag_confirmed = 1;
+                                        }
+
+
+                                    }
+                                    var poeditable = '';
+
+                                    if ($('#hdn_usertype').val() != '6') {
+                                        if ($('#poeditpermission').val() == "1") {
+                                            us[i][0] = '<i title="View Purchase Order History" class="fa fa-history"style="font-size: 1.25em;cursor:pointer;" onclick="ViewPurchaseOrderHistory(\'' + PurchaseOrderID + '\');"></i>'
+                                                //+ '<i title="Edit Purchase Order" class="fa fa-pencil-square-o" style="font-size: 1.4em;cursor:pointer;margin-left:5px;" onclick="editpurchaseOrder(\'' + PurchaseOrderID + '\');"></i>'
+                                                + '<i title="Delete Purchase Order" class="fa fa-trash-o fa-fw" style="font-size: 1.2em;cursor:pointer;" onclick="deletepurchaseOrder(\'' + PurchaseOrderID + '\');"></i>'
+                                                + '<i class="fa fa-download" id="dwnload_' + PurchaseOrderID + '"  style="cursor:pointer;font-size: 1.4em;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'//<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');"
+                                                + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                             + '<i class="fa displaynone mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>';//<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+                                            poeditable = '<a href="javascript:void(0)" onclick="editpurchaseOrder(\'' + PurchaseOrderID + '\');">'
+                                             + PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2] + '</a>';
+
+                                        }
+                                        else {
+                                            us[i][0] = '<i class="fa fa-download mrg10R" style="cursor:pointer;font-size: 1.4em;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                                + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                            + '<i class="fa displaynone mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>';//<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+                                            poeditable = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+
+                                        }
+                                    }
+                                    else {
+                                        if (flag_confirmed == 0) {
+                                            us[i][0] = '<i class="fa fa-download mrg10R" style="cursor:pointer;font-size: 1.2em;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i><i class="fa fa-pencil-square mrg5L" style="cursor:pointer;font-size: 1.2em;" title="Confirm/Reject PO" onclick="RejectApprovePO(\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                                + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                                  + '<i class="fa displaynone mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>';//<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+                                            poeditable = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+
+
+                                        }
+                                        else {
+                                            us[i][0] = '<i class="fa fa-download mrg10R" style="cursor:pointer;font-size: 1.2em;" title="Add to Download" onclick="ProofPO(this,\'' + dt[i].PurchaseOrderID + '\');"></i>'
+                                                + '<i class="fa fa-file-pdf-o mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="ProofPOold(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].IsCommited + '\');"></i>'
+                                                  + '<i class="fa displaynone mrg5L" style="cursor:pointer;font-size: 1.2em;" title="View PDF" onclick="getPOFiles(\'' + dt[i].PurchaseOrderID + '\');"></i>';//<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+                                            poeditable = PurchaseOrderIDShow.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+
+
+                                        }
+                                    }
+                                    us[i][1] = poeditable;//.split('-')[0] + "-" + PurchaseOrderIDShow.split('-')[2];
+                                    us[i][2] = dt[i].ProjectNumber;
+                                    us[i][3] = dt[i].VendorName;
+                                    us[i][4] = dt[i].BuyerName;
+                                    us[i][5] = dt[i].ArrivalDate == '1900.01.01' ? '-' : dt[i].ArrivalDate;
+                                    us[i][6] = dt[i].CheckBackDate == '1900.01.01' ? '-' : dt[i].CheckBackDate;
+                                    us[i][7] = dt[i].IsCommited;
+                                    us[i][8] = dt[i].IsApproved == 0 ? "N" : "Y";
+                                    // us[i][8] = dt[i].IsDeleted;
+                                }
+                                $('#UnCommittedPODetail').dataTable({
+                                    "processing": true,
+                                    fixedHeader: true,
+                                    "data": us,
+                                    "columns":
+                                      [
+                                        { "title": "Action", "class": "leftposition" },
+                                        { "title": "PO Number", "class": "leftposition" },
+                                        { "title": "Project", "class": "leftposition" },
+                                        { "title": "Vendor Common", "class": "leftposition" },
+                                        { "title": "Buyer", "class": "leftposition" },
+                                        { "title": "Arrival Date", "class": "leftposition" },
+                                        { "title": "CheckBack Date", "class": "leftposition" },
+                                        { "title": "Commit", "class": "leftposition" },
+                                        { "title": "Approved", "class": "leftposition" },
+                                        { "title": "Status", "class": "displaynone" }
+                                        //{ "title": "IsDeleted" }
+                                      ],
+                                    "order": [1, "asc"],
+                                    "initComplete": function () {
+                                        $('#UnCommittedPODetail thead').find('tr:eq(0)').find('th:eq(0)').removeClass('sorting_asc');
+                                        $('#UnCommittedPODetail tbody').find('tr').find('td:eq(0)').css('text-align', 'left');
+                                    },
+                                    "aoColumnDefs": [
+          { 'bSortable': false, 'aTargets': [0] }
+                                    ]
+                                });
+                                var html = "";
+                                html = "<tr>"
+                                      + "<th class='Resetth' rowspan='1' colspan='1'>"
+                                      + "<a><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px;width:112px;' /></a>"
+                                      + "</th>"
+                                      + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text' tabindex=5></th>"
+                                      + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'  tabindex=6></th>"
+                                      + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='3' type='text'  tabindex=7></th>"
+                                      + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='4' type='text' tabindex=8></th>"
+                                      + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='5' type='text'  tabindex=9></th>"
+                                      + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='6' type='text' tabindex=10></th>"
+                                      + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='7' type='text' tabindex=11></th>"
+                                      + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='8' type='text' tabindex=11></th>"
+                                      + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='9' type='text' tabindex=11></th>"
+                                      + "</tr>";
+                                $('#UnCommittedPODetail thead').append(html);
+                                var table = $('#UnCommittedPODetail').DataTable();
+                                $('.srch').on('keyup change', function () {
+                                    var indx = $(this).attr('data-indx');
+                                    var txt = this.value;
+                                    table
+                                           .column(indx)
+                                           .search(txt)
+                                           .draw();
+                                    //RowHtmlRendernew();
+                                });
+                            }
+                            else {
+                                var table = $('#UnCommittedPODetail').DataTable();
+                                table.clear().draw();
+                            }
+                            $('#UnCommittedPODetail').show();
+                        }
+                        else {
+                            alert('Wrong');
+                        }
+                    }
+                });
+            });
+        });
+        function IsNumber(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            var vl = $('#txtPurchaseOrder').val();
+            if (keyCode == 13) {
+                $("#btnSearchByPO").click();
+                return;
+            }
+            else if (vl.length > 8) {
+                return false;
+            }
+            else if ((keyCode > 47 && keyCode < 58) || (keyCode == 8)) {
+                return true;
+            }
+            else if (keyCode == 45) {
+                if (vl.indexOf('-') === -1) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+        function checkInput(obj) {
+            var vl = $(obj).val();
+            if (vl.length == 5) {
+                if (vl.indexOf('-') === -1) {
+                    $(obj).val(vl.substring(0, 4) + '-' + vl[4]);
+                }
+            }
+        }
+
+        function searchtriggertext(e) {
+
+
+            var key = e.keyCode;
+
+            if (key == 13) {
+                getVal2();
+            }
+        }
+
+    </script>
+    <script>
+        var ProjectDdlForPage = $('#txt_Project'); //The project dropdown ID
+        $(document).ready(function () {
+
+
+           
+
+            $('#UnCommittedPODetail').on('draw.dt', function () {
+                if ($('#hdn_usertype').val() == '6') {
+
+                    $('.notforvendors').hide();
+                }
+                else {
+                    $('.notforvendors').show();
+                }
+            }
+
+            );
+
+
+
+
+
+            $('#UnCommittedPODetail').on('draw.dt', function () {
+
+                $('.fa-share-square').removeClass('checked');
+                for (var a = 0; a < selectedpoids.length; a++) {
+                    $('#batchchk_' + selectedpoids[a]).addClass('checked');
+                }
+
+
+                $('.fa-download').removeClass('checked');
+                for (var a = 0; a < selectedpoidsatt.length; a++) {
+                    $('#dwnload_' + selectedpoidsatt[a]).addClass('checked');
+                }
+
+
+                $('.fa-paper-plane').removeClass('checked');
+                for (var a = 0; a < selectedpoidsvendor.length; a++) {
+                    $('#batchmailvendor_' + selectedpoidsvendor[a]).addClass('checked');
+                }
+
+            });
+
+
+
+
+            var selectedpreferredpid = getProjectPreferencemulti();
+            console.log(selectedpreferredpid + "  >>>>>>>>>>>>>>>>>>>>>>>>");
+
+
+            if (selectedpreferredpid.split(',').length == 0) {
+                $(ProjectDdlForPage).find('option[value="' + selectedpreferredpid[i] + '"]').attr("selected", "true");
+            }
+            else {
+                for (var i = 0; i <= selectedpreferredpid.split(',').length + 1; i++) {
+                    $(ProjectDdlForPage).find('option[value="' + selectedpreferredpid.split(',')[i] + '"]').attr("selected", "true");
+                }
+            }
+            $(ProjectDdlForPage).multiselect('refresh');
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+            //To call page specific dropdown change event
+            projectddlchange();
+        });
+        $(document).on('change', ProjectDdlForPage, function () {
+            // console.log("RRRRRRRRRRRRRREEEEEEEEEEE");
+            // projectddlchange();
+            //setProjectPreference(ProjectDdlForPage);
+        });
+    </script>
+    <script type="text/javascript">
+
+        function ProofPOold(poid, IsCommited) {
+            poid = poid.split('#')[0].trim();
+            mode = 0;
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Reports/PurchaseOrderReportGeneration';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Reports/PurchaseOrderReportGeneration';
+            }
+            url1 += "?ProjectID=" + "";
+            url1 += "&SectionID=" + "";
+            url1 += "&PurchaseOrder=" + poid;
+            url1 += "&showImageFlag=" + mode;
+            url1 += "&IsCommited=" + IsCommited;
+            url1 += "&isSSRSCall=" + "1";
+
+            var totdata = '';
+            $.get(url1)
+                .success(function (response) {
+                    if (response == '0') {
+                        notify('No records found!!!');
+                        return;
+                    }
+                    if (response == "isSSRSCall") {
+                        window.open("../../SSRSRptViewer/ReportTemplate.aspx");
+                        return;
+                    }
+
+
+                    var html = "";
+                    var url2 = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        totdata = response;
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        totdata = "/POMS/POMS/" + response;
+                    }
+                    setTimeout(function () {
+                        window.open(totdata, '_blank');
+                    }, 1000);
+                });
+        }
+
+
+
+        function ProofPO(obj, poid) {
+
+            var poid1 = poid.split('#')[0].trim();
+            var ponumber = poid.split('#')[1].trim();
+
+
+            checkuncheckatt(obj, poid1, ponumber);
+            return;
+
+
+
+
+            mode = 0;
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Reports/PurchaseOrderReportGeneration';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Reports/PurchaseOrderReportGeneration';
+            }
+            url1 += "?ProjectID=" + "";
+            url1 += "&SectionID=" + "";
+            url1 += "&PurchaseOrder=" + poid;
+            url1 += "&showImageFlag=" + mode;
+            var totdata = '';
+            $.get(url1)
+                .success(function (response) {
+                    if (response == '0') {
+                        notify('No records found!!!');
+                        return;
+                    }
+                    var html = "";
+                    var url2 = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        totdata = response;
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        totdata = "/POMS/POMS/" + response;
+                    }
+                    setTimeout(function () {
+                        window.open(totdata, '_blank');
+                    }, 1000);
+                });
+        }
+        function RejectApprovePO(poid) {
+            poid = poid.split('#')[0].trim();
+            $('#hdn_aprvrjctpoid').val(poid);
+            $('#forvendorpopup').modal('show');
+        }
+        function approverejectsave(mode) {
+            var poid = $('#hdn_aprvrjctpoid').val();
+            var comment = $('#approverejectcomment').val();
+            if (mode == 'REJECTPO' && comment.trim() == '') {
+                notify('To reject you must enter comment');
+                return;
+            }
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/VendorConfirmRejectPO';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/VendorConfirmRejectPO';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: { 'POID': poid, 'mode': mode, 'comment': comment },
+                success: function (data) {
+                    if (data == 'SUCCESS') {
+                        if (mode == 'REJECTPO') {
+                            notify('Rejected PO', 'red');
+
+                        }
+                        else {
+                            notify('Accepted PO', 'green');
+                        }
+
+                        window.setTimeout(function () {
+                            window.location.reload();
+                        }, 4000);
+
+                    }
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            debugger;
+            var poid = $('#vendor_poid').val();
+            if (poid != "" && poid != null) {
+                window.setTimeout(function () {
+                    //  $('#txtPurchaseOrder').val(poid);
+                    // $('#btnSearchByPO').click();
+                }, 500);
+            }
+        }
+     );
+    </script>
+    <script>
+        $(document).ready(function () {
+            debugger;
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/getpriority';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/getpriority';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: {},
+                success: function (data) {
+                    $('#poeditpermission').val(data);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        });
+
+
+        function sendmailtovendorForSingle() {
+            var mailbody = escape(tinyMCE.get('vendormailbody').getContent());
+            var mailto = $('#vendormailto').val();
+            var mailsubject = $('#vendormailsubject').val();
+            var poid = $('#mailsendvendorbtn').attr('data-poid');
+            if (mailto.trim() == "") {
+                notify("Add recipient");
+                return;
+            }
+            if (mailbody.trim() == "") {
+                notify("Add Body");
+                return;
+            }
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Home/VendorMailSendFromPOList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Home/VendorMailSendFromPOList';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                data: "{ \"mailto\" : \"" + mailto + "\",\"mailsubject\" : \"" + mailsubject + "\",\"poid\":\"" + poid + "\",\"mailbody\": \"" + mailbody + "\"}",
+                async: false,
+                dataType: 'text',
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    notify("Mail sent to " + mailto, 'green');
+                    $('#sendmailtovendor').modal('hide');
+                },
+                error: function (error) {
+                    notify("Mail sending ERROR!!!");
+                    $('#sendmailtovendor').modal('show');
+                }
+            });
+        }
+
+        function getPOFiles(poid) {
+
+            poid = poid.split('#')[0];
+
+
+
+            var url11 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url11 = '/Project/GetProjectFilesToIncludePOList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url11 = 'Project/GetProjectFilesToIncludePOList';
+            }
+
+            var availablefiles = '';
+
+            $.ajax({
+                type: "POST",
+                async: false,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                url: url11,
+                data: " { \"PID\" : \"" + poid + "\"}",
+                success: function (data) {
+                    availablefiles = data;
+
+                    //console.log(data);
+
+                    var baseurl = '';
+
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        baseurl = '../../Assets/';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        baseurl = 'Assets/';
+                    }
+
+                    var html = '';
+
+                    if (data != "") {
+                        for (var i = 0; i < availablefiles.split('^^^').length; i++) {
+                            filename = availablefiles.split('^^^')[i].split('|||')[0];
+                            if (html != "") { html += "<br />"; }
+                            html += "<a target='_blank' href ='" + baseurl + "ProjectFiles/" + filename + "'><i class='fa fa-download mrg5R' aria-hidden='true'></i>" + filename + "</a>";//data.files[0].name;
+
+
+                        }
+                    }
+
+                    $('#filedownload').modal('show');
+                    if (html != "") {
+                        $('#filebody').html(html);
+                    }
+                    else {
+                        $('#filebody').html("No file available");
+                    }
+                    //console.log(html);
+                }
+            });
+
+
+
+
+        }
+    </script>
+
+    <div id="filedownload" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Project Attachments</h4>
+                </div>
+                <div class="modal-body" id="filebody">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="float-panel-container">
+        <ul>
+
+            <li id="btn_sendbatchapproval" class="displaynone" onclick="sendforapprovalbatch();">
+                <span class="badge" style="position: relative;top: -15px;left: 18px;font-size: 15px; background: #096000;">4</span>
+                <a title="Send For Approval Batch" data-toggle="tooltip" data-placement="left" href="javascript:void(0);"><i class="fa fa-share-square mrg5R"></i><span class="tooltip-toggle">Copy PO</span></a>
+            </li>
+
+
+            <li id="btn_sendbatchvendor" class="displaynone" onclick="sendtovendorsbatch();">
+                <span class="badge" style="position: relative;top: -15px;left: 18px;font-size: 15px; background: #096000;">4</span>
+                <a title="Send To Vendor Batch" data-toggle="tooltip" data-placement="left" href="javascript:void(0);"><i class="fa fa-paper-plane mrg5R"></i><span class="tooltip-toggle">Copy PO</span></a>
+            </li>
+
+
+            <li id="btn_sendbatchatt" class="displaynone" onclick="opendownloadpospopup();">
+                <span class="badge" style="position: relative;top: -15px;left: 18px;font-size: 15px; background: #096000;">4</span>
+                <a title="Download PO/Attachment" data-toggle="tooltip" data-placement="left" href="javascript:void(0);"><i class="fa fa-download mrg5R"></i><span class="tooltip-toggle">Download PO/Attachment</span></a>
+            </li>
+
+
+
+
+
+        </ul>
+    </div>
+
+
+</body>
+</html>

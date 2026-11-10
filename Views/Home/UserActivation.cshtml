@@ -1,0 +1,45 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UserActivation</title>
+
+     <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.12.0.js"></script>
+
+    <style>
+    body {
+	    background-image: none;
+        padding:40px;
+    }
+</style>
+</head>
+<body>
+   
+    <div class="main_container">
+
+<a href="javascript:void(0)" class="logo_container_B">
+    <img src="~/images/logo.png" width="372" height="73" alt=""/>
+</a>
+
+<div class="logo_container_heading_big">@ViewBag.Fullname</div>
+
+<div class="logo_container_heading_small">@ViewBag.FullText</div>
+
+<div class="user_panel_container">
+    @*<a href="Login">For Local*@
+    <a href="../../">@*For Server*@
+    <input type="submit" value="Proceed to Login">
+    </a>
+</div>
+
+</div>
+  
+</body>
+</html>

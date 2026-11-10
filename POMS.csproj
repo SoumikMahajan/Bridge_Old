@@ -1,0 +1,1723 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\EntityFramework.6.3.0\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.3.0\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EC5220A8-0AFF-46ED-8D30-AAA5682D62F9}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>POMS</RootNamespace>
+    <AssemblyName>POMS</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <Use64BitIISExpress>false</Use64BitIISExpress>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>0</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
+    <FilesToIncludeForPublish>OnlyFilesToRunTheApp</FilesToIncludeForPublish>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <FilesToIncludeForPublish>AllFilesInTheProject</FilesToIncludeForPublish>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="DevDefined.OAuth, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a3261f5b4697e67d, processorArchitecture=MSIL">
+      <HintPath>packages\DevDefined.OAuth.0.2\lib\DevDefined.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.AspNet, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>packages\DotNetOpenAuth.AspNet.4.3.3.13295\lib\net45-full\DotNetOpenAuth.AspNet.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>packages\DotNetOpenAuth.Core.4.3.3.13295\lib\net45-full\DotNetOpenAuth.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OAuth, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>packages\DotNetOpenAuth.OAuth.Core.4.3.3.13295\lib\net45-full\DotNetOpenAuth.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OAuth.Consumer, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>packages\DotNetOpenAuth.OAuth.Consumer.4.3.3.13295\lib\net45-full\DotNetOpenAuth.OAuth.Consumer.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OpenId, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>packages\DotNetOpenAuth.OpenId.Core.4.3.3.13295\lib\net45-full\DotNetOpenAuth.OpenId.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OpenId.RelyingParty, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>packages\DotNetOpenAuth.OpenId.RelyingParty.4.3.3.13295\lib\net45-full\DotNetOpenAuth.OpenId.RelyingParty.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.3.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.3.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus">
+      <HintPath>C:\Users\ETG (P) Ltd\Downloads\EPPlus 4.1\DotNet4\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.11.16.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>packages\HtmlAgilityPack.1.11.16\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="Intuit.Ipp.Core, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\Intuit.Ipp.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Intuit.Ipp.Data, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\Intuit.Ipp.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Intuit.Ipp.DataService, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\Intuit.Ipp.DataService.dll</HintPath>
+    </Reference>
+    <Reference Include="Intuit.Ipp.Diagnostics, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\Intuit.Ipp.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="Intuit.Ipp.EntitlementService, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\Intuit.Ipp.EntitlementService.dll</HintPath>
+    </Reference>
+    <Reference Include="Intuit.Ipp.Exception, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\Intuit.Ipp.Exception.dll</HintPath>
+    </Reference>
+    <Reference Include="Intuit.Ipp.GlobalTaxService, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\Intuit.Ipp.GlobalTaxService.dll</HintPath>
+    </Reference>
+    <Reference Include="Intuit.Ipp.OAuth2PlatformClient, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\Intuit.Ipp.OAuth2PlatformClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Intuit.Ipp.OAuth2PlatformClient.Diagnostics, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\Intuit.Ipp.OAuth2PlatformClient.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="Intuit.Ipp.QueryFilter, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\Intuit.Ipp.QueryFilter.dll</HintPath>
+    </Reference>
+    <Reference Include="Intuit.Ipp.ReportService, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\Intuit.Ipp.ReportService.dll</HintPath>
+    </Reference>
+    <Reference Include="Intuit.Ipp.Retry, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\Intuit.Ipp.Retry.dll</HintPath>
+    </Reference>
+    <Reference Include="Intuit.Ipp.Security, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\Intuit.Ipp.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Intuit.Ipp.Utility, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\Intuit.Ipp.Utility.dll</HintPath>
+    </Reference>
+    <Reference Include="Intuit.Ipp.WebHooksService, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\Intuit.Ipp.WebHooksService.dll</HintPath>
+    </Reference>
+    <Reference Include="IppDotNetSdkForQuickBooksApiV3, Version=14.6.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\IppDotNetSdkForQuickBooksApiV3.14.6.3.6\lib\net461\IppDotNetSdkForQuickBooksApiV3.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Azure.Documents.Client, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Azure.DocumentDB.2.1.2\lib\net461\Microsoft.Azure.Documents.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.DotNet.PlatformAbstractions.2.0.4\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Configuration.3.1.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Abstractions, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Configuration.Abstractions.3.1.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Binder, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Configuration.Binder.3.1.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Binder.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.FileExtensions, Version=3.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Configuration.FileExtensions.3.0.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.FileExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Json, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Configuration.Json.2.2.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Xml, Version=3.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Configuration.Xml.3.0.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.3.1.0\lib\net461\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.Abstractions.3.1.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyModel, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyModel.2.0.4\lib\net451\Microsoft.Extensions.DependencyModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Abstractions, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.FileProviders.Abstractions.3.1.0\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Physical, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.FileProviders.Physical.3.1.0\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Physical.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileSystemGlobbing, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.FileSystemGlobbing.3.1.0\lib\netstandard2.0\Microsoft.Extensions.FileSystemGlobbing.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Logging.3.1.0\lib\netstandard2.0\Microsoft.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Logging.Abstractions.3.1.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Options.3.1.0\lib\netstandard2.0\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options.ConfigurationExtensions, Version=3.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Options.ConfigurationExtensions.3.0.1\lib\netstandard2.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Primitives.3.1.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Tools.Excel.v4.0.Utilities, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Owin, Version=4.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Owin.4.2.3\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Owin.Host.SystemWeb.4.2.3\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=4.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Owin.Security.4.2.3\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Owin.Security.Cookies.4.2.3\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.ReportViewer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Design, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.ReportingServices.ReportViewerControl.WebForms.150.1400.0\lib\net40\Microsoft.ReportViewer.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=15.2.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.ReportViewer.ProcessingObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WebDesign, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.ReportingServices.ReportViewerControl.WebForms.150.1400.0\lib\net40\Microsoft.ReportViewer.WebDesign.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.ReportViewer.WebForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.SqlServer.Types.14.0.1016.290\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.WebPages.OAuth, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebPages.OAuth.3.2.6\lib\net45\Microsoft.Web.WebPages.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.DocumentObjectModel, Version=1.32.4334.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\MigraDoc.DocumentObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.Rendering, Version=1.32.4334.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\MigraDoc.Rendering.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.RtfRendering, Version=1.32.4334.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\MigraDoc.RtfRendering.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp, Version=1.50.4820.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>packages\PDFsharp.1.50.4820-RC1\lib\net20\PdfSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Charting, Version=1.50.4820.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>packages\PDFsharp.1.50.4820-RC1\lib\net20\PdfSharp.Charting.dll</HintPath>
+    </Reference>
+    <Reference Include="ReportViewerForMvc">
+      <HintPath>C:\Users\ETG (P) Ltd\Downloads\ReportViewerForMvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>packages\Serilog.2.10.0\lib\net46\Serilog.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Enrichers.Environment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>packages\Serilog.Enrichers.Environment.2.1.3\lib\net45\Serilog.Enrichers.Environment.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Enrichers.Thread, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>packages\Serilog.Enrichers.Thread.3.1.0\lib\net45\Serilog.Enrichers.Thread.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Extensions.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>packages\Serilog.Extensions.Logging.3.0.1\lib\netstandard2.0\Serilog.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Settings.Configuration, Version=3.1.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>packages\Serilog.Settings.Configuration.3.1.0\lib\net461\Serilog.Settings.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.AzureDocumentDB, Version=4.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>packages\Serilog.Sinks.AzureDocumentDB.4.0.0\lib\net45\Serilog.Sinks.AzureDocumentDB.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.Console, Version=3.1.1.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>packages\Serilog.Sinks.Console.3.1.1\lib\net45\Serilog.Sinks.Console.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.Debug, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>packages\Serilog.Sinks.Debug.2.0.0\lib\net46\Serilog.Sinks.Debug.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.File, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>packages\Serilog.Sinks.File.4.1.0\lib\net45\Serilog.Sinks.File.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.Literate, Version=3.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>packages\Serilog.Sinks.Literate.3.0.0\lib\net45\Serilog.Sinks.Literate.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.RollingFile, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>packages\Serilog.Sinks.RollingFile.3.3.0\lib\net45\Serilog.Sinks.RollingFile.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.Trace, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>packages\Serilog.Sinks.Trace.2.1.0\lib\net45\Serilog.Sinks.Trace.dll</HintPath>
+    </Reference>
+    <Reference Include="SerilogTraceListener, Version=0.0.0.0, Culture=neutral, PublicKeyToken=9398e41289d9b801, processorArchitecture=MSIL">
+      <HintPath>packages\SerilogTraceListener.3.2.0\lib\net46\SerilogTraceListener.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.Common, Version=2.2.12.61046, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
+      <HintPath>packages\FreeSpire.XLS.9.2.1\lib\net46\Spire.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.License, Version=1.3.7.46, Culture=neutral, PublicKeyToken=b1144360237c8b3f, processorArchitecture=MSIL">
+      <HintPath>packages\FreeSpire.XLS.9.2.1\lib\net46\Spire.License.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.Pdf, Version=5.2.8.19046, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
+      <HintPath>packages\FreeSpire.XLS.9.2.1\lib\net46\Spire.Pdf.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.XLS, Version=9.2.12.61046, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
+      <HintPath>packages\FreeSpire.XLS.9.2.1\lib\net46\Spire.XLS.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Buffers.4.5.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration.ConfigurationManager, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Configuration.ConfigurationManager.4.7.0\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Diagnostics.TraceSource, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Diagnostics.TraceSource.4.3.0\lib\net46\System.Diagnostics.TraceSource.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Memory, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.2\lib\netstandard2.0\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.28.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Net.Http.2.2.28\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=4.2.28.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Net.Http.2.2.28\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WinHttpHandler, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Net.Http.WinHttpHandler.4.5.0\lib\net461\System.Net.Http.WinHttpHandler.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.7.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.AccessControl, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.AccessControl.4.7.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Xml, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Xml.4.6.0\lib\net461\System.Security.Cryptography.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Permissions, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Permissions.4.7.0\lib\net461\System.Security.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Principal.Windows.4.7.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.5.3\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebApi.Core.5.2.6\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebApi.WebHost.5.2.6\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.Data, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebPages.Data.3.2.6\lib\net45\WebMatrix.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.WebData, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebPages.WebData.3.2.6\lib\net45\WebMatrix.WebData.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\ProjectController.cs" />
+    <Compile Include="Controllers\PurchaseOrderController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Startup.cs" />
+    <Content Include="App_Code\PODetails.cs">
+      <DependentUpon>PODetails.xsd</DependentUpon>
+    </Content>
+    <Compile Include="SqlServerTypes\Loader.cs" />
+    <Compile Include="SSRSRptViewer\ReportTemplate.aspx.cs">
+      <DependentUpon>ReportTemplate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SSRSRptViewer\ReportTemplate.aspx.designer.cs">
+      <DependentUpon>ReportTemplate.aspx</DependentUpon>
+    </Compile>
+    <Content Include="App_Code\CommittedCostDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CommittedCostDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\DemoDataset.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DemoDataset.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseCommitment.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PurchaseCommitment.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseCommitment_Test.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PurchaseCommitment_Test.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\CommittedCostReportDetail.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CommittedCostReportDetail.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\BudgetReportSummary.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BudgetReportSummary.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ExpediteReportByStatuss.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExpediteReportByStatuss.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\StatusByVendor.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StatusByVendor.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ExpeditNote.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExpeditNote.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ExpeditNote.cs">
+      <DependentUpon>ExpeditNote.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\AtRiskByItem.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AtRiskByItem.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\CurrentPaidReport.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CurrentPaidReport.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ExpediteReportByItem.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExpediteReportByItem.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PrintedChequeList.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PrintedChequeList.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ProjectToDateReport.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProjectToDateReport.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ReceivingReportSection.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReceivingReportSection.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseOrder.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PurchaseOrder.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseOrderDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PurchaseOrderDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseOrder.cs">
+      <DependentUpon>PurchaseOrder.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseOrderReport.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PurchaseOrderReport.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\Empty.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Empty.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\POSummay.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>POSummay.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PODetails.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PODetails.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\InvoiceDetails.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InvoiceDetails.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\InvoiceSummary.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InvoiceSummary.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ApprovalStatus.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ApprovalStatus.xsd</DependentUpon>
+    </Content>
+    <Compile Include="Controllers\AboutController.cs" />
+    <Compile Include="Controllers\adduserController.cs" />
+    <Compile Include="Controllers\AuthorityCheckController.cs" />
+    <Compile Include="Controllers\BudgetController.cs" />
+    <Compile Include="Controllers\BudgetViewController.cs" />
+    <Compile Include="Controllers\CustomHandleErrorAttribute.cs" />
+    <Compile Include="Controllers\DBFunctions.cs" />
+    <Compile Include="Controllers\Email.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\ExpediteController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InvoiceController.cs" />
+    <Compile Include="Controllers\ItemApprovalController.cs" />
+    <Compile Include="Controllers\LogOutController.cs" />
+    <Compile Include="Controllers\MenuController.cs" />
+    <Compile Include="Controllers\MyActionFilterAttribute.cs" />
+    <Compile Include="Controllers\PageAuthorization.cs" />
+    <Compile Include="Controllers\ProjectViewController.cs" />
+    <Compile Include="Controllers\PurchaseOrderViewController.cs" />
+    <Compile Include="Controllers\QuickBookController.cs" />
+    <Compile Include="Controllers\SystemAdminController.cs" />
+    <Compile Include="Controllers\TaskListController.cs" />
+    <Compile Include="Controllers\UploadFileController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\VendorController.cs" />
+    <Compile Include="Controllers\VendorViewController.cs" />
+    <Compile Include="Models\BankAccount.cs" />
+    <Compile Include="Models\PaymentMode.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Content Include="App_Code\BudgetDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BudgetDataSet.xsd</DependentUpon>
+    </Content>
+    <Compile Include="App_Start\AuthConfig.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\AllModel.cs" />
+    <Compile Include="Models\Priority.cs" />
+    <Compile Include="Models\Security.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="css\datatables.min.css" />
+    <Content Include="css\milestones.css" />
+    <Content Include="css\Misc.css" />
+    <Content Include="css\New\fixedHeader.dataTables.min.css" />
+    <Content Include="css\New\jquery.dataTables.min.css" />
+    <Content Include="Images\NewSort.png" />
+    <Content Include="Images\PURCHASE-ORDER-DELETED-PO.png" />
+    <Content Include="js\plugin.js" />
+    <Content Include="Scripts\datatables.min.js" />
+    <Content Include="Scripts\GlobalJSForPo.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Assets\TermsConditionFiles\TermsandConditions%28TC_1002_2%29.pdf" />
+    <Content Include="Assets\TermsConditionFiles\MGM RESORTS DESIGN _ DEVELOPMENT-Terms_Conditions%28TC_1212_1%29.pdf" />
+    <Content Include="Assets\TermsConditionFiles\SystemTermsFile%28TC_1210_0%29.pdf" />
+    <Content Include="Assets\SystemTermsFiles\SystemTermsFile^TermsandConditions_0.pdf" />
+    <Content Include="Assets\TermsConditionFiles\TermsandConditions%28TC_1002_3%29.pdf" />
+    <Content Include="Assets\TermsConditionFiles\file-sample_150kB%28TC_1002_1003%29.pdf" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\Ramashree.pubxml" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\milestones.js" />
+    <Content Include="Scripts\New\jquery.dataTables.min.js" />
+    <Content Include="Scripts\User.js" />
+    <Content Include="SqlServerTypes\readme.htm" />
+    <Content Include="SqlServerTypes\x64\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x64\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x86\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x86\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Invoice\EditCreditNote.cshtml" />
+    <Content Include="Views\PurchaseOrder\_partialPOEdit.cshtml" />
+    <Content Include="Views\Budget\LineItems_Back.cshtml" />
+    <Content Include="Views\PurchaseOrder\POEdit25.cshtml" />
+    <Content Include="Views\PurchaseOrder\POEdit22.cshtml" />
+    <Content Include="Views\PurchaseOrder\POEdit18.cshtml" />
+    <Content Include="Views\PurchaseOrder\POEdit19.cshtml" />
+    <Content Include="Views\PurchaseOrder\POEdit28.cshtml" />
+    <Content Include="Views\PurchaseOrder\POEdit24042023.cshtml" />
+    <Content Include="Views\Budget\LineItems_.cshtml" />
+    <Content Include="Views\Budget\LineItems+.cshtml" />
+    <Content Include="Views\Budget\LineItems.cshtml" />
+    <Content Include="Views\Expedite\Home24042023.cshtml" />
+    <Content Include="Views\Expedite\Home11052023.cshtml" />
+    <Content Include="Views\Home\Dashboard.cshtml" />
+    <Content Include="Views\Reports\Report08052024.cshtml" />
+    <Content Include="Views\Project\ProjectTeam.cshtml" />
+    <Content Include="Views\PurchaseOrder\POEdit11052023.cshtml" />
+    <Content Include="Views\Expedite\Home01062023.cshtml" />
+    <Content Include="Views\PurchaseOrder\POEdit01062023.cshtml" />
+    <Content Include="Views\PurchaseOrder\AddItemsToPO.cshtml" />
+    <Content Include="Views\Expedite\Home.cshtml" />
+    <Content Include="Views\PurchaseOrder\POEdit14072023.cshtml" />
+    <Content Include="Views\PurchaseOrder\POEdit25012024.cshtml" />
+    <Content Include="Views\Vendor\SearchPoList.cshtml" />
+    <Content Include="Views\PurchaseOrder\POEdit.cshtml" />
+    <Content Include="Views\Expedite\Home08042024.cshtml" />
+    <Content Include="Views\Reports\Report.cshtml" />
+    <Content Include="Views\PurchaseOrder\POEdit16052024.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bootstrap\css\bootstrap-theme.css" />
+    <Content Include="bootstrap\css\bootstrap-theme.min.css" />
+    <Content Include="bootstrap\css\bootstrap.css" />
+    <Content Include="bootstrap\css\bootstrap.min.css" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="bootstrap\js\bootstrap.js" />
+    <Content Include="bootstrap\js\bootstrap.min.js" />
+    <Content Include="bootstrap\js\npm.js" />
+    <Content Include="css\bootstrap-theme.min.css" />
+    <Content Include="css\bootstrap.min.css" />
+    <Content Include="css\build.css" />
+    <Content Include="css\jquery.multiselect2.css" />
+    <Content Include="css\style.css" />
+    <Content Include="css\font-awesome.css" />
+    <Content Include="css\hover.css" />
+    <Content Include="css\hover1.css" />
+    <Content Include="css\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <Content Include="css\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
+    <Content Include="css\images\ui-bg_flat_10_000000_40x100.png" />
+    <Content Include="css\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="css\images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <Content Include="css\images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <Content Include="css\images\ui-bg_glass_65_ffffff_1x400 %281%29.png" />
+    <Content Include="css\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="css\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="css\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="css\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <Content Include="css\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <Content Include="css\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <Content Include="css\images\ui-icons_222222_256x240.png" />
+    <Content Include="css\images\ui-icons_228ef1_256x240.png" />
+    <Content Include="css\images\ui-icons_454545_256x240.png" />
+    <Content Include="css\images\ui-icons_888888_256x240.png" />
+    <Content Include="css\images\ui-icons_ef8c08_256x240.png" />
+    <Content Include="css\images\ui-icons_ffd27a_256x240.png" />
+    <Content Include="css\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="css\InnerMisc.css" />
+    <Content Include="css\jquery-ui.css" />
+    <Content Include="css\jquery.dataTables.min.css" />
+    <Content Include="css\jquery.multiselect.css" />
+    <Content Include="css\jquery.multiselect.filter.css" />
+    <Content Include="css\jquery.spellchecker.css" />
+    <Content Include="css\jquery.switchButton.css" />
+    <Content Include="css\menu_style.css" />
+    <Content Include="css\Misc24042023.css" />
+    <Content Include="css\multiaccordion.jquery.css" />
+    <Content Include="css\multiaccordion.jquery.min.css" />
+    <Content Include="css\site.css" />
+    <Content Include="css\stylesForFileUpload.css" />
+    <Content Include="css\theme.css" />
+    <Content Include="css\ui-lightness\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_flat_10_000000_40x100.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <Content Include="css\ui-lightness\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <Content Include="css\ui-lightness\images\ui-icons_222222_256x240.png" />
+    <Content Include="css\ui-lightness\images\ui-icons_228ef1_256x240.png" />
+    <Content Include="css\ui-lightness\images\ui-icons_ef8c08_256x240.png" />
+    <Content Include="css\ui-lightness\images\ui-icons_ffd27a_256x240.png" />
+    <Content Include="css\ui-lightness\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="css\ui-lightness\jquery-ui-1.8.19.custom.css" />
+    <Content Include="design\css\bootstrap-theme.min.css" />
+    <Content Include="design\css\bootstrap.min.css" />
+    <Content Include="design\css\jquery.custom-scrollbar.css" />
+    <Content Include="design\css\owl.carousel.css" />
+    <Content Include="design\css\owl.theme.css" />
+    <Content Include="design\css\theme.css" />
+    <Content Include="design\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="design\img\BridgeLogo6-darker2.png" />
+    <Content Include="design\img\favicon.png" />
+    <Content Include="design\img\menu-sep.png" />
+    <Content Include="design\js\bootstrap.min.js" />
+    <Content Include="design\js\customize.min.js" />
+    <Content Include="design\js\docs.min.js" />
+    <Content Include="design\js\ie-emulation-modes-warning.js" />
+    <Content Include="design\js\ie10-viewport-bug-workaround.js" />
+    <Content Include="design\js\ie8-responsive-file-warning.js" />
+    <Content Include="design\js\jquery.1.11.3.min.js" />
+    <Content Include="design\js\js\affix.js" />
+    <Content Include="design\js\js\alert.js" />
+    <Content Include="design\js\js\button.js" />
+    <Content Include="design\js\js\carousel.js" />
+    <Content Include="design\js\js\collapse.js" />
+    <Content Include="design\js\js\dropdown.js" />
+    <Content Include="design\js\js\modal.js" />
+    <Content Include="design\js\js\popover.js" />
+    <Content Include="design\js\js\scrollspy.js" />
+    <Content Include="design\js\js\tab.js" />
+    <Content Include="design\js\js\tests\index.html" />
+    <Content Include="design\js\js\tests\unit\affix.js" />
+    <Content Include="design\js\js\tests\unit\alert.js" />
+    <Content Include="design\js\js\tests\unit\button.js" />
+    <Content Include="design\js\js\tests\unit\carousel.js" />
+    <Content Include="design\js\js\tests\unit\collapse.js" />
+    <Content Include="design\js\js\tests\unit\dropdown.js" />
+    <Content Include="design\js\js\tests\unit\modal.js" />
+    <Content Include="design\js\js\tests\unit\phantom.js" />
+    <Content Include="design\js\js\tests\unit\popover.js" />
+    <Content Include="design\js\js\tests\unit\scrollspy.js" />
+    <Content Include="design\js\js\tests\unit\tab.js" />
+    <Content Include="design\js\js\tests\unit\tooltip.js" />
+    <Content Include="design\js\js\tests\vendor\jquery.min.js" />
+    <Content Include="design\js\js\tests\vendor\qunit.css" />
+    <Content Include="design\js\js\tests\vendor\qunit.js" />
+    <Content Include="design\js\js\tests\visual\affix-with-sticky-footer.html" />
+    <Content Include="design\js\js\tests\visual\affix.html" />
+    <Content Include="design\js\js\tests\visual\alert.html" />
+    <Content Include="design\js\js\tests\visual\button.html" />
+    <Content Include="design\js\js\tests\visual\carousel.html" />
+    <Content Include="design\js\js\tests\visual\collapse.html" />
+    <Content Include="design\js\js\tests\visual\dropdown.html" />
+    <Content Include="design\js\js\tests\visual\modal.html" />
+    <Content Include="design\js\js\tests\visual\popover.html" />
+    <Content Include="design\js\js\tests\visual\scrollspy.html" />
+    <Content Include="design\js\js\tests\visual\tab.html" />
+    <Content Include="design\js\js\tests\visual\tooltip.html" />
+    <Content Include="design\js\js\tooltip.js" />
+    <Content Include="design\js\js\transition.js" />
+    <Content Include="design\js\owl.carousel.js" />
+    <Content Include="design\js\theme.js" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="Assets\Samples\LineItemSample.xlsx" />
+    <Content Include="css\multiaccordion.jquery.less" />
+    <Content Include="App_Code\BudgetDataSet.xsc">
+      <DependentUpon>BudgetDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\AtRiskByItem.xsc">
+      <DependentUpon>AtRiskByItem.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ApprovalStatus.xsc">
+      <DependentUpon>ApprovalStatus.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ApprovalStatus.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ApprovalStatus.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\ApprovalStatus.xss">
+      <DependentUpon>ApprovalStatus.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\AtRiskByItem.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>AtRiskByItem.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\AtRiskByItem.xss">
+      <DependentUpon>AtRiskByItem.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\BudgetDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>BudgetDataSet.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\BudgetDataSet.xss">
+      <DependentUpon>BudgetDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\CommittedCostDataSet.xsc">
+      <DependentUpon>CommittedCostDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\BudgetReportSummary.xsc">
+      <DependentUpon>BudgetReportSummary.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\BudgetReportSummary.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>BudgetReportSummary.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\BudgetReportSummary.xss">
+      <DependentUpon>BudgetReportSummary.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\CommittedCostDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>CommittedCostDataSet.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\CommittedCostDataSet.xss">
+      <DependentUpon>CommittedCostDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\DemoDataset.xsc">
+      <DependentUpon>DemoDataset.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\CommittedCostReportDetail.xsc">
+      <DependentUpon>CommittedCostReportDetail.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\CommittedCostReportDetail.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>CommittedCostReportDetail.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\CommittedCostReportDetail.xss">
+      <DependentUpon>CommittedCostReportDetail.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\CurrentPaidReport.xsc">
+      <DependentUpon>CurrentPaidReport.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\CurrentPaidReport.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>CurrentPaidReport.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\CurrentPaidReport.xss">
+      <DependentUpon>CurrentPaidReport.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\DemoDataset.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DemoDataset.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\DemoDataset.xss">
+      <DependentUpon>DemoDataset.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseCommitment.xsc">
+      <DependentUpon>PurchaseCommitment.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ExpediteReportByStatuss.xsc">
+      <DependentUpon>ExpediteReportByStatuss.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ExpediteReportByItem.xsc">
+      <DependentUpon>ExpediteReportByItem.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\Empty.xsc">
+      <DependentUpon>Empty.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\Empty.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Empty.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\Empty.xss">
+      <DependentUpon>Empty.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ExpediteReportByItem.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ExpediteReportByItem.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\ExpediteReportByItem.xss">
+      <DependentUpon>ExpediteReportByItem.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ExpediteReportByStatuss.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ExpediteReportByStatuss.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\ExpediteReportByStatuss.xss">
+      <DependentUpon>ExpediteReportByStatuss.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ExpeditNote.xsc">
+      <DependentUpon>ExpeditNote.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ExpeditNote.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ExpeditNote.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\ExpeditNote.xss">
+      <DependentUpon>ExpeditNote.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PrintedChequeList.xsc">
+      <DependentUpon>PrintedChequeList.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseOrder.xsc">
+      <DependentUpon>PurchaseOrder.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\POSummay.xsc">
+      <DependentUpon>POSummay.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PODetails.xsc">
+      <DependentUpon>PODetails.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\InvoiceDetails.xsc">
+      <DependentUpon>InvoiceDetails.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\InvoiceDetails.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>InvoiceDetails.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\InvoiceDetails.xss">
+      <DependentUpon>InvoiceDetails.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\InvoiceSummary.xsc">
+      <DependentUpon>InvoiceSummary.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\InvoiceSummary.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>InvoiceSummary.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\InvoiceSummary.xss">
+      <DependentUpon>InvoiceSummary.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PODetails.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PODetails.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\PODetails.xss">
+      <DependentUpon>PODetails.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\POSummay.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>POSummay.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\POSummay.xss">
+      <DependentUpon>POSummay.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseOrder.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PurchaseOrder.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\PurchaseOrder.xss">
+      <DependentUpon>PurchaseOrder.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PrintedChequeList.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PrintedChequeList.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\PrintedChequeList.xss">
+      <DependentUpon>PrintedChequeList.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ProjectToDateReport.xsc">
+      <DependentUpon>ProjectToDateReport.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ProjectToDateReport.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ProjectToDateReport.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\ProjectToDateReport.xss">
+      <DependentUpon>ProjectToDateReport.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseCommitment.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PurchaseCommitment.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\PurchaseCommitment.xss">
+      <DependentUpon>PurchaseCommitment.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseCommitment_Test.xsc">
+      <DependentUpon>PurchaseCommitment_Test.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseCommitment_Test.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PurchaseCommitment_Test.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\PurchaseCommitment_Test.xss">
+      <DependentUpon>PurchaseCommitment_Test.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\StatusByVendor.xsc">
+      <DependentUpon>StatusByVendor.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ReceivingReportSection.xsc">
+      <DependentUpon>ReceivingReportSection.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseOrderDataSet.xsc">
+      <DependentUpon>PurchaseOrderDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseOrderDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PurchaseOrderDataSet.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\PurchaseOrderDataSet.xss">
+      <DependentUpon>PurchaseOrderDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseOrderReport.xsc">
+      <DependentUpon>PurchaseOrderReport.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\PurchaseOrderReport.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PurchaseOrderReport.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\PurchaseOrderReport.xss">
+      <DependentUpon>PurchaseOrderReport.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\ReceivingReportSection.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ReceivingReportSection.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\ReceivingReportSection.xss">
+      <DependentUpon>ReceivingReportSection.xsd</DependentUpon>
+    </Content>
+    <Content Include="App_Code\StatusByVendor.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>StatusByVendor.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_Code\StatusByVendor.xss">
+      <DependentUpon>StatusByVendor.xsd</DependentUpon>
+    </Content>
+    <Content Include="bootstrap\css\bootstrap-theme.css.map" />
+    <Content Include="bootstrap\css\bootstrap-theme.min.css.map" />
+    <Content Include="bootstrap\css\bootstrap.css.map" />
+    <Content Include="bootstrap\css\bootstrap.min.css.map" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="design\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="design\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="design\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="design\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="design\js\js\tests\README.md" />
+    <Content Include="design\js\js\tests\unit\.jshintrc" />
+    <None Include="Properties\PublishProfiles\Avijit.pubxml" />
+    <None Include="Properties\PublishProfiles\LocalPub.pubxml" />
+    <None Include="Properties\PublishProfiles\Subham.pubxml" />
+    <Content Include="Images\Arrow-Down-d.png" />
+    <Content Include="Images\Arrow-Down-s.png" />
+    <Content Include="Images\BridgeLogo6-darker2.png" />
+    <Content Include="Images\favicon-tcg.ico" />
+    <Content Include="Images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Images\hr.gif" />
+    <Content Include="Images\percentage-.png" />
+    <Content Include="Images\PURCHASE-ORDER-PROOF-ONLY.png" />
+    <Content Include="Images\Untitled-1.png" />
+    <Content Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="Images\1424712754_118546.ico" />
+    <Content Include="Images\body-back.jpg" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Images\button.gif" />
+    <Content Include="Images\css-custom-cursor.ico" />
+    <Content Include="Images\delete-icon.png" />
+    <Content Include="Images\edit-icon.png" />
+    <Content Include="Images\h-loading.gif" />
+    <Content Include="Images\load.gif" />
+    <Content Include="Images\loader-blue-round.gif" />
+    <Content Include="Images\logo1.png" />
+    <Content Include="Images\magnifying-glass.gif" />
+    <Content Include="Images\sort_asc.png" />
+    <Content Include="Images\sort_asc_disabled.png" />
+    <Content Include="Images\sort_both.png" />
+    <Content Include="Images\sort_desc.png" />
+    <Content Include="Images\sort_desc_disabled.png" />
+    <Content Include="js\custom.js" />
+    <Content Include="js\jquery-1.9.1.js" />
+    <Content Include="js\multiaccordion.jquery.min.js" />
+    <Content Include="ReportViewerWebForm.aspx" />
+    <Content Include="Scripts\AddUser.js" />
+    <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Budget.js" />
+    <Content Include="Scripts\jquery.custom-scrollbar.js" />
+    <Content Include="Scripts\jquery.UrlChanger.js" />
+    <Content Include="Scripts\jquery.DB_PROC.js" />
+    <Content Include="Scripts\Copy of MenuJS.js" />
+    <Content Include="Scripts\dataTables.fixedHeader.min.js" />
+    <Content Include="Scripts\editor_plugin.js" />
+    <Content Include="Scripts\filedrag.js" />
+    <Content Include="Scripts\flip.js" />
+    <Content Include="Scripts\GlobalJS.js" />
+    <Content Include="Scripts\GlobalJSForLI.js" />
+    <Content Include="Scripts\InnerMisc.js" />
+    <Content Include="Scripts\jquery-1.12.0.js" />
+    <Content Include="Scripts\jquery-1.7.1.js" />
+    <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.1.11.3.min.js" />
+    <Content Include="Scripts\jquery.autosize.js" />
+    <Content Include="Scripts\jquery.bpopup.min.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
+    <Content Include="Scripts\jquery.dragscroll.js" />
+    <Content Include="Scripts\jquery.fileupload.itemapproval.js" />
+    <Content Include="Scripts\jquery.fileupload.js" />
+    <Content Include="Scripts\jquery.multiselect.filter.js" />
+    <Content Include="Scripts\jquery.multiselect.js" />
+    <Content Include="Scripts\jquery.redirect.js" />
+    <Content Include="Scripts\jquery.swfupload.js" />
+    <Content Include="Scripts\jquery.switchButton.js" />
+    <Content Include="Scripts\jquery.tools.min.js" />
+    <Content Include="Scripts\MakePayment.js" />
+    <Content Include="Scripts\Menu1.js" />
+    <Content Include="Scripts\MenuJS.js" />
+    <Content Include="Scripts\menu_script.js" />
+    <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\multiaccordion.jquery.js" />
+    <Content Include="Scripts\multiaccordion.jquery.min.js" />
+    <Content Include="Scripts\Project.js" />
+    <Content Include="Scripts\ProjectView.js" />
+    <Content Include="Scripts\ReportFilter.js" />
+    <Content Include="Scripts\swfupload.js" />
+    <Content Include="Scripts\tinymce\changelog.txt" />
+    <Content Include="Scripts\tinymce\js\editor_plugin.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\license.txt" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\advlist\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\anchor\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\autolink\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\autoresize\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\autosave\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\bbcode\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\charmap\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\code\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\colorpicker\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\contextmenu\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\directionality\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-cool.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-cry.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-embarassed.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-foot-in-mouth.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-frown.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-innocent.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-kiss.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-laughing.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-money-mouth.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-sealed.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-smile.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-surprised.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-tongue-out.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-undecided.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-wink.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\img\smiley-yell.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\emoticons\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\example\dialog.html" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\example\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\example_dependency\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\fullpage\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\fullscreen\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\hr\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\image\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\importcss\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\insertdatetime\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\layer\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\legacyoutput\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\link\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\lists\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\media\moxieplayer.swf" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\media\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\nonbreaking\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\noneditable\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\pagebreak\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\paste\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\preview\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\print\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\save\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\searchreplace\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\spellchecker\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\tabfocus\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\table\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\template\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\textcolor\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\textpattern\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\visualblocks\css\visualblocks.css" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\visualblocks\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\visualchars\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\plugins\wordcount\plugin.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\content.inline.min.css" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\content.min.css" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\fonts\tinymce-small.svg" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\fonts\tinymce.svg" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\img\anchor.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\img\loader.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\img\object.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\img\trans.gif" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\skin.ie7.min.css" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\skin.min.css" />
+    <Content Include="Scripts\tinymce\js\tinymce\themes\modern\theme.min.js" />
+    <Content Include="Scripts\tinymce\js\tinymce\tinymce.min.js" />
+    <Content Include="Scripts\tinymce\LICENSE.TXT" />
+    <Content Include="Scripts\Usercopy.js" />
+    <Content Include="Scripts\Vendorpage.js" />
+    <Content Include="Scripts\VendorView.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="SSRSRptViewer\ReportTemplate.aspx" />
+    <Content Include="tick1.png" />
+    <Content Include="Views\Account\test.aspx" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Images\accent.png" />
+    <Content Include="Images\bullet.png" />
+    <Content Include="Images\heroAccent.png" />
+    <Content Include="Images\orderedList0.png" />
+    <Content Include="Images\orderedList1.png" />
+    <Content Include="Images\orderedList2.png" />
+    <Content Include="Images\orderedList3.png" />
+    <Content Include="Images\orderedList4.png" />
+    <Content Include="Images\orderedList5.png" />
+    <Content Include="Images\orderedList6.png" />
+    <Content Include="Images\orderedList7.png" />
+    <Content Include="Images\orderedList8.png" />
+    <Content Include="Images\orderedList9.png" />
+    <Content Include="Views\adduser\ClientandInteriorDesigner.cshtml" />
+    <Content Include="Views\adduser\Vendor.cshtml" />
+    <Content Include="Views\adduser\VendorContacts.cshtml" />
+    <Content Include="Views\adduser\VendorContactsForNewParentVendor.cshtml" />
+    <Content Include="Views\BudgetView\LineItems.cshtml" />
+    <Content Include="Views\Budget\BudgetSection.cshtml" />
+    <Content Include="Views\Budget\Copy of BudgetSection.cshtml" />
+    <Content Include="Views\Budget\ExportFile.cshtml" />
+    <Content Include="Views\Budget\LineItems-copy.cshtml" />
+    <Content Include="Views\Budget\ReadBudget.cshtml" />
+    <Content Include="Views\Budget\Sort.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Expedite\Copy of Home.cshtml" />
+    <Content Include="Views\Expedite\Home04082022.cshtml" />
+    <Content Include="Views\Expedite\Home_New.cshtml" />
+    <Content Include="Views\Expedite\Home_old.cshtml" />
+    <Content Include="Views\Expedite\test.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Dashboard24042023.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Home\MySettings.cshtml" />
+    <Content Include="Views\Home\NotFound.cshtml" />
+    <Content Include="Views\Home\ResetPassword.cshtml" />
+    <Content Include="Views\Home\SystemLevelPermission.cshtml" />
+    <Content Include="Views\Home\UnaothorizedAccess.cshtml" />
+    <Content Include="Views\Home\UserActivation.cshtml" />
+    <Content Include="Views\Invoice\15092016InvoiceEntry.cshtml" />
+    <Content Include="Views\Invoice\16092016InvoiceEntry.cshtml" />
+    <Content Include="Views\Invoice\CreditNoteEntry.cshtml" />
+    <Content Include="Views\Invoice\Copy of ManualPayment.cshtml" />
+    <Content Include="Views\Invoice\Index.cshtml" />
+    <Content Include="Views\Invoice\InvoiceEdit.cshtml" />
+    <Content Include="Views\Invoice\InvoiceEdit09012017.cshtml" />
+    <Content Include="Views\Invoice\InvoiceEdit2.cshtml" />
+    <Content Include="Views\Invoice\InvoiceEditNew.cshtml" />
+    <Content Include="Views\Invoice\InvoiceEntry.cshtml" />
+    <Content Include="Views\Invoice\InvoiceEntryEdit.cshtml" />
+    <Content Include="Views\Invoice\InvoiceEntryEditNew.cshtml" />
+    <Content Include="Views\Invoice\InvoiceEntryNew.cshtml" />
+    <Content Include="Views\Invoice\InvoiceSearch.cshtml" />
+    <Content Include="Views\Invoice\ManualPayment.cshtml" />
+    <Content Include="Views\Invoice\ManualPaymentSearch.cshtml" />
+    <Content Include="Views\ItemApproval\ItemApprovalList.cshtml" />
+    <Content Include="Views\ProjectView\EditProject.cshtml" />
+    <Content Include="Views\ProjectView\ProjectList.cshtml" />
+    <Content Include="Views\Project\ContactTypes.cshtml" />
+    <Content Include="Views\Project\CreateProject.cshtml" />
+    <Content Include="Views\Project\EditProject.cshtml" />
+    <Content Include="Views\Project\EditProjectContact.cshtml" />
+    <Content Include="Views\Project\ProjectContacts.cshtml" />
+    <Content Include="Views\Project\ProjectList.cshtml" />
+    <Content Include="Views\Project\ProjectTeam24042023.cshtml" />
+    <Content Include="Views\Project\ViewProject.cshtml" />
+    <Content Include="Views\PurchaseOrderView\DeletedPOList.cshtml" />
+    <Content Include="Views\PurchaseOrderView\POList.cshtml" />
+    <Content Include="Views\PurchaseOrderView\POViewNew.cshtml" />
+    <Content Include="Views\PurchaseOrderView\ViewPoHistory.cshtml" />
+    <Content Include="Views\PurchaseOrder\AddItemsToPO11052023.cshtml" />
+    <Content Include="Views\PurchaseOrder\CreatePurchaseOrder.cshtml" />
+    <Content Include="Views\PurchaseOrder\DeletedPOList.cshtml" />
+    <Content Include="Views\PurchaseOrder\EditPOLineItems.cshtml" />
+    <Content Include="Views\PurchaseOrder\EditPOLineItemsForCommitted - Copy.cshtml" />
+    <Content Include="Views\PurchaseOrder\EditPOLineItemsForCommitted.cshtml" />
+    <Content Include="Views\PurchaseOrder\Index.cshtml" />
+    <Content Include="Views\PurchaseOrder\POEdit-copy.cshtml" />
+    <Content Include="Views\PurchaseOrder\POForVendor.cshtml" />
+    <Content Include="Views\PurchaseOrder\POHistory.cshtml" />
+    <Content Include="Views\PurchaseOrder\POlineitems.cshtml" />
+    <Content Include="Views\PurchaseOrder\POList.cshtml" />
+    <Content Include="Views\PurchaseOrder\POView.cshtml" />
+    <Content Include="Views\PurchaseOrder\ViewPoHistory.cshtml" />
+    <Content Include="Views\QuickBook\AuthenticationAsync.cshtml" />
+    <Content Include="Views\QuickBook\Index.cshtml" />
+    <Content Include="Views\Reports\AtRiskByItem.cshtml" />
+    <Content Include="Views\Reports\BudgetReport.cshtml" />
+    <Content Include="Views\Reports\BudgetReportByItem.cshtml" />
+    <Content Include="Views\Reports\BudgetReportSummary.cshtml" />
+    <Content Include="Views\Reports\CommittedCostNewReport.cshtml" />
+    <Content Include="Views\Reports\CommittedCostReport.cshtml" />
+    <Content Include="Views\Reports\CommittedCostReportDetail.cshtml" />
+    <Content Include="Views\Reports\CurrentPaidReport.cshtml" />
+    <Content Include="Views\Reports\ExpediteReportByItem.cshtml" />
+    <Content Include="Views\Reports\ExpediteReportByStatus.cshtml" />
+    <Content Include="Views\Reports\ExpeditNote.cshtml" />
+    <Content Include="Views\Reports\POReport.cshtml" />
+    <Content Include="Views\Reports\PrintedChequeList.cshtml" />
+    <Content Include="Views\Reports\ProjectReport.cshtml" />
+    <Content Include="Views\Reports\ProjectToDateReport.cshtml" />
+    <Content Include="Views\Reports\PurchaseCommitmentReport.cshtml" />
+    <Content Include="Views\Reports\PurchaseCommitmentReport_test.cshtml" />
+    <Content Include="Views\Reports\PurchaseReport.cshtml" />
+    <Content Include="Views\Reports\ReceivingReportSection.cshtml" />
+    <Content Include="Views\Reports\Report_old.cshtml" />
+    <Content Include="Views\Reports\StatusByVendor.cshtml" />
+    <Content Include="Views\Reports\StatusReport.cshtml" />
+    <Content Include="Views\Reports\test.cshtml" />
+    <Content Include="Views\Shared\CheckSession.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\MenuPage.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\SystemAdmin\Copy %282%29 of SystemAdminActivity.cshtml" />
+    <Content Include="Views\SystemAdmin\Copy of SystemAdminActivity.cshtml" />
+    <Content Include="Views\SystemAdmin\SystemAdminActivity.cshtml" />
+    <Content Include="Views\TaskList\TaskManager.cshtml" />
+    <Content Include="Views\User\AddUser.cshtml" />
+    <Content Include="Views\User\UserList.cshtml" />
+    <Content Include="Views\VendorView\AllContacts.cshtml" />
+    <Content Include="Views\VendorView\Index.cshtml" />
+    <Content Include="Views\VendorView\SearchPoList.cshtml" />
+    <Content Include="Views\VendorView\ViewContact.cshtml" />
+    <Content Include="Views\VendorView\ViewVendor.cshtml" />
+    <Content Include="Views\Vendor\AllContacts.cshtml" />
+    <Content Include="Views\Vendor\Copy of EditVendor.cshtml" />
+    <Content Include="Views\Vendor\EditContact.cshtml" />
+    <Content Include="Views\Vendor\EditVendor.cshtml" />
+    <Content Include="Views\Vendor\Index.cshtml" />
+    <Content Include="Views\Vendor\MergeVendor.cshtml" />
+    <Content Include="Views\Vendor\SearchPoList_05122023.cshtml" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\About\accessiblecustomerserviceplan.cshtml" />
+    <Content Include="Views\About\privacypolicy.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Manage.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Account\_RemoveExternalLoginsPartial.cshtml" />
+    <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
+    <Content Include="Views\PurchaseOrder\LineItems.cshtml" />
+    <Content Include="Views\PurchaseOrder\POList1.cshtml" />
+    <Content Include="Views\Project\Copy of EditProject.cshtml" />
+    <Content Include="Views\Invoice\Copy %282%29 of InvoiceEntry.cshtml" />
+    <Content Include="Scripts\tinymce\js\tinymce\langs\readme.md" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\fonts\tinymce-small.ttf" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\fonts\tinymce-small.woff" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\fonts\tinymce.eot" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\fonts\tinymce.ttf" />
+    <Content Include="Scripts\tinymce\js\tinymce\skins\lightgray\fonts\tinymce.woff" />
+    <Content Include="Views\Invoice\CreditNoteEdit.cshtml" />
+    <Content Include="Views\Home\Dashboard_oold.cshtml" />
+    <Content Include="Views\Invoice\InvoiceEdit_TAX.cshtml" />
+    <Content Include="Views\Invoice\InvoiceEntry_TAX.cshtml" />
+    <Content Include="web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Invoice\CreditEntry_TAX.cshtml" />
+    <Content Include="Views\Invoice\CreditEdit_TAX.cshtml" />
+    <Content Include="Views\Home\Bridgesupporter.cshtml" />
+    <Content Include="Views\SystemAdmin\FAQAdmin.cshtml" />
+    <Content Include="Views\Vendor\AllVendors.cshtml" />
+    <Content Include="Views\Project\POApprovalLevel.cshtml" />
+    <Content Include="Views\Home\GeneratePassforalluser.cshtml" />
+    <Content Include="Views\Reports\Report24042023.cshtml" />
+    <Content Include="Views\Reports\BridgeSupporter_Report.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Assets\Approvals\" />
+    <Folder Include="Assets\Budgets\" />
+    <Folder Include="Assets\ImportedFiles\" />
+    <Folder Include="Assets\InstallationScheduleFiles\" />
+    <Folder Include="Assets\POApprovals\" />
+    <Folder Include="Assets\POFiles\" />
+    <Folder Include="Assets\ProjectFiles\" />
+    <Folder Include="Assets\Reports\BudgetReports\" />
+    <Folder Include="Assets\Reports\Purchase\" />
+    <Folder Include="Assets\TinyMceImges\" />
+    <Folder Include="Assets\VendorFiles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ReportGenerators\ApprovalStatus.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\ApprovalStatus1.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\ApprovalStatus2.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\AtRiskByItem.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\BridgeSupporter.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\BudgetReportByItem.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\BudgetReportSummary.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\CommittedCost.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\CommittedCostReportDetail.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\demo1.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\PODetails.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\PurchaseCommitmentReport.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceDetails10.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceDetails8.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceDetails9.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceSummary10.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceSummary8.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceSummary9.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\PODetails5.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\Copy of PurchaseCommitmentReport.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\CurrentPaidReport.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\Demo.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\ExpediteReportByItem.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\ExpediteReportByStatus.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceDetails.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceDetails1.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceDetails2.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceDetails3.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceDetails4.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceDetails5.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceDetails6.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceDetails7.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceSummary.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceSummary1.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceSummary2.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceSummary3.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceSummary4.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceSummary5.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceSummary6.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\InvoiceSummary7.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\PODetails03042023.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\PODetails1.rdlc" />
+    <Content Include="ReportGenerators\PODetails2.rdlc">
+      <SubType>Designer</SubType>
+    </Content>
+    <EmbeddedResource Include="ReportGenerators\PODetails3.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\PODetails4.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\PODetails6.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\POReportSummary.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\POReportSummary1.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\POReportSummary2.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\POReportSummary3.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\POReportSummary4.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\POReportSummary5.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\POReportSummary6.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\PrintedChequeList.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\PrintedChequeList1.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\ProjectToDateReport.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\ProjectToDateReport1.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\ProjectToDateReport2.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\PurchaseCommitment.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\PurchaseCommitmentReport2.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\PurchaseCommitmentReport1.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\PurchaseCommitmentReport_Test.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\PurchaseOrder.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\ReceivingReportSection.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\ReceivingReportSection1.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\ReceivingReportSection2.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\ReceivingReportSection3.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\ReceivingReportSection4.rdlc" />
+    <EmbeddedResource Include="ReportGenerators\StatusByVendor.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Office">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>99</VersionMajor>
+      <VersionMinor>1</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="stdole">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>0</WarningLevel>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>4347</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:4347/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\EntityFramework.6.3.0\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.3.0\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.3.0\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.3.0\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('packages\Microsoft.Azure.DocumentDB.2.1.2\build\Microsoft.Azure.DocumentDB.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Azure.DocumentDB.2.1.2\build\Microsoft.Azure.DocumentDB.targets'))" />
+    <Error Condition="!Exists('packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+  </Target>
+  <Import Project="packages\EntityFramework.6.3.0\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.3.0\build\EntityFramework.targets')" />
+  <Import Project="packages\Microsoft.Azure.DocumentDB.2.1.2\build\Microsoft.Azure.DocumentDB.targets" Condition="Exists('packages\Microsoft.Azure.DocumentDB.2.1.2\build\Microsoft.Azure.DocumentDB.targets')" />
+  <Import Project="packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

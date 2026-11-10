@@ -1,0 +1,2281 @@
+﻿@{    
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Purchase Order</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+
+     <script src="~/Scripts/jquery.DB_PROC.js"></script>
+
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+    <style type="text/css">
+        #popupforvendorlist .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        .spn {
+            border: #208093 1px solid;
+             color: #555555;
+            margin: 0px 0px;
+            width: 96%;
+            height: 20px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+
+           .custom-combobox-input{
+            width:93%  !important;
+                color: #726b79 !important;
+                  background: white;
+    border-radius: 0px;
+    padding-left: 3px;
+    border: 1px solid #7792a8;
+        }
+
+          .ui-button-text{
+              height: 26px !important;
+    margin-top: -4px !important;
+          }
+
+          .custom-combobox-toggle{
+              height : 26px !important;
+              margin-top : -3px !important;
+                width:6.5%  !important;
+          }
+
+          .ui-autocomplete {
+    max-height: 350px;
+    overflow-y: auto;   /* prevent horizontal scrollbar */
+    overflow-x: hidden; /* add padding to account for vertical scrollbar */
+    z-index:1000 !important;
+}
+
+
+    </style>
+
+    <style>
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        .ui-multiselect {
+            width: 100% !important;
+            /*color: rgb(195, 16, 1) !important;*/
+            height: 25px !important;
+            margin-top: 0px !important;
+        }
+
+        label {
+            color: #333333;
+            font-weight: 500;
+        }
+
+        #txt_VendorName, #txt_CurrencyCode, #txt_VendorCO {
+            height: 25px;
+            padding: 2px;
+        }
+
+        table.dataTable thead th, table.dataTable thead td {
+            padding: 2px !important;
+        }
+
+
+        table.dataTable tbody th, table.dataTable tbody td {
+            padding: 2px !important;
+        }
+    </style>
+
+    <script>
+        var allconvrate;
+        var allvendorlist = [];
+
+        function addresslist() {
+            var vendorid = $('#txt_VendorCO').val();
+            console.log(vendorid);
+
+            //if (vendorid == '' || vendorid == '0') {
+            //    notify("Choose a vendor first");
+            //    return;
+            //}
+            var obj = new Object();
+            obj.Mode = 'GETPO';
+            obj.VendorID = vendorid;
+            obj.FldID = $("#Ddl_Project").val().trim();
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_ContactAddressesProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o1 = DBSP.call_DB_Procedure();
+            o1 = o1.data;
+
+            console.log(o1);
+            var html = '';
+            for (var a = 0; a < o1.length; a++) {
+
+                var address1 = o1[a].Address1;
+                var Tabheader = o1[a].Tabheader;
+                html += '<p style="font-weight: bold;">' + Tabheader + '</p>'
+                +'<p onclick="chooseaddress(this);" style="cursor:pointer;border: 1px solid black;padding: 15px;">' + address1 + '</span>';
+            }
+
+
+
+            $('#addresslist').html(html);
+
+            $('#addresslistmodal').modal('show');
+
+        }
+
+        function chooseaddress(o) {
+            var html = $(o).text();
+
+            $('#txt_HotelZipCode').val(html);
+            $('#addresslistmodal').modal('hide');
+        }
+    </script>
+
+    
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            var date = new Date();
+            var currentMonth = date.getMonth();
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+
+            $('#txt_DeliveryDate').datepickercustom({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'MM dd yy'
+                //minDate: new Date(currentYear, currentMonth, currentDate)
+            });
+
+            $('#txt_CheckDate').datepickercustom({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'MM dd yy',
+                minDate: new Date(currentYear, currentMonth, currentDate)
+            });
+
+        });
+
+
+        function IsNumber(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            if ((keyCode > 47 && keyCode < 58) || (keyCode == 8) || (keyCode == 46)) {
+                return true;
+            }
+            else {
+                alert('Use Only Numeric value');
+                return false;
+            }
+        }
+
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('#btn_CreatePO').click(function () {
+
+                $(this).addClass('pointer-events', 'none');
+                var InvRcvdPartial = 'complete';
+                //if ($('input:radio[name=InvRcvdPartial]:checked').val() == 'partial') {
+                //    InvRcvdPartial = 'partial';
+                //}
+                //else if ($('input:radio[name=InvRcvdPartial]:checked').val() == 'complete') {
+                //    InvRcvdPartial = 'complete';
+                //}
+
+
+             
+
+                var Project = $('#Ddl_Project').val().trim();
+                if (Project == "0") {
+                    notify('You must select Project before saving the Purchase Order');
+                    $('#Ddl_Project').focus();
+                    return;
+                }
+               
+                var VendorID = $('#txt_VendorName').attr('data-id'); //$('#txt_VendorName').val().trim();
+               
+                if (VendorID == "0" || VendorID == undefined) {
+                   // errorfunc('txt_VendorName', 'You must select Vendor before saving the Project');
+                    notify('You must select Vendor before saving the Purchase Order');
+                    return;
+                }
+
+                var txt_ConversionRate = $('#txt_ConversionRate').val().trim();
+
+
+                var Ddl_Buyer = $('#Ddl_Buyer').val().trim();
+                if (Ddl_Buyer == "0") {
+                    //$('#Ddl_Buyer').attr("style", "height:40px");
+                    notify('You must select Buyer before saving the Purchase Order');
+                    $('#Ddl_Buyer').focus();
+                    return;
+                }
+
+                var Ddl_Shipment = $('#Ddl_Shipment').val().trim();
+                var txt_Terms = $('#txt_Terms').val().trim();
+
+
+                var txt_FOB = $('#txt_FOB').val().trim();
+
+
+                var txt_ShipTo = $('#txt_ShipTo').val().trim();
+
+                var VendorCO = $('#txt_VendorCO').attr('data-id'); 
+
+                VendorCO = VendorCO == undefined ? "0" : VendorCO;
+
+                var txt_InvoiceTo = $('#txt_InvoiceTo').val().trim();
+
+
+                var address1 = $('#txt_HotelZipCode').val();
+
+                var Remarks = $('#txt_Remarks').val().trim().replace("\\", "/");
+
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/SavePurchaseOrderDetail';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/SavePurchaseOrderDetail';
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        'VendorID': VendorID, 'ProjectID': $('#Ddl_Project').val(), 'ConversionRate': $('#txt_ConversionRate').val(),
+                        'CurrencyCode': $('#txt_CurrencyCode').attr('data-id'), 'BuyerID': $('#Ddl_Buyer').val(), 'ShipMethod': $('#Ddl_Shipment').val(),
+                        'ShipDate': $('#txt_DeliveryDate').val(), 'CheckBackDate': $('#txt_CheckDate').val(), 'Terms': $("#txt_Terms option:selected").attr('data-id'),// $('#txt_Terms').val(),
+                        'FOB': $('#txt_FOB').val(), 'Frieght': $('#txt_Freight').val(), 'Remark': Remarks,
+                        'ShipTo': $('#txt_ShipTo').val(), 'VendorCO': VendorCO, 'InVoiceAddress': $('#txt_InvoiceTo').val(),
+                        'Notes': $('#txt_Notes').val(), 'address1': address1, 'InvRcvdPartial': InvRcvdPartial
+                    },
+                    success: function (data) {
+                        $(this).removeClass('pointer-events');
+                        irrrrr = 0;
+
+                        if (data != '') {
+                            if (data.split('^').length > 0) {
+                                if (data.split('^')[0] == 'Success') {
+                                    notify("PO created Successfully",'green');
+                                    var PONo = data.split('^')[1];
+                                    if (PONo != '') {
+                                        var url = '';
+                                        if (LOCALORSERVERNEW == 'LOCAL') {
+                                            url = '/PurchaseOrder/POEdit';
+                                        }
+                                        else if (LOCALORSERVERNEW == 'SERVER') {
+                                            url = '/PurchaseOrder/POEdit';
+                                        }
+                                        url += "/" + PONo;
+
+                                        window.location.href = url;
+
+                                    }
+                                }
+                                else {
+                                    notify('Something going wrong');
+                                }
+                            }
+                            else {
+                                notify('Something going wrong');
+                            }
+
+                        }
+                        else {
+                            notify('Something going wrong');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        var selectedpopup;
+        $(document).ready(function () {
+            $('#master_content').removeClass('displaynone');
+            $(document).tooltip();
+
+            var classarray = new Array();
+            var clsearch = '';
+            var ddlfrcllsfictn;
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/getClassification';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'PurchaseOrder/getClassification';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: {},
+                success: function (data) {
+
+                    ddlfrcllsfictn = "<select id='Ddl_Clftion' multiple='multiple'>"
+
+                    data = JSON.parse(data);
+                    ////console.log(data);
+                    classarray = data.data;
+
+                    for (var a = 0; a < classarray.length ; a++) {
+
+                        //ddlfrcllsfictn += "<opiton>" + 'test' + "</option>";
+                        ddlfrcllsfictn += "<option text='" + classarray[a].classname + "' value='" + classarray[a].classid + "'>" + deletespaces(classarray[a].classname) + "</option>";
+                    }
+
+                    ddlfrcllsfictn += "</select>";
+
+                    //alert(ddlfrcllsfictn);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+            url1 = '';
+
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/getVendors';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'PurchaseOrder/getVendors';
+            }
+
+
+            var totdata;
+
+            var vendors = new Array();
+
+            $.get(url1)
+                .success(function (response) {
+                    totdata = JSON.parse(response);
+                    totdata = totdata.data;
+                    for (i = 0; i < totdata.length ; i++) {
+                        vendors[i] = new Array();
+                        var id = totdata[i].Vendor_ID;
+                        var txt = 'Click to select ' + totdata[i].ContactFirstname + ' ' + totdata[i].ContactLastname + ' At ' + totdata[i].ParentVendorName;
+                        vendors[i][0] = '<i class="fa fa-hand-o-right" style="font-size: 1.5em;cursor:pointer;" data-id="' + id + '" title="' + txt + '" onclick="selectvendor(this);"></i>';
+                        vendors[i][1] = '<a href="javascript:void(0);" onclick="navtoPV(' + totdata[i].ParentVendor_ID + ');">' + totdata[i].ParentVendorName + '</a>';
+                        vendors[i][2] = '<a href="javascript:void(0);" onclick="navtoV(' + totdata[i].Vendor_ID + ');">' + totdata[i].ContactFirstname + ' ' + totdata[i].ContactLastname + '</a>';
+                        vendors[i][3] = deletespaces(totdata[i].Classifications);
+                        vendors[i][4] = totdata[i].Currency;
+                        vendors[i][5] = totdata[i].City;
+                        vendors[i][6] = totdata[i].State;
+                        vendors[i][7] = totdata[i].CurrCode;
+                        vendors[i][8] = totdata[i].Ischecked;
+                        //vendors[i][9] = totdata[i].ParentVendor_ID;
+                        //vendors[i][10] = id;
+                    }
+
+                    $('#vendorlist').dataTable({
+                        "processing": true,
+                        "data": vendors,
+                        "columns": [
+                            { "title": "Actions", "class": "centerposition" },
+                            { "title": "Vendor" },
+                            { "title": "Contact" },
+                            { "title": "Classification", 'class': 'desktoponly-datatable' },
+                            { "title": "Currency" },
+                            { "title": "City", 'class': 'desktoponly-datatable' },
+                            { "title": "State/Prov", 'class': 'desktoponly-datatable' },
+                            { "title": "Currcode", "class": "displaynone" },
+                        { "title": "Currcode", "class": "displaynone" }
+
+
+                        ],
+                        "order": [[8, "desc"], [1, "asc"], [2, "asc"]],
+                        //"lengthMenu": [[5, 10, 50, -1], [5, 10, 50, "All"]],
+                        "initComplete": function () {
+
+                            //var ddl = "<select><option>1</option><option>2</option></select>";
+                            var html = "";
+                            html = "<tr >"
+                                  + "<th><span onclick='resetsrch();' style='cursor:pointer;'><i class='fa fa-undo'></i></span></th>"
+                                  + "<th rowspan='1' colspan='1' ><input class='srch' type='text' data-indx='1' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='2' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                                  //+ "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='3' placeholder='Search Vendor Category'></th>"
+                                  + "<th rowspan='1' colspan='1' class='desktoponly-datatable'>" + ddlfrcllsfictn + "</th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='4' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                                  + "<th rowspan='1' colspan='1' class='desktoponly-datatable'><input class='srch' type='text' data-indx='5' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                                  + "<th rowspan='1' colspan='1' class='desktoponly-datatable'><input class='srch' type='text' data-indx='6' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>";
+
+
+                            $('#vendorlist thead').append(html);
+
+                            $("#Ddl_Clftion").multiselect().multiselectfilter();
+
+                            $("#Ddl_Clftion").multiselect({
+
+                                //click: function (event, ui) {
+                                //    //$callback.text(ui.value + ' ' + (ui.checked ? 'checked' : 'unchecked'));
+                                //    //alert(ui.value);
+                                //    //console.log(ui);
+                                //    alert(ui.title);
+                                //}
+
+                                close: function () {
+                                    var clsearch = $('#Ddl_Clftion').val();
+                                    if (clsearch == null)
+                                        clsearch = '';
+                                    var srchtxt = '';
+                                    var tmp = clsearch;
+
+                                    for (var i = 0; i < tmp.length; i++) {
+
+                                        var id = tmp[i];
+
+
+                                        for (var a = 0; a < classarray.length ; a++) {
+
+
+                                            if (classarray[a].classid == id) {
+                                                if (srchtxt == '') {
+                                                    srchtxt += deletespaces(classarray[a].classname);
+                                                }
+                                                else {
+                                                    srchtxt += '|' + deletespaces(classarray[a].classname);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    var table = $('#vendorlist').DataTable();
+                                    table.column(3).search(srchtxt, true).draw();
+                                }
+                            });
+
+
+                            var table = $('#vendorlist').DataTable();
+                            // table.column(2).search("fname|ff", true).draw();
+
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+                                table
+                                       .column(indx)
+                                       .search(txt)
+                                       .draw();
+                                //RowHtmlRender();
+                            });
+
+
+                            $('#vendorlist_filter').remove();
+                            $('#vendorlist_length').remove();
+
+                        },
+                        "pagingType": "full_numbers",
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0] }
+                        ]
+                    });
+                });
+
+
+
+
+            $('#Ddl_Project').change(function () {
+
+                var ddlProject = $('#Ddl_Project');
+                setProjectPreference(ddlProject);
+
+                var pid = $(this).val();
+
+                if (pid == "0") {
+                    return;
+                }
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/PurchaseOrder/PO_GetRequiredAndAssignedApprovers_Project';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+
+                    url1 = 'PurchaseOrder/PO_GetRequiredAndAssignedApprovers_Project';
+                }
+
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    data: { 'PID': pid },
+                    success: function (data) {
+                        if (data == "") {
+                            data = 1;
+                        }
+                        if (parseInt(data) > 0) {
+                            //$('#Ddl_Project').val('0');
+                            $('#btn_CreatePO').hide();
+                            notify("Can not create purchase order enough approvers");
+                            return;
+
+                        }
+                        else {
+                            $('#btn_CreatePO').show();
+                        }
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+
+
+
+
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/PurchaseOrder/shiptoaddress';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+
+                    url1 = 'PurchaseOrder/shiptoaddress';
+                }
+
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    data: { 'pid': pid },
+                    success: function (data) {
+                        var hoteladdress = data.split('^')[0];
+                        var legalname = data.split('^')[1];
+                        var projectname = data.split('^')[2];
+                        var ponote = data.split('^')[3];
+
+                        $('#txt_ShipTo').val(projectname);
+                        $('#txt_InvoiceTo').val(legalname);
+                        //$('#txt_HotelZipCode').text(hoteladdress);
+                        //$('#txt_Notes').text(ponote);
+
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+                getVendorShippingWise(pid);
+
+
+            });
+
+
+
+
+        });
+
+        function resetsrch() {
+            $("#Ddl_Clftion").multiselect("uncheckAll");
+
+            var table = $('#vendorlist').DataTable();
+            table.column(3).search('').draw();
+            $('.srch').each(function () {
+                this.value = '';
+                var indx = $(this).attr('data-indx');
+                var txt = this.value;
+                table
+                       .column(indx)
+                       .search(txt)
+                       .draw();
+            });
+        }
+
+        function openvendors(obj) {
+
+           // resetsrch();
+
+            selectedpopup = obj;
+           
+
+            //$('#popupforvendorlist').modal('show');
+            //$('#popupforvendorlist').bPopup({
+            //    easing: 'easeOutBack', //uses jQuery easing plugin
+            //    speed: 450,
+            //    transition: 'slideDown',
+            //    modalColor: 'rgb(18, 54, 65)'
+
+            //});
+        }
+
+        function openvendors1(obj,btn) {
+
+            resetsrch();
+
+            selectedpopup = obj;
+            
+            //$('<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>').insertAfter($("#vlist"));
+            $("#vlist").append('<i class="fa fa-spin fa-spinner mrg5L" aria-hidden="true"></i>');
+            loaddefaultVendor(btn);
+            
+            //$('#popupforvendorlist').bPopup({
+            //    easing: 'easeOutBack', //uses jQuery easing plugin
+            //    speed: 450,
+            //    transition: 'slideDown',
+            //    modalColor: 'rgb(18, 54, 65)'
+
+            //});
+        }
+
+
+        function loaddefaultVendor(btn)
+        {
+            var vendorTable = $('#vendorlist').dataTable();
+            
+            if (vendorTable != null) {
+                vendorTable.fnDestroy();
+                $('#vendorlist').empty();
+            }
+            url1 = '';
+
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/getVendors';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'PurchaseOrder/getVendors';
+            }
+
+
+            var totdata;
+
+            var vendors = new Array();
+
+            $.get(url1)
+                .success(function (response) {
+
+
+                    totdata = JSON.parse(response);
+                    totdata = totdata.data;
+
+                    for (i = 0; i < totdata.length ; i++) {
+                        vendors[i] = new Array();
+
+                        var id = totdata[i].Vendor_ID;
+                        var txt = 'Click to select ' + totdata[i].ContactFirstname + ' ' + totdata[i].ContactLastname + ' At ' + totdata[i].ParentVendorName;
+                        vendors[i][0] = '<i class="fa fa-hand-o-right" style="font-size: 1.5em;cursor:pointer;" data-id="' + id + '" title="' + txt + '" onclick="selectvendor(this);"></i>';
+                        vendors[i][1] = '<a href="javascript:void(0);" onclick="navtoPV(' + totdata[i].ParentVendor_ID + ');">' + totdata[i].ParentVendorName + '</a>';
+                        vendors[i][2] = '<a href="javascript:void(0);" onclick="navtoV(' + totdata[i].Vendor_ID + ');">' + totdata[i].ContactFirstname + ' ' + totdata[i].ContactLastname + '</a>';
+                        vendors[i][3] = deletespaces(totdata[i].Classifications);
+                        vendors[i][4] = totdata[i].Currency;
+                        vendors[i][5] = totdata[i].City;
+                        vendors[i][6] = totdata[i].State;
+                        vendors[i][7] = totdata[i].CurrCode;
+                        vendors[i][8] = totdata[i].Ischecked;
+                        //vendors[i][9] = totdata[i].ParentVendor_ID;
+                        //vendors[i][10] = id;
+                    }
+
+                    $('#vendorlist').dataTable({
+                        "processing": true,
+                        "data": vendors,
+                        "destroy": true,
+                        "columns": [
+                            { "title": "Actions", "class": "centerposition" },
+                            { "title": "Vendor" },
+                            { "title": "Contact" },
+                            { "title": "Classification" },
+                            { "title": "Currency" },
+                            { "title": "City" },
+                            { "title": "State/Prov" },
+                            { "title": "Currcode", "class": "displaynone" },
+                        { "title": "Currcode", "class": "displaynone" }
+
+
+                        ],
+                        "order": [[8, "desc"], [1, "asc"], [2, "asc"]],
+                        //"lengthMenu": [[5, 10, 50, -1], [5, 10, 50, "All"]],
+                        "initComplete": function () {
+
+                            //var ddl = "<select><option>1</option><option>2</option></select>";
+                            //Change By Subhabrata Mondal 10_11_2015
+                            var ddlfrcllsfictn;
+                            var url1 = '';
+                            if (LOCALORSERVERNEW == 'LOCAL') {
+                                url1 = '/PurchaseOrder/getClassification';
+                            }
+                            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                                url1 = 'PurchaseOrder/getClassification';
+                            }
+                            $.ajax({
+                                type: "POST",
+                                url: url1,
+                                async: false,
+                                data: {},
+                                success: function (data) {
+
+                                    ddlfrcllsfictn = "<select id='Ddl_Clftion' multiple='multiple'>"
+
+                                    data = JSON.parse(data);
+                                    ////console.log(data);
+                                    classarray = data.data;
+
+                                    for (var a = 0; a < classarray.length ; a++) {
+
+                                        //ddlfrcllsfictn += "<opiton>" + 'test' + "</option>";
+                                        ddlfrcllsfictn += "<option text='" + classarray[a].classname + "' value='" + classarray[a].classid + "'>" + deletespaces(classarray[a].classname) + "</option>";
+                                    }
+
+                                    ddlfrcllsfictn += "</select>";
+
+                                    //alert(ddlfrcllsfictn);
+                                },
+                                error: function () { notify('Something went wrong'); }
+                            });
+
+                            //Change By Subhabrata Mondal 10_11_2015
+
+                            var html = "";
+                            html = "<tr >"
+                                  + "<th><span onclick='resetsrch();' style='cursor:pointer;'><i class='fa fa-undo'></i></span></th>"
+                                  + "<th rowspan='1' colspan='1' ><input id='tofocus' class='srch' type='text' data-indx='1' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='2' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                                  //+ "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='3' placeholder='Search Vendor Category'></th>"
+                                  + "<th rowspan='1' colspan='1'>" + ddlfrcllsfictn + "</th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='4' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='5' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='6' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>";
+
+
+                            $('#vendorlist thead').append(html);
+
+                            setTimeout(function () { $('#tofocus').focus(); }, 500);
+
+                            $("#Ddl_Clftion").multiselect().multiselectfilter();
+
+                            $("#Ddl_Clftion").multiselect({
+
+                                //click: function (event, ui) {
+                                //    //$callback.text(ui.value + ' ' + (ui.checked ? 'checked' : 'unchecked'));
+                                //    //alert(ui.value);
+                                //    //console.log(ui);
+                                //    alert(ui.title);
+                                //}
+
+                                close: function () {
+                                    var clsearch = $('#Ddl_Clftion').val();
+                                    if (clsearch == null)
+                                        clsearch = '';
+                                    var srchtxt = '';
+                                    var tmp = clsearch;
+
+                                    for (var i = 0; i < tmp.length; i++) {
+
+                                        var id = tmp[i];
+
+
+                                        for (var a = 0; a < classarray.length ; a++) {
+
+
+                                            if (classarray[a].classid == id) {
+                                                if (srchtxt == '') {
+                                                    srchtxt += deletespaces(classarray[a].classname);
+                                                }
+                                                else {
+                                                    srchtxt += '|' + deletespaces(classarray[a].classname);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    var table = $('#vendorlist').DataTable();
+                                    table.column(3).search(srchtxt, true).draw();
+                                }
+                            });
+
+
+                            var table = $('#vendorlist').DataTable();
+                            // table.column(2).search("fname|ff", true).draw();
+
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+                                table
+                                       .column(indx)
+                                       .search(txt)
+                                       .draw();
+                                //RowHtmlRender();
+                            });
+
+
+                            $('#vendorlist_filter').remove();
+                            $('#vendorlist_length').remove();
+                            $("#vlist").find('i').remove();
+
+                        },
+                        "pagingType": "full_numbers",
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0] }
+                        ]
+                    });
+                });
+
+            $('#popupforvendorlist').modal('show');
+            
+        }
+
+        function selectvendor(obj) {
+            var id = $(obj).attr('data-id');
+            var rw = $(obj).parent().parent();
+            //var cname = $(rw).find("td:eq(2)").html();
+
+            var cname = "";
+            if (selectedpopup == 'vendor') {
+                cname = $(rw).find("td:eq(1) a").text() + '-' + $(rw).find("td:eq(2) a").text();
+            }
+            else {
+                cname = $(rw).find("td:eq(2) a").text();
+            }
+
+
+            var currency = $(rw).find("td:eq(4)").html();
+            var currencycode = $(rw).find("td:eq(7)").html();
+
+            //$('#popupforvendorlist').bPopup().close();
+            $('#popupforvendorlist').modal('hide');
+           
+            if (selectedpopup == 'vendor') {
+
+                $("#txt_VendorName").combobox('destroy');
+                $('#txt_VendorName').val(id);
+                $('#txt_VendorName').attr('data-id', id);
+
+                $("#txt_VendorName").combobox(
+               {
+                   select: function (event, ui) {
+                       $('#txt_VendorName').attr('data-id', ui.item.value);
+                       $('#txt_VendorName').val(ui.item.value);
+                       var curr = $('#txt_VendorName option:selected').attr('data-currid');
+                       var currencycode = $('#txt_VendorName option:selected').attr('data-currcode');
+
+                       $('#txt_ConversionRate').val('1.00');
+
+                       for (var a = 0; a < allconvrate.length; a++) {
+                           if (allconvrate[a].CurrencyID == curr) {
+
+                               $('#txt_ConversionRate').val(allconvrate[a].ConversionRate);
+                           }
+                       }
+
+                       $('#txt_CurrencyCode').text(currencycode);
+                       $('#txt_CurrencyCode').attr('data-id', curr);
+
+                       var url1 = '';
+                       if (LOCALORSERVERNEW == 'LOCAL') {
+                           url1 = '/Vendor/EditContact/';
+                       }
+                       else if (LOCALORSERVERNEW == 'SERVER') {
+                           url1 = 'Vendor/EditContact/';
+                       }
+
+                       url1 += ui.item.value;
+
+
+                       
+                       $('#edtvndr').html("<a target='_blank' href='" + url1 + "'><u><span style='float:right;'>" + "<i class='fa fa-pencil-square-o'></i></span></u></a>");
+
+
+
+
+                   }
+               }
+               );
+
+
+
+
+                $('#txt_ConversionRate').val('1.00');
+
+                for (var a = 0; a < allconvrate.length; a++) {
+                    if (allconvrate[a].CurrencyID == currencycode) {
+                        tmp = 1;
+                        $('#txt_ConversionRate').val(allconvrate[a].ConversionRate);
+                    }
+                }
+              
+
+                $('#txt_CurrencyCode').text(currency);
+                $('#txt_CurrencyCode').attr('data-id', currencycode);
+
+              
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/Vendor/EditContact/';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'Vendor/EditContact/';
+                }
+
+                url1 += id;
+
+
+                $('#txt_VendorName').val(cname);
+                $('#edtvndr').html("<a target='_blank' href='" + url1 + "'><u><span style='float:right;'>" + "<i class='fa fa-pencil-square-o'></i></span></u></a>");
+
+
+
+
+
+                $('#txt_VendorName').attr('data-id', id);
+            }
+            else {
+
+                //$('#txt_VendorCO').text(cname);
+                //$('#txt_VendorCO').attr('data-id', id);
+                // alert('still working');
+
+                $("#txt_VendorCO").combobox('destroy');
+
+                $('#txt_VendorCO').attr('data-id', id);
+                $('#txt_VendorCO').val(id);
+                setTimeout(function () {
+
+
+                    $("#txt_VendorCO").combobox(
+                        {
+                            select: function (event, ui) {
+                                $('#txt_VendorCO').attr('data-id', ui.item.value)
+
+                                var url1 = '';
+                                if (LOCALORSERVERNEW == 'LOCAL') {
+                                    url1 = '/PurchaseOrder/vendoraddress';
+                                }
+                                else if (LOCALORSERVERNEW == 'SERVER') {
+
+                                    url1 = 'PurchaseOrder/vendoraddress';
+                                }
+
+
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: url1,
+                                    async: false,
+                                    data: { 'vendorid': ui.item.value },
+                                    success: function (data) {
+
+                                        $('#txt_HotelZipCode').text(data);
+                                    },
+                                    error: function () { notify('Something went wrong'); }
+                                });
+
+
+
+
+                            }
+                        }
+
+                        );
+
+
+
+                }, 100);
+
+
+
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/PurchaseOrder/vendoraddress';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+
+                    url1 = 'PurchaseOrder/vendoraddress';
+                }
+
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    data: { 'vendorid': id },
+                    success: function (data) {
+
+                        $('#txt_HotelZipCode').text(data);
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+            }
+        }
+
+        function deletespaces(str) {
+            var newstr = '';
+            for (var i = 0; i < str.length; i++) {
+                if (str[i] != ' ') {
+                    newstr += str[i];
+                }
+            }
+            return newstr;
+
+        }
+
+    </script>
+
+    <style type="text/css">
+        /** { margin: 0; padding: 0; }
+        body { font: 14px/1.4 Georgia, serif; }
+        #page-wrap { width: 600px; margin: 15px auto; }
+        p { margin: 0 0 15px 0; }
+        p:first-child { background: #fffcde; padding: 10px; }
+        #sidebar ul { background: #eee; padding: 10px; }
+        li { margin: 0 0 0 20px; }
+        #main { width: 390px; float: left; }*/
+        /*#sidebar { width: 190px; float: right; }*/
+        #sidebar {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+        }
+        /*#sidebar ul { background: #eee; padding: 10px; }*/
+        /*li { margin: 0 0 0 20px; }*/
+    </style>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#Ddl_Project").multiselect({
+                multiple: false,
+                maxTextWrapSize: 100
+                //,header: "Select an option"
+                , noneSelectedText: "Select a Project"
+                //,selectedList: 1
+            }).multiselectfilter();
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+        });
+        function ProjectNameAtLabel(obj) {
+
+            getallconvrate();
+
+            var Projectval = $(obj).val();
+            Projectval = Projectval == null ? "" : Projectval.toString();
+
+
+            var ProjectText = $(obj).find('option:selected').text();
+            ProjectText = ProjectText == null ? "" : ProjectText.toString();
+
+
+            if (Projectval.toString() == null || Projectval.toString() == undefined || Projectval.toString() == 'undefined') {
+                $('#lbl_ProjectName').html('No project has been selected.');
+                return;
+            }
+
+            if (Projectval.toString() == '0') {
+                $('#lbl_ProjectName').html('No project has been selected.');
+            }
+            else {
+                $('#lbl_ProjectName').html('Selected Project : ' + $(obj).find('option:selected').text());
+            }
+
+
+        }
+       
+    </script>
+
+</head>
+<body>
+
+
+    <!-- Modal -->
+<div id="addresslistmodal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Choose Address</h4>
+      </div>
+      <div class="modal-body" style="max-height:550px;overflow:auto;" id="addresslist">
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+    <input type="hidden" id="iscopypo" value="@ViewData["IsCopyPO"]" />
+    <div id="popupforvendorlist" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="vlist">Vendor List</h4>
+                </div>
+                <div class="modal-body" style="max-width:100%; zoom:0.95; overflow: auto; max-height:450px;">
+                    <table id="vendorlist" class="display  compact">
+                        <thead>
+                            <tr>
+                                <th style="width:4%;"></th>
+                                <th style="width:27%;">></th>
+                                <th style="width:21%;">></th>
+                                <th style="width:26%;"></th>
+                                <th style="width:5%;"></th>
+                                <th style="width:11%;">></th>
+                                <th style="width:6%;">></th>
+                                <th></th>
+                                <th></th>
+
+
+                            </tr>
+                        </thead>
+
+
+
+
+
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container-fluid" id="angulardiv" ng-app="Project" ng-controller="PO">
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header">Create Purchase Order</h3>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-3 req">
+                <label>Project</label>
+                <select id="Ddl_Project" class="form-control" onchange="ProjectNameAtLabel(this);" tabindex="1">
+                    <option value="0">--Select Project--</option>
+                    @Html.Raw(ViewData["getAllProjectName"])
+                </select>
+
+                <span id="lbl_ProjectName" class="mrg5T displaynone">No project has been selected.</span>
+
+            </div>
+
+            <div class="col-sm-3 req">
+                <label><span style="cursor: pointer;" onclick="openvendors1('vendor',this);" id="vendorLink"><u>Vendor</u></span></label>
+                <span id="edtvndr"></span>
+                @*<span id="txt_VendorName" style="height: 30px;" class="spn" data-id="0" tabindex="2"></span>*@
+                @*<input type="text" id="txt_VendorName2"  class="form-control" data-id="0" tabindex="2" />*@
+
+                <select class="combobox form-control" id="txt_VendorName">
+                    @Html.Raw(ViewData["VendorDetails"])
+                </select>
+
+
+            </div>
+
+            <div class="col-sm-2 req">
+                <label>Buyer</label>
+                <select id="Ddl_Buyer" class="makedisable form-control" style="padding: 7px 0px 6px;" tabindex="2">
+                    <option value="0">--Select Buyer--</option>
+                    @Html.Raw(ViewData["GetBuyerDetail"])
+                </select>
+            </div>
+
+            <div class="col-sm-1">
+                <label>Currency</label>
+                <span id="txt_CurrencyCode" class="spn" data-id="0"></span>
+            </div>
+            <div class="col-sm-1">
+                <label>Conv. Rate</label>
+                <input type="text" id="txt_ConversionRate" ng-model="PO.ConversionRate" class="makedisable floatonly form-control" tabindex="3" />
+            </div>
+
+            <div class="col-sm-2">
+                <label>Payment Schedule</label>
+                <select id="txt_Terms" class="makedisable form-control" style="padding: 7px 0px 6px;" tabindex="4">
+                    <option value="0">--Select Terms--</option>
+                    @Html.Raw(ViewData["getAllTerms"])
+                </select>
+
+            </div>
+
+        </div>
+        <hr />
+
+        <div class="row mrg10T">
+            <div class="col-sm-2">
+                <label>Ship Via</label>
+                <select id="Ddl_Shipment" class="makedisable form-control" style="padding: 7px 0px 6px;" tabindex="5">
+                    <option value="0">--Select Shipping Method--</option>
+                    @Html.Raw(ViewData["GetShipmentMethod"])
+                </select>
+
+            </div>
+
+            
+            <div class="col-sm-2">
+                <label>Shipping Instructions</label>
+                <input type="text" id="txt_Freight" ng-model="PO.Freight" class="makedisable form-control" value="Prepaid and Charge" tabindex="6" />
+            </div>
+
+
+            <div class="col-sm-2">
+                <label>FOB</label>
+                <input type="text" id="txt_FOB" ng-model="PO.FOB" class="makedisable form-control" tabindex="7" />
+            </div>
+
+            <div class="col-sm-2">
+                <label>Delivery Date</label>
+                <input type="text" id="txt_DeliveryDate" ng-model="PO.ArrivalDate" onkeypress="return IsNumber(event);" placeholder="Select Delivery Date" class="makedisable form-control" tabindex="8" />
+
+            </div>
+
+            <div class="col-sm-2">
+                <label>Check Back Date</label>
+                <input type="text" id="txt_CheckDate" ng-model="PO.CheckDate" onkeypress="return IsNumber(event);" placeholder="Select CheckBack Date" class="makedisable form-control" tabindex="9" />
+
+            </div>
+
+            <div class="col-sm-2">
+                <label>Reference</label>
+                <input type="text" id="txt_Remarks" ng-model="PO.Remarks" class="makedisable form-control" tabindex="10" />
+            </div>
+
+
+
+        </div>
+
+ <hr />
+         
+
+
+
+
+
+       
+
+         <div class="row mrg10T">
+
+             <div class="col-sm-4">
+
+                 <div class="form-group">
+                     <label>Ship To</label>
+                     <input type="text" id="txt_ShipTo" ng-model="PO.ShipTo" class="makedisable form-control" tabindex="11" />
+                 </div>
+                 <div class="form-group">
+                     <label class="makedisable"><span style="cursor: pointer;" onclick="openvendors('vendorco',this);"><u id="vendor_co">Vendor(C/O): </u></span></label>
+                     @*<span id="txt_VendorCO" style="width:100%;" class="spn" data-id="0"></span>*@
+
+                     <select class="combobox form-control" id="txt_VendorCO">
+                         @Html.Raw(ViewData["VendorDetails"])
+                     </select>
+
+
+                 </div>
+
+                 <div class="form-group">
+                     <label>Invoice To</label>
+                     <input type="text" id="txt_InvoiceTo" ng-model="PO.InvoiceTo" class="makedisable form-control" tabindex="12" />
+                 </div>
+
+             </div>
+
+
+             <div class="col-sm-4">
+                 <div class="form-group">
+                     <span style="float:right;color:blue;cursor:pointer;" onclick="addresslist();"><u>Change Address</u></span>
+                     <label>Address</label>
+                     <textarea id="txt_HotelZipCode" class="makedisable form-control no-resize" style="height:118px;" tabindex="13">To Be Determined</textarea>
+                 </div>
+             </div>
+
+             
+
+
+             <div class="col-sm-4">
+                 
+
+                  <div class="form-group">
+                  <label>Notes</label>
+                <textarea id="txt_Notes" ng-model="PO.Notes"  class="makedisable form-control no-resize" style="height:118px;" tabindex="14"></textarea>
+</div>
+                
+             </div>
+             
+
+             </div>
+
+        <div class="edit_vendor_full">
+            
+           
+            <div style="width: 32%; float: left;">
+                <div style="width: 96%; margin-right: 4%; float: left; margin-top: 27px;">
+                    <div class="user_panel_container policy-items displaynone">
+                        
+                    </div>
+                </div>
+                @*<div style="width:48%;float:left;margin-top:27px;">
+                    
+                </div>*@
+            </div>
+
+        </div>
+        
+        <div class="edit_vendor_full">
+
+            <div class="edit_vendor_half">
+
+
+
+
+                <div class="user_panel_container" style="display: none;">
+                    <label>Vendor Address</label>
+                    <input type="text" id="txt_ProjectScope" ng-model="PO.VendorAddress" placeholder="Enter Vendor Address">
+                </div>
+
+                <div class="user_panel_container" style="display: none;">
+                    <label>Address 3</label>
+                    <input type="text" id="txt_OwnerName" ng-model="PO.Address3" />
+                </div>
+
+                <div class="user_panel_container" style="display: none;">
+                    <label>Address 4</label>
+                    <input type="text" id="txt_OwnerAddr" ng-model="PO.OwnerAddr">
+                </div>
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+
+
+    <div class="float-panel-container">
+        <ul>
+            <li id="btn_CreatePO" title="Create PO" ><a href="javascript:void(0);"><i class="fa fa-save mrg5R"data-toggle="tooltip"></i><span class="tooltip-toggle">Create PO</span></a></li>
+
+        </ul>
+    </div>
+
+    @*  <div class="sidebar_btn">
+                        <ul>
+                            <li>
+                                <a href="javascript:void(0);" class="hvr-icon-save" title="Update" id="btn_CreatePO"></a>
+                                <img id="loader_CreatePO" style="display: none;" src="~/Images/load.gif" />
+                            </li>
+                        </ul>
+                    </div>*@    @*--------------------------------------------------Added By Subhabrta Mondal 10/11/2015-------------------------------------------*@
+
+                    <script type="text/javascript">
+                        function navtoPV(pvid) {
+                            var url1 = '';
+                            if (LOCALORSERVERNEW == 'LOCAL') {
+                                url1 = '/Vendor/EditVendor/' + pvid;
+                            }
+                            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                                url1 = '/Vendor/EditVendor/' + pvid;
+                            }
+
+                            window.open(url1, '_blank');
+                        }
+                        function navtoV(vid) {
+                            var url1 = '';
+                            if (LOCALORSERVERNEW == 'LOCAL') {
+                                url1 = '/Vendor/EditContact/' + vid;
+                            }
+                            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                                url1 = 'Vendor/EditContact/' + vid;
+                            }
+
+                            window.open(url1, '_blank');
+                        }
+    $(function () {
+        $("#vendor_co").on("click", function () {
+
+
+            var vendorTable = $('#vendorlist').dataTable();
+            if (vendorTable != null) {
+                vendorTable.fnDestroy();
+                $('#vendorlist').empty();
+            }
+
+            $("#vlist").find('i').remove();
+            $("#vlist").append('<i class="fa fa-spin fa-spinner mrg5L" aria-hidden="true"></i>');
+            $('#popupforvendorlist').modal('show');
+
+
+            setTimeout(function () {
+                var urltemp1;
+                var pid;
+                pid = $("#Ddl_Project").val().trim();
+
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    urltemp1 = '/PurchaseOrder/getVendorsOrderByProject';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+
+                    urltemp1 = 'PurchaseOrder/getVendorsOrderByProject';
+                }
+                var totdata;
+                var vendors = new Array();
+                $("#vendor_co").parent().parent().after('<i class="fa fa-spin fa-spinner mrg5L" aria-hidden="true"></i>');
+
+                $.ajax({
+                    type: "POST",
+                    url: urltemp1,
+                    async: false,
+                    data: { 'pid': pid },
+                    success: function (data) {
+
+                        totdata = JSON.parse(data);
+                        totdata = totdata.data;
+
+
+                        for (i = 0; i < totdata.length ; i++) {
+
+                            vendors[i] = new Array();
+                            var id = totdata[i].Vendor_ID;
+                            var txt = 'Click to select ' + totdata[i].ContactFirstname + ' ' + totdata[i].ContactLastname + ' At ' + totdata[i].ParentVendorName;
+                            vendors[i][0] = '<i class="fa fa-hand-o-right" style="font-size: 1.5em;cursor:pointer;" data-id="' + id + '" title="' + txt + '" onclick="selectvendor(this);"></i>';
+                            vendors[i][1] = '<a href="javascript:void(0);" onclick="navtoPV(' + totdata[i].ParentVendor_ID + ');">' + totdata[i].ParentVendorName + '</a>';
+                            vendors[i][2] = '<a href="javascript:void(0);" onclick="navtoV(' + totdata[i].Vendor_ID + ');">' + totdata[i].ContactFirstname + ' ' + totdata[i].ContactLastname + '</a>';
+                            vendors[i][3] = deletespaces(totdata[i].Classifications);
+                            vendors[i][4] = totdata[i].Currency;
+                            vendors[i][5] = totdata[i].City;
+                            vendors[i][6] = totdata[i].State;
+                            vendors[i][7] = totdata[i].CurrCode;
+                            vendors[i][8] = totdata[i].Ischecked;
+
+                        }
+                        $('#vendorlist').dataTable({
+                            "processing": true,
+                            "data": vendors,
+                            "columns": [
+                                { "title": "Actions" },
+                                { "title": "Vendor" },
+                                { "title": "Contact" },
+                                { "title": "Classification" },
+                                { "title": "Currency" },
+                                { "title": "City" },
+                                { "title": "State/Prov" },
+                                { "title": "Currcode", "class": "displaynone" },
+                            { "title": "pos", "class": "displaynone" }
+
+
+                            ],
+                            "order": [[8, "desc"], [1, "asc"], [2, "asc"]],
+                            //"lengthMenu": [[ 10, 50, -1], [ 10, 50, "All"]],
+                            "initComplete": function () {
+
+                                //var ddl = "<select><option>1</option><option>2</option></select>";
+                                var html = "";
+
+                                //Change By Subhabrata Mondal 10_11_2015
+                                var ddlfrcllsfictn;
+                                var url1 = '';
+                                if (LOCALORSERVERNEW == 'LOCAL') {
+                                    url1 = '/PurchaseOrder/getClassification';
+                                }
+                                else if (LOCALORSERVERNEW == 'SERVER') {
+
+                                    url1 = 'PurchaseOrder/getClassification';
+                                }
+                                $.ajax({
+                                    type: "POST",
+                                    url: url1,
+                                    async: false,
+                                    data: {},
+                                    success: function (data) {
+
+                                        ddlfrcllsfictn = "<select id='Ddl_Clftion' multiple='multiple'>"
+
+                                        data = JSON.parse(data);
+                                        ////console.log(data);
+                                        classarray = data.data;
+
+                                        for (var a = 0; a < classarray.length ; a++) {
+
+                                            //ddlfrcllsfictn += "<opiton>" + 'test' + "</option>";
+                                            ddlfrcllsfictn += "<option text='" + classarray[a].classname + "' value='" + classarray[a].classid + "'>" + deletespaces(classarray[a].classname) + "</option>";
+                                        }
+
+                                        ddlfrcllsfictn += "</select>";
+
+                                        //alert(ddlfrcllsfictn);
+                                    },
+                                    error: function () { notify('Something went wrong'); }
+                                });
+
+                                //Change By Subhabrata Mondal 10_11_2015
+
+                                //$('#vendorlist').append("<thead></thead>");
+                                html = "<tr>"
+                                    + "<th><span onclick='resetsrch();' style='cursor:pointer;'><i class='fa fa-undo'></i></span></th>"
+                                    + "<th rowspan='1' colspan='1'><input class='srch' type='text' id='tofocus2' data-indx='1' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                                    + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='2' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                                    //+ "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='3' placeholder='Search Vendor Category'></th>"
+                                    + "<th rowspan='1' colspan='1'>" + ddlfrcllsfictn + "</th>"
+                                    + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='4' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                                    + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='5' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                                    + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='6' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>";
+                                $('#vendorlist thead').append(html);
+
+                                setTimeout(function () { $('#tofocus2').focus(); }, 500);
+
+
+                                $("#Ddl_Clftion").multiselect().multiselectfilter();
+
+
+                                $("#Ddl_Clftion").multiselect({
+
+                                    //click: function (event, ui) {
+                                    //    //$callback.text(ui.value + ' ' + (ui.checked ? 'checked' : 'unchecked'));
+                                    //    //alert(ui.value);
+                                    //    //console.log(ui);
+                                    //    alert(ui.title);
+                                    //}
+
+                                    close: function () {
+                                        var clsearch = $('#Ddl_Clftion').val();
+                                        if (clsearch == null)
+                                            clsearch = '';
+                                        var srchtxt = '';
+                                        var tmp = clsearch;
+
+                                        for (var i = 0; i < tmp.length; i++) {
+
+                                            var id = tmp[i];
+
+                                            for (var a = 0; a < classarray.length ; a++) {
+
+
+                                                if (classarray[a].classid == id) {
+                                                    if (srchtxt == '') {
+                                                        srchtxt += deletespaces(classarray[a].classname);
+                                                    }
+                                                    else {
+                                                        srchtxt += '|' + deletespaces(classarray[a].classname);
+                                                    }
+                                                }
+
+                                            }
+
+                                        }
+                                        var table = $('#vendorlist').DataTable();
+                                        table.column(3).search(srchtxt, true).draw();
+
+
+                                    }
+
+                                });
+
+                                var table = $('#vendorlist').DataTable();
+                                // table.column(2).search("fname|ff", true).draw();
+
+                                $('.srch').on('keyup change', function () {
+                                    var indx = $(this).attr('data-indx');
+                                    var txt = this.value;
+                                    table
+                                           .column(indx)
+                                           .search(txt)
+                                           .draw();
+                                    //RowHtmlRender();
+                                });
+                                $('#vendorlist_filter').remove();
+                                // $('#vendorlist_length').remove();
+                                $("#vendor_co").parent().parent().parent().find('i').remove();
+
+                            },
+                            "pagingType": "full_numbers",
+                            "aoColumnDefs": [
+                                { 'bSortable': false, 'aTargets': [0] }
+                            ]
+                        });
+
+
+                        $("#vlist").find('i').remove();
+
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+            }, 400);//end of setTimeout
+        });
+    });
+
+                    </script>
+
+                    @*--------------------------------------------------Added By Subhabrta Mondal 10/11/2015-------------------------------------------*@
+
+                    <script>
+
+    function projectddlchange(obj) {
+
+        var pid = $(obj).val();
+
+        if (pid == "0") {
+            return;
+        }
+
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/PurchaseOrder/PO_GetRequiredAndAssignedApprovers_Project';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+
+            url1 = 'PurchaseOrder/PO_GetRequiredAndAssignedApprovers_Project';
+        }
+
+
+
+        $.ajax({
+            type: "POST",
+            url: url1,
+            async: false,
+            data: { 'PID': pid },
+            success: function (data) {
+                if (data == "") {
+                    data = 1;
+                }
+                if (parseInt(data) > 0) {
+                    $('#btn_CreatePO').hide();
+                    notify("Can not create purchase order. Not enough approvers");
+                    return;
+
+                }
+                else {
+                    $('#btn_CreatePO').show();
+                }
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+
+
+
+
+
+
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/PurchaseOrder/shiptoaddress';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+
+            url1 = 'PurchaseOrder/shiptoaddress';
+        }
+
+
+
+        $.ajax({
+            type: "POST",
+            url: url1,
+            async: false,
+            data: { 'pid': pid },
+            success: function (data) {
+                
+                var hoteladdress = data.split('^')[0];
+                var legalname = data.split('^')[1];
+                var projectname = data.split('^')[2];
+                var ponote = data.split('^')[3];
+                
+
+                $('#txt_ShipTo').val(projectname);
+                $('#txt_InvoiceTo').val(legalname);
+                //$('#txt_HotelZipCode').text(hoteladdress);
+                //$('#txt_Notes').text(ponote);
+
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+
+        getVendorShippingWise(pid);
+
+
+    }
+
+    function getVendorShippingWise(pid) {
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/PurchaseOrder/GetVendorShipingPriorityCreate';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+
+            url1 = 'PurchaseOrder/GetVendorShipingPriorityCreate';
+        }
+
+
+
+        $.ajax({
+            type: "POST",
+            url: url1,
+            async: false,
+            data: { 'projectID': pid },
+            success: function (data) {
+                $('#txt_VendorCO').empty();
+                $('#txt_VendorCO').append(data);
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+    }
+                    </script>
+
+                    <script>
+
+
+    var ProjectDdlForPage = $('#Ddl_Project'); //The project dropdown ID
+
+
+    $(document).ready(function () {
+
+        var isCopyPOVal = $("#iscopypo").val();
+        if (isCopyPOVal == "0")
+        {            
+            var selectedpreferredpid = getProjectPreference();
+
+            if (selectedpreferredpid.split(',').length > 0) {
+                selectedpreferredpid = selectedpreferredpid.split(',')[0];
+            }
+            $(ProjectDdlForPage).find('option').each(function () {
+                if ($(this).attr('data-id') == selectedpreferredpid) {
+                    $(this).attr("selected", "true");
+                }
+            });
+            
+        }               
+
+
+        $(ProjectDdlForPage).multiselect('refresh');
+
+        var width = '100%';
+        $('.ui-multiselect').css('width', width);
+        $('.ui-multiselect-menu').css('width', '39.5%');
+        $('.ui-state-default').css('color', '#C31001');
+        $('.ui-multiselect').css('height', '34px');
+        $('.ui-multiselect').css('margin-top', '5px');
+
+
+
+        //To call page specific dropdown change event
+        ProjectNameAtLabel(ProjectDdlForPage);
+        projectddlchange(ProjectDdlForPage);
+
+
+
+
+    });
+
+
+
+    //$(document).on('change', ProjectDdlForPage, function () {
+
+    //    setProjectPreference(ProjectDdlForPage);
+
+    //});
+
+
+    $(document).ready(function () {
+        PreventTwoDecimalPlace("#txt_ConversionRate", 4);
+        getallconvrate();
+
+        var curr = $('#txt_VendorName option:selected').attr('data-currid');
+        var currencycode = $('#txt_VendorName option:selected').attr('data-currcode');
+
+        $('#txt_ConversionRate').val('1.00');
+
+        for (var a = 0; a < allconvrate.length; a++) {
+            if (allconvrate[a].CurrencyID == curr) {
+
+                $('#txt_ConversionRate').val(allconvrate[a].ConversionRate);
+            }
+        }
+
+        $('#txt_CurrencyCode').text(currencycode);
+        $('#txt_CurrencyCode').attr('data-id', curr);
+
+
+
+    });
+
+    function getallconvrate() {
+
+
+        var pid = $("#Ddl_Project").val();
+
+        var urltemp = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Project/getAllConvRate';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            urltemp = 'Project/getAllConvRate';
+        }
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: urltemp,
+            async: false,
+            data: "{'PID' : '" + pid + "'}",
+            success: function (response) {
+
+                response = JSON.parse(response);
+                response = response.data;
+
+                allconvrate = response;
+
+
+
+
+
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+
+
+
+    }
+
+
+
+                    </script>
+
+
+
+</body>
+
+
+<script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#txt_VendorName").combobox(
+              {
+                  select: function (event, ui) {
+                      $('#txt_VendorName').attr('data-id', ui.item.value);
+                      $('#txt_VendorName').val(ui.item.value);
+                      var curr = $('#txt_VendorName option:selected').attr('data-currid');
+                      var currencycode = $('#txt_VendorName option:selected').attr('data-currcode');
+
+                      $('#txt_ConversionRate').val('1.00');
+
+                      for (var a = 0; a < allconvrate.length; a++) {
+                          if (allconvrate[a].CurrencyID == curr) {
+
+                              $('#txt_ConversionRate').val(allconvrate[a].ConversionRate);
+                          }
+                      }
+
+                      $('#txt_CurrencyCode').text(currencycode);
+                      $('#txt_CurrencyCode').attr('data-id', curr);
+
+
+                      var url1 = '';
+                      if (LOCALORSERVERNEW == 'LOCAL') {
+                          url1 = '/Vendor/EditContact/';
+                      }
+                      else if (LOCALORSERVERNEW == 'SERVER') {
+                          url1 = 'Vendor/EditContact/';
+                      }
+
+                      url1 += ui.item.value;
+
+
+
+                      $('#edtvndr').html("<a target='_blank' href='" + url1 + "'><u><span style='float:right;'>" + "<i class='fa fa-pencil-square-o'></i></span></u></a>");
+
+
+
+                  }
+              }
+              );
+
+
+
+
+                $("#txt_VendorCO").combobox(
+                    {
+                        select: function (event, ui) {
+                            $('#txt_VendorCO').attr('data-id', ui.item.value)
+
+                            var url1 = '';
+                            if (LOCALORSERVERNEW == 'LOCAL') {
+                                url1 = '/PurchaseOrder/vendoraddress';
+                            }
+                            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                                url1 = 'PurchaseOrder/vendoraddress';
+                            }
+
+
+
+                            $.ajax({
+                                type: "POST",
+                                url: url1,
+                                async: false,
+                                data: { 'vendorid': ui.item.value },
+                                success: function (data) {
+
+                                    $('#txt_HotelZipCode').text(data);
+                                },
+                                error: function () { notify('Something went wrong'); }
+                            });
+
+
+
+
+                        }
+                    }
+
+                    );
+
+
+                var copypo = $('#iscopypo').val();
+                //console.log("copypo -> " + copypo);
+                if (copypo == 1) {
+
+                    var url1 = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url1 = '/PurchaseOrder/populatedetails';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+
+                        url1 = 'PurchaseOrder/populatedetails';
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: url1,
+                        async: false,
+                        data: {},
+                        datatype: 'JSON',
+                        success: function (data) {
+                            //console.log(data);
+
+                            data = JSON.parse(data).data[0];
+                            var vendorid = data.Vendor_ID;
+                            var VendorCO = data.VendorCO;
+
+
+                            //console.log(data);
+
+                            //console.log("***" + vendorid);
+
+                            console.log('Project ID: ' + data.Project_ID);
+
+                            $("#Ddl_Project").find('option').each(function () {
+                                if ($(this).attr('data-id') == data.Project_ID) {
+                                    $(this).attr("selected", "true");
+                                }
+                            });
+                            $("#Ddl_Project").multiselect('refresh');
+
+                            //$("#Ddl_Project").val(data.Project_ID);
+                            $("#txt_VendorName").val(vendorid);
+                            $("#txt_VendorName").attr('data-id',vendorid);
+                            $("#txt_VendorName").combobox("destroy");
+                            
+                            $("#txt_VendorName").combobox(
+             {
+                 select: function (event, ui) {
+                     $('#txt_VendorName').attr('data-id', ui.item.value);
+                     $('#txt_VendorName').val(ui.item.value);
+                     var curr = $('#txt_VendorName option:selected').attr('data-currid');
+                     var currencycode = $('#txt_VendorName option:selected').attr('data-currcode');
+
+                     $('#txt_ConversionRate').val('1.00');
+
+                     for (var a = 0; a < allconvrate.length; a++) {
+                         if (allconvrate[a].CurrencyID == curr) {
+
+                             $('#txt_ConversionRate').val(allconvrate[a].ConversionRate);
+                         }
+                     }
+
+                     $('#txt_CurrencyCode').text(currencycode);
+                     $('#txt_CurrencyCode').attr('data-id', curr);
+
+
+                     var url1 = '';
+                     if (LOCALORSERVERNEW == 'LOCAL') {
+                         url1 = '/Vendor/EditContact/';
+                     }
+                     else if (LOCALORSERVERNEW == 'SERVER') {
+                         url1 = 'Vendor/EditContact/';
+                     }
+
+                     url1 += ui.item.value;
+
+
+
+                     $('#edtvndr').html("<a target='_blank' href='" + url1 + "'><u><span style='float:right;'>" + "<i class='fa fa-pencil-square-o'></i></span></u></a>");
+
+
+
+                 }
+             }
+             );
+
+                            var curr = $('#txt_VendorName option:selected').attr('data-currid');
+                            var currencycode = $('#txt_VendorName option:selected').attr('data-currcode');
+                            $('#txt_CurrencyCode').text(currencycode);
+                            $('#txt_CurrencyCode').attr('data-id', curr);
+
+
+                            $("#txt_VendorCO").val(VendorCO);
+                            $("#txt_VendorCO").attr('data-id', VendorCO);
+                            $("#txt_VendorCO").combobox("destroy");
+
+
+
+                            $("#txt_VendorCO").combobox(
+                               {
+                                   select: function (event, ui) {
+                                       $('#txt_VendorCO').attr('data-id', ui.item.value)
+
+                                       var url1 = '';
+                                       if (LOCALORSERVERNEW == 'LOCAL') {
+                                           url1 = '/PurchaseOrder/vendoraddress';
+                                       }
+                                       else if (LOCALORSERVERNEW == 'SERVER') {
+
+                                           url1 = 'PurchaseOrder/vendoraddress';
+                                       }
+
+
+
+                                       $.ajax({
+                                           type: "POST",
+                                           url: url1,
+                                           async: false,
+                                           data: { 'vendorid': ui.item.value },
+                                           success: function (data) {
+
+                                               $('#txt_HotelZipCode').text(data);
+                                           },
+                                           error: function () { notify('Something went wrong'); }
+                                       });
+
+
+
+
+                                   }
+                               }
+
+                               );
+
+
+                            $('#txt_Terms').val(data.Terms);
+                            $('#Ddl_Shipment').val(data.ShipMethod);
+                            $('#txt_Freight').val(data.Freight);
+                            $('#txt_FOB').val(data.FOB);
+                            $('#txt_DeliveryDate').val(data.ArrivalDate);
+                            $('#txt_CheckDate').val(data.CheckBackDate);
+                            $('#txt_Remarks').val(data.Remarks);
+                            $('#txt_ShipTo').val(data.ShipTo);
+                            $('#txt_InvoiceTo').val(data.InvoiceTo);
+                            $('#txt_Notes').val(data.Notes);
+                            setTimeout(function () { $('#Ddl_Buyer').val(data.Buyer_ID); }, 900);
+                           
+                            $('#txt_HotelZipCode').text(data.Address1);
+                           
+
+
+
+                        },
+                        error: function () { notify('Something went wrong'); }
+                    });
+
+
+
+                }
+
+
+
+
+
+
+
+
+
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Vendor/EditContact/';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Vendor/EditContact/';
+            }
+
+            url1 += $("#txt_VendorName").val();
+
+
+
+            $('#edtvndr').html("<a target='_blank' href='" + url1 + "'><u><span style='float:right;'>" + "<i class='fa fa-pencil-square-o'></i></span></u></a>");
+
+
+
+            SearchText();
+
+
+            $('#txt_DeliveryDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_CheckDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+        });
+
+        function SearchText() {
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/GetVendorList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/GetVendorList';
+            }
+
+            $(function () {
+
+
+            });
+        }
+</script>
+
+
+
+
+
+</html>

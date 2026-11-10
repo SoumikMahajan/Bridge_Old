@@ -1,0 +1,4297 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Project Team</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+
+
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <script src="~/Scripts/Project.js"></script>
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/swfupload.js"></script>
+    <script src="~/Scripts/jquery.swfupload.js"></script>
+    <link href="~/css/stylesForFileUpload.css" rel="stylesheet" />
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+
+
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <style>
+        .ui-multiselect-filter {
+            color: #333;
+        }
+
+        input.awesome {
+            font-family: FontAwesome;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: inherit;
+        }
+
+        .levelheader {
+            background: #7792a8;
+            height: 30px;
+            padding: 6px;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .levelpo {
+        }
+
+        .fablevelheader { /**************Arnab Das 28/03/2022*/
+            background: #7792a8;
+            /*height: 30px;*/
+            height: 37px;
+            padding: 6px;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .form-control option {
+            padding: 10px;
+            border-bottom: 1px solid #efefef;
+        }
+    </style>
+    <script>
+        function poapprovallevelset(){
+
+            var htm = '';
+            var obj = new Object();
+            obj.ProjectID = $('#projectid').val();
+            obj.Mode = 'GETDATA';
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+
+            if (o.length > 0) {
+
+                obj.ProjectID = $('#projectid').val();
+                obj.Mode = 'GETDATA';
+
+
+                DBSP = new DB_SP_CONNECT();
+                DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+                DBSP.obj = obj;
+                DBSP.isasync = false;
+                o = DBSP.call_DB_Procedure();
+                o = o.data;
+
+                var al = '';
+                for (var i = 0; i < o.length; i++) {
+                    var ApprovalLevel = o[i].ApprovalLevel;
+                    var FldID = o[i].FldID;
+                    var Name = o[i].Name;
+                    var Assigned = o[i].Assigned;
+                    var LevelID = o[i].LevelID;
+
+                    if (al == '' || al != ApprovalLevel) {
+                        //if (i == 0) {
+                        //    htm += htm == '' ? '<div id="lvlPart">' +
+                        //        '<div class="levelheader" data-levelid="' + LevelID + '">' + numArray[ApprovalLevel] + ' Level Approval </div>' : '<br /></div></div><div id="lvlPart"><div class="levelheader" data-levelid="' + LevelID + '">' + numArray[ApprovalLevel] + ' Level Approval  <button type="button" class="close" title="Remove Level" onclick="deleteApproverLevel(this,' + LevelID + ')">×</button></div>';
+                        //}
+
+
+                        htm += htm == '' ? '<div id="lvlPart">' +
+                            '<div class="levelheader" data-levelid="' + LevelID + '">' + numArray[ApprovalLevel] + ' Level Approval ' +
+                            '<button type="button" class="close" title="Remove Level" onclick="deleteApproverLevel(this,' + LevelID + ')">×</button>' +
+                            '<select onchange="ReqApprvDropdownOnChng(this)" id="ReqApprvDropdown_' + LevelID +'" data-levelid="' + LevelID + '">' +
+                            '<option value="1">1</option><option value="2">2</option>' +
+                            '<option value="3">3</option><option value="4">4</option>' +
+                            '<option value="5">5</option><option value="6">6</option>' +
+                            '<option value="7">7</option><option value="8">8</option>' +
+                            '<option value="9">9</option><option value="10">10</option>' +
+                            '</select></div>' :
+                            '</div ></div > <div id="lvlPart"><div class="levelheader" data-levelid="' + LevelID + '">' + numArray[ApprovalLevel] + ' Level Approval ' +
+                            '<button type="button" class="close" title="Remove Level" onclick="deleteApproverLevel(this,' + LevelID + ')">×</button>' +
+                            '<select onchange="ReqApprvDropdownOnChng(this)" id="ReqApprvDropdown_' + LevelID + '" data-levelid="' + LevelID + '">' +
+                            '<option value="1">1</option><option value="2">2</option>' +
+                            '<option value="3">3</option><option value="4">4</option>' +
+                            '<option value="5">5</option><option value="6">6</option>' +
+                            '<option value="7">7</option><option value="8">8</option>' +
+                            '<option value="9">9</option><option value="10">10</option>' +
+                            '</select></div>';
+                    }
+                    if (Assigned == '0') {
+
+                        htm += '<div class="levelpo lev' + LevelID + '" for="chkap_' + FldID + '" data-levelid="' + LevelID + '" data-userid="' + FldID + '"><p style="width:80%;"><input type="checkbox" id="chkap_' + FldID + '" data-userid="' + FldID + '" data-levelid="' + LevelID + '" onchange="checkforusersOnexistingLvl(this)"/>' + Name + '</p></div>';
+                    }
+                    else {
+                        htm += '<div class="levelpo lev' + LevelID + '" for="chkap_' + FldID + '" data-levelid="' + LevelID + '" data-userid="' + FldID + '"><p style="width:80%;"><input checked type="checkbox" id="chkap_' + FldID + '" data-userid="' + FldID + '" data-levelid="' + LevelID + '" onchange="checkforusersOnexistingLvl(this)"/>' + Name + '</p></div>';
+                    }
+                    al = ApprovalLevel;
+                }
+
+                //$('#poapprovalleveldiv').html('');
+                htm += '</div>';
+                $('#poapprovallevel').modal('show');
+                $('#poapprovalleveldiv').html(htm);
+                chcktotalapproversdata();
+            } else {
+                addnewlevel();
+            }
+            //var htm = '';
+            //var obj = new Object();
+            //obj.ProjectID = $('#projectid').val();
+            //obj.Mode = 'GETDATA';
+
+
+            //var DBSP = new DB_SP_CONNECT();
+            //DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+            //DBSP.obj = obj;
+            //DBSP.isasync = false;
+            //var o = DBSP.call_DB_Procedure();
+            //o = o.data;
+            ////var req = $('#RqrdPOApprvrs_ddl').val();
+            //if (o.length < 1) {
+            //    addnewlevel();
+            //    obj.ProjectID = $('#projectid').val();
+            //    obj.Mode = 'GETDATA';
+
+
+            //    DBSP = new DB_SP_CONNECT();
+            //    DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+            //    DBSP.obj = obj;
+            //    DBSP.isasync = false;
+            //    o = DBSP.call_DB_Procedure();
+            //    o = o.data;
+            //}
+            //var al = '';
+            //for (var i = 0; i < o.length; i++) {
+            //    var ApprovalLevel = o[i].ApprovalLevel;
+            //    var FldID = o[i].FldID;
+            //    var Name = o[i].Name;
+            //    var Assigned = o[i].Assigned;
+            //    var LevelID = o[i].LevelID;
+
+            //    if (al == '' || al != ApprovalLevel) {
+            //        //if (i == 0) {
+            //        //    htm += htm == '' ? '<div id="lvlPart">' +
+            //        //        '<div class="levelheader" data-levelid="' + LevelID + '">' + numArray[ApprovalLevel] + ' Level Approval </div>' : '<br /></div></div><div id="lvlPart"><div class="levelheader" data-levelid="' + LevelID + '">' + numArray[ApprovalLevel] + ' Level Approval  <button type="button" class="close" title="Remove Level" onclick="deleteApproverLevel(this,' + LevelID + ')">×</button></div>';
+            //        //}
+            //        //else {
+            //            htm += htm == '' ? '<div id="lvlPart">' +
+            //                '<div class="levelheader" data-levelid="' + LevelID + '">' + numArray[ApprovalLevel] + ' Level Approval <button type="button" class="close" title="Remove Level" onclick="deleteApproverLevel(this,' + LevelID + ')">×</button></div>' : '<br /></div></div><div id="lvlPart"><div class="levelheader" data-levelid="' + LevelID + '">' + numArray[ApprovalLevel] + ' Level Approval  <button type="button" class="close" title="Remove Level" onclick="deleteApproverLevel(this,' + LevelID + ')">×</button></div>';
+            //        //}
+
+            //    }
+            //    if(Assigned == '0') {
+            //        htm += '<div class="levelpo lev' + LevelID + '" for="chkap_' + FldID + '" data-levelid="' + LevelID + '" data-userid="' + FldID + '"><p style="width:80%;"><input type="checkbox" id="chkap_' + FldID + '" data-userid="' + FldID + '" data-levelid="' + LevelID +'" onchange="checkforusersOnexistingLvl(this)"/>' + Name + '</p></div>';
+            //    }
+            //    else{
+            //        htm += '<div class="levelpo lev' + LevelID + '" for="chkap_' + FldID + '" data-levelid="' + LevelID + '" data-userid="' + FldID + '"><p style="width:80%;"><input checked type="checkbox" id="chkap_' + FldID + '" data-userid="' + FldID + '" data-levelid="' + LevelID +'" onchange="checkforusersOnexistingLvl(this)"/>' + Name + '</p></div>';
+            //    }
+            //    al = ApprovalLevel;
+            //}
+
+            //htm += '</div>';
+            //$('#poapprovallevel').modal('show');
+            //$('#poapprovalleveldiv').html(htm);
+            //chcktotalapproversdata();
+        }
+        function ReqApprvDropdownOnChng(obj) {
+            debugger;
+            var LevelId = $(obj).attr('data-levelid');
+            alert(LevelId);
+            changenumberstoapprovepo(obj, LevelId);
+        }
+
+        function checkforusersOnexistingLvl(obj) {
+            if($(obj).is(':checked')){
+                $.ajax({
+                    url: '@Url.Content("~/Project/CheckForExistingUserPerLevel")',
+                    method: 'POST',
+                    data: '{"Fldid":"' + $(obj).attr('data-userid') + '", "Levelid":"' + $(obj).attr("data-levelid") + '"}',
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response !== undefined && response.mesg.split('%')[0] === 'failed') {
+                            $(obj).removeAttr('checked');
+                            alert(response.mesg.split('%')[1]);
+                        }
+                        else {
+                            $(obj).attr('checked');
+                            $('.editpolevelapprovers').trigger('click');
+                        }
+                    }, error: function (d) {
+                        console.error(d.message);
+                    }
+                });
+            }else{
+                $(obj).removeAttr('checked');
+                $('.editpolevelapprovers').trigger('click');
+            }
+        }
+
+
+        function deleteApproverLevel(element,levelID){
+            var ans = confirm("Do you want to delete?");
+            if(ans==true){
+                var obj = new Object();
+                obj.LevelID = levelID;
+                obj.SESSIONUSERBACKEND = 'UserID';
+                obj.Mode = 'DeleteLevel';
+
+                var DBSP = new DB_SP_CONNECT();
+                DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+                DBSP.obj = obj;
+                DBSP.isasync = false;
+                var o = DBSP.call_DB_Procedure();
+                o = o.data;
+                //console.log(o);
+                $(element).parent().parent().remove();
+            }
+        }
+
+
+
+        function chcktotalapproversdata() {
+            debugger;
+            //var req = $('#RqrdPOApprvrsPerLevel').val();
+            var req = 0;
+            $('.levelheader').each(function (){
+                var level = $(this).attr('data-levelid');
+                var tota = 0;
+                var DBSP;
+                var obj;
+
+                $('.lev' + level).each(function (){
+                    if ($(this).find('p input').is(':checked')){
+                        tota++;
+                    }
+                });
+                obj = new Object();
+                obj.ProjectID = $('#projectid').val();
+                obj.LevelID = level;
+                obj.SESSIONUSERBACKEND = 'UserID';
+                obj.Mode = 'GETREQUIREDAPPROVERS';
+
+                var DBSP = new DB_SP_CONNECT();
+                DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+                DBSP.obj = obj;
+                DBSP.isasync = false;
+                var o = DBSP.call_DB_Procedure();
+                o = o.data;
+                req = o[0].NumOfUserToAprv_POITEMS;
+                $('#ReqApprvDropdown_'.concat(level)).val(req);
+
+                $(this).append(' ('+ tota +'/'+ req+')');
+                if (tota < req) {
+                    $(this).css('background', '#eda7b1');
+                }
+            });
+        }
+
+        function addnewlevel() {
+            var c = confirm("Are you sure you want to add a new level approvers?");
+
+            if (c) {
+                var reqApprv = 1; //prompt('Enter required level')
+
+                if (reqApprv !== null) {
+
+                    if (/^[0-9]*$/g.test($.trim(reqApprv)) === false) {
+                        alert('Only numbers are permitted.');
+                        return false;
+                    }
+                    else if (Number($.trim(reqApprv)) < 1) {
+                        alert('Number of required approvers cannot be less than 1.');
+                        return false;
+                    } else {
+                        var result = CheckForassignedusercount($.trim(reqApprv));
+                        if (result.split('%')[0] === 'failed') {
+                            alert(result.split('%')[1]);
+                            return false;
+                        } else {
+
+                            var resp = checkforPOapprovals();
+                            if (resp.split('|')[0] === 'success') {
+                                var obj = new Object();
+                                obj.ProjectID = $('#projectid').val();
+                                obj.SESSIONUSERBACKEND = 'UserID';
+                                obj.LevelID = Number(reqApprv);
+
+                                obj.Mode = 'ADDLEVEL';
+                                var DBSP = new DB_SP_CONNECT();
+                                DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+                                DBSP.obj = obj;
+                                DBSP.isasync = false;
+                                var o = DBSP.call_DB_Procedure();
+                                o = o.data;
+
+                                poapprovallevelset();
+                                notify('New approval level added.', 'green');
+
+                            } else {
+                                alert(resp.split('|')[1]);
+                            }
+                        }
+                    }
+                } else {
+                    return;
+                }
+            } else {
+                return;
+            }
+            //var resp = checkforPOapprovals();
+            //if(resp.split('|')[0] === 'success'){
+            //    var c = confirm("Are you sure you want to add a new level approvers?");
+            //    if(c){
+            //        var obj = new Object();
+            //        obj.ProjectID = $('#projectid').val();
+            //        obj.SESSIONUSERBACKEND = 'UserID';
+
+            //        obj.Mode = 'ADDLEVEL';
+            //        var DBSP = new DB_SP_CONNECT();
+            //        DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+            //        DBSP.obj = obj;
+            //        DBSP.isasync = false;
+            //        var o = DBSP.call_DB_Procedure();
+            //        o = o.data;
+
+            //        //$('#RqrdPOApprvrsPerLevel').val(o[0]['']);
+            //        poapprovallevelset();
+            //        notify('New approval level added.', 'green');
+            //    }else{
+            //        return;
+            //    }
+            //}else{
+            //    alert(resp.split('|')[1]);
+            //}
+        }
+        function CheckForassignedusercount(ReqFld) {
+            var obj = new Object();
+            obj.ProjectID = $('#projectid').val();
+            obj.Mode = 'CHECKFORUNASSIGNEDUSER';
+            obj.LevelID = Number(ReqFld);
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "[dbo].[POMS_POApprovalLevelProc]";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            return o.data[0]['resp'];
+        }
+
+        function checkforPOapprovals(){
+            var obj = new Object();
+            obj.ProjectID = $('#projectid').val();
+            obj.Mode = 'CHECKFORAPPROVALMEMBER';
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            return (o.data[0]['']);
+        }
+
+
+        function updateModalApproversLevelOnClose() {
+            var incLvlCnt = 0;
+            $('#lvlprt').each(function (){
+                incLvlCnt++;
+            });
+            return incLvlCnt;
+        }
+
+        function checkforactivecheckboxes(){
+            var req = $('#RqrdPOApprvrsPerLevel').val();
+            var lvCnt = 0;
+            $('#poapprovalleveldiv #lvlPart').each(function(){
+                lvCnt++;
+            });
+
+            var isCheckedCnt = 0;
+            $('#lvlPart:has(.levelpo) input[type="checkbox"]').each(function(){
+                if($(this).is(':checked')){
+                    isCheckedCnt++;
+                }
+            });
+
+            return (isCheckedCnt / lvCnt) !== Number(req) ? false : true;
+        }
+
+        function editpolevelapprovers(){
+            //if(checkforactivecheckboxes() === true) {
+                var l = '';
+                var str = '';
+
+                $('.levelpo').find('p input').each(function () {
+                    var levelid = $(this).parent().parent().attr('data-levelid');
+                    var userid = $(this).parent().parent().attr('data-userid');
+                    if(l == '' || l != levelid) {
+                        str += str == '' ? levelid + '^' : '$' + levelid + '^';
+                    }
+                    if($(this).is(':checked')) {
+                        str += '^' + userid;
+                    }
+                    l = levelid;
+                });
+
+                notify('Saving data...','yellow-load');
+                setTimeout(function (){
+                    for(var i = 0; i < str.split('$').length; i++){
+                        var str2 = str.split('$')[i];
+                        var levelid = str2.split('^^')[0];
+                        var userids = str2.split('^^')[1];
+
+                        levelid = levelid.replace('^','');
+
+                        var obj = new Object();
+                        obj.ProjectID = $('#projectid').val();
+                        obj.LevelID = levelid;
+                        obj.SESSIONUSERBACKEND = 'UserID';
+                        obj.UserIDs = userids;
+                        obj.Mode = 'EDITUSERSLEVEL';
+
+                        var DBSP = new DB_SP_CONNECT();
+                        DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+                        DBSP.obj = obj;
+                        DBSP.isasync = false;
+                        var o = DBSP.call_DB_Procedure();
+                        o = o.data;
+
+                        notify('Saved successfully.', 'GREEN');
+                    }
+                    poapprovallevelset();
+
+                }, 200);
+            //}
+            //else {
+            //    alert('Levels do not match required number of approvers');
+            //}
+        }
+
+
+
+        //function poapprovallevelset() {
+        //    //show modal
+
+        //    var htm = '';
+        //    var obj = new Object();
+        //    obj.ProjectID = $('#projectid').val();
+        //    obj.Mode = 'GETDATA';
+
+
+        //    var DBSP = new DB_SP_CONNECT();
+        //    DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+        //    DBSP.obj = obj;
+        //    DBSP.isasync = false;
+        //    var o = DBSP.call_DB_Procedure();
+        //    o = o.data;
+        //    console.log(o);
+        //    var req = $('#RqrdPOApprvrs_ddl').val();
+        //    //htm = '<div class="levelheader" data-levelid="' + LevelID + '">';
+
+        //    var al = '';
+        //    for (var i = 0; i < o.length; i++) {
+        //        var ApprovalLevel = o[i].ApprovalLevel;
+        //        var FldID = o[i].FldID;
+        //        var Name = o[i].Name;
+        //        var Assigned = o[i].Assigned;
+        //        var LevelID = o[i].LevelID;
+
+        //        if (al == '' || al != ApprovalLevel) {
+
+        //            htm += htm == '' ? '<div id="lvlPart"><div class="levelheader" data-levelid="' + LevelID + '">' + numArray[ApprovalLevel] + ' Level Approval <button type="button" class="close" title="Remove Level" onclick="deleteApproverLevel(this,' + LevelID + ')">×</button></div>' : '<br /></div></div><div id="lvlPart"><div class="levelheader" data-levelid="' + LevelID + '">' + numArray[ApprovalLevel] + ' Level Approval  <button type="button" class="close" title="Remove Level" onclick="deleteApproverLevel(this,' + LevelID + ')">×</button></div>';
+        //        }
+
+        //        if (Assigned == '0') {
+        //            htm += '<div class="levelpo lev' + LevelID + '" for="chkap_' + FldID + '" data-levelid="' + LevelID + '" data-userid="' + FldID + '"><p style="width:80%;"><input type="checkbox" id="chkap_' + FldID + '" />   ' + Name + '</p></div>';
+        //        }
+        //        else {
+        //            htm += '<div class="levelpo lev' + LevelID + '" for="chkap_' + FldID + '" data-levelid="' + LevelID + '" data-userid="' + FldID + '"><p style="width:80%;"><input checked type="checkbox" id="chkap_' + FldID + '" />   ' + Name + '</p></div>';
+
+        //        }
+        //        al = ApprovalLevel;
+
+        //    }
+
+        //    htm += '</div>';
+        //    console.log(htm);
+
+        //    $('#poapprovallevel').modal('show');
+        //    $('#poapprovalleveldiv').html(htm);
+        //    chcktotalapproversdata();
+
+        //}
+
+        //function deleteApproverLevel(element,levelID)
+        //{
+        //    var ans = confirm("Do you want to delete?");
+        //    if ( ans==true) {
+        //        var obj = new Object();
+        //        obj.LevelID = levelID;
+        //        obj.SESSIONUSERBACKEND = 'UserID';
+
+        //        obj.Mode = 'DeleteLevel';
+
+        //        var DBSP = new DB_SP_CONNECT();
+        //        DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+        //        DBSP.obj = obj;
+        //        DBSP.isasync = false;
+        //        var o = DBSP.call_DB_Procedure();
+        //        o = o.data;
+        //        console.log(o);
+        //        $(element).parent().parent().remove();
+        //    }
+
+        //}
+
+        //function chcktotalapproversdata() {
+
+        //    var req = $('#RqrdPOApprvrs_ddl').val();
+
+        //    $('.levelheader').each(function () {
+        //        var level = $(this).attr('data-levelid');
+        //        var tota = 0;
+
+        //        $('.lev' + level).each(function () {
+        //            if ($(this).find('p input').is(':checked')) {
+        //                tota++;
+        //            }
+        //        });
+
+
+        //        console.log(level + "///" + tota);
+
+        //       // $(this).append('   (' + req + '/' + tota + ')');
+        //        $(this).append('   (' + tota + '/' + req + ')');
+        //        if (tota < req) {
+        //            $(this).css('background', '#eda7b1');
+        //        }
+
+        //    });
+
+
+        //}
+
+        //function addnewlevel() {
+        //    var c = confirm("Are you sure you want to add a new level approvers?");
+        //    if (c) {
+        //        var obj = new Object();
+        //        obj.ProjectID = $('#projectid').val();
+        //        obj.SESSIONUSERBACKEND = 'UserID';
+
+        //        obj.Mode = 'ADDLEVEL';
+
+
+        //        var DBSP = new DB_SP_CONNECT();
+        //        DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+        //        DBSP.obj = obj;
+        //        DBSP.isasync = false;
+        //        var o = DBSP.call_DB_Procedure();
+        //        o = o.data;
+        //        console.log(o);
+        //        poapprovallevelset();
+
+        //        notify('New approval level added.','green');
+        //    }
+        //}
+
+        //function editpolevelapprovers() {
+
+        //    var l = '';
+        //    var str = '';
+
+        //    $('.levelpo').find('p input').each(function () {
+        //        var levelid = $(this).parent().parent().attr('data-levelid');
+        //        var userid = $(this).parent().parent().attr('data-userid');
+
+        //        if (l == '' || l != levelid) {
+        //            str += str == '' ? levelid + '^' : '$' + levelid + '^';
+        //        }
+        //        if ($(this).is(':checked')) {
+        //            str += '^' + userid;
+        //        }
+
+        //    //    console.log(levelid);
+        //        l = levelid;
+        //    });
+
+        //    notify('Saving data...', 'yellow-load');
+
+        //    setTimeout(function () {
+
+        //        for (var i = 0; i < str.split('$').length; i++) {
+        //            var str2 = str.split('$')[i];
+        //            var levelid = str2.split('^^')[0];
+        //            var userids = str2.split('^^')[1];
+
+        //            var obj = new Object();
+        //            obj.ProjectID = $('#projectid').val();
+        //            obj.LevelID = levelid;
+        //            obj.SESSIONUSERBACKEND = 'UserID';
+        //            obj.UserIDs = userids;
+
+        //            obj.Mode = 'EDITUSERSLEVEL';
+
+
+        //            var DBSP = new DB_SP_CONNECT();
+        //            DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+        //            DBSP.obj = obj;
+        //            DBSP.isasync = false;
+        //            var o = DBSP.call_DB_Procedure();
+        //            o = o.data;
+
+
+
+
+        //            notify('Saved successfully.', 'GREEN');
+        //            console.log(levelid + '>>>>>>>>' + userids);
+
+        //        }
+
+        //        poapprovallevelset();
+
+        //    }, 200);
+
+
+
+        //    console.log(str);
+
+        //}
+    </script>
+</head>
+<body>
+
+    <div id="poapprovallevel" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                    <h4 class="modal-title">PO Approval Level</h4>
+                </div>
+                <div class="modal-body">
+
+                    <input type="button" class="btn btn-default" onclick="addnewlevel();" value="Add New Level" />
+
+                    <div id="poapprovalleveldiv"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="editpolevelapprovers();">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @*FABRICATION GROUP MODEL POPUP START*@
+
+    <div id="fab_poapprovallevel" class="modal fade" role="dialog">
+        <!--Esolz Dev1 **************26/03/2022-->
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                    <h4 class="modal-title">Fabrication Approval Groups</h4>
+                </div>
+                <div class="modal-body">
+
+                    <input type="button" id="btn_fabadd" class="btn btn-default" onclick="fab_addnewlevel();" value="Add New Level" />
+
+                    <div id="fab_poapprovalleveldiv"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default editfablevelapprovers" onclick="fab_editGrpnamesave();">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @*FABRICATION GROUP MODEL POPUP END*@
+
+
+    @*FABRICATION PATH MODAL POPUP Esolz Dev2 Soumik **************21/04/2022*@
+    <div id="fab_poapprovalpath" class="modal responsive-modal fade" role="dialog">
+        <div class="modal-dialog modal-lg custom-modal">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Fabrication Approval Path</h4>
+                </div>
+                <div class="modal-body new-body">
+                    <div class="row mrg10T" style="margin-left:8px">
+                        <div class="col-sm-12">
+                            <table id="tblfabpathitemHistory" style="width: 98%;">
+                                <thead>
+                                    <tr>
+                                        <th class="leftposition" width="10%">Name</th>
+                                        <th class="leftposition" width="10%">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="border-top: 2px solid #ddd;" id="tblfabpathitemHistoryBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row" style="margin-left: 75%;">
+                        <div class="col">
+                            <button type="button" class="btn btn-primary w-100" onclick="newfabapprovalpath();"><i class="fa fa-plus-square mrg5R"></i>New Approval Path</button>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="hide" id="apppath">
+                        <div class="row">
+                            <div class="col">
+                                <label class="header_txt" style="margin-left:29px;">approval path name : </label><input type="text" class="fabpathvalidator border" id="fabapprovalpathname" name="FabApprovalName" />
+                                <input type="hidden" id="fabpathid" />
+                                <button type="button" class="close" style="font-size: 27px;margin-right:17px;" onclick="closeapppatharea();">&times;</button>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="dual_wrap">
+                                <div id="demo1">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default w-100 hide" id="fabsave" onclick="savefabpathname();">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @*FABRICATION PATH MODAL POPUP END Esolz Dev2 Soumik*@
+
+
+    <input type="hidden" id="projectid" value="@ViewBag.Projectid" />
+    <div>
+        <div class="container-fluid" id="ProjectTeamdiv" ng-app="ProjectTeam" ng-controller="ProjectTeam">
+
+
+
+
+
+
+
+
+
+            <div class="row mrg10T">
+
+                <div class="col-sm-5">
+
+                    <div class="col-sm-12">
+                        <h3 class="section-header">Project Team (@ViewBag.Pname)</h3>
+                    </div>
+
+
+
+                    @*<div class="col-sm-12">
+                            <button type="button" style="height: 25px;padding: 2px;margin-left: -3px;border-radius: 0px;" class="btn btn-poms" onclick="projectedit();">Go back To Project Edit Page</button>
+                            <button type="button" style="height: 25px;padding: 2px;margin-left: 10px;border-radius: 0px;" class="btn btn-poms" onclick="poapprovallevelset();">PO Approval Level</button>
+
+                        </div>*@
+
+                    <div class="col-sm-12">
+                        <button type="button" style="height: 25px;padding: 2px;margin-left: 0px;border-radius: 0px;" class="btn btn-poms" onclick="projectedit();">Go back To Project Edit Page</button>
+                        <button type="button" style="width:174px;height: 25px;padding: 2px;margin-left: 6px;border-radius: 0px;" class="btn btn-poms" onclick="poapprovallevelset();">PO Approval Level</button>
+                    </div>
+                    <div class="col-sm-12" style="margin-top:4px;">
+                        <button type="button" style="width: 192px;height: 25px;padding: 2px;margin-left: 0px;border-radius: 0px;" class="btn btn-poms" onclick="fabricationapprovallevelset();">Fabrication Approval Groups</button><!--Esolz Dev1 **********26/03/2022-->
+                        <button type="button" style="height: 25px;padding: 2px;margin-left: 5px;border-radius: 0px;" class="btn btn-poms" onclick="fabricationpathlevelset();">Fabrication Approval Path</button>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="left_box">
+
+                            <div class="req lb_box">
+
+                                <div id="PMHDR" style="float: left;">Project Manager</div>
+                                <div style="clear: left; margin-top: 2px;"></div>
+                                <select id="manager_ddl" onchange="changeManager();"></select>
+                            </div>
+
+                            <div class="lb_box" style=" line-height:48px;">
+
+                                <div style="float: left;">
+                                    PO Approvers :
+                                    <label id="POApprvrs" style="float: none;">@ViewBag.POApprvrs</label>
+                                </div>
+                                <div style="clear: left; margin-top: 2px;"></div>
+                                @*<div>
+                                        Required Assigned to Team :
+                                        <label id="RqrdPOApprvrs" style="float: none;" class="displaynone">@ViewBag.RqrdPOApprvrs</label>
+                                        <select id="RqrdPOApprvrs_ddl" style="width: 45px; float: none;" onchange="changenumberstoapprovepo(this);">
+
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+
+
+                                        </select>
+
+                                    </div>*@
+
+                            </div>
+
+                            <div class="lb_box">
+
+                                <div style="float: left;">
+                                    Budget Approvers :
+                                    <label id="BgtApprvrs" style="float: none;">@ViewBag.BgtApprvrs</label>
+
+
+
+
+                                </div>
+                                <div style="clear: left; margin-top: 2px;"></div>
+                                <div>
+                                    Required Assigned to Team :
+                                    <label id="RqrdBgtApprvrs" class="displaynone" style="float: none;">@ViewBag.RqrdBgtApprvrs</label>
+                                    <select id="RqrdBgtApprvrs_ddl" style="width: 40px; float: none;" onchange="changenumberstoapprovebudget(this);">
+
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+
+
+                                    </select>
+
+                                </div>
+                            </div>
+
+
+                            <div class="lb_box">
+
+                                <div style="float: left;">
+                                    Fabrication Approvals :
+                                    <label id="POItemApprvrs" style="float: none;">@ViewBag.POApprvrs</label>
+                                </div>
+                                <div style="clear: left; margin-top: 2px;"></div>
+                                <!--<div>
+                                Required Assigned to Team :-->
+                                @*<label id="RqrdPOItemApprvrs" style="float: none;" class="displaynone">@ViewBag.RqrdPOApprvrs</label>*@
+                                <!--<label id="RqrdPOItemApprvrs" style="float: none;" class="displaynone">@ViewBag.RqrdFabrication</label>
+
+                                    <select id="RqrdPOItemApprvrs_ddl" style="width: 45px; float: none;" onchange="changenumberstoapprovepolineitems(this);">
+
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+
+
+                                    </select>
+
+                                </div>-->
+
+                                <div class="displaynone">
+                                    <!----------------------------------Esolz Dev1 01/04/2022-->
+                                    Required Assigned to Team :
+                                    @*<label id="RqrdPOItemApprvrs" style="float: none;" class="displaynone">@ViewBag.RqrdPOApprvrs</label>*@
+                                    <label id="RqrdPOItemApprvrs" style="float: none;" class="displaynone">@ViewBag.RqrdFabrication</label>
+
+                                    <select id="RqrdPOItemApprvrs_ddl" style="width: 45px; float: none;" class="displaynone" onchange="changenumberstoapprovepolineitems(this);">
+
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+
+
+                                    </select>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-sm-7">
+
+                    <div class="col-sm-12" style="padding:0px;">
+                        <h3 class="section-header">Team Member(s)</h3>
+                    </div>
+
+                    <table id="projectteam" class="display  compact" cellspacing="0">
+                        <thead>
+
+                            <tr>
+
+                                <th style="width:10%;"></th>
+                                <th style="width:18%;"></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th style="width:18%;"></th>
+                                <th style="width:18%;"></th>
+                                <th></th>
+                                <th style="width:18%;"></th>
+                                <th style="width:18%;"></th>
+                                <th style="width:18%;"></th>
+
+                            </tr>
+                        </thead>
+
+
+
+
+
+                    </table>
+
+                </div>
+
+
+            </div>
+
+            <hr />
+
+            <div class="row">
+                <div class="col-sm-4">
+
+                    <div class="col-sm-12">
+                        <h3 class="section-header">Add Member</h3>
+                    </div>
+
+
+                    <div class="col-sm-12">
+                        <label>System User Types</label>
+                        <select ng-options="ut.UserType for ut in SystemUserTypes" ng-change="getSystemUsers();" ng-model="selectedSystemUserType" class="form-control" name="SysUsrId" id="Ddl_SysUsrTyp">
+                            @*<option value="">--select--</option>*@
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12" ng-if="selectedSystemUserType.Fldid !=7">
+                        <label>Users</label>
+                        <select ng-options="c.Lastname + ',' + c.Firstname + '(' + c.Email + ')' for c in Users" class="form-control" ng-change="getPriority();" ng-model="selectedUser.test" name="paysId" id="Ddl_Usr">
+                            <option value="">---Select User---</option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-sm-12" ng-if="selectedSystemUserType.Fldid ==7">
+                        <label>Users</label>
+                        <select ng-options="c.ParentVendor + '(' + c.ContactFName + ' ' + c.ContactLName + ')' for c in Users" class="form-control" ng-change="getPriority();" ng-model="selectedUser.test" name="paysId" id="Ddl_Usr">
+                            <option value="">---Select User---</option>
+                        </select>
+                    </div>
+
+
+
+                    <div class="col-sm-12">
+                        <label>Project Roles</label>
+                        <select ng-options="c.UserType for c in UserType" ng-selected="selectedItemvalue == c.UserType" ng-model="selectedUserType" class="form-control" name="paysId" id="Ddl_UsrTyp">
+                            <option>select</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-poms" style="height:25px;padding:2px;margin-top: 5px;border-radius: 0px;" onclick="AddTeamMember();">Add Member</button>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-8 showHide" style="display:none;">
+
+                    <div class="col-sm-12">
+                        <h3 class="section-header">SECURITY PERMISSIONS</h3>
+                    </div>
+
+                    <table border="1" class="table" cellspacing="0" style="width:100%;" cellpadding="0" id="priority_checkbox"></table>
+
+                </div>
+
+
+            </div>
+
+
+
+
+
+
+
+
+            <div class="row displaynone">
+                <div class="col-sm-12 showHide" style="display: none;">
+                    <label>User Type</label>
+                    <div class="security-title">{{ selectedUserType.UserType }}</div>
+                    <div class="security-detail">
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <div id="popupbs" class="modal fade" role="dialog">
+                <div class="modal-dialog" style="width:80%;">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Edit User</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="edituserid" />
+                            <div class="row" style="margin:0px;">
+                                <div class="col-sm-6">
+                                    <label>Project Role</label>
+                                    <select ng-options="c.UserType for c in UserType" ng-model="selectedUserTypeForEdit" name="paysId" class="form-control" id="Ddl_UsrTypEdt">
+                                        <option>select</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mrg15T" style="max-height:400px; overflow-y:auto;">
+                                <div class="col-sm-12">
+
+                                    <table border="1" class="logo_container_table" cellspacing="0" cellpadding="0" style="width:100%;" id="priority_checkbox2"></table>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-poms" ng-click="Editmember();">Save</button>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+
+
+            <div class="user_panel_container">
+
+
+
+
+
+
+                <div id="popup2">
+
+                    <span class="button b-close"><span>X</span></span>
+
+
+                    <div style="height: 500px; width: 900px; overflow-x: hidden; overflow-y: auto;">
+                        @*<div ng-repeat="priority in prioritylist2" style="float: left; margin: 20px;">
+                                <label>
+                                    {{priority.name}}
+                                    <input ng-if="priority.isactive == 1" type='checkbox' class='edtScrty' value="{{priority.isactive}}" id="prioritychk_{{priority.securityid}}" checked>
+                                    <input ng-if="priority.isactive == 0" type='checkbox' class='edtScrty' value="{{priority.isactive}}" id="prioritychk_{{priority.securityid}}">
+                                </label>
+                            </div>*@
+
+
+
+
+                        <div class="user_panel_container policy-items showHide">
+                            <div class="security-title">Permissions</div>
+                            <div class="security-detail">
+
+                            </div>
+                        </div>
+
+
+
+
+
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+    <style type="text/css">
+        #popup, #popup2, .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        #popup {
+            height: auto;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+            }
+    </style>
+
+    <style>
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        #popupforvendorlist .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 6px 0px;
+            width: 96%;
+            height: 20px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+
+        .nav-tabs > li > a {
+            background-color: rgba(238, 238, 238, 0.43);
+            border-color: #eee #eee #ddd;
+            text-transform: uppercase;
+        }
+
+            .nav-tabs > li > a:hover {
+                background-color: #ddd;
+            }
+
+        #txt_HotelAddr, #txt_OwnerAddr, #txt_InvAddr {
+            height: 70px !important;
+        }
+    </style>
+
+    <style>
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+
+        label {
+            color: #333333;
+            font-weight: 500;
+            margin-bottom: 1px;
+        }
+
+        .section-header {
+            padding: 2px 4px;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .nav > li > a {
+            position: relative !important;
+            display: block !important;
+            padding: 4px 15px !important;
+        }
+
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+            color: rgb(246, 251, 252) !important;
+            cursor: default;
+            background-color: #7792a8;
+            border: 1px solid #ddd;
+            border-bottom-color: transparent;
+            color: #7792a8;
+            font-size: 16.5px;
+        }
+
+        .fileinput-button {
+            width: 50% !important;
+            height: 101px;
+            float: left;
+            border: #7d97ac 2px dashed;
+            line-height: 35px;
+            cursor: pointer;
+        }
+
+        .previousfilelist {
+            float: none !important;
+            margin-left: 43%;
+            width: 57%;
+            margin-top: 15px !important;
+        }
+    </style>
+    <script type="text/javascript">
+
+        var totdata;
+        var teamdetails = new Array();
+        var projectteam = new Array();
+
+    </script>
+
+
+    <style type="text/css">
+        #projectteam tr td {
+            text-align: center;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        function changeManager() {
+            var ProjectID = $('#projectid').val();
+            var UserID = $('#manager_ddl').val();
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/changeManager';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/changeManager';
+            }
+
+            $.ajax({
+                url: url1,
+                async: false,
+                type: "POST",
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'ProjectID' : '" + ProjectID + "','UserID' : '" + UserID + "'}",
+                failed: function (error) {
+                    alert("failed");
+                },
+                success: function (response) {
+                    if (response == 'SUCCESS') {
+                        notify("Updated successfully", 'green');
+                    }
+                    else {
+                        notify("Error!!!");
+
+                        window.location.reload();
+                    }
+                }
+            });
+
+        }
+
+        function changenumberstoapprovebudget(obj) {
+            var Number = $(obj).val();
+            var ProjectID = $('#projectid').val();
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/changeBudgetApprovernumber';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/changeBudgetApprovernumber';
+            }
+
+            $.ajax({
+                url: url1,
+                async: false,
+                type: "POST",
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'ProjectID' : '" + ProjectID + "','Number' : '" + Number + "'}",
+                failed: function (error) {
+                    alert("failed");
+                },
+                success: function (response) {
+
+                    if (response == 'SUCCESS') {
+
+
+                        $('#projectteam thead tr').find('th:eq(9)').html('Budget(' + $('#BgtApprvrs').text() + '/' + Number + ')');
+
+                        set_approval_color();
+
+                        notify("Updated successfully", 'green');
+                    }
+                    else {
+                        var prev = $('#RqrdBgtApprvrs').text();
+                        $(obj).val(prev);
+                        notify("Something went wrong");
+
+                    }
+
+
+                }
+            });
+
+
+
+
+
+
+        }
+
+        function changenumberstoapprovepolineitems(obj) {
+            var Number = $(obj).val();
+            var ProjectID = $('#projectid').val();
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/changePOItemApprovernumber';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/changePOItemApprovernumber';
+            }
+
+            $.ajax({
+                url: url1,
+                async: false,
+                type: "POST",
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'ProjectID' : '" + ProjectID + "','Number' : '" + Number + "'}",
+                failed: function (error) {
+                    alert("failed");
+                },
+                success: function (response) {
+
+                    if (response == 'SUCCESS') {
+
+
+                        $('#projectteam thead tr').find('th:eq(10)').html('Fabrication(' + $('#POItemApprvrs').text() + '/' + Number + ')');
+
+                        set_approval_color();
+
+                        notify("Updated successfully", 'green');
+                    }
+                    else {
+                        var prev = $('#RqrdPOItemApprvrs_ddl').text();
+                        $(obj).val(prev);
+                        notify("Something went wrong");
+
+                    }
+
+
+                }
+            });
+
+
+
+
+
+
+        }
+
+        function changenumberstoapprovepo(obj, level) {
+            var number = $(obj).val();
+            //alert(number);
+
+            var Number = $(obj).val();
+            var ProjectID = $('#projectid').val();
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/changePOApprovernumber';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = '/Project/changePOApprovernumber';
+            }
+
+            $.ajax({
+                url: url1,
+                async: false,
+                type: "POST",
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'ProjectID' : '" + ProjectID + "','Number' : '" + Number + "','level' :'" + level + "'}",
+                failed: function (error) {
+                    alert("failed");
+                },
+                success: function (response) {
+
+                    if (response == 'SUCCESS') {
+                        //$('#RqrdPOApprvrs').text(Number);
+
+                        //$('#projectteam thead tr').find('th:eq(8)').html('PO(' + $('#POApprvrs').text() + '/' + Number + ')');
+
+                        set_approval_color();
+                        poapprovallevelset();
+                        notify("Updated successfully", 'green');
+                    }
+                    else {
+                        //var prev = $('#RqrdPOApprvrs').text();
+                        $(obj).val(prev);
+                        notify("Something went wrong");
+
+                    }
+
+
+                }
+            });
+
+
+        }
+
+
+        $('#changeprojectlvlapprovers').change(function (e) {
+            e.preventDefault();
+
+            var lvl = $(this).val();
+            $.ajax({
+                url: '/Project/ChangeProjectApproversPerLevel',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8',
+                data: JSON.stringify({ ProjectId: $(this).data('projectid'), LevelId: $(this).val() }),
+                success: function (response) {
+                    if (response != '') {
+                        //$('#RqrdPOLvlApprvrs').text(lvl);
+                        notify("Updated successfully", 'green');
+                    }
+                },
+                error: function () {
+                    console.error();
+                }
+            });
+        });
+
+        //function changenumberstoapprovepo(obj) {
+        //    var number = $(obj).val();
+        //    //alert(number);
+
+        //    var Number = $(obj).val();
+        //    var ProjectID = $('#projectid').val();
+
+        //    var url1 = '';
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url1 = '/Project/changePOApprovernumber';
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+        //        url1 = 'Project/changePOApprovernumber';
+        //    }
+
+        //    $.ajax({
+        //        url: url1,
+        //        async: false,
+        //        type: "POST",
+        //        dataType: "text",
+        //        contentType: "application/json; charset=utf-8",
+        //        data: "{ 'ProjectID' : '" + ProjectID + "','Number' : '" + Number + "'}",
+        //        failed: function (error) {
+        //            alert("failed");
+        //        },
+        //        success: function (response) {
+
+        //            if (response == 'SUCCESS') {
+        //                $('#RqrdPOApprvrs').text(Number);
+
+        //                $('#projectteam thead tr').find('th:eq(8)').html('PO(' + $('#POApprvrs').text() + '/' + Number + ')');
+
+        //                set_approval_color();
+
+        //                notify("Updated successfully", 'green');
+        //            }
+        //            else {
+        //                var prev = $('#RqrdPOApprvrs').text();
+        //                $(obj).val(prev);
+        //                notify("Something went wrong");
+
+        //            }
+
+
+        //        }
+        //    });
+
+
+        //}
+
+
+
+        //$(document).ready(function () {
+
+
+        //    var ProjectID = $('#projectid').val();
+
+        //    var url1 = '';
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url1 = '/Project/getPOItemApproverNumber';
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+        //        url1 = 'Project/getPOItemApproverNumber';
+        //    }
+
+        //    $.ajax({
+        //        url: url1,
+        //        async: false,
+        //        type: "POST",
+        //        dataType: "text",
+        //        contentType: "application/json; charset=utf-8",
+        //        data: "{ 'ProjectID' : '" + ProjectID + "'}",
+        //        failed: function (error) {
+        //            alert("failed");
+        //        },
+        //        success: function (response) {
+
+        //            $('#RqrdPOItemApprvrs_ddl').val(response);
+
+
+
+        //        }
+        //    });
+
+
+
+
+
+
+        //    url1 = '';
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url1 = '/Project/getAlluserListProjectManager';
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+        //        url1 = 'Project/getAlluserListProjectManager';
+        //    }
+
+
+        //    $.ajax({
+        //        url: url1,
+        //        async: false,
+        //        type: "POST",
+        //        dataType: "JSON",
+        //        contentType: "application/json; charset=utf-8",
+        //        data: {},
+        //        failed: function (error) {
+        //            alert("failed");
+        //        },
+        //        success: function (response) {
+
+        //            var data = response.data;
+        //            var html = "";
+        //            html = "<option value='0'>" + "---Select---" + "</option>";
+
+        //            for (var i = 0; i < data.length; i++) {
+        //                html += "<option value='" + data[i].FldID + "'>" + data[i].UserName + "</option>";
+        //            }
+
+        //            $('#manager_ddl').html(html);
+
+
+        //        }
+        //    });
+
+
+
+
+
+
+
+
+
+        //    $('#RqrdPOApprvrs_ddl').val($('#RqrdPOApprvrs').text());
+        //    $('#RqrdBgtApprvrs_ddl').val($('#RqrdBgtApprvrs').text());
+
+        //    clicknew();
+        //    //$('.paginate_button').live('click', function () {
+        //    //    RowHtmlRender();
+        //    //});
+        //});
+
+
+        $(document).ready(function () {
+            var ProjectID = $('#projectid').val();
+
+            var url1 = '';
+            //if (LOCALORSERVERNEW == 'LOCAL') {
+            //    url1 = '/Project/getPOItemApproverNumber';
+            //}
+            //else if (LOCALORSERVERNEW == 'SERVER') {
+            //    url1 = 'Project/getPOItemApproverNumber';
+            //}
+
+            //$.ajax({
+            //    url: url1,
+            //    async: false,
+            //    type: "POST",
+            //    dataType: "text",
+            //    contentType: "application/json; charset=utf-8",
+            //    data: "{ 'ProjectID' : '" + ProjectID + "'}",
+            //    failed: function (error) {
+            //        alert("failed");
+            //    },
+            //    success: function (response) {
+
+            //        $('#RqrdPOItemApprvrs_ddl').val(response);
+
+
+
+            //    }
+            //});
+
+
+
+
+
+
+            url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/getAlluserListProjectManager';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = '/Project/getAlluserListProjectManager';
+            }
+
+
+            $.ajax({
+                url: url1,
+                async: false,
+                type: "POST",
+                dataType: "JSON",
+                contentType: "application/json; charset=utf-8",
+                data: {},
+                failed: function (error) {
+                    alert("failed");
+                },
+                success: function (response) {
+
+                    var data = response.data;
+                    var html = "";
+                    html = "<option value='0'>" + "---Select---" + "</option>";
+
+                    for (var i = 0; i < data.length; i++) {
+                        html += "<option value='" + data[i].FldID + "'>" + data[i].UserName + "</option>";
+                    }
+
+                    $('#manager_ddl').html(html);
+
+
+                }
+            });
+
+
+            $('#RqrdPOApprvrs_ddl').val($('#RqrdPOApprvrs').text());
+            $('#RqrdBgtApprvrs_ddl').val($('#RqrdBgtApprvrs').text());
+
+            $('#RqrdPOItemApprvrs_ddl').val($("#RqrdPOItemApprvrs").text());
+
+
+            clicknew();
+            //$('.paginate_button').live('click', function () {
+            //    RowHtmlRender();
+            //});
+        });
+
+
+
+        function clicknew() {
+
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/getProjectTeamDetails';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/getProjectTeamDetails';
+            }
+
+            var projectid = $('#projectid').val();
+            url1 += "?projectid=" + projectid;
+
+
+            $.ajax({
+                url: url1,
+                async: false,
+                type: "POST",
+                dataType: "JSON",
+                contentType: "application/json; charset=utf-8",
+                data: {},
+                failed: function (error) {
+                    alert("failed");
+                },
+                success: function (response) {
+
+                    var data = response.data;
+                    teamdetails = data;
+
+                    for (var i = 0; i < teamdetails.length; i++) {
+                        if (teamdetails[i].Usertype == "Manager") {
+                            $('#manager_ddl').val(teamdetails[i].UserID);
+                        }
+                        else {
+                            var uid = teamdetails[i].UserID;
+                            $("#manager_ddl option[value='" + uid + "']").remove();
+                        }
+                    }
+
+                    //console.log(teamdetails);
+
+
+                }
+            });
+
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/getAllProjectTeammembersNew';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/getAllProjectTeammembersNew';
+            }
+
+            var projectid = $('#projectid').val();
+            url1 += "?projectid=" + projectid;
+
+
+
+
+
+            $.ajax({
+                url: url1,
+                type: "POST",
+                dataType: "JSON",
+                contentType: "application/json; charset=utf-8",
+                data: {},
+                failed: function (error) {
+                    alert("failed");
+                },
+                success: function (response) {
+                    var project;
+
+                    var poapprovers = 0;
+                    var budgetapprovers = 0;
+                    var poitemapprovers = 0;
+
+                    totdata = response;
+                    totdata = totdata.data;
+                    //console.log(totdata);
+                    projectteam = [];
+                    for (i = 0; i < totdata.length; i++) {
+                        projectteam[i] = new Array();
+                        projectteam[i][1] = totdata[i].Username;
+                        projectteam[i][2] = totdata[i].TeammemberID;
+                        projectteam[i][3] = totdata[i].SystemUserID;
+                        projectteam[i][4] = totdata[i].Email;
+                        projectteam[i][5] = totdata[i].ProjectusertypeID;
+                        projectteam[i][6] = totdata[i].UsertypeName;
+                        projectteam[i][7] = totdata[i].Security;
+
+
+
+                        for (var k = 0; k < teamdetails.length; k++) {
+
+                            if (teamdetails[k].UserID == totdata[i].SystemUserID && teamdetails[k].Usertype != "Manager") {
+
+                                if (teamdetails[k].POApprover == "1") {
+
+                                    if (projectteam[i][5] != '3') {
+                                        poapprovers++;
+                                    }
+
+                                    projectteam[i][8] = '<i style="cursor:pointer;" class="fa fa-check" data-userid="' + totdata[i].TeammemberID + '" onclick="POApprover(this,0);"></i>';
+                                }
+                                else {
+                                    projectteam[i][8] = '<i style="cursor:pointer;" class="fa fa-times" data-userid="' + totdata[i].TeammemberID + '" onclick="POApprover(this,1);"></i>';
+                                }
+                                //projectteam[i][6] = teamdetails[k].POApprover;
+                                if (teamdetails[k].BudgetApprover == "1") {
+
+                                    if (projectteam[i][5] != '3') {
+                                        budgetapprovers++;
+                                    }
+
+                                    projectteam[i][9] = '<i style="cursor:pointer;" class="fa fa-check" data-userid="' + totdata[i].TeammemberID + '" onclick="BudgetApprover(this,0);"></i>';
+                                }
+                                else {
+                                    projectteam[i][9] = '<i style="cursor:pointer;" class="fa fa-times" data-userid="' + totdata[i].TeammemberID + '" onclick="BudgetApprover(this,1);"></i>';
+                                }
+                                //projectteam[i][7] = teamdetails[k].BudgetApprover;
+                                if (teamdetails[k].POItemApprover == "1") {
+                                    if (projectteam[i][5] != '3') {
+                                        poitemapprovers++;
+                                    }
+                                    projectteam[i][10] = '<i style="cursor:pointer;" class="fa fa-check" data-userid="' + totdata[i].SystemUserID + '" onclick="POItemApprover(this,0);"></i>';
+                                }
+                                else {
+                                    projectteam[i][10] = '<i style="cursor:pointer;" class="fa fa-times" data-userid="' + totdata[i].SystemUserID + '" onclick="POItemApprover(this,1);"></i>';
+                                }
+                                //projectteam[i][8] = teamdetails[k].POItemApprover;
+                                break;
+                            }
+
+                            else {
+                                projectteam[i][8] = '';
+                                projectteam[i][9] = '';
+                                projectteam[i][10] = '';
+                            }
+
+                        }
+
+                        var teammemberid = totdata[i].TeammemberID;
+                        if (projectteam[i][6] != 'Manager') {
+                            var html = '<i style="cursor:pointer; font-size: 17px;" onclick="EditProjectMember(this,\'' + teammemberid + '\');" class="fa fa-pencil" data-id="' + teammemberid + '"></i>';// '<input type="button" class="buttonedit"  onclick="EditProjectMember(this,\'' + teammemberid + '\');" style="margin-bottom:6px;" data-id="' + teammemberid + '" />';
+                            html += '<i style="cursor:pointer; font-size: 17px;" class="fa fa-trash mrg10L" data-id="' + teammemberid + '" onclick="DeleteProjectMember(this,\'' + teammemberid + '\');" ></i>';//<input type="button" class="buttondelete"   style="margin-bottom:6px;" data-id="' + teammemberid + '" />';
+                        }
+                        else {
+                            var html = '';
+                        }
+
+                        projectteam[i][0] = html;
+
+                    }
+
+                    $('#POApprvrs').text(poapprovers);
+                    $('#BgtApprvrs').text(budgetapprovers);
+                    $('#POItemApprvrs').text(poitemapprovers);
+
+                    if (parseInt($('#RqrdPOItemApprvrs_ddl').val()) > parseInt(poitemapprovers)) {
+
+                        $('#POItemApprvrs').parent().parent().css('background', '#e7c3c3');
+                    }
+
+                    if (parseInt($('#RqrdBgtApprvrs_ddl').val()) > parseInt(budgetapprovers)) {
+
+                        $('#BgtApprvrs').parent().parent().css('background', '#e7c3c3');
+                    }
+
+                    if (parseInt($('#RqrdPOApprvrs_ddl').val()) > parseInt(poapprovers)) {
+
+                        $('#POApprvrs').parent().parent().css('background', '#e7c3c3');
+                    }
+
+
+
+                    // var poitemapprovers = 0;
+
+                    $('#projectteam').dataTable().fnDestroy();
+                    // //console.log(projectteam);
+                    $('#projectteam').dataTable({
+                        "processing": true,
+                        "data": projectteam,
+                        "columns": [
+                            { "title": "Action", "class": "leftposition" },
+                            { "title": "User name", "class": "leftposition" },
+                            { "title": "TeammemberID", "class": "displaynone" },
+                            { "title": "SystemUserID", "class": "displaynone" },
+                            { "title": "Email", "class": "leftposition" },
+
+                            { "title": "ProjectusertypeID", "class": "displaynone" },
+                            { "title": "User Type Name", "class": "leftposition" },
+                            { "title": "Security", "class": "displaynone" },
+                            { "title": "PO", "class": "leftposition" },
+                            { "title": "Budget", "class": "leftposition" },
+                            { "title": "Fabrication", "class": "leftposition" }
+
+
+                        ]
+                        ,
+
+                        "initComplete": function () {
+
+                            //var o = $('#projectteam_filter label').find('input');
+                            //$(o).attr('placeholder', '&#xF002;');
+                            //$(o).addClass('awesome');
+                            //setTimeout(function () {
+                            //    $('#projectteam_filter label').html($(o)[0].outerHTML);
+                            //}, 5000);
+
+
+                            ////console.log(o);
+
+
+                            var neededpoapprovers = $('#RqrdPOApprvrs_ddl').val();
+                            var neededbudgetapprovers = $('#RqrdBgtApprvrs_ddl').val();
+                            var neededpoitemapprovers = $('#RqrdPOItemApprvrs_ddl').val();
+
+                            if ($('#projectteam thead tr').length == 1) {
+
+                                $('#projectteam thead tr:eq(0)').find('th:eq(8)').append('(' + poapprovers + '/' + 1 + ')');
+                                $('#projectteam thead tr:eq(0)').find('th:eq(9)').append('(' + budgetapprovers + '/' + neededbudgetapprovers + ')');
+                                //$('#projectteam thead tr:eq(0)').find('th:eq(10)').append('(' + poitemapprovers + '/' + neededpoitemapprovers + ')');
+                                $('#projectteam thead tr:eq(0)').find('th:eq(10)').append('(' + poitemapprovers + '/' + 1 + ')');
+                            }
+                            else {
+
+                                $('#projectteam thead tr:eq(1)').find('th:eq(8)').append('(' + poapprovers + '/' + 1 + ')');
+                                $('#projectteam thead tr:eq(1)').find('th:eq(9)').append('(' + budgetapprovers + '/' + neededbudgetapprovers + ')');
+                                //$('#projectteam thead tr:eq(1)').find('th:eq(10)').append('(' + poitemapprovers + '/' + neededpoitemapprovers + ')');
+                                $('#projectteam thead tr:eq(1)').find('th:eq(10)').append('(' + poitemapprovers + '/' + 1 + ')');
+
+                            }
+                            RowHtmlRender();
+
+                            if ($('#projectteam thead tr').length == 1) {
+                                var rowheadhtml = '<tr><th style="width:10%; border:none;"></th>'
+                                    + '<th style="width:18%;border:none;"></th>'
+                                    + '<th style="width:18%;border:none;"></th>'
+                                    + '<th style="width:18%;border:none;"></th>'
+
+                                    + '<th style="width:18%;text-align:center !important;" colspan="3">Approvers</th></tr>';
+
+                                $('#projectteam thead').prepend(rowheadhtml);
+                            }
+
+
+                        },
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0, 6] }
+                        ],
+                        "order": [[1, "asc"]]
+                    });
+                    var html = "";
+
+
+                    var table = $('#projectteam').DataTable();
+                    $('.srch').on('keyup change', function () {
+                        var indx = $(this).attr('data-indx');
+                        var txt = this.value;
+                        table
+                            .column(indx)
+                            .search(txt)
+                            .draw();
+                        RowHtmlRender();
+                    });
+                }
+            });
+
+
+
+
+
+
+
+
+        }
+
+
+
+        //function clicknew() {
+
+
+        //    var url1 = '';
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url1 = '/Project/getProjectTeamDetails';
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+        //        url1 = 'Project/getProjectTeamDetails';
+        //    }
+
+        //    var projectid = $('#projectid').val();
+        //    url1 += "?projectid=" + projectid;
+
+
+        //    $.ajax({
+        //        url: url1,
+        //        async: false,
+        //        type: "POST",
+        //        dataType: "JSON",
+        //        contentType: "application/json; charset=utf-8",
+        //        data: {},
+        //        failed: function (error) {
+        //            alert("failed");
+        //        },
+        //        success: function (response) {
+
+        //            var data = response.data;
+        //            teamdetails = data;
+
+        //            for (var i = 0; i < teamdetails.length; i++) {
+        //                if (teamdetails[i].Usertype == "Manager") {
+        //                    $('#manager_ddl').val(teamdetails[i].UserID);
+        //                }
+        //                else {
+        //                    var uid = teamdetails[i].UserID;
+        //                    $("#manager_ddl option[value='" + uid + "']").remove();
+        //                }
+        //            }
+
+        //            //console.log(teamdetails);
+
+
+        //        }
+        //    });
+
+
+        //    var url1 = '';
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url1 = '/Project/getAllProjectTeammembersNew';
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+        //        url1 = 'Project/getAllProjectTeammembersNew';
+        //    }
+
+        //    var projectid = $('#projectid').val();
+        //    url1 += "?projectid=" + projectid;
+
+
+
+
+
+        //    $.ajax({
+        //        url: url1,
+        //        type: "POST",
+        //        dataType: "JSON",
+        //        contentType: "application/json; charset=utf-8",
+        //        data: {},
+        //        failed: function (error) {
+        //            alert("failed");
+        //        },
+        //        success: function (response) {
+        //            var project;
+
+        //            var poapprovers = 0;
+        //            var budgetapprovers = 0;
+        //            var poitemapprovers = 0;
+
+        //            totdata = response;
+        //            totdata = totdata.data;
+        //            //console.log(totdata);
+        //            projectteam = [];
+        //            for (i = 0; i < totdata.length ; i++) {
+        //                projectteam[i] = new Array();
+        //                projectteam[i][1] = totdata[i].Username;
+        //                projectteam[i][2] = totdata[i].TeammemberID;
+        //                projectteam[i][3] = totdata[i].SystemUserID;
+        //                projectteam[i][4] = totdata[i].Email;
+        //                projectteam[i][5] = totdata[i].ProjectusertypeID;
+        //                projectteam[i][6] = totdata[i].UsertypeName;
+        //                projectteam[i][7] = totdata[i].Security;
+
+
+
+        //                for (var k = 0; k < teamdetails.length ; k++) {
+
+        //                    if (teamdetails[k].UserID == totdata[i].SystemUserID && teamdetails[k].Usertype != "Manager") {
+
+        //                        if (teamdetails[k].POApprover == "1") {
+
+        //                            if (projectteam[i][5] != '3') {
+        //                                poapprovers++;
+        //                            }
+
+        //                            projectteam[i][8] = '<i style="cursor:pointer;" class="fa fa-check" data-userid="' + totdata[i].TeammemberID + '" onclick="POApprover(this,0);"></i>';
+        //                        }
+        //                        else {
+        //                            projectteam[i][8] = '<i style="cursor:pointer;" class="fa fa-times" data-userid="' + totdata[i].TeammemberID + '" onclick="POApprover(this,1);"></i>';
+        //                        }
+        //                        //projectteam[i][6] = teamdetails[k].POApprover;
+        //                        if (teamdetails[k].BudgetApprover == "1") {
+
+        //                            if (projectteam[i][5] != '3') {
+        //                                budgetapprovers++;
+        //                            }
+
+        //                            projectteam[i][9] = '<i style="cursor:pointer;" class="fa fa-check" data-userid="' + totdata[i].TeammemberID + '" onclick="BudgetApprover(this,0);"></i>';
+        //                        }
+        //                        else {
+        //                            projectteam[i][9] = '<i style="cursor:pointer;" class="fa fa-times" data-userid="' + totdata[i].TeammemberID + '" onclick="BudgetApprover(this,1);"></i>';
+        //                        }
+        //                        //projectteam[i][7] = teamdetails[k].BudgetApprover;
+        //                        if (teamdetails[k].POItemApprover == "1") {
+        //                            if (projectteam[i][5] != '3') {
+        //                                poitemapprovers++;
+        //                            }
+        //                            projectteam[i][10] = '<i style="cursor:pointer;" class="fa fa-check" data-userid="' + totdata[i].SystemUserID + '" onclick="POItemApprover(this,0);"></i>';
+        //                        }
+        //                        else {
+        //                            projectteam[i][10] = '<i style="cursor:pointer;" class="fa fa-times" data-userid="' + totdata[i].SystemUserID + '" onclick="POItemApprover(this,1);"></i>';
+        //                        }
+        //                        //projectteam[i][8] = teamdetails[k].POItemApprover;
+        //                        break;
+        //                    }
+
+        //                    else
+        //                        {
+        //                        projectteam[i][8] = '';
+        //                        projectteam[i][9] = '';
+        //                        projectteam[i][10] = '';
+        //                        }
+
+        //                }
+
+        //                var teammemberid = totdata[i].TeammemberID;
+        //                if (projectteam[i][6] != 'Manager') {
+        //                    var html = '<i style="cursor:pointer; font-size: 17px;" onclick="EditProjectMember(this,\'' + teammemberid + '\');" class="fa fa-pencil" data-id="' + teammemberid + '"></i>';// '<input type="button" class="buttonedit"  onclick="EditProjectMember(this,\'' + teammemberid + '\');" style="margin-bottom:6px;" data-id="' + teammemberid + '" />';
+        //                    html += '<i style="cursor:pointer; font-size: 17px;" class="fa fa-trash mrg10L" data-id="' + teammemberid + '" onclick="DeleteProjectMember(this,\'' + teammemberid + '\');" ></i>';//<input type="button" class="buttondelete"   style="margin-bottom:6px;" data-id="' + teammemberid + '" />';
+        //                }
+        //                else {
+        //                    var html = '';
+        //                }
+
+        //                projectteam[i][0] = html;
+
+        //            }
+
+        //            $('#POApprvrs').text(poapprovers);
+        //            $('#BgtApprvrs').text(budgetapprovers);
+        //            $('#POItemApprvrs').text(poitemapprovers);
+
+        //            if (parseInt($('#RqrdPOItemApprvrs_ddl').val()) > parseInt(poitemapprovers)) {
+
+        //                $('#POItemApprvrs').parent().parent().css('background', '#e7c3c3');
+        //            }
+
+        //            if (parseInt($('#RqrdBgtApprvrs_ddl').val()) > parseInt(budgetapprovers)) {
+
+        //                $('#BgtApprvrs').parent().parent().css('background', '#e7c3c3');
+        //            }
+
+        //            if (parseInt($('#RqrdPOApprvrs_ddl').val()) > parseInt(poapprovers)) {
+
+        //                $('#POApprvrs').parent().parent().css('background', '#e7c3c3');
+        //            }
+
+
+
+        //            // var poitemapprovers = 0;
+
+        //            $('#projectteam').dataTable().fnDestroy();
+        //            // //console.log(projectteam);
+        //            $('#projectteam').dataTable({
+        //                "processing": true,
+        //                "data": projectteam,
+        //                "columns": [
+        //                    { "title": "Action", "class": "leftposition" },
+        //                    { "title": "User name", "class": "leftposition" },
+        //                    { "title": "TeammemberID", "class": "displaynone" },
+        //                    { "title": "SystemUserID", "class": "displaynone" },
+        //                    { "title": "Email", "class": "leftposition" },
+
+        //                    { "title": "ProjectusertypeID", "class": "displaynone" },
+        //                    { "title": "User Type Name", "class": "leftposition" },
+        //                    { "title": "Security", "class": "displaynone" },
+        //                    { "title": "PO", "class": "leftposition" },
+        //                    { "title": "Budget", "class": "leftposition" },
+        //                    { "title": "Fabrication", "class": "leftposition" }
+
+
+        //                ]
+        //                ,
+
+        //                "initComplete": function () {
+
+        //                    //var o = $('#projectteam_filter label').find('input');
+        //                    //$(o).attr('placeholder', '&#xF002;');
+        //                    //$(o).addClass('awesome');
+        //                    //setTimeout(function () {
+        //                    //    $('#projectteam_filter label').html($(o)[0].outerHTML);
+        //                    //}, 5000);
+
+
+        //                    ////console.log(o);
+
+
+        //                    var neededpoapprovers = $('#RqrdPOApprvrs_ddl').val();
+        //                    var neededbudgetapprovers = $('#RqrdBgtApprvrs_ddl').val();
+        //                    var neededpoitemapprovers = $('#RqrdPOItemApprvrs_ddl').val();
+
+        //                    if ($('#projectteam thead tr').length == 1) {
+
+        //                        $('#projectteam thead tr:eq(0)').find('th:eq(8)').append('(' + poapprovers + '/' + neededpoapprovers + ')');
+        //                        $('#projectteam thead tr:eq(0)').find('th:eq(9)').append('(' + budgetapprovers + '/' + neededbudgetapprovers + ')');
+        //                        $('#projectteam thead tr:eq(0)').find('th:eq(10)').append('(' + poitemapprovers + '/' + neededpoitemapprovers + ')');
+        //                    }
+        //                    else {
+
+        //                        $('#projectteam thead tr:eq(1)').find('th:eq(8)').append('(' + poapprovers + '/' + neededpoapprovers + ')');
+        //                        $('#projectteam thead tr:eq(1)').find('th:eq(9)').append('(' + budgetapprovers + '/' + neededbudgetapprovers + ')');
+        //                        $('#projectteam thead tr:eq(1)').find('th:eq(10)').append('(' + poitemapprovers + '/' + neededpoitemapprovers + ')');
+
+        //                    }
+        //                    RowHtmlRender();
+
+        //                    if ($('#projectteam thead tr').length == 1) {
+        //                        var rowheadhtml = '<tr><th style="width:10%; border:none;"></th>'
+        //                        + '<th style="width:18%;border:none;"></th>'
+        //                        + '<th style="width:18%;border:none;"></th>'
+        //                        + '<th style="width:18%;border:none;"></th>'
+
+        //                        + '<th style="width:18%;text-align:center !important;" colspan="3">Approvers</th></tr>';
+
+        //                        $('#projectteam thead').prepend(rowheadhtml);
+        //                    }
+
+
+        //                },
+        //                "aoColumnDefs": [
+        //                    { 'bSortable': false, 'aTargets': [0, 6] }
+        //                ],
+        //                "order": [[1, "asc"]]
+        //            });
+        //            var html = "";
+
+
+        //            var table = $('#projectteam').DataTable();
+        //            $('.srch').on('keyup change', function () {
+        //                var indx = $(this).attr('data-indx');
+        //                var txt = this.value;
+        //                table
+        //                       .column(indx)
+        //                       .search(txt)
+        //                       .draw();
+        //                RowHtmlRender();
+        //            });
+        //        }
+        //    });
+
+
+
+
+
+
+
+
+        //}
+
+        function RowHtmlRender() {
+            // $('#project thead tr').find("th:eq(1)").html('Action').removeClass('sorting_asc');
+            // $('#projectteam_filter').css('display', 'none');
+            //$('#projectteam tbody tr').find("td:eq(6)").each(function () {
+            //    var teammemberid = $(this).parent().find("td:eq(1)").html();
+            //    //var zz = $(this).html();
+            //    var html = '<input type="button" class="buttonedit"  onclick="EditProjectMember(this,\'' + teammemberid + '\');" style="margin-bottom:6px;" data-id="' + teammemberid + '" />';
+            //    html += '<input type="button" class="buttondelete"  onclick="DeleteProjectMember(this,\'' + teammemberid + '\');" style="margin-bottom:6px;" data-id="' + teammemberid + '" />';
+            //    $(this).html(html);
+            //});
+        }
+
+        function ResetSearch() {
+            var table = $('#projectteam').DataTable();
+            $('.srch').each(function () {
+                this.value = '';
+                var indx = $(this).attr('data-indx');
+                var txt = this.value;
+                table
+                    .column(indx)
+                    .search(txt)
+                    .draw();
+            });
+        }
+
+        $(function () {
+            //$('select[name="projectteam_length"]').live('change', function () {
+            //    RowHtmlRender();
+            //});
+        });
+
+        function EditProjectMember(obj, teammemberid) {
+
+            var scope = angular.element($("#ProjectTeamdiv")).scope().edituserpopup(teammemberid);
+        }
+
+        function projectedit() {
+            var pid = $('#projectid').val();
+
+            var id = $('#ProjectID').val();
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/EditProject/' + pid;
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = '/Project/EditProject/' + pid;
+            }
+            window.location = url1;
+
+        }
+
+
+        function POItemApprover(obj, Flag) {
+            var UserID = $(obj).attr('data-userid');
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/AddDeletePOLineItemApprover';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/AddDeletePOLineItemApprover';
+            }
+
+            var ProjectID = $('#projectid').val();
+
+
+
+            $.ajax({
+                url: url1,
+                type: "POST",
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'UserID' : '" + UserID + "','ProjectID' : '" + ProjectID + "','Flag' : '" + Flag + "'}",
+                failed: function (error) {
+                    alert("failed");
+                },
+                success: function (response) {
+
+                    clicknew();
+                    notify("Successfully updated", 'green');
+
+                    window.setTimeout(function () {
+                        set_approval_color();
+                    }, 1000);
+
+
+                }
+            });
+
+
+        }
+
+        function POApprover(obj, Flag) {
+            var UserID = $(obj).attr('data-userid');
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/AddDeletePOApprovers';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/AddDeletePOApprovers';
+            }
+
+            var ProjectID = $('#projectid').val();
+
+
+
+            $.ajax({
+                url: url1,
+                type: "POST",
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'UserID' : '" + UserID + "','ProjectID' : '" + ProjectID + "','Flag' : '" + Flag + "'}",
+                failed: function (error) {
+                    alert("failed");
+                },
+                success: function (response) {
+
+
+
+                    clicknew();
+
+                    notify("Successfully updated", 'green');
+                    window.setTimeout(function () {
+                        set_approval_color();
+                    }, 1000);
+                }
+            });
+
+
+        }
+
+        function BudgetApprover(obj, Flag) {
+            var UserID = $(obj).attr('data-userid');
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/AddDeleteBudgetApprovers';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/AddDeleteBudgetApprovers';
+            }
+
+            var ProjectID = $('#projectid').val();
+
+
+
+            $.ajax({
+                url: url1,
+                type: "POST",
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'UserID' : '" + UserID + "','ProjectID' : '" + ProjectID + "','Flag' : '" + Flag + "'}",
+                failed: function (error) {
+                    alert("failed");
+                },
+                success: function (response) {
+
+                    clicknew();
+                    notify("Successfully updated", 'green');
+                    window.setTimeout(function () {
+                        set_approval_color();
+                    }, 1000);
+
+
+
+                }
+            });
+
+
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        function DeleteProjectMember(obj, id) {
+
+            var ask = confirm("Delete the Team Member?");
+            if (!ask) {
+                return;
+            }
+
+            var url = "";
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/project/DeleteProjectTeammembers';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'project/DeleteProjectTeammembers';
+            }
+            $.ajax({
+                url: url,
+                type: "POST",
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{'FldID' : '" + id + "' }",
+                failed: function (error) {
+                    alert("failed");
+                },
+                success: function (data) {
+                    if (data == 'SUCCESS') {
+                        window.location.reload();
+                    }
+                    else {
+                        alert("Member not deleted.");
+                    }
+                }
+            });
+        }
+        function AddTeamMember() {
+
+            if ($('#Ddl_SysUsrTyp').val() == '' || $('#Ddl_SysUsrTyp').val() == null || $('#Ddl_SysUsrTyp').val() == 'undefined' || $('#Ddl_SysUsrTyp').val() == '0') {
+                notify('Please select System User');
+                return;
+            }
+            if ($('#Ddl_Usr').val() == '' || $('#Ddl_Usr').val() == null || $('#Ddl_Usr').val() == 'undefined') {
+                notify('Please select user');
+                return;
+            }
+            if ($('#Ddl_UsrTyp').val() == '0') {
+                notify('Please select User Type');
+                return;
+            }
+            var scope = angular.element($("#ProjectTeamdiv")).scope().AddTeamMember();
+        }
+
+
+        angular.module("ProjectTeam", [])
+            .controller("ProjectTeam", function ($scope, $http) {
+
+                $scope.prioritylist2 = new Array();
+
+                // $scope.prioritylist2.push({ 'name': 'i', 'securityid': '8', 'isactive': '9' });
+
+
+                var name = 'i';
+                var securityid = '8';
+                var isactive = '9';
+                var GroupTypescrty = '';
+                var passhtml = '';
+
+                prioritycheckbox2FillUp(name, securityid, isactive, GroupTypescrty, passhtml);
+
+
+
+
+                $scope.AddTeamMember = function () {
+                    var priorities = "";
+                    $('.chkScrty').each(function () {
+                        if ($(this).is(":checked")) {
+                            if (priorities == "") { priorities += $(this).attr('id').split('prioritychk_')[1]; }
+                            else {
+                                priorities += "^" + $(this).attr('id').split('prioritychk_')[1];
+                            }
+                        }
+                    });
+                    var projectid = $('#projectid').val();
+                    var userid = $scope.selectedUser.test.FldID;
+
+
+                    var projectroleid = $scope.selectedUserType.Fldid;
+                    var url = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url = '/project/Addteammember';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url = 'project/Addteammember';
+                    }
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        dataType: "text",
+                        contentType: "application/json; charset=utf-8",
+                        data: "{'projectid' : '" + projectid + "','userid' : '" + userid + "','projectroleid' : '" + projectroleid + "', 'prioritiesonlist' : '" + priorities + "' }",
+                        failed: function (error) {
+                            alert("failed");
+                        },
+                        success: function (data) {
+                            if (data == 'SUCCESS') {
+                                //Add default Level by Esolz
+                                var obj = new Object();
+                                obj.ProjectID = $('#projectid').val();
+                                obj.SESSIONUSERBACKEND = 'UserID';
+                                obj.LevelID = 1;
+
+                                obj.Mode = 'ADDDEFAULTLEVEL';
+                                var DBSP = new DB_SP_CONNECT();
+                                DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+                                DBSP.obj = obj;
+                                DBSP.isasync = false;
+                                var o = DBSP.call_DB_Procedure();
+                                window.location.reload();
+                            }
+                            else if (data == 'FAILED') {
+                                alert("This user already exist as team member.");
+                            }
+                        }
+                    });
+                }
+                $scope.Editmember = function () {
+                    var FldID = $('#edituserid').val();
+                    var priorities = "";
+                    $('.edtScrty').each(function () {
+                        if ($(this).is(":checked")) {
+                            if (priorities == "") { priorities += $(this).attr('id').split('prioritychk_')[1]; }
+                            else {
+                                priorities += "^" + $(this).attr('id').split('prioritychk_')[1];
+                            }
+                        }
+                    });
+                    var Projectusertypeid = $scope.selectedUserTypeForEdit.Fldid;
+                    var url = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url = '/project/EditProjectTeammembers';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url = 'project/EditProjectTeammembers';
+                    }
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        dataType: "text",
+                        contentType: "application/json; charset=utf-8",
+                        data: "{'FldID' : '" + FldID + "','Projectusertypeid' : '" + Projectusertypeid + "','priorities_on_list' : '" + priorities + "' }",
+                        failed: function (error) {
+                            alert("failed");
+                        },
+                        success: function (data) {
+                            if (data == 'SUCCESS') {
+                                window.location.reload();
+                            }
+                            else if (data == 'FAILED') {
+                                alert("Something went wrong.");
+                            }
+                        }
+                    });
+                }
+
+
+                $scope.getPriority = function () {
+
+                    var selecttedusertype = $scope.selectedUser.test.Usertype;
+                    for (var i = 0; i < $scope.UserType.length; i++) {
+                        if (selecttedusertype == $scope.UserType[i].Fldid) {
+                            $scope.selectedUserType = $scope.UserType[i];
+                            break;
+                        }
+                    }
+                    //console.log('hi' + $scope.selectedUser.test.FldID);
+                    var selectedid = $scope.selectedUser.test.FldID;
+
+
+                    $('.showHide').show();
+                    var url = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url = '/project/return_priorities_user_new';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url = 'project/return_priorities_user_new';
+                    }
+                    $http.get(url + "?userid=" + selectedid)
+                        .success(function (response) {
+                            // $scope.prioritylist = response;
+                            var grouptype = "";
+                            var currg = "";
+                            var html = "<tr>"
+                                + "<th>Security Item</th>"
+                                + "<th>Assigned</th>"
+                                + "</tr>";
+
+
+
+
+
+                            var plist = response.data;
+                            var html = "";
+
+                            for (var i = 0; i < plist.length; i++) {
+
+                                currg = plist[i].GroupType;
+
+                                //console.log(currg);
+
+                                if (currg.toUpperCase() != "PROJECT" && currg.toUpperCase() != "USER" && currg.toUpperCase() != "VENDOR") {
+
+
+                                    if (currg == grouptype) {
+                                    }
+                                    else {
+                                        grouptype = currg;
+                                        html += "<tr><td style='color:white;background:black;' colspan='2'>" + grouptype + "</td></tr>";
+                                    }
+
+                                    html += "<tr><td><label style='padding:0px;width:100%;' for='prioritychk_" + plist[i].security_id + "'>" + plist[i].priority_name + "</label></td>";
+
+                                    if (plist[i].is_selected == "1") {
+                                        if (plist[i].security_id == 16 || plist[i].security_id == 6 || plist[i].security_id == 3 || plist[i].security_id == 2 || plist[i].security_id == 1 || plist[i].security_id == 17 || plist[i].security_id == 17 || plist[i].security_id == 4) {
+                                            html += '<td><input  type="checkbox" checked class="chkScrty" value="1" id="prioritychk_' + plist[i].security_id + '" disabled ></td></tr>';
+                                        } else {
+                                            html += '<td><input  type="checkbox" class="chkScrty" value="1" id="prioritychk_' + plist[i].security_id + '" checked></td></tr>';
+                                        }
+                                        //  html += '<td><input  type="checkbox" class="chkScrty" value="1" id="prioritychk_' + plist[i].security_id + '" checked></td></tr>';
+                                    }
+                                    else {
+                                        html += '<td><input type="checkbox" class="chkScrty" value="0" id="prioritychk_' + plist[i].security_id + '"></td></tr>';
+                                    }
+
+
+                                }
+
+
+                            }
+                            $('#priority_checkbox').html(html);
+
+                            var tableobj = $('#priority_checkbox');
+                            rebuiltPriorityintoDivs(tableobj);
+                        });
+                }
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/project/getUserType';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'project/getUserType';
+                }
+
+                $http.get(url)
+                    .success(function (response) {
+                        $scope.UserType = response;
+                        $scope.selectedUserType = $scope.UserType[0];
+                        $scope.selectedUserTypeForEdit = $scope.UserType[0];
+                    });
+
+
+
+                //--------------------------------
+
+                url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/project/getSystemUserType';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'project/getSystemUserType';
+                }
+                $http.get(url)
+                    .success(function (response) {
+                        $scope.SystemUserTypes = response;
+                        $scope.selectedSystemUserType = $scope.SystemUserTypes[0];
+                    });
+
+                //----------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/project/getAllUsers';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'project/getAllUsers';
+                }
+                url += "?UserTypeId=0";
+                $http.get(url)
+                    .success(function (response) {
+                        $scope.Users = response.data;
+                        // $scope.selectedUser = $scope.Users[0];
+                        // //console.log($scope.Users);
+                        for (a = 0; a < $scope.Users.length; a++) {
+                            for (b = 0; b < projectteam.length; b++) {
+
+                                if ($scope.Users[a].FldID == projectteam[b][3]) {
+
+                                    $scope.Users.splice(a, 1);
+                                    break;
+                                }
+                            }
+                        }
+                    });
+
+
+
+                $scope.getSystemUsers = function () {
+
+                    // $scope.selectedUserType = $scope.selectedSystemUserType.Fldid;
+                    //$scope.apply();
+
+                    //$('#Ddl_UsrTyp').val($('#SysUsrId option:selected').val());
+                    $('.newappendeddivforpermissions').remove();
+                    var teammemberid = $scope.selectedSystemUserType.Fldid;
+
+
+
+
+
+                    //$('#Ddl_UsrTyp').val($('#Ddl_SysUsrTyp').val());
+
+
+                    url = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url = '/project/getAllUsers';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url = 'project/getAllUsers';
+                    }
+                    url += "?UserTypeId=" + teammemberid;
+                    $http.get(url)
+                        .success(function (response) {
+                            $scope.Users = response.data;
+                            $scope.selectedUser = $scope.Users[0];
+                            //$scope.selectedUser.test = $scope.Users[0];
+                            // $scope.selectedUserType = $scope.selectedSystemUserType;
+
+                            for (var i = 0; i < $scope.UserType.length; i++) {
+                                if ($scope.selectedSystemUserType.Fldid == $scope.UserType[i].Fldid) {
+                                    $scope.selectedUserType = $scope.UserType[i];
+                                    break;
+                                }
+                            }
+
+
+
+                            // $scope.selectedSystemUserType = $scope.SystemUserTypes[0];
+                            //selectedUserType = selectedSystemUserType;
+                            //console.log($scope.selectedSystemUserType);
+
+                            var len = $scope.Users.length;
+                            for (a = 0; a < len; a++) {
+
+                                for (b = 0; b < projectteam.length; b++) {
+
+                                    if ($scope.Users[a].FldID == projectteam[b][3]) {
+
+                                        $scope.Users.splice(a, 1);
+                                        len--;
+                                        break;
+
+                                    }
+                                }
+                            }
+
+
+                            $('#Ddl_Usr options').each(function () {
+                                $(this).text('5555');
+                            });
+
+                            window.setTimeout(function () {
+                                try {
+                                    $('#Ddl_Usr').multiselect('refresh');
+                                }
+                                catch (exp) {
+                                    $('#Ddl_Usr').multiselect({ multiple: false }).multiselectfilter();
+                                }
+                            }, 0);
+
+
+                        });
+
+
+                }
+
+
+
+
+
+                $scope.edituserpopup = function (teammemberid) {
+
+
+
+                    $scope.prioritylist2 = [];
+
+
+                    var name = '';
+                    var securityid = '';
+                    var isactive = '';
+                    var GroupTypescrty = '';
+                    var passhtml = '';
+                    var html = '';
+
+                    prioritycheckbox2FillUp(name, securityid, isactive, GroupTypescrty, passhtml);
+
+
+
+
+
+                    var security = "";
+                    $('#edituserid').val(teammemberid);
+
+                    for (i = 0; i < projectteam.length; i++) {
+
+
+                        if (projectteam[i][2] == teammemberid) {
+                            security = projectteam[i][7];
+                            var selecttedusertype = projectteam[i][5];
+                            for (var i = 0; i < $scope.UserType.length; i++) {
+                                if (selecttedusertype == $scope.UserType[i].Fldid) {
+                                    $scope.selectedUserTypeForEdit = $scope.UserType[i];
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+
+
+                    var currg = "";
+                    var grouptype = "";
+
+
+                    for (i = 0; i < security.split(',').length; i++) {
+                        var name = security.split(',')[i].split('^')[0];
+                        var securityid = security.split(',')[i].split('^')[1];
+                        var isactive = security.split(',')[i].split('^')[2];
+                        var GroupTypescrty = security.split(',')[i].split('^')[3];
+
+                        //  $scope.prioritylist2.push({ 'name': name, 'securityid': securityid, 'isactive': isactive });
+
+                        passhtml = "";
+                        currg = GroupTypescrty;
+
+                        if (currg.toUpperCase() != "PROJECT" && currg.toUpperCase() != "USER" && currg.toUpperCase() != "VENDOR") {
+
+
+                            if (currg == grouptype) {
+                            }
+                            else {
+                                grouptype = currg;
+                                passhtml += "<tr><td style='color:white;background:black;' colspan='2'>" + grouptype + "</td></tr>";
+                            }
+
+
+
+                            html += prioritycheckbox2FillUp(name, securityid, isactive, GroupTypescrty, passhtml);
+                        }
+
+                    }
+
+
+                    $('#priority_checkbox2').html(html);
+
+                    var tableobj = $('#priority_checkbox2');
+                    rebuiltPriorityintoDivs(tableobj);
+
+
+                    // //console.log($scope.prioritylist2);
+                    $scope.$apply();
+                    // $('#popup').bPopup();
+                    $('#popupbs').modal('show');
+                }
+            });
+
+        function prioritycheckbox2FillUp(name, securityid, isactive, GroupTypescrty, passhtml) {
+            // $('#UserTypeSecurityDiv').css('display', 'block');
+
+
+            var html = "<tr>"
+                + "<th>Security Item</th>"
+                + "<th>Assigned</th>"
+                + "</tr>";
+            ////console.log(response.data);
+
+            var html = "";
+
+            html += passhtml;
+
+            html += "<tr><td><label style='padding:0px;width:100%;' for='prioritychk_" + securityid + "'>" + name + "</label></td>";
+            if (isactive == "1") {
+                html += '<td><input  type="checkbox" class="chkScrty edtScrty" value="1" id="prioritychk_' + securityid + '" checked></td></tr>';
+            }
+            else {
+                html += '<td><input type="checkbox" class="chkScrty edtScrty" value="0" id="prioritychk_' + securityid + '"></td></tr>';
+            }
+            return html;
+
+        }
+    </script>
+
+    <script>
+
+        $(document).ready(function () {
+
+
+            window.setTimeout(function () {
+                $('#Ddl_Usr').multiselect({ multiple: false }).multiselectfilter();
+            }, 0
+            );
+
+        });
+
+        function set_approval_color() {
+
+            if (parseInt($('#RqrdPOItemApprvrs_ddl').val()) > parseInt($('#POItemApprvrs').text())) {
+
+                $('#POItemApprvrs').parent().parent().css('background', '#e7c3c3');
+            }
+            else {
+                $('#POItemApprvrs').parent().parent().css('background', 'none');
+            }
+
+            if (parseInt($('#RqrdBgtApprvrs_ddl').val()) > parseInt($('#BgtApprvrs').text())) {
+
+                $('#BgtApprvrs').parent().parent().css('background', '#e7c3c3');
+            }
+            else {
+                $('#BgtApprvrs').parent().parent().css('background', 'none');
+            }
+
+            if (parseInt($('#RqrdPOApprvrs_ddl').val()) > parseInt($('#POApprvrs').text())) {
+
+                $('#POApprvrs').parent().parent().css('background', '#e7c3c3');
+            } else {
+                $('#POApprvrs').parent().parent().css('background', 'none');
+            }
+
+        }
+
+    </script>
+
+    <script>
+
+        function rebuiltPriorityintoDivs(obj) {
+            // $(obj).find('.newappendeddivforpermissions').html();
+            //console.log($('.newappendeddivforpermissions').length);
+            $('.newappendeddivforpermissions').remove();
+            //console.log($('.newappendeddivforpermissions').length);
+            var ttt = 0;
+            var cnt = -1;
+            var outerhtml = "<div class='col-sm-12 newappendeddivforpermissions'>";
+
+            $(obj).find('tbody tr').each(function () {
+
+                var nowDiv = $(this).find('td:eq(0)').html().toUpperCase();
+
+                //console.log(nowDiv + '%%%%');
+                if (nowDiv != "PROJECT" && nowDiv != "USER" && nowDiv != "VENDOR") {
+
+                    if ($(this).find('td').length == 1) {
+
+                        cnt++;
+
+                        if (ttt == 0) {
+
+
+                            outerhtml += '<div class="row" style="margin-left:0px;margin-right:0px;">';
+
+                            outerhtml += '<div class="col-sm-3" style="width:20%;">';
+                        }
+                        else {
+
+
+
+
+                            if (cnt % 7 == 0) {
+                                if (nowDiv != "PROJECT" && nowDiv != "USER" && nowDiv != "VENDOR") {
+                                    outerhtml += '</div></div><div class="row"  style="margin-left:0px;margin-right:0px;"><div class="col-sm-3"  style="width:20%;">';
+                                }
+                                else {
+                                    outerhtml += '</div></div><div class="row"  style="margin-left:0px;margin-right:0px;"><div class="col-sm-3 displaynone"  style="width:20%;">';
+
+
+                                }
+
+
+                            }
+                            else {
+
+                                if (nowDiv != "PROJECT" && nowDiv != "USER" && nowDiv != "VENDOR") {
+                                    outerhtml += '</div><div class="col-sm-3"  style="width:20%;">';
+                                }
+                                else {
+                                    outerhtml += '</div><div class="col-sm-3 displaynone">';
+
+                                }
+
+                            }
+                        }
+                        //outerhtml += '<h3 class="section-header">' + $(this).find('td:eq(0)').html() + '</h3>';
+
+                        outerhtml += '<div class="col-sm-12 section-header"><span style="float: left;width: 76.9%;text-align: left;">' + $(this).find('td:eq(0)').html() + '</span>'
+                            + '<input style="float:left;margin-left:2px;    margin-top: 10px;" type="checkbox" onclick="Checkallinner(this);" /></div> ';
+
+                    }
+
+                    else {
+
+                        if (nowDiv != "PROJECT" && nowDiv != "USER" && nowDiv != "VENDOR") {
+                            outerhtml += '<div class="col-sm-9">';
+                            outerhtml += '<span>' + $(this).find('td:eq(0)').html() + '</span></div>';
+                            outerhtml += '<div class="col-sm-3">' + $(this).find('td:eq(1)').html() + '</div>';
+                        }
+                        else {
+                            outerhtml += '<div class="col-sm-9 displaynone">';
+                            outerhtml += '<span>' + $(this).find('td:eq(0)').html() + '</span></div>';
+                            outerhtml += '<div class="col-sm-3 displaynone">' + $(this).find('td:eq(1)').html() + '</div>';
+
+                        }
+
+
+                    }
+
+                    ttt = 1;
+
+                }
+
+            });
+
+            outerhtml += "</div>";
+
+
+            $(obj).after(outerhtml);
+
+            $(obj).html('');
+
+        }
+
+
+        function Checkallinner(obj) {
+
+            var pdiv = $(obj).parent().parent();
+            if ($(obj).is(':checked')) {
+                $(pdiv).find('.chkScrty').prop('checked', true);
+            }
+            else {
+                $(pdiv).find('.chkScrty').prop('checked', false);
+
+            }
+        }
+    </script>
+
+
+
+    <script type="text/javascript">
+        //*****************************************  FABRICATION APPROVAL GROUP  SCRIPT START BY ---- ESOLZ DEV1  ***************************************************************//
+
+        function fabricationapprovallevelset() {//**************************Esolz Dev1 26/03/2022 (Modal Design Bind)
+            debugger;
+            $('#fab_poapprovalleveldiv').html('');
+            var htm = '';
+            var obj = new Object();
+            obj.ProjectID = $('#projectid').val();
+            obj.Mode = 'FABRICATION_GETDATA';
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+
+            if (o.length > 0) {
+
+                obj.ProjectID = $('#projectid').val();
+                obj.Mode = 'FABRICATION_GETDATA';
+
+
+                DBSP = new DB_SP_CONNECT();
+                DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+                DBSP.obj = obj;
+                DBSP.isasync = false;
+                o = DBSP.call_DB_Procedure();
+                o = o.data;
+
+                var ProjectId = obj.ProjectID;
+                var al = '';
+                for (var i = 0; i < o.length; i++) {
+                    var ApprovalLevel = o[i].ApprovalLevel;
+                    var FldID = o[i].FldID;
+                    var Name = o[i].Name;
+                    var Assigned = o[i].Assigned;
+                    var LevelID = o[i].LevelID;
+                    var IsFabrication = o[i].IsFabrication;
+                    var DltbtnHtm = '';
+                    if (IsFabrication == '1') {
+                        DltbtnHtm = '<button type="button" class="close" style="display:none;" title="Remove Level" onclick="fab_deleteApproverLevel(this,' + LevelID + ',' + ProjectId + ')">×</button>'
+                    }
+                    else {
+                        DltbtnHtm = '<button type="button" class="close" title="Remove Level" onclick="fab_deleteApproverLevel(this,' + LevelID + ',' + ProjectId + ')">×</button>'
+                    }
+                    //if (al == '' || al != ApprovalLevel) {
+
+                    //    htm += htm == '' ? '<div id="fab_lvlPart" class="gp_name">' +
+                    //        '<div class="fablevelheader" data-levelid="' + LevelID + '">' + ' Group  ' + ApprovalLevel + '-' +
+                    //        '&nbsp;<input type="text" id="fab_grp_name' + ApprovalLevel + '" class="fabgrp_name" style="color: black;" placeholder="Enter Group Name" data-id="' + ApprovalLevel+'">&nbsp;&nbsp;'+
+                    //        '<button type="button" class="close" title="Remove Level" onclick="fab_deleteApproverLevel(this,' + LevelID + ',' + ProjectId + ')">×</button>' +
+                    //        '<select onchange="fab_ReqApprvDropdownOnChng(this)" id="Fab_ReqApprvDropdown_' + LevelID + '" data-levelid="' + LevelID + '">' +
+                    //        '<option value="1">1</option><option value="2">2</option>' +
+                    //        '<option value="3">3</option><option value="4">4</option>' +
+                    //        '<option value="5">5</option><option value="6">6</option>' +
+                    //        '<option value="7">7</option><option value="8">8</option>' +
+                    //        '<option value="9">9</option><option value="10">10</option>' +
+                    //        '</select></div>' :
+                    //        '</div ></div > <div id="fab_lvlPart" class="gp_name"><div class="fablevelheader" data-levelid="' + LevelID + '">' + ' Group ' + ApprovalLevel + '-' +
+                    //        '&nbsp;<input type="text" id="fab_grp_name' + ApprovalLevel + '" class="fabgrp_name" style="color: black;" placeholder="Enter Group Name"  data-id="' + ApprovalLevel +'">&nbsp;&nbsp;' +
+                    //        '<button type="button" class="close" title="Remove Level" onclick="fab_deleteApproverLevel(this,' + LevelID + ',' + ProjectId + ')">×</button>' +
+                    //        '<select onchange="fab_ReqApprvDropdownOnChng(this)" id="Fab_ReqApprvDropdown_' + LevelID + '" data-levelid="' + LevelID + '">' +
+                    //        '<option value="1">1</option><option value="2">2</option>' +
+                    //        '<option value="3">3</option><option value="4">4</option>' +
+                    //        '<option value="5">5</option><option value="6">6</option>' +
+                    //        '<option value="7">7</option><option value="8">8</option>' +
+                    //        '<option value="9">9</option><option value="10">10</option>' +
+                    //        '</select></div>';
+                    //}
+                    if (al == '' || al != ApprovalLevel) {
+
+                        htm += htm == '' ? '<div id="fab_lvlPart" class="gp_name">' +
+                            '<div class="fablevelheader" data-levelid="' + LevelID + '">' + ' Group  ' + ApprovalLevel + '-' +
+                            ' <input type="text" id="fab_grp_name' + ApprovalLevel + '" class="fabgrp_name" style="color: black;" placeholder="Enter Group Name" data-id="' + ApprovalLevel + '">  ' +
+                            DltbtnHtm +
+                            '<select onchange="fab_ReqApprvDropdownOnChng(this)" id="Fab_ReqApprvDropdown_' + LevelID + '" data-levelid="' + LevelID + '">' +
+                            '<option value="1">1</option><option value="2">2</option>' +
+                            '<option value="3">3</option><option value="4">4</option>' +
+                            '<option value="5">5</option><option value="6">6</option>' +
+                            '<option value="7">7</option><option value="8">8</option>' +
+                            '<option value="9">9</option><option value="10">10</option>' +
+                            '</select></div>' :
+                            '</div ></div > <div id="fab_lvlPart" class="gp_name"><div class="fablevelheader" data-levelid="' + LevelID + '">' + ' Group ' + ApprovalLevel + '-' +
+                            ' <input type="text" id="fab_grp_name' + ApprovalLevel + '" class="fabgrp_name" style="color: black;" placeholder="Enter Group Name"  data-id="' + ApprovalLevel + '">  ' +
+                            DltbtnHtm +
+                            '<select onchange="fab_ReqApprvDropdownOnChng(this)" id="Fab_ReqApprvDropdown_' + LevelID + '" data-levelid="' + LevelID + '">' +
+                            '<option value="1">1</option><option value="2">2</option>' +
+                            '<option value="3">3</option><option value="4">4</option>' +
+                            '<option value="5">5</option><option value="6">6</option>' +
+                            '<option value="7">7</option><option value="8">8</option>' +
+                            '<option value="9">9</option><option value="10">10</option>' +
+                            '</select></div>';
+                    }
+                    if (Assigned == '0') {
+
+                        htm += '<div class="fablevelpo fablev' + LevelID + '" for="chkap_' + FldID + '" data-levelid="' + LevelID + '" data-userid="' + FldID + '"><p style="width:80%;"><input type="checkbox" id="fab_chkap_' + FldID + '" data-userid="' + FldID + '" data-levelid="' + LevelID + '" onchange="fab_checkforusersOnexistingLvl(this)"/>' + Name + '</p></div>';
+                    }
+                    else {
+                        htm += '<div class="fablevelpo fablev' + LevelID + '" for="chkap_' + FldID + '" data-levelid="' + LevelID + '" data-userid="' + FldID + '"><p style="width:80%;"><input checked type="checkbox" id="fab_chkap_' + FldID + '" data-userid="' + FldID + '" data-levelid="' + LevelID + '" onchange="fab_checkforusersOnexistingLvl(this)"/>' + Name + '</p></div>';
+                    }
+                    al = ApprovalLevel;
+                }
+                htm += '</div>';
+                $('#fab_poapprovallevel').modal('show');
+
+                $('#fab_poapprovalleveldiv').html(htm);
+                feb_chcktotalapproversdata();
+                GetFabGroupName("div.gp_name");
+
+
+            } else {
+                fab_addnewlevel();
+            }
+
+        }
+
+        var GetFabGroupName = function (elem) {//***************Esolz Dev2 28/03/2022
+            debugger;
+            var obj = new Object();
+            obj.ProjectID = $('#projectid').val();
+            obj.Mode = 'GET_FAB_GroupName';
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+
+            var dataTable = typeof elem === "object" & $(elem).is("div") ? $(elem) : $(".gp_name");
+            var index = 1;
+            $.each(dataTable, function (key, row) {
+                let _stringArray = [], _stringHtml = '';
+                var $row = $(row);
+                var grp_dataId = $row.find("input#fab_grp_name" + index + "").val(o[key].GroupName);
+                index++;
+            });
+        }
+
+        function fab_addnewlevel() { //***********Arnab Das 28/03/2022
+            debugger;
+            var c = confirm("Are you sure you want to add a new level approvers?");
+
+            if (c) {
+                var reqApprv = 1; //prompt('Enter required level')
+
+                if (reqApprv !== null) {
+
+                    if (/^[0-9]*$/g.test($.trim(reqApprv)) === false) {
+                        alert('Only numbers are permitted.');
+                        return false;
+                    }
+                    else if (Number($.trim(reqApprv)) < 1) {
+                        alert('Number of required approvers cannot be less than 1.');
+                        return false;
+                    } else {
+                        var result = fab_CheckForassignedusercount($.trim(reqApprv));
+                        if (result.split('%')[0] === 'failed') {
+                            alert(result.split('%')[1]);
+                            return false;
+                        } else {
+
+                            var resp = fab_checkforPOapprovals();
+                            if (resp.split('|')[0] === 'success') {
+                                var obj = new Object();
+                                obj.ProjectID = $('#projectid').val();
+                                obj.SESSIONUSERBACKEND = 'UserID';
+                                obj.LevelID = Number(reqApprv);
+
+                                obj.Mode = 'FABADDLEVEL';
+                                var DBSP = new DB_SP_CONNECT();
+                                DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+                                DBSP.obj = obj;
+                                DBSP.isasync = false;
+                                var o = DBSP.call_DB_Procedure();
+                                o = o.data;
+
+                                fabricationapprovallevelset();
+                                notify('New approval level added.', 'green');
+
+                            } else {
+                                alert(resp.split('|')[1]);
+                            }
+                        }
+                    }
+                } else {
+                    return;
+                }
+            } else {
+                return;
+            }
+
+        }
+
+        function fab_CheckForassignedusercount(ReqFld) {//****************Arnab Das 28/03/2022
+            debugger;
+            var obj = new Object();
+            obj.ProjectID = $('#projectid').val();
+            obj.Mode = 'FABCHECKFORUNASSIGNEDUSER';
+            obj.LevelID = Number(ReqFld);
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "[dbo].[POMS_POApprovalLevelProc]";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            return o.data[0]['res'];
+        }
+
+        function fab_checkforPOapprovals() {//*************Arnab Das 28/03/2022
+            debugger;
+            var obj = new Object();
+            obj.ProjectID = $('#projectid').val();
+            obj.Mode = 'CHECKFORFABAPPROVALMEMBER';
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            return (o.data[0]['']);
+        }
+
+        function feb_chcktotalapproversdata() {//********Arnab Das 28/03/2022
+            debugger;
+            //var req = $('#RqrdPOApprvrsPerLevel').val();
+            var req = 0;
+            $('.fablevelheader').each(function () {
+                var level = $(this).attr('data-levelid');
+                var tota = 0;
+                var DBSP;
+                var obj;
+
+                $('.fablev' + level).each(function () {
+                    if ($(this).find('p input').is(':checked')) {
+                        tota++;
+                    }
+                });
+                obj = new Object();
+                obj.ProjectID = $('#projectid').val();
+                obj.LevelID = level;
+                obj.SESSIONUSERBACKEND = 'UserID';
+                obj.Mode = 'GETREQUIREDFABRICATIONAPPROVERS';
+
+                var DBSP = new DB_SP_CONNECT();
+                DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+                DBSP.obj = obj;
+                DBSP.isasync = false;
+                var o = DBSP.call_DB_Procedure();
+                o = o.data;
+                req = o[0].NumOfUserToAprv_POITEMS;
+                $('#Fab_ReqApprvDropdown_'.concat(level)).val(req);
+
+                $(this).append(' (' + tota + '/' + req + ')');
+                if (tota < req) {
+                    $(this).css('background', '#eda7b1');
+                }
+            });
+        }
+
+        function fab_CheckForassignedusercount(ReqFld) {//****************Arnab Das 28/03/2022
+            var obj = new Object();
+            obj.ProjectID = $('#projectid').val();
+            obj.Mode = 'FABCHECKFORUNASSIGNEDUSER';
+            obj.LevelID = Number(ReqFld);
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "[dbo].[POMS_POApprovalLevelProc]";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            return o.data[0]['res'];
+        }
+
+        function fab_checkforusersOnexistingLvl(obj) {//*****************Esolz Dev1 28/03/2022
+            debugger;
+            if($(obj).is(':checked')){
+                $.ajax({
+                    url: '@Url.Content("~/Project/Fab_CheckForExistingUserPerLevel")',
+                    method: 'POST',
+                    data: '{"Fldid":"' + $(obj).attr('data-userid') + '", "Levelid":"' + $(obj).attr("data-levelid") + '"}',
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response !== undefined && response.mesg.split('%')[0] === 'failed') {
+                            $(obj).removeAttr('checked');
+                            alert(response.mesg.split('%')[1]);
+                        }
+                        else {
+                            $(obj).attr('checked');
+                            //$('.editfablevelapprovers').trigger('click');
+                           fab_edituserlevelapprovers(obj);
+                        }
+                    }, error: function (d) {
+                        console.error(d.message);
+                    }
+                });
+            }else{
+                $(obj).removeAttr('checked');
+                fab_edituserlevelapprovers(obj);
+
+            }
+        }
+
+
+        function fab_edituserlevelapprovers() {//***************Esolz Dev1 28/03/2022
+            debugger;
+            var l = '';
+            var str = '';
+
+            $('.fablevelpo').find('p input').each(function () {
+
+                var levelid = $(this).parent().parent().attr('data-levelid');
+                var userid = $(this).parent().parent().attr('data-userid');
+                if (l == '' || l != levelid) {
+                    str += str == '' ? levelid + '^' : '$' + levelid + '^';
+                }
+                if ($(this).is(':checked')) {
+                    str += '^' + userid;
+                }
+                l = levelid;
+
+
+            });
+
+
+            notify('Saving data...', 'yellow-load');
+
+                setTimeout(function () {
+                    for (var i = 0; i < str.split('$').length; i++) {
+
+                        var str2 = str.split('$')[i];
+                        var levelid = str2.split('^^')[0];
+                        var userids = str2.split('^^')[1];
+                        levelid = levelid.replace('^', '');
+
+                        var obj = new Object();
+                        obj.ProjectID = $('#projectid').val();
+                        obj.LevelID = levelid;
+                        obj.SESSIONUSERBACKEND = 'UserID';
+                        obj.UserIDs = userids;
+                        obj.Mode = 'FABEDITUSERSLEVEL';
+
+                        var DBSP = new DB_SP_CONNECT();
+                        DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+                        DBSP.obj = obj;
+                        DBSP.isasync = false;
+                        var o = DBSP.call_DB_Procedure();
+                        o = o.data;
+
+                        notify('Saved successfully.', 'GREEN');
+
+
+                    }
+                    fabricationapprovallevelset();
+                }, 200);
+        }
+
+        function fab_editGrpnamesave() {//***************Esolz Dev1 28/03/2022
+            debugger;
+            var flag = false;
+            var l = '';
+            var str = '';
+
+            $('.fablevelpo').find('p input').each(function () {
+
+                var levelid = $(this).parent().parent().attr('data-levelid');
+                if (l == '' || l != levelid) {
+                    str += str == '' ? levelid + '^' : '$' + levelid + '^';
+                }
+                l = levelid;
+
+
+            });
+
+            var totalgrpname = '';
+            var groupnames = ''
+            var j = 1;
+            $(".fabgrp_name").each(function () {//***************Esolz Dev2
+
+                var grpname = $('#fab_grp_name' + j + '').val();
+
+                if (grpname == "" || grpname == null) {
+                    notify("Please Enter Group Name");
+                    flag = true;
+                    return;
+                }
+                if (j == 1) {
+                    totalgrpname = grpname;
+                }
+                else {
+                    totalgrpname = totalgrpname + ',' + grpname;
+                }
+                j++;
+
+            })
+
+
+            var check = grpNameValidationCkeck("input.fabgrp_name"); //***************Esolz Dev2
+            if (check === false) {
+                return;
+            }
+
+
+            notify('Saving data...', 'yellow-load');
+            if (flag == false) {
+                setTimeout(function () {
+                    for (var i = 0; i < str.split('$').length; i++) {
+
+                        var str2 = str.split('$')[i];
+                        var levelid = str2.split('^^')[0];
+                        //var userids = str2.split('^^')[1];
+                        //var totalgrpnames = str2.split('^^')[2];
+                        var g_name = totalgrpname.split(',');
+                        var grp_name = g_name[i];
+
+                        levelid = levelid.replace('^', '');
+                        //totalgrpnames = levelid.replace('^', '');
+                        app_level = i + 1;
+
+                        var obj = new Object();
+                        obj.ProjectID = $('#projectid').val();
+                        obj.LevelID = levelid;
+                        obj.GroupName = grp_name;
+                        obj.ApprovalLevel = app_level;
+                        //obj.SESSIONUSERBACKEND = 'UserID';
+                        //obj.UserIDs = userids;
+                        obj.Mode = 'FABEDITGRPLEVEL';
+
+                        var DBSP = new DB_SP_CONNECT();
+                        DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+                        DBSP.obj = obj;
+                        DBSP.isasync = false;
+                        var o = DBSP.call_DB_Procedure();
+                        o = o.data;
+
+                        notify('Saved successfully.', 'GREEN');
+
+
+                    }
+                    fabricationapprovallevelset();
+
+                }, 200);
+            }
+
+
+        }
+
+        var grpNameValidationCkeck = function (elem) {
+            var dataTable = typeof elem === "object" & $(elem).is("input") ? $(elem) : $(".fabgrp_name");
+
+            var valid = true;
+
+            $.each(dataTable, function (index1, item1) {
+
+                $.each(dataTable.not(this), function (index2, item2) {
+
+                    if ($(item1).val().trim().toUpperCase() === $(item2).val().trim().toUpperCase()) {
+                        //$(item1).css("border-color", "red");
+                        notify('With ' + $(item1).val().trim() + ' name already exists');
+                        valid = false;
+                    }
+
+                });
+            });
+
+            return valid;
+
+        }
+
+
+        function fab_getLavelId() {//*******************Esolz Dev1 30/03/2022
+            var htm = '';
+            var obj = new Object();
+            obj.ProjectID = $('#projectid').val();
+            obj.Mode = 'FabGetLavelId';
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            return o.data[0]['res'];
+
+        }
+
+        function fab_deleteApproverLevel(element, levelID, projectId) {//************Esolz Dev1 30/03/2022
+            debugger;
+            var ans = confirm("Do you want to delete?");
+            if (ans == true) {
+                var obj = new Object();
+                obj.LevelID = levelID;
+                obj.ProjectID = projectId;
+                obj.SESSIONUSERBACKEND = 'UserID';
+                obj.Mode = 'FABDeleteLevel';
+
+                var DBSP = new DB_SP_CONNECT();
+                DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+                DBSP.obj = obj;
+                DBSP.isasync = false;
+                var o = DBSP.call_DB_Procedure();
+                o = o.data;
+                //console.log(o);
+                $(element).parent().parent().remove();
+                var CntGrp = HideSaveButton(projectId);
+                if (CntGrp == 0) {
+                    $('#fab_poapprovallevel').modal('hide');
+                }
+            }
+        }
+
+        function HideSaveButton(projectId) {
+            var obj = new Object();
+            obj.ProjectID = projectId;
+            obj.Mode = 'countCurrentFabGroups';
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            return o[0].tot;
+        }
+
+        function fab_ReqApprvDropdownOnChng(obj) {//*****************Esolz Dev1 30/03/2022
+            debugger;
+            var LevelId = $(obj).attr('data-levelid');
+            if (LevelId === undefined) {
+                LevelId = fab_getLavelId();
+                var modalValue = 1;
+            }
+            //alert(LevelId);
+            fab_changenumberstoapprovepo(obj, LevelId, modalValue);
+        }
+
+        function fab_changenumberstoapprovepo(obj, level, modalValue) {//***********************Esolz Dev1 30/03/2022
+            debugger;
+            var number = $(obj).val();
+            //alert(number);
+
+            var Number = $(obj).val();
+            var ProjectID = $('#projectid').val();
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/changeFABApprovernumber';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = '/Project/changeFABApprovernumber';
+            }
+
+            $.ajax({
+                url: url1,
+                async: false,
+                type: "POST",
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'ProjectID' : '" + ProjectID + "','Number' : '" + Number + "','level' :'" + level + "'}",
+                failed: function (error) {
+                    alert("failed");
+                },
+                success: function (response) {
+
+                    if (response == 'SUCCESS') {
+
+                        //set_approval_color();
+                        if (modalValue != 1) {
+                            fabricationapprovallevelset();
+
+                        }
+                        notify("Updated successfully", 'green');
+                    }
+                    else {
+
+                        $(obj).val(prev);
+                        notify("Something went wrong");
+
+                    }
+
+
+                }
+            });
+
+
+        }
+
+        //*****************************************  FABRICATION APPROVAL GROUP  SCRIPT START BY END ***************************************************************//
+
+
+        //*****************************************  FABRICATION PATH Model WORK SCRIPT START BY ---- ESOLZ DEV2 SOUMIK  ***************************************************************//
+
+
+        function fabricationpathlevelset() { //Model Bind Dynamic //Esoz dev 2 soumik
+            var ProjectID = $('#projectid').val();
+            ViewfabpathitemHistory(ProjectID); //fab path list
+
+            $('#demo1').html('');
+            var htm = '';
+            htm += '<form role="form" id="fabpathform" class="form">' +
+                '<fieldset style="border:none;">' +
+                '<div class="row custom-row">' +
+                '<div class="col-sm-5">' +
+                '<div class="form-group">' +
+                '<div class="row custom-row"><label for="selectFrom">Options</label></div>' +
+                '<div class="row custom-row">' +
+                '<select name="selectFrom" id="selectFrom" style="height:202px" class="form-control input-medium" multiple size="5">' +
+                getGrpOnFabPath() +
+                '</select></div></div></div>' +
+                '<div class="col-sm-1 res-pad-no">' +
+                '<div class="row custom-row"><div class="col-sm-12">' +
+                '<div class="btn-group-vertical btn-block">' +
+                '<button id="btnAdd" name="btnAdd" type="button" class="btn btn-primary btn-small"><i class="fa fa-angle-right" aria-hidden="true"></i></button>' +
+                '<button id="btnRemove" name="btnRemove" type="button" class="btn btn-primary btn-small m-0"><i class="fa fa-angle-left" aria-hidden="true"></i></button>' +
+                '</div></div></div></div>' +
+                '<div class="col-sm-5"><div class="last-wrap"><div class="form-group">' +
+                '<div class="row custom-row"><label for="selectTo">Selected</label></div>' +
+                '<div class="row custom-row">' +
+                '<select name="selectTo" id="selectTo" size="5" style="height:202px" class="form-control input-medium">' +
+                //getSelectedGrpOnFabPath() +
+                '</select>' +
+                '</div></div></div></div>' +
+                '<div class="col-sm-1 res-pad-no">' +
+                '<div class="row custom-row"><div class="col-sm-12">' +
+                '<div class="btn-group-vertical btn-block">' +
+                '<button id="btnUp" name="btnUp" type="button" class="btn btn-primary btn-small"><i class="fa fa-angle-up" aria-hidden="true"></i></button>' +
+                '<button id="btnDown" name="btnDown" type="button" class="btn btn-primary btn-small m-0"><i class="fa fa-angle-down" aria-hidden="true"></i></button>' +
+                '</div></div></div></div></div></fieldset></form>'
+
+
+            $('#fab_poapprovalpath').modal('show');
+            $('#demo1').html(htm);
+            //console.log(htm);
+            //GetFabPathName("#fabapprovalpathname");
+        }
+
+        $(document.body).on('click', '#btnAdd', function () { //Add on Selected List(Esolz dev 2 soumik)
+            $('#selectFrom option:selected').each(function () {
+                $('#selectTo').append('<option  data-id="' + $(this).attr("data-id") + '" value="' + $(this).val() + '" class="demogrpname">' + $(this).text() + '</option>');
+            });
+        });
+
+        $(document.body).on('click', '#btnRemove', function () { //Remove on Selected List(Esolz dev 2 soumik)
+
+            $('#selectTo option:selected').each(function () {
+                //$('#selectFrom').append('<option value="' + $(this).val() + '">' + $(this).text() + '</option>');
+                $(this).remove();
+                //if ($("#selectTo option:selected").attr("data-flid") === 'undefined') {
+                //    $(this).remove();
+                //}
+                //else {
+                //    var delgroup = $(this).attr("data-id");
+
+                //    var obj = new Object();
+                //    obj.ProjectID = $('#projectid').val();
+                //    obj.GrpNameID = delgroup;
+                //    obj.Mode = 'RemoveGrpOnSelectOption';
+
+                //    var DBSP = new DB_SP_CONNECT();
+                //    DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+                //    DBSP.obj = obj;
+                //    DBSP.isasync = false;
+                //    var o = DBSP.call_DB_Procedure();
+                //    o = o.data;
+                //    $(this).remove();
+                //    notify('Remove successfully.', 'GREEN');
+                //}
+
+            });
+        });
+
+        $(document.body).on('click', '#btnUp', function () { //Up on Selected List(Esolz dev 2 soumik)
+
+            $('#selectTo option:selected').each(function () {
+                var newPos = $('#selectTo option').index(this) - 1;
+                if (newPos > -1) {
+                    $('#selectTo option').eq(newPos).before('<option  data-id="' + $(this).attr("data-id") + '" value="' + $(this).val() + '" class="demogrpname" selected="selected">' + $(this).text() + '</option>');
+                    $(this).remove();
+                }
+            });
+        });
+        $(document.body).on('click', '#btnDown', function () { //Down on Selected List(Esolz dev 2 soumik)
+
+            var countOptions = $('#selectTo option').size();
+            $('#selectTo option:selected').each(function () {
+                var newPos = $('#selectTo option').index(this) + 1;
+                if (newPos < countOptions) {
+                    $('#selectTo option').eq(newPos).after('<option  data-id="' + $(this).attr("data-id") + '" value="' + $(this).val() + '" class="demogrpname" selected="selected">' + $(this).text() + '</option>');
+                    $(this).remove();
+                }
+            });
+        });
+
+
+
+        function getGrpOnFabPath() { //Get Group name In Left side option area(Esolz dev 2 soumik)
+            debugger;
+            var ProjectID = $('#projectid').val();
+            var html = "";
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Project/getGrpOnFabPath';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url = 'Project/getGrpOnFabPath';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                url: url,
+                data: "{ 'ProjectID': '" + ProjectID + "'}",
+                success: function (data) {
+                    html = data;
+                }
+
+            });
+            return html;
+
+        }
+
+
+
+        var duplicatedgroupCheck = function (elem) { //Check Validation for same grp name assign
+            var dataTable = typeof elem === "object" & $(elem).is("option") ? $(elem) : $(".demogrpname");
+
+            var valid = true;
+
+            $.each(dataTable, function (index1, item1) {
+
+                $.each(dataTable.not(this), function (index2, item2) {
+
+                    if ($(item1).text() == $(item2).text()) {
+                        //$(item1).css("border-color", "red");
+                        notify('With ' + $(item1).text() + ' name already exists');
+                        valid = false;
+                    }
+
+                });
+            });
+
+            return valid;
+
+        }
+
+
+        function newfabapprovalpath() {
+            $("#apppath").removeClass("hide");
+            $("#fabsave").removeClass("hide");
+            document.getElementById("fabapprovalpathname").disabled = false;
+            document.getElementById("fabapprovalpathname").value = "";
+            document.getElementById("fabpathid").value = "";
+            $('#selectTo').html('');
+        }
+
+        function closeapppatharea() {
+            $("#apppath").addClass("hide");
+            $("#fabsave").addClass("hide");
+        }
+
+        function deletegroupname(ApprovalPathID) { //when you edit a fabpath name and save it then this function called because before you sava that editable path actually its not updating ,its delele the previous path and insert it again
+            //var fabapprovalpathname1 = $('#fabapprovalpathname').val().trim();
+            debugger;
+            var obj = new Object();
+            obj.ProjectID = $('#projectid').val();
+            obj.ApprovalPathID = ApprovalPathID;
+            obj.Mode = 'RemoveAllGrpName';
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            //console.log(o);
+        }
+
+
+        function savefabpathname() { //save fab approval path name
+            debugger;
+            var fabnameID = '';
+            var flag = false;
+            var fabapprovalpathname = $('#fabapprovalpathname').val().trim();
+            var ApprovalPathID = $('#fabpathid').val();
+            var pathnameval = $('#selectTo option').toArray().map(item => item.value);
+
+            if (fabapprovalpathname == "" || fabapprovalpathname == null) {
+                notify("Please Enter Fabrication Path Name");
+                flag = true;
+                return;
+            }
+
+            var duplicatefabpathname = DuplicateFabricationName(fabapprovalpathname);
+
+            if (document.getElementById("fabpathid").value == 0) {
+                if (duplicatefabpathname != "0") {
+                    notify("This Fabrication Path Name Already Exists!");
+                    flag = true;
+                    return;
+                }
+            }
+
+            var check = duplicatedgroupCheck('.demogrpname');
+
+            if (check === false) {
+                return;
+            }
+
+            if (pathnameval == "" || pathnameval == null) {
+                notify("Please Assign Group");
+                flag = true;
+                return;
+            }
+
+            var obj = new Object();
+            obj.ProjectID = $('#projectid').val();
+            obj.ApprovalPathName = fabapprovalpathname;
+            obj.ApprovalPathID = ApprovalPathID;
+            obj.Mode = 'SaveFabPathName';
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            fabnameID = o[0].FldID;
+            if (flag == false) {
+                if (ApprovalPathID !== 'undefined' && ApprovalPathID !== null && ApprovalPathID !== '') {
+                    deletegroupname(ApprovalPathID);
+                }
+                fab_editgrppath(fabnameID);
+                document.getElementById("fabpathid").value = "";
+            }
+
+            //console.log(fabnameID);
+        }
+
+
+
+        function DuplicateFabricationName(ApprovalPathName) {
+            debugger;
+            var obj = new Object();
+            obj.ProjectID = $('#projectid').val();
+            obj.ApprovalPathName = ApprovalPathName;
+            obj.Mode = 'checkepathnameonsave';
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            return o[0].tot;
+            //console.log(o);
+        }
+
+        function fab_editgrppath(fabnameID) { //Save all approval grpname(Esolz dev 2 soumik)
+            debugger;
+
+            var FabPathNameID = fabnameID;
+            var pathnameval = $('#selectTo option').toArray().map(item => item.value);
+
+
+
+            var dataList = $('#selectTo option').map(function () {
+                return $(this).data("id");
+            });
+
+            setTimeout(function () {
+                for (var i = 0; i < pathnameval.length; i++) {
+
+                    //var fab_pathname = pathname;
+                    //var path_name = fab_pathname[i];
+                    var fab_pathnameval = pathnameval;
+                    var LevelID = fab_pathnameval[i];
+                    ordering = i + 1;
+                    var getgrpidoption = dataList;
+                    var getgrpidoption1 = getgrpidoption[i];
+                    //var getfldid = dataList1;
+                    //var getfldid1 = getfldid[i];
+
+                    var obj = new Object();
+                    //obj.FldID = getfldid1;
+                    obj.LevelID = LevelID;
+                    obj.ordering = ordering;
+                    obj.ProjectID = $('#projectid').val();
+                    //obj.ApprovalPathName = fabapprovalpathname;
+                    obj.GrpNameID = getgrpidoption1;
+                    obj.ApprovalPathID = FabPathNameID;
+                    obj.Mode = 'FABPATHEDITGRPLEVEL';
+
+                    var DBSP = new DB_SP_CONNECT();
+                    DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+                    DBSP.obj = obj;
+                    DBSP.isasync = false;
+                    var o = DBSP.call_DB_Procedure();
+                    o = o.data;
+                    var value = o[0].status;
+                    if (value === 'Insert Successfully!!') {
+                        notify('Saved successfully.', 'GREEN');
+                    }
+                    else {
+                        notify('Please Insert Again.', 'Red');
+                    }
+                }
+                document.getElementById("fabapprovalpathname").disabled = false;
+                document.getElementById("fabapprovalpathname").value = "";
+                fabricationpathlevelset();
+            }, 200);
+
+
+        }
+
+        function ViewfabpathitemHistory(obj) { //list of all fabrication path name
+            $('#tblfabpathitemHistoryBody').html("");
+            ProjectID = obj;
+            var url = "";
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Project/getfabpathitemHistory';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Project/getfabpathitemHistory';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'ProjectID': ProjectID },
+                success: function (data) {
+                    if (data != "") {
+                        //console.log(data);
+                        // $('#tblPOLineItemExpediteHistory').html(data);
+                        $('#tblfabpathitemHistoryBody').html(data);
+                    }
+                }
+            });
+
+        }
+
+        var GetFabPathName = function (FabApprovalPathID) {//Get fabtication path name on textbox(Esolz dev 2 soumik)
+            debugger;
+            //var FabApprovalPathID = $("#fabpathid").val();
+            var obj = new Object();
+            //obj.ProjectID = $('#projectid').val();
+            obj.ApprovalPathID = FabApprovalPathID;
+            obj.Mode = 'GetPathNameBasedOnID';
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_POApprovalLevelProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+
+            var fabpathname = o[0].ApprovalPathName;
+            $("#fabapprovalpathname").val(fabpathname);
+            //console.log(fabpathname);
+
+        }
+
+        function EditFabApprovalPath(FldID, obj) { //edit fabpath
+            debugger;
+            $("#apppath").removeClass("hide");
+            $("#fabsave").removeClass("hide");
+            $('#selectTo').html('');
+
+
+            document.getElementById("fabapprovalpathname").value = "";
+            document.getElementById("fabpathid").value = "";
+            var htm = "";
+            var url = '';
+            var FabApprovalPathID = FldID;
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Project/editFabApprovalPath';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url = 'Project/editFabApprovalPath';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                url: url,
+                data: "{ 'FabApprovalPathID': '" + FabApprovalPathID + "'}",
+                success: function (data) {
+                    htm = data;
+                }
+
+            });
+
+
+
+            //document.getElementById("fabapprovalpathname").value += GetFabPathName;
+            document.getElementById("fabpathid").value += FldID;
+            GetFabPathName(FabApprovalPathID);
+            $('#selectTo').html(htm);
+
+        }
+
+        function DeleteFabApprovalPath(ApprovalPathID, obj) { //delete fab path
+            debugger;
+
+            if (!confirm("Do you want to really delete this fabrication approval path?")) {
+                return false;
+            }
+
+            var ProjectID = $('#projectid').val();
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Project/deleteFabApprovalPath';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url = 'Project/deleteFabApprovalPath';
+            }
+
+
+            $.ajax({
+                async: false,
+                type: "POST",
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                url: url,
+                data: "{ 'ProjectID' : '" + ProjectID + "','ApprovalPathID': '" + ApprovalPathID + "'}",
+                failed: function (error) {
+                    alert("failed");
+                },
+                success: function (response) {
+
+                    if (response == 'SUCCESS') {
+                        ViewfabpathitemHistory(ProjectID);
+                        notify("Delete successfully", 'green');
+                    }
+                    else {
+                        notify("Something went wrong");
+                    }
+                }
+            });
+
+        }
+
+        $(window).on('hidden.bs.modal', function () { //Fab path Modal close
+            $('#fab_poapprovalpath').modal('hide');
+            document.getElementById("fabapprovalpathname").value = "";
+            document.getElementById("fabpathid").value = "";
+            $('#selectTo').html('');
+            closeapppatharea();
+        })
+
+    //*****************************************  FABRICATION PATH Model WORK SCRIPT END ***************************************************************//
+    </script>
+</body>
+</html>

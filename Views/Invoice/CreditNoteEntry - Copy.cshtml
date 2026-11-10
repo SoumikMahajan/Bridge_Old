@@ -1,0 +1,2140 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Credit Note Entry</title>
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+   
+    @* <script src="~/Scripts/angular.min.js"></script>*@
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    @*<script src="~/Scripts/AddUser.js"></script>*@
+    <script src="~/Scripts/Project.js"></script>
+
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/swfupload.js"></script>
+    <script src="~/Scripts/jquery.swfupload.js"></script>
+    <link href="~/css/stylesForFileUpload.css" rel="stylesheet" />
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+    <style>
+        .roundbtn {
+            cursor: pointer;
+            border: 3px solid #7792a8;
+            border-radius: 6px;
+            cursor: pointer;
+            background: #7792a8;
+            color: black;
+        }
+
+        .underline {
+            color: blue;
+            text-decoration: underline;
+        }
+
+        .tottaxpaid {
+            position: relative;
+            width: 100%;
+            height: 40px;
+            float: left;
+        }
+
+
+            .tottaxpaid p {
+                margin-top: 12px;
+                position: relative;
+                font-size: 1em;
+                color: #208093;
+                margin-left: 45px;
+            }
+
+
+        .noselect td {
+            opacity: 0.4 !important;
+            background-color: #eee !important;
+        }
+
+
+        .selectedrow {
+            background-color: rgb(239, 255, 144);
+        }
+
+        .selectedrowforinvoice {
+            background-color: rgb(239, 255, 144);
+        }
+
+
+
+
+        .singledown {
+            background: url('https://thebridgebytcg.com/Images/Arrow-Down-s.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+            background-color: #7792A8;
+            border-radius: 5px;
+        }
+
+        .doubledown {
+            background: url('https://thebridgebytcg.com/Images/Arrow-Down-d.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+            background-color: #7792A8;
+            border-radius: 5px;
+        }
+
+        .singleup {
+            margin-left: 20px;
+            background: url('https://thebridgebytcg.com/Images/Arrow-Down-s.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+            -webkit-transform: rotate(180deg);
+            background-color: #7792A8;
+            border-radius: 5px;
+        }
+
+        .doubleup {
+            background: url('https://thebridgebytcg.com/Images/Arrow-Down-d.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+            -webkit-transform: rotate(180deg);
+            background-color: #7792A8;
+            border-radius: 5px;
+        }
+        .notmatched
+        {
+                background: #ffeded !important;
+        }
+        .matched
+        {
+                background: #defbde !important;
+        }
+    </style>
+
+    <style type="text/css">
+        #sidebar {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+        }
+    </style>
+
+    <style type="text/css">
+        a.tooltip {
+            outline: none;
+        }
+
+            a.tooltip strong {
+                line-height: 30px;
+            }
+
+            a.tooltip:hover {
+                text-decoration: none;
+            }
+
+            a.tooltip span {
+                z-index: 10;
+                display: none;
+                padding: 14px 20px;
+                margin-top: -30px;
+                margin-left: 28px;
+                width: 300px;
+                line-height: 16px;
+            }
+
+            a.tooltip:hover span {
+                display: inline;
+                position: absolute;
+                color: #111;
+                border: 1px solid #DCA;
+                background: #fffAF0;
+            }
+
+        .callout {
+            z-index: 20;
+            position: absolute;
+            top: 30px;
+            border: 0;
+            left: -12px;
+        }
+
+        /*CSS3 extras*/
+        a.tooltip span {
+            border-radius: 4px;
+            box-shadow: 5px 5px 8px #CCC;
+        }
+    </style>
+
+    <style>
+        table.dataTable thead th, table.dataTable thead td {
+            padding: 5px!important;
+        }
+
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        .ui-multiselect {
+            width: 100% !important;
+                color: #526779 !important;
+            height: 25px !important;
+            margin-top: 0px !important;
+        }
+
+        .ui-multiselect-menu {
+            width: 23% !important;
+        }
+
+        label {
+            color: #333333;
+            font-weight: 500;
+        }
+
+        table.dataTable tbody th, table.dataTable tbody td {
+            padding: 5px 5px;
+        }
+    </style>
+    <script src="~/Scripts/jquery.DB_PROC.js"></script>
+
+
+    <script>
+        var POSelector = new Array();
+
+        $(function () {
+            var table = $('#tblPOSelector').DataTable();
+
+            table
+                .clear()
+                .draw();
+           // $('#tblPOSelector_filter').hide();
+            $('#tblPOSelector_length').hide();
+
+            var table = $('#tblPOItemSelector').DataTable();
+
+            table
+                .clear()
+                .draw();
+
+            $('#tblPOItemSelector_filter').hide();
+            $('#tblPOItemSelector_length').hide();
+
+
+            var table = $('#tblitemeditor').DataTable();
+
+            table
+                .clear()
+                .draw();
+            $('#tblitemeditor_filter').hide();
+            $('#tblitemeditor_length').hide();
+
+
+
+
+
+            _a();
+
+            var date = new Date();
+            var currentMonth = date.getMonth();
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+
+            $('#txt_InvoiceDate').datepickercustom({
+                changeMonth: true,
+                changeYear: true,
+                //dateFormat: 'MM dd yy'
+                dateFormat: 'yy/mm/dd'
+                //,minDate: new Date(currentYear, currentMonth, currentDate)
+            });
+            $('#txt_InvoiceDate').datepicker("setDate", date);
+
+
+
+        });
+
+        function _a() {
+            var obj = new Object();
+            obj.Mode = 'GETVENDORS';
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_CreditNoteAll";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            var html = "";
+            html += "<option value='0'>" + "Select Vendor" + "</option>";
+            for (var a = 0; a < o.length; a++) {
+                html += "<option value='" + o[a].ParentVendor_ID + "'>" + o[a].ParentVendorName + "</option>";
+
+            }
+            $('#Ddl_Vendors').html(html);
+
+            $("#Ddl_Vendors").multiselect({
+                "multiple": false,
+                maxTextWrapSize: 42
+            }).multiselectfilter();
+
+            $("#ddl_project").multiselect({
+                "multiple": false,
+                maxTextWrapSize: 42
+            }).multiselectfilter();
+            changevendorddl();
+
+            //console.log(o);
+
+        }
+
+        function changevendorddl() {
+            var vendorid = $('#Ddl_Vendors').val();
+
+            if (vendorid == '0') return;
+
+            var obj = new Object();
+            obj.Mode = 'GETPROJECT';
+            obj.VendorID = vendorid;
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_CreditNoteAll";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            var html = "";
+
+            for (var a = 0; a < o.length; a++) {
+                if (a == 0) {
+                    html += "<option selected value='" + o[a].ProjectID + "'>" + o[a].project + "</option>";
+                }
+                else {
+                    html += "<option value='" + o[a].ProjectID + "'>" + o[a].project + "</option>";
+
+                }
+
+            }
+            $('#ddl_project').html(html);
+
+            $("#ddl_project").multiselect("refresh");
+
+            getPO();
+
+
+        }
+
+        function getPO() {
+
+            var vendorid = $('#Ddl_Vendors').val();
+            var projectID = $('#ddl_project').val();
+
+            var obj = new Object();
+            obj.Mode = 'GETACCOUNTS';
+          
+            obj.ProjectID = projectID[0];
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_CreditNoteAll";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            var htmlddl = '';
+            console.log(o);
+
+            htmlddl = "<option value='0'>--Select Project Account--</option>";
+            for (i = 0; i < o.length ; i++) {
+               
+                htmlddl += "<option value='" + o[i].FldID + "'>" + o[i].Anumber + "</option>";
+            }
+            $('#Ddl_ProjectAccount').html(htmlddl);
+
+            var obj = new Object();
+            obj.Mode = 'GETPO';
+            obj.VendorID = vendorid;
+            obj.ProjectID = projectID[0];
+            
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_CreditNoteAll";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            //console.log(o);
+            totdata = o;
+
+            POSelector = [];
+
+
+            for (i = 0; i < totdata.length ; i++) {
+                POSelector[i] = new Array();
+                var polink = "<a href='/Purchaseorder/POEdit/" + totdata[i].PurchaseOrderID + "' target='_blank'>"
+                                              + totdata[i].PONUMBER + "</a>";
+
+                POSelector[i][0] = totdata[i].PurchaseOrderID;
+                POSelector[i][1] = "<input type='checkbox' class='poselector_chk' />";
+                POSelector[i][2] = polink;//totdata[i].PONUMBER;
+                POSelector[i][3] = totdata[i].CurrencyCode;
+                POSelector[i][4] = formatNumber(totdata[i].TotalPOCOST);
+                POSelector[i][5] = formatNumber(totdata[i].InvoiceCost);
+
+                POSelector[i][7] = "";
+                POSelector[i][6] = "";
+                POSelector[i][8] = "";
+                POSelector[i][9] = "";
+            }
+
+            $('#tblPOSelector').dataTable().fnDestroy();
+
+            $('#tblPOSelector').dataTable({
+                "processing": true,
+                "destroy": true,
+                "data": POSelector,
+                "columns": [
+                                { "title": "POID", "class": "displaynone" },
+                                { "title": "", "class": "leftposition" },
+                                { "title": "PO #", "class": "leftposition" },
+                                { "title": "Curr", "class": "leftposition" },
+                                { "title": "Amount", "class": "rightposition" },
+                                { "title": "Inv. Amt.", "class": "rightposition" },
+                                { "title": "Pymnt Sch.", "class": "leftposition displaynone" },
+                                { "title": "Taxes", "class": "rightposition displaynone" }
+                                , { "title": "ProjectID", "class": "displaynone" }
+                                , { "title": "VendorId", "class": "displaynone" }
+
+                ],
+                paging: false,
+                "initComplete": function () {
+                   // $('#tblPOSelector_filter').hide();
+
+                    AddtableTdTextAlign('#tblPOSelector', '4^5^7', 'right', false);
+                    $('#tblPOSelector tbody tr').each(function () {
+                        $(this).find('td:eq(1) input').attr('onclick', 'selectpo(this);');
+                    });
+
+
+                },
+                "order": [[2, "asc"]],
+                "aoColumnDefs": [
+                    { 'bSortable': false, 'aTargets': [1] }
+                ]
+                 , "order": [[2, "asc"]]
+            });
+
+
+
+
+        }
+
+        function selectpo(obj) {
+            var poid = "";
+
+            $('.poselector_chk').each(function () {
+                var curterms = "";
+
+                if ($(this).is(':checked')) {
+                    poid += poid == "" ? $(this).parent().parent().find('td:eq(0)').html() : "^" + $(this).parent().parent().find('td:eq(0)').html();
+                }
+
+            });
+            
+
+            var obj = new Object();
+            obj.Mode = 'GETPOITEMS';
+            obj.POID = poid;
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_CreditNoteAll";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+
+            //console.log(o);
+
+
+            var POLineItemSelector = new Array();
+
+            var totdata = o;
+
+            for (i = 0; i < totdata.length ; i++) {
+                POLineItemSelector[i] = new Array();
+
+                POLineItemSelector[i][0] = totdata[i].POLineItemID;
+
+                POLineItemSelector[i][1] = "<input type='button' value='Select' />";
+
+                POLineItemSelector[i][2] = totdata[i].POLineItemNumber;
+                POLineItemSelector[i][3] = totdata[i].PONUMBER;
+                POLineItemSelector[i][4] = totdata[i].ItemDescription;
+                POLineItemSelector[i][5] = '';
+
+
+                POLineItemSelector[i][6] = '';
+
+
+
+                POLineItemSelector[i][7] = formatNumber(totdata[i].POCost);
+
+                POLineItemSelector[i][8] = formatNumber(totdata[i].LineItemTotal);
+
+
+
+                POLineItemSelector[i][9] = '';//formatNumber(totdata[i].AmountRemaining);
+                POLineItemSelector[i][10] = '';//(i + 1);
+                //POLineItemSelector[i][9] = totdata[i].Amount;
+                POLineItemSelector[i][11] = '';// '';//totdata[i].AmountRemaining;
+                POLineItemSelector[i][12] = '';//formatNumber(totdata[i].PercentPaid);
+
+
+            }
+
+
+            $('#tblPOItemSelector').dataTable().fnDestroy();
+
+            $('#tblPOItemSelector').dataTable({
+                "processing": true,
+                "data": POLineItemSelector,
+                "columns": [
+                    { "title": "POLineItemID", "class": "displaynone" },
+                    { "title": "Action", "class": "displaynone" },
+                    { "title": "Item #", "class": "underline selectpo leftposition" },
+                    { "title": "PO #", "class": "leftposition" },
+                    { "title": "Description", "class": "leftposition" },
+                    { "title": "Qty", "class": "displaynone" },
+                    { "title": "Curr", "class": "displaynone" },
+                    { "title": "PO Cost", "class": "rightposition" },
+                    { "title": "Inv. Total", "class": "rightposition" },
+                    { "title": "Rem", "class": "rightposition" },
+                    { "title": "RowIndex", "class": "displaynone" },
+                    { "title": "Total", "class": "displaynone" },
+                { "title": "%", "class": "rightposition" }
+
+                ],
+                paging: false,
+                "initComplete": function () {
+
+
+
+                    $('#tblPOItemSelector_filter').hide();
+                    $('#tblPOItemSelector thead tr').find('th:eq(2)').removeClass('underline');
+
+                    $('#tblPOItemSelector tr').each(function () {
+                        $(this).find('td:eq(2)').css('cursor', 'pointer');
+                        $(this).find('td:eq(2)').attr('onclick', 'getotherinvoices(this);');
+                    });
+
+                },
+                "order": [[2, "asc"]],
+                "aoColumnDefs": [
+
+                ]
+            });
+
+            var i = 1;
+
+            $('#tblPOItemSelector tbody tr').each(function () {
+                $(this).find("td:eq(10)").html(i++);
+            });
+
+            getconvrate();
+
+
+            return;
+
+
+         
+
+
+          
+
+
+
+        }
+
+        function fetch(obj) {
+
+
+            //cancelselectionsinvoice();
+
+
+            var percent = $('#percentage').val();
+            var poidall = '';
+
+
+            if (obj == "onlyselected") {
+                $('.selectedrow').each(function () {
+                    if (!$(this).hasClass('noselect')) {
+                        $(this).addClass('noselect');
+                        var poid = $(this).find('td:eq(0)').html();
+                        poidall += poidall == "" ? poid : "^" + poid;
+                    }
+                });
+            }
+            else {
+                $('#tblPOItemSelector tbody tr').each(function () {
+                    if (!$(this).hasClass('noselect')) {
+                        $(this).addClass('noselect');
+                        var poid = $(this).find('td:eq(0)').html();
+                        poidall += poidall == "" ? poid : "^" + poid;
+                    }
+                });
+            }
+
+            var obj = new Object();
+            obj.Mode = 'GETITEMDETAILS';
+            obj.POLineItemID = poidall;
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_CreditNoteAll";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+
+
+
+           
+            buildLastTable(o);
+            return;
+
+        }
+
+        function fetchreverse(obj) {
+
+            cancelselections();
+
+            if (obj == "onlyselected") {
+
+
+                $('.selectedrowforinvoice').each(function () {
+                    $(this).remove();
+                    var poitemidinvoice = $(this).find('td:eq(0)').html();//('data-rowid');
+
+                    $('#tblPOItemSelector tbody tr').each(function () {
+                        var poitemidselector = $(this).find("td:eq(0)").html();
+                        if (poitemidselector == poitemidinvoice) { $(this).removeClass('noselect'); }
+                    });
+
+                });
+
+
+
+            }
+            else {
+
+
+
+                $('#tblInvoiceItems tbody tr').each(function () {
+                    $(this).remove();
+
+                });
+
+                $('#tblPOItemSelector tbody tr').each(function () {
+                    $(this).removeClass('noselect');
+                });
+
+            }
+
+            calculatetaxes();
+
+
+        }
+
+
+        function buildLastTable(obj) {
+            console.log(obj);
+            var html = '';
+            for (var a = 0; a < obj.length; a++) {
+                html += "<tr data-poid='" + obj[a].PurchaseOrderID + "' data-rowindex='" + (a+1) + "' data-GSTHST='" + obj[a].GSTHST + "' data-GSTHSTType='" + obj[a].GSTHSTType + "' data-PST='" + obj[a].PST + "'"
+                + " data-PSTType='" + obj[a].PSTType + "' data-StateTax='" + obj[a].StateTax + "' data-StateTaxType='" + obj[a].StateTaxType + "'>"
+                + "<td class='displaynone selectable'>" + obj[a].POLineItemID + "</td>"
+                + "<td class='leftposition selectable'>" + obj[a].PONumber + "</td>"
+                + "<td class='leftposition selectable'>" + obj[a].POLineItemNumber + "</td>"
+                + "<td class='leftposition selectable'>" + obj[a].Description + "</td>"
+                + "<td><input onkeyup='calculatetaxes();' type='text' class='floatonly' data-maxvalcheck='" + obj[a].total + "' value='" + obj[a].total + "' /></td>"
+                + "</tr>"
+            }
+
+            $('#tblInvoiceItems tbody').html(html);
+
+            calculatetaxes();
+
+        }
+
+        function cancelselectionsinvoice() {
+
+            //$('#lineitems tr').removeClass('selectedrow');
+
+            $('.selectedrowforinvoice').each(function () {
+
+                $(this).removeClass('selectedrowforinvoice');
+
+                if ($(this).hasClass('odd')) {
+                    $(this).find('td').css('background-color', '#f9f9f9');
+                }
+                else {
+                    $(this).find('td').css('background-color', '#fff');
+                }
+
+
+            });
+
+
+
+        }
+
+        function calculatetaxes() {
+
+            var tottax = 0;
+            var tottax1 = 0;
+            var tottax2 = 0;
+            var tottax3 = 0;
+            var totamount = 0;
+
+            $('#tblInvoiceItems tbody tr').each(function () {
+
+                var tax1 = $(this).attr('data-gsthst');
+                var tax2 = $(this).attr('data-pst');
+                var tax3 = $(this).attr('data-statetax');
+                var amount = replaceAll($(this).find('td:eq(4) input').val(),',','');
+
+               
+                amount = isNaN(amount) ? 0 : amount;
+
+                totamount += parseFloat(amount);
+
+                if ($(this).attr('data-gsthsttype') == '%') {
+                    tax1 = parseFloat(amount) * parseFloat(tax1) / 100;
+                }
+                if ($(this).attr('data-psttype') == '%') {
+                    tax2 = parseFloat(amount) * parseFloat(tax2) / 100;
+                }
+                if ($(this).attr('data-statetaxtype') == '%') {
+                    tax3 = parseFloat(amount) * parseFloat(tax3) / 100;
+                }
+                //console.log(tax1 + ">>>" + tax2 + ">>>>" + tax3);
+
+                tottax1 += parseFloat(tax1);
+                tottax2 += parseFloat(tax2);
+                tottax3 += parseFloat(tax3);
+
+                tottax += parseFloat(tax1) + parseFloat(tax2) + parseFloat(tax3);
+                console.log("HIIII" + tottax1 + ">>" + tottax2 + ">>>" + tottax3);
+
+            });
+
+            $('#txt_TotalTax1').val(formatNumber(tottax1));
+            $('#txt_TotalTax2').val(formatNumber(tottax2));
+            $('#txt_TotalTax3').val(formatNumber(tottax3));
+            $('#txt_SubtotalInvoice').val(formatNumber(totamount));
+            $('#txt_TotalInvoice').val(formatNumber(tottax1 + tottax2 + tottax3 + totamount));
+
+        }
+        function calcsubtotal() {
+
+            var t1 = replaceAll($('#txt_TotalTax1').val(), ',', '');
+            var t2 = replaceAll($('#txt_TotalTax2').val(), ',', '');
+            var t3 = replaceAll($('#txt_TotalTax3').val(), ',', '');
+
+
+          
+            var totamount = parseFloat(replaceAll($('#txt_SubtotalInvoice').val(), ',', ''));
+
+            if (t1 == '') {
+                t1 = 0;
+                $('#txt_TotalTax1').val(0);
+            }
+            if (t2 == '') {
+                t2 = 0;
+                $('#txt_TotalTax2').val(0);
+            }
+            if (t3 == '') {
+                t3 = 0;
+                $('#txt_TotalTax3').val(0);
+            }
+
+
+            $('#txt_TotalInvoice').val(formatNumber(parseFloat(t1) + parseFloat(t2) + parseFloat(t3) + totamount));
+        }
+        function formatNumber(number) {
+            number = parseFloat(number);
+            var number = number.toFixed(2) + '';
+            var x = number.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return numberWithCommas(x1 + x2);
+        }
+
+        function numberWithCommas(x) {
+            var parts = x.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
+
+        function SaveInvoiceFinal() {
+
+            var account = $('#Ddl_ProjectAccount').val();
+            var invnumber = $('#txt_InvoiceNumber').val();
+            var memo = $('#txt_InvoiceMemo').val();
+
+            var idate = $('#txt_InvoiceDate').val();
+            var InvoiceAmount = $('#txt_SubtotalInvoice').val();
+            InvoiceAmount = replaceAll(InvoiceAmount, ',', '');
+            var Subtotal = $('#txt_SubtotalInvoice').val();
+            Subtotal = replaceAll(Subtotal, ',', '');
+
+            var TotalInvoice = $('#txt_TotalInvoice').val();
+            TotalInvoice = replaceAll(TotalInvoice, ',', '');
+
+            var Exrate = $('#exchngrate').val();
+            var VendorId = $('#Ddl_Vendors').val();
+
+
+            var Tax1 = $('#txt_TotalTax1').val();
+            Tax1 = replaceAll(Tax1, ',', '');
+
+            var Tax2 = $('#txt_TotalTax2').val();
+            Tax2 = replaceAll(Tax2, ',', '');
+
+            var Tax3 = $('#txt_TotalTax3').val();
+            Tax3 = replaceAll(Tax3, ',', '');
+
+
+
+            if (invnumber == 'CR-') {
+                notify("Add Credit memo number");
+                return;
+            }
+
+            var polineitemid = '';
+            var amount = '';
+            var poid = '';
+            var PurchaseOrderNumber = '';
+            var POLineItemNumber = '';
+            var Description = '';
+            $('#tblInvoiceItems tbody tr').each(function () {
+                polineitemid += polineitemid == '' ? $(this).find('td:eq(0)').html() : '^' + $(this).find('td:eq(0)').html();
+                amount += amount == '' ? replaceAll($(this).find('td:eq(4) input').val(),',','') : '^' + replaceAll($(this).find('td:eq(4) input').val(),',','');
+                poid += poid == '' ? $(this).attr('data-poid') : '^' + $(this).attr('data-poid');
+                PurchaseOrderNumber += PurchaseOrderNumber == '' ? $(this).find('td:eq(1)').html() : '^' + $(this).find('td:eq(1)').html();
+                POLineItemNumber += POLineItemNumber == '' ? $(this).find('td:eq(2)').html() : '^' + $(this).find('td:eq(2)').html();
+                Description += Description == '' ? $(this).find('td:eq(3)').html() : '^' + $(this).find('td:eq(3)').html();
+
+
+            });
+
+          
+
+            var obj = new Object();
+            obj.Mode = 'INSERTINVOICE';
+            obj.InvoiceNumberVendor = invnumber;
+            obj.InvoiceDate = idate;
+            obj.InvoiceAmount = 0 - parseFloat(InvoiceAmount);
+            obj.Subtotal = 0 - parseFloat(Subtotal);
+            obj.VendorId = VendorId;
+            obj.POID = poid;
+            obj.TotalInvoice = 0 - parseFloat(TotalInvoice);
+            obj.Exrate = Exrate;
+            obj.Memo = memo;
+            obj.Tax1 = 0 - parseFloat(Tax1);
+            obj.Tax2 = 0 - parseFloat(Tax2);
+            obj.Tax3 = 0 - parseFloat(Tax3);
+            obj.Accountnumber = account;
+           // obj.IsCCRefund = $('#isccrefund').is(':checked') == true ? 1 : 0;
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_CreditNoteAll";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            //console.log(o);
+
+            var InvoiceID = o[0].InvoiceID;
+
+            if (InvoiceID == '0') {
+                notify("Duplicate Invoice number exists");
+                return;
+            }
+
+            for (var t = 0; t < polineitemid.split('^').length; t++) {
+
+                var poitemid = polineitemid.split('^')[t];
+                var amount1 = amount.split('^')[t];
+                var poid1 = poid.split('^')[t];
+                var PurchaseOrderNumber1 = PurchaseOrderNumber.split('^')[t];
+                var Description1 = Description.split('^')[t];
+                var POLineItemNumber1 = POLineItemNumber.split('^')[t];
+
+                var obj = new Object();
+                obj.Mode = 'INSERTLINEITEMS';
+                obj.POLineItemID = poitemid;
+                obj.POLineItemNumber = POLineItemNumber1;
+                obj.PurchaseOrderNumber = PurchaseOrderNumber1;
+                obj.Description = Description1;
+                obj.LineItemTotal = 0 - parseFloat(amount1);
+                obj.InvoiceID = InvoiceID;
+
+
+
+                var DBSP = new DB_SP_CONNECT();
+                DBSP.ProcedureName = "POMS_CreditNoteAll";
+                DBSP.obj = obj;
+                DBSP.isasync = false;
+                var o = DBSP.call_DB_Procedure();
+                o = o.data;
+
+
+
+
+            }
+
+
+        }
+        function SaveInvoice() {
+            
+            
+
+            var invnumber = $('#txt_InvoiceNumber').val();
+            var account = $('#Ddl_ProjectAccount').val();
+
+
+
+            var memo = $('#txt_InvoiceMemo').val();
+
+            var idate = $('#txt_InvoiceDate').val();
+            var InvoiceAmount = $('#txt_SubtotalInvoice').val();
+            InvoiceAmount = replaceAll(InvoiceAmount, ',', '');
+            var Subtotal = $('#txt_SubtotalInvoice').val();
+            Subtotal = replaceAll(Subtotal, ',', '');
+
+            var TotalInvoice = $('#txt_TotalInvoice').val();
+            TotalInvoice = replaceAll(TotalInvoice, ',', '');
+
+            var Exrate = '1.00';
+            var VendorId = $('#Ddl_Vendors').val();
+            
+
+            var Tax1 = $('#txt_TotalTax1').val();
+            Tax1 = replaceAll(Tax1, ',', '');
+
+            var Tax2 = $('#txt_TotalTax2').val();
+            Tax2 = replaceAll(Tax2, ',', '');
+
+            var Tax3 = $('#txt_TotalTax3').val();
+            Tax3 = replaceAll(Tax3, ',', '');
+
+
+
+            if (invnumber == 'CR-') {
+                notify("Add Credit memo number");
+                return;
+            }
+            if (account == '0') {
+                notify("Please select account");
+                return;
+            }
+            
+
+            var polineitemid = '';
+            var amount = '';
+            var poid = '';
+            var PurchaseOrderNumber = '';
+            var POLineItemNumber = '';
+            var Description = '';
+            $('#tblInvoiceItems tbody tr').each(function () {
+                polineitemid += polineitemid == '' ? $(this).find('td:eq(0)').html() : '^' + $(this).find('td:eq(0)').html();
+                amount += amount == '' ? $(this).find('td:eq(4) input').val() : '^' + $(this).find('td:eq(4) input').val();
+                poid += poid == '' ? $(this).attr('data-poid') : '^' + $(this).attr('data-poid');
+                PurchaseOrderNumber += PurchaseOrderNumber == '' ? $(this).find('td:eq(1)').html() : '^' + $(this).find('td:eq(1)').html();
+                POLineItemNumber += POLineItemNumber == '' ? $(this).find('td:eq(2)').html() : '^' + $(this).find('td:eq(2)').html();
+                Description += Description == '' ? $(this).find('td:eq(3)').html() : '^' + $(this).find('td:eq(3)').html();
+
+
+            });
+
+            console.log(polineitemid);
+            console.log("polineitemid");
+            //return;
+            var obj = new Object();
+            obj.Mode = 'GETITEMS';
+            obj.POLineItemID = polineitemid;
+            
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_CreditNotePOItemOp";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+
+            totdata = o;
+
+            var ItemEditor = [];
+
+
+            for (i = 0; i < totdata.length ; i++) {
+
+                var camt = 0;
+
+                for (var t = 0; t < polineitemid.split('^').length; t++) {
+                    if (polineitemid.split('^')[t] == totdata[i].POLineItemID) {
+                        camt = amount.split('^')[t];
+                    }
+                }
+
+                ItemEditor[i] = new Array();
+                ItemEditor[i][0] = totdata[i].PONumber;
+                ItemEditor[i][1] = totdata[i].TotalID;
+                ItemEditor[i][2] = totdata[i].ItemDescription;
+                ItemEditor[i][3] = "<input onkeyup='itemeditorbalance();' type='text' class='floatonly' value='" + totdata[i].Cost + "' />";
+                ItemEditor[i][4] = "<input onkeyup='itemeditorbalance();' type='text' class='floatonly' value='" + totdata[i].Quantity + "' />";
+                ItemEditor[i][5] = formatNumber(totdata[i].Extended);
+                ItemEditor[i][6] = formatNumber(camt);
+                ItemEditor[i][7] = camt;
+                
+                ItemEditor[i][8] = "";
+                ItemEditor[i][9] = "";
+                ItemEditor[i][10] = "";
+                ItemEditor[i][11] = "";
+                ItemEditor[i][12] = totdata[i].Extended;
+                ItemEditor[i][13] = totdata[i].POLineItemID;
+            }
+
+            $('#tblitemeditor').dataTable().fnDestroy();
+
+            $('#tblitemeditor').dataTable({
+                "processing": true,
+                "destroy": true,
+                "data": ItemEditor,
+                "columns": [
+                                { "title": "PO #", "class": "leftposition" },
+                                { "title": "Item #", "class": "leftposition" },
+                                { "title": "Desc.", "class": "leftposition" },
+                                { "title": "Cost", "class": "rightposition" },
+                                { "title": "Qty", "class": "rightposition" },
+                                { "title": "Revised Amount", "class": "rightposition" },
+                                { "title": "Credit Amount", "class": "rightposition" },
+                                { "title": "Variance", "class": "rightposition" }                            
+                                , { "title": "", "class": "displaynone" }
+                                , { "title": "", "class": "displaynone" }
+                                , { "title": "", "class": "displaynone" }
+                                , { "title": "", "class": "displaynone" }
+                                , { "title": "", "class": "displaynone" }
+                                , { "title": "", "class": "displaynone" }
+
+                ],
+                paging: false,
+                "initComplete": function () {
+                    itemeditorbalance();
+                    $('#itemeditpopup').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    $('#itemeditpopup').modal('show');
+
+                },
+                "order": [[2, "asc"]],
+                "aoColumnDefs": [
+                    { 'bSortable': false, 'aTargets': [1] }
+                ]
+                 , "order": [[1, "asc"]]
+            });
+
+            return;
+
+            var obj = new Object();
+            obj.Mode = 'INSERTINVOICE';
+            obj.InvoiceNumberVendor = invnumber;
+            obj.InvoiceDate = idate;
+            obj.InvoiceAmount = 0 -parseFloat(InvoiceAmount);
+            obj.Subtotal = 0 -parseFloat(Subtotal);
+            obj.VendorId = VendorId;
+            obj.POID = poid;
+            obj.TotalInvoice = 0 -parseFloat(TotalInvoice);
+            obj.Exrate = Exrate;
+            obj.Memo = memo;
+            obj.Tax1 = 0 -parseFloat(Tax1);
+            obj.Tax2 = 0 -parseFloat(Tax2);
+            obj.Tax3 = 0 -parseFloat(Tax3);
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_CreditNoteAll";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            var InvoiceID = o[0].InvoiceID;
+
+            for (var t = 0; t < polineitemid.split('^').length; t++) {
+                var poitemid = polineitemid.split('^')[t];
+                var amount1 = amount.split('^')[t];
+                var poid1 = poid.split('^')[t];
+                var PurchaseOrderNumber1 = PurchaseOrderNumber.split('^')[t];
+                var Description1 = Description.split('^')[t];
+                var POLineItemNumber1 = POLineItemNumber.split('^')[t];
+                var obj = new Object();
+                obj.Mode = 'INSERTLINEITEMS';
+                obj.POLineItemID = poitemid;
+                obj.POLineItemNumber = POLineItemNumber1;
+                obj.PurchaseOrderNumber = PurchaseOrderNumber1;
+                obj.Description = Description1;
+                obj.LineItemTotal = 0 - parseFloat(amount1);
+                obj.InvoiceID = InvoiceID;
+                var DBSP = new DB_SP_CONNECT();
+                DBSP.ProcedureName = "POMS_CreditNoteAll";
+                DBSP.obj = obj;
+                DBSP.isasync = false;
+                var o = DBSP.call_DB_Procedure();
+                o = o.data;
+
+
+
+
+            }
+
+
+        }
+
+        function saveitemedits() {
+
+            var cn = true;
+            if ($('.notmatched').length > 0) {
+                cn = confirm("There are items which are not adjusted as per the Credit Memo. Do you want to continue?");
+            }
+
+            if (!cn) return;
+
+            notify("Saving Credit Memo. Please wait...", "green");
+            SaveInvoiceFinal();
+
+
+            $('#tblitemeditor tbody tr').each(function () {
+                var cost = $(this).find('td:eq(3) input').val();
+                var qty = $(this).find('td:eq(4) input').val();
+                var itemid = $(this).find('td:eq(13)').html();
+                //console.log(cost + ">>>" + qty + ">>>" + itemid);
+
+                
+
+                var obj = new Object();
+                obj.Mode = 'EDITITEM';
+                obj.Qty = qty;
+                obj.Cost = cost;
+                obj.POLineItemID = itemid;
+               
+
+                var DBSP = new DB_SP_CONNECT();
+                DBSP.ProcedureName = "POMS_CreditNotePOItemOp";
+                DBSP.obj = obj;
+                DBSP.isasync = false;
+                var o = DBSP.call_DB_Procedure();
+                o = o.data;
+
+
+            });
+
+            notify("Credit Memo saved successfully.", "green");
+            setTimeout(function () {
+                irrrrr = 0;
+                window.location.reload();
+            }, 3000);
+
+
+        }
+        function itemeditorbalance() {
+            $('#tblitemeditor tbody tr').each(function () {
+
+                var cost = replaceAll($(this).find('td:eq(3) input').val(),',','');
+                var qty = replaceAll($(this).find('td:eq(4) input').val(),',','');
+
+                var extcst = replaceAll($(this).find('td:eq(12)').html(),',','');
+                var camt = replaceAll($(this).find('td:eq(6)').html(), ',', '');
+
+
+
+                var amount = parseFloat(cost) * parseFloat(qty);
+                
+                $(this).find('td:eq(5)').html(formatNumber(amount));
+                $(this).find('td:eq(7)').html(formatNumber(camt - (parseFloat(extcst) - parseFloat(amount))));
+
+                if (parseFloat($(this).find('td:eq(7)').html()) == 0) {
+                    $(this).find('td').addClass('matched');
+                    $(this).find('td').removeClass('notmatched');
+                }
+                else {
+                    $(this).find('td').removeClass('matched');
+                    $(this).find('td').addClass('notmatched');
+
+                }
+
+            });
+        }
+
+
+        $(function () {
+
+            var readOnlyLength = 3;
+
+            $('#txt_InvoiceNumber').on('keypress, keydown', function (event) {
+                if ((event.which != 37 && (event.which != 39))
+                    && ((this.selectionStart < readOnlyLength)
+                    || ((this.selectionStart == readOnlyLength) && (event.which == 8)))) {
+                    return false;
+                }
+            });
+
+
+
+            $('#tblInvoiceItems .selectable').live('click', function (event) {
+
+
+                var obj = $(this).parent();
+
+
+                if ($(obj).hasClass('theader')) {
+                    return;
+                }
+                var clickedrowindex = $(obj).attr('data-rowindex');
+
+                if (!event.ctrlKey && !event.shiftKey) {
+                    var ln = $('.selectedrowforinvoice').length;
+                    var hclass = false;
+                    hclass = $(obj).hasClass('selectedrowforinvoice');
+                    cancelselectionsinvoice();
+
+                    if (!hclass || ln > 1 || ln == 0) {
+                        $(obj).addClass('selectedrowforinvoice');
+                    }
+                    else if (ln == 1) {
+                        $(obj).removeClass('selectedrowforinvoice');
+                    }
+                }
+
+                else if (event.ctrlKey) {
+
+                    var hclass = false;
+                    hclass = $(obj).hasClass('selectedrowforinvoice');
+
+                    if (!hclass) {
+                        $(obj).addClass('selectedrowforinvoice');
+                    }
+                    else {
+                        $(obj).removeClass('selectedrowforinvoice');
+                    }
+
+                }
+
+                else if (event.shiftKey) {
+
+                    var closestrow = 99999999;
+                    var closestrowindex = 0;
+
+                    $('.selectedrowforinvoice').each(function () {
+
+                        if ($(this).hasClass('selectedrowforinvoice')) {
+                            var id = $(this).attr('data-rowindex');
+
+                            var diff = id - clickedrowindex;
+
+
+                            diff = diff < 0 ? 0 - diff : diff;
+                            if (closestrow > diff) {
+                                closestrow = diff;
+                                closestrowindex = id;
+                            }
+
+                        }
+
+                    });
+
+
+
+
+
+                    var startpoint = 0;
+                    var endpoint = 0;
+                    startpoint = clickedrowindex > closestrowindex ? closestrowindex : clickedrowindex;
+                    endpoint = clickedrowindex > closestrowindex ? clickedrowindex : closestrowindex;
+                    cancelselectionsinvoice();
+
+                    $('#tblInvoiceItems tbody tr').each(function () {
+
+                        var currrowindex = $(this).attr('data-rowindex');
+                        if (currrowindex >= startpoint && currrowindex <= endpoint) {
+                            $(this).addClass('selectedrowforinvoice');
+                        }
+
+                    });
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                $('#tblInvoiceItems tbody tr').each(function () {
+
+                    if ($(this).hasClass('selectedrowforinvoice')) {
+
+                        $(this).find('td').css('background-color', 'rgb(201, 240, 249)');
+                    }
+                    else {
+                        if ($(this).hasClass('odd')) {
+                            $(this).find('td').css('background-color', '#f9f9f9');
+                        }
+                        else {
+                            $(this).find('td').css('background-color', '#fff');
+
+                        }
+                    }
+
+
+                });
+
+
+
+
+            });
+
+
+            $('#tblPOItemSelector tr').live('click', function (event) {
+
+                if ($(this).hasClass('theader')) {
+                    return;
+                }
+                var clickedrowindex = $(this).find("td:eq(10)").html();
+
+                if (!event.ctrlKey && !event.shiftKey) {
+                    var ln = $('.selectedrow').length;
+                    var hclass = false;
+                    hclass = $(this).hasClass('selectedrow');
+                    cancelselections();
+
+                    if (!hclass || ln > 1 || ln == 0) {
+                        $(this).addClass('selectedrow');
+                    }
+                    else if (ln == 1) {
+                        $(this).removeClass('selectedrow');
+                    }
+                }
+
+                else if (event.ctrlKey) {
+
+                    var hclass = false;
+                    hclass = $(this).hasClass('selectedrow');
+
+                    if (!hclass) {
+                        $(this).addClass('selectedrow');
+                    }
+                    else {
+                        $(this).removeClass('selectedrow');
+                    }
+
+                }
+
+                else if (event.shiftKey) {
+
+                    var closestrow = 99999999;
+                    var closestrowindex = 0;
+
+                    $('.selectedrow').each(function () {
+
+                        if ($(this).hasClass('selectedrow')) {
+                            var id = $(this).find("td:eq(10)").html();
+
+                            var diff = id - clickedrowindex;
+
+
+                            diff = diff < 0 ? 0 - diff : diff;
+                            if (closestrow > diff) {
+                                closestrow = diff;
+                                closestrowindex = id;
+                            }
+
+                        }
+
+                    });
+
+
+
+
+
+                    var startpoint = 0;
+                    var endpoint = 0;
+                    startpoint = clickedrowindex > closestrowindex ? closestrowindex : clickedrowindex;
+                    endpoint = clickedrowindex > closestrowindex ? clickedrowindex : closestrowindex;
+                    cancelselections();
+
+                    $('#tblPOItemSelector tbody tr').each(function () {
+
+                        var currrowindex = $(this).find("td:eq(10)").html();
+                        if (currrowindex >= startpoint && currrowindex <= endpoint) {
+                            $(this).addClass('selectedrow');
+                        }
+
+                    });
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                $('#tblPOItemSelector tbody tr').each(function () {
+
+                    if ($(this).hasClass('selectedrow')) {
+
+                        $(this).find('td').css('background-color', 'rgb(201, 240, 249)');
+                    }
+                    else {
+                        if ($(this).hasClass('odd')) {
+                            $(this).find('td').css('background-color', '#f9f9f9');
+                        }
+                        else {
+                            $(this).find('td').css('background-color', '#fff');
+
+                        }
+                    }
+
+
+                });
+
+
+
+
+            });
+        });
+
+
+        function cancelselections() {
+
+            //$('#lineitems tr').removeClass('selectedrow');
+
+            $('.selectedrow').each(function () {
+
+                $(this).removeClass('selectedrow');
+
+                if ($(this).hasClass('odd')) {
+                    $(this).find('td').css('background-color', '#f9f9f9');
+                }
+                else {
+                    $(this).find('td').css('background-color', '#fff');
+                }
+
+
+            });
+
+
+
+        }
+
+        function dataedited(val, obj) {
+
+            //console.log('%%%%%%');
+
+            $(obj).removeAttr('data-edited');
+            $(obj).attr('data-edited', val);
+        }
+
+        function getconvrate() {
+
+            if ($('#exchngrate').attr('data-edited') == 'Y') {
+                return;
+            }
+
+
+            var VID = $('#Ddl_Vendors').val();
+
+            var totalbeforeconv = 0;
+            var totalafterconv = 0;
+
+
+
+            $('#tblPOItemSelector tbody tr').each(function () {
+
+                var POLineItemID = $(this).find('td:eq(0)').html();
+                var total = replaceAll($(this).find('td:eq(7)').html(), ',', '');
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/getconvrate';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/getconvrate';
+                }
+
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    datatype: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ \"VID\" : \"" + VID + "\",\"POLineItemID\" : \"" + POLineItemID + "\"}",
+                    async: false,
+                    success: function (data) {
+
+                        if (!isNaN(data)) {
+                            var data = parseFloat(data) * parseFloat(total);
+                            totalafterconv += parseFloat(data);
+                            totalbeforeconv += parseFloat(total);
+                        }
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+
+
+
+
+            });
+
+
+            $('#exchngrate').val(formatNumber4(parseFloat(totalafterconv / totalbeforeconv)));
+
+        }
+
+        function formatNumber4(number) {
+            number = parseFloat(number);
+            var number = number.toFixed(4) + '';
+            var x = number.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+
+
+        function CancelInvoice() {
+            irrrrr = 0;
+            window.location.reload();
+        }
+
+
+    </script>
+
+
+</head>
+<body>
+
+    <div id="itemeditpopup" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:75%;">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+       
+        <h4 class="modal-title text-uppercase">Adjust PO Items</h4>
+      </div>
+      <div class="modal-body" style="max-height: 450px;overflow-y: auto;">
+       
+          <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblitemeditor" style="text-align: center;">
+                        <thead>
+                            <tr>
+                               
+                                <th style="text-align: center; width: 95px;">PO #</th>
+                                <th style="text-align: center; width: 125px;">Item #</th>
+                                <th style="text-align: center; width: 250px;">Desc.</th>
+                                <th style="text-align: right;">Cost</th>
+                                <th style="text-align: right;">Qty</th>
+                                <th >Revised Amount</th>
+                                <th>Credit Amount</th>
+                                <th>Variance</th>
+                                <th class="displaynone"></th>
+                                <th class="displaynone"></th>
+                                <th class="displaynone"></th>
+                                <th class="displaynone"></th>
+                                <th class="displaynone"></th>
+                                <th class="displaynone"></th>
+                            </tr>
+                        </thead>
+                    </table>
+
+
+      </div>
+      <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-default" onclick="saveitemedits();">Save Item(s) and Credit Memo</button>
+       
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+    <div class="container-fluid" style="zoom: 0.95;" id="angulardiv">
+
+
+        <div class="row">
+             <div class="col-sm-12" style="margin-bottom:30px;">
+                <a href="/Invoice/CreditEntry_Tax"><input type="button" class="btn btn-poms" value="ENTER CREDIT NOTE WITHOUT ITEM" /></a>
+            </div>
+
+            <div class="col-sm-3">
+
+
+                <div class="col-sm-12">
+                    <h3 class="section-header" style="margin-top: -20px; margin-bottom: 0px;">Credit note</h3>
+                </div>
+                
+
+                <div class="col-sm-12">
+                    <label>Vendor</label>
+                    <select onchange="changevendorddl();" id="Ddl_Vendors" name="Vendors" class="form-control">
+                        @*onchange="GetDefaultBuyer(this);"*@
+                        @*<option value="0">--Select Vendors--</option>*@
+                       
+                    </select>
+                    <label id="lbl_ProjectName" class="displaynone">No vendor has been selected.</label>
+
+
+
+
+                </div>
+
+                <div class="col-sm-12 mrg10T">
+                    <select class="form-control " multiple="multiple"  id="ddl_project" onchange="getPO();">
+                        <option>--Select Project---</option>
+                    </select>
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="col-sm-9">
+
+
+
+                <div class="col-sm-12">
+                    <h3 class="section-header" style="margin-top: -20px; margin-bottom: 0px;">Credit Note Data</h3>
+                </div>
+
+
+
+                <div class="col-sm-2">
+                    <label style="padding: 0px 0px;">Date</label>
+                    <input type="text" id="txt_InvoiceDate" class="form-control" />
+                </div>
+
+                
+
+                <div class="col-sm-3">
+                    <label>Number</label>
+                    <input type="text" id="txt_InvoiceNumber" value="CR-" class="form-control leftposition" />
+                </div>
+
+                  <div class="col-sm-1">
+
+                    <label style="padding: 0px 0px;cursor:pointer;">Fx Rate</label>
+                    <input type="text" id="exchngrate" data-edited="N" onkeyup="dataedited('Y',this);" class="floatonly form-control rightposition" value="1.0000" />
+                   
+                   
+                </div>
+
+
+                   <div class="col-sm-3">
+                        <label>Project Account</label>
+                 <select id="Ddl_ProjectAccount" class="form-control">
+
+                        <option value="0">--Select Project Account--</option>
+                        
+                    </select>
+</div>
+
+                
+
+
+                <div class="col-sm-3">
+
+                    <label style="padding: 0px 0px;">Credit Memo</label>
+                    <textarea id="txt_InvoiceMemo" rows="1" style="height: 25px; overflow: hidden;" class="form-control no-resize"></textarea>
+                </div>
+
+
+                @* <div class="col-sm-3" style="margin-top: 11px;">
+
+                    <label for="isccrefund" style="padding: 0px 0px;">Credit Card Refund</label>
+                    <input type="checkbox" id="isccrefund" />
+                </div>*@
+
+                
+
+                <div class="col-sm-4 displaynone mrg10T" id="gotoinvoices">
+                    <button class="btn btn-poms mrg15L displaynone" style="padding: 3px;" type="button" onclick="gotoinvoices();">Invoices for this vendor</button>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+
+
+
+
+
+
+        <div class="row mrg15T">
+
+
+            <div class="col-sm-5">
+
+
+                <div class="col-sm-12">
+                    <h3 class="section-header" style="margin-bottom: 0px;">PO Selector</h3>
+                </div>
+
+
+
+
+
+                <div class="col-sm-12" style="zoom: 0.85">
+
+                    <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblPOSelector" style="text-align: center;">
+                        <thead>
+                            <tr>
+                                <th class="displaynone">POID</th>
+                                <th style="width: 5%">
+                                    <input type="checkbox" /></th>
+                                <th style="text-align: center; width: 40%;">PO #</th>
+                                <th style="text-align: center; width: 15%;">Curr</th>
+                                <th style="text-align: right; width: 20%;">Amt.</th>
+                                <th style="text-align: right; width: 20%;">Inv. Amt.</th>
+                                <th  class="displaynone">Payment Schedule</th>
+                                <th class="displaynone">Taxes</th>
+                                <th class="displaynone">ProjectID</th>
+                                <th class="displaynone">VendorId</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+
+            </div>
+
+            <div class="col-sm-7">
+
+                <div class="col-sm-12">
+                    <h3 class="section-header" style="margin-bottom: 0px;">Item Selector</h3>
+                </div>
+
+
+
+                <div class="col-sm-12" style="overflow: auto; zoom: 0.85; max-height: 350px;">
+                    <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblPOItemSelector" style="text-align: center;">
+                        <thead>
+                            <tr class="theader">
+                                <th class="displaynone">POLineItemID</th>
+                                <th class="displaynone">Action</th>
+                                <th style="width:15%;">Item #</th>
+                                <th style="width:40%;">PO #</th>
+                                <th style="text-align: center; width:28%;">Description</th>
+                                <th class="displaynone" style="text-align: right; width:9%;">Qty</th>
+                                <th class="displaynone" style="text-align: right; width:5%;">Curr</th>
+                                <th style="text-align: right; width:9%;">PO Cost</th>
+                                <th style="text-align: right; width:9%;">Inv. Total</th>
+                                <th class="displaynone">Rem</th>
+                                <th class="displaynone">RowIndex</th>
+                                <th class="displaynone">Total</th>
+                                <th class="displaynone">%</th>
+
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <input type="hidden" id="hdn_vendorid" />
+        <input type="hidden" id="hdn_poid" />
+      
+        
+
+
+        <div class="row mrg5T mrg5B">
+
+
+            <div class="col-sm-3 col-sm-offset-7">
+
+
+
+
+
+
+                <div class="col-sm-3 displaynone">
+                    <label>Apply %</label>
+                    <input type="text" data-maxvalcheck="100" value="100" id="percentage" class="floatonly form-control rightposition" />
+                </div>
+
+                <div class="col-sm-9 mrg20T" style="font-size: 32px; padding-left: 8px; color: #7792a8; margin-top: 10px !important; font-weight: bolder;">
+                    <i title="Select selected" style="cursor: pointer;" class="fa fa-angle-down roundbtn" aria-hidden="true" onclick="fetch('onlyselected');"></i>
+                    <input type="button" class="singledown displaynone" title="Select selected" onclick="fetch('onlyselected');" />
+
+
+                    <i style="cursor: pointer;" title="Select selected" class="fa fa-angle-double-down roundbtn" aria-hidden="true" onclick="fetch('all');"></i>
+                    <input type="button" class="doubledown displaynone" title="Select all" onclick="fetch('all');" />
+
+
+                    <i style="cursor: pointer;" title="Unselect selected" class="fa fa-angle-up mrg10L roundbtn" aria-hidden="true" onclick="fetchreverse('onlyselected');"></i>
+                    <input type="button" class="singleup displaynone" title="Unselect selected" onclick="fetchreverse('onlyselected');" />
+
+                    <i style="cursor: pointer;" title="Unselect All" class="fa fa-angle-double-up roundbtn" aria-hidden="true" onclick="fetchreverse('all');"></i>
+                    <input type="button" class="doubleup displaynone" title="Unselect All" onclick="fetchreverse('all');" />
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+
+        <div class="row">
+
+            <div class="col-sm-12">
+                <div class="col-sm-12">
+                    <h3 class="section-header">Credit Items</h3>
+                </div>
+
+                <div class="col-sm-12" style="overflow-x: auto; overflow-y: auto; max-height: 500px; zoom: 0.85;">
+
+
+                    <table cellpadding="0" cellspacing="0" border="0" class="display no-footer dataTable" id="tblInvoiceItems" style="text-align: center; font-size: 0.9em;">
+                        <thead>
+                            <tr class="theader">
+                                <th class="leftposition displaynone"></th>
+
+                                
+                                <th  class="leftposition" style="width: 20%">PO # </th>
+                                <th  class="leftposition" style="width: 20%">Item #</th>
+                               
+                                <th style="width: 40%;" class="leftposition">Description</th>
+                                <th style="width: 20%; text-align: center;">Amount</th>
+                                
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+
+                    </table>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <hr />
+
+
+
+        <div class="row mrg15T">
+
+            <div class="col-sm-8">
+            </div>
+
+            <div class="col-sm-2">
+                <label>Subtotal Invoice</label>
+            </div>
+
+            <div class="col-sm-2">
+                <input class="form-control" style="text-align: right;" type="text" id="txt_SubtotalInvoice" disabled="disabled" />
+            </div>
+
+        </div>
+
+        <div class="row mrg10T">
+            <div class="col-sm-8">
+            </div>
+
+            <div class="col-sm-2">
+                <label>Total Tax 1</label>
+            </div>
+
+            <div class="col-sm-2">
+                <input class="form-control floatonly" type="text" onkeyup="calcsubtotal();" style="text-align: right;" id="txt_TotalTax1" />
+            </div>
+        </div>
+
+
+        <div class="row mrg10T">
+            <div class="col-sm-8">
+            </div>
+
+            <div class="col-sm-2">
+                <label>Total Tax 2</label>
+            </div>
+
+            <div class="col-sm-2">
+                <input class="form-control floatonly" type="text" onkeyup="calcsubtotal();" style="text-align: right;" id="txt_TotalTax2"  />
+            </div>
+        </div>
+
+        <div class="row mrg10T">
+            <div class="col-sm-8">
+            </div>
+
+            <div class="col-sm-2">
+                <label>Total Tax 3</label>
+            </div>
+
+            <div class="col-sm-2">
+                <input class="form-control floatonly" type="text" onkeyup="calcsubtotal();" id="txt_TotalTax3" style="text-align: right;" />
+            </div>
+        </div>
+
+        <div class="row mrg10T">
+            <div class="col-sm-8">
+            </div>
+
+            <div class="col-sm-2">
+                <label>Total Invoice</label>
+            </div>
+
+            <div class="col-sm-2">
+                <input class="form-control" type="text" id="txt_TotalInvoice" style="text-align: right;" disabled="disabled" />
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <div class="float-panel-container">
+        <ul>
+            <li id="btn_Save" onclick="SaveInvoice();" title="Save" ><a href="javascript:void(0)"><i class="fa fa-save mrg5R"data-toggle="tooltip"></i><span class="tooltip-toggle">Save</span></a></li>
+            <li id="btn_Cancel" onclick="CancelInvoice();" title="Cancel" ><a href="javascript:void(0)"><i class="fa fa-times mrg5R"data-toggle="tooltip"></i><span class="tooltip-toggle">Cancel</span></a></li>
+
+        </ul>
+    </div>
+
+    <div id="previnvoice" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Invoices</h4>
+                </div>
+                <div class="modal-body">
+
+
+                    <table cellpadding="0" cellspacing="0" border="0" class="display no-footer dataTable" id="tblprevinvoice" style="text-align: center; font-size: 0.9em;">
+                        <thead>
+                            <tr class="theader">
+
+                                <th>Invoice Date</th>
+                                <th>Invoice Amt.</th>
+                                <th>Item Amount</th>
+                                <th>Item Quantity</th>
+                                <th>%</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+
+                    </table>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+    <div id="currexchange" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:350px;">
+
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Exchange Rate</h4>
+      </div>
+      <div class="modal-body">
+          <div class="row displaynone">
+          <div class="col-sm-6">
+
+       <select id="currencysource" onchange="getfxrate();" class="form-control">
+           @Html.Raw(@ViewData["GetAllCurency"])
+       </select>
+              </div>
+
+              <div class="col-sm-6">
+       <select id="currencytarget" onchange="getfxrate();" class="form-control">
+                   @Html.Raw(@ViewData["GetAllCurency"])
+
+       </select>
+              </div>
+
+              <div class="col-sm-4 mrg10T">
+                  <label id="exchangerate"></label>
+              </div>
+
+
+              </div>
+
+          <iframe id="rateapi" src="https://www.google.com/finance/converter?a=1&from=CAD" width="100%;"></iframe>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+  
+</body>
+</html>

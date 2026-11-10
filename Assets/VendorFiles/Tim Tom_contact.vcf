@@ -1,0 +1,10 @@
+BEGIN:VCARD
+FN:Tim Tom
+TITLE:Contact
+ORG:Tim
+ADR;WORK:;;same as previous;los angeles;California (CA);;United States
+TEL;Work;VOICE;:
+TEL;Cell:
+TEL;Work;FAX:
+EMAIL;Internet:aaa@ttt.com
+END:VCARD

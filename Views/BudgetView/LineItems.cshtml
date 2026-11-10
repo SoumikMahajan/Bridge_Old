@@ -1,0 +1,2728 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>LineItems</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    @*<script src="~/Scripts/angular.min.js"></script>*@
+
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+
+    <script src="~/Scripts/Budget.js"></script>
+    <script src="~/Scripts/flip.js"></script>
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/jquery.redirect.js"></script>
+
+
+
+
+    @*<script src="~/Scripts/MenuJS.js"></script>*@
+    @*<script src="~/Scripts/jquery.switchButton.js"></script>*@
+    @*<script src="~/Scripts/InnerMisc.js"></script>*@
+
+
+    <style type="text/css">
+        .popupleft label {
+            font-weight: 300;
+            padding-bottom: 4px;
+            color: #208093;
+        }
+
+        .popupright label {
+            font-weight: 300;
+            padding-bottom: 4px;
+            color: #208093;
+        }
+
+        .popupleft div {
+            padding-top: 5px;
+        }
+
+        .popupright div {
+            padding-top: 5px;
+        }
+
+        .popupleft input, select {
+            width: 95%;
+            color: #208093;
+            border: 1px #208093 solid;
+            border-radius: 3px;
+            padding: 1px;
+        }
+
+
+
+        .popupright input, select {
+            width: 95%;
+            color: #208093;
+            border: 1px #208093 solid;
+            border-radius: 3px;
+            padding: 1px;
+        }
+
+        .popupright input {
+            height: 17px;
+        }
+
+        .popupleft input {
+            height: 17px;
+        }
+
+
+
+        body {
+            cursor: url('../images/1424712754_118546.ico'), auto;
+        }
+
+        #popup, #popup2, #popup3, .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+            }
+
+
+        .flip {
+            display: inline-block;
+            margin: 0px;
+            width: 100%;
+            height: 150px;
+        }
+
+        .front {
+            width: 100%;
+        }
+
+        .display_none {
+            display: none;
+        }
+
+        #edtsvbtn {
+            color: white;
+            background-color: #208093;
+            margin-top: 10px;
+            border-radius: 6px;
+            height: 23px;
+            cursor: pointer;
+            width: 152px;
+            position: absolute;
+            border-radius: 7px;
+            padding: 2px;
+        }
+
+        .inside {
+            width: 49%;
+            float: left;
+            margin-left: 1%;
+            min-height: 88px;
+        }
+
+
+        .addnotebtn {
+            width: 100px;
+            background: #D3D3D3;
+            height: 17px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 1px;
+            padding: 2px;
+        }
+
+        .edtnotebtn {
+            width: 100px;
+            background: #2A9BA0;
+            color: white;
+            height: 17px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 1px;
+            padding: 2px;
+        }
+
+        .edtdiv {
+            width: 100px;
+            background: #D3D3D3;
+            height: 17px;
+            border-radius: 5px;
+            margin-top: 1px;
+            padding: 2px;
+        }
+
+        .selectedrow {
+            background-color: rgb(239, 255, 144);
+        }
+
+        .spacing_span {
+            
+            color: rgb(139, 147, 229);
+        }
+    </style>
+
+    <script type="text/javascript">
+
+
+
+        var budget = new Array();
+        var spacing = new Array();
+        var offsecurity = new Array();
+
+        function getHiddenclass() {
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/AuthorityCheck/GetAllSecurityHidden';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'AuthorityCheck/GetAllSecurityHidden';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {},
+                success: function (data) {
+                    data = JSON.parse(data);
+                    offsecurity = data.data;
+                    for (var a = 0; a < offsecurity.length; a++) {
+                        $('.' + offsecurity[a].Classname).remove();
+                    }
+                    //Classname
+                    ////console.log(data);
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+        }
+
+
+        $(document).ready(function () {
+            getHiddenclass();
+        });
+
+
+
+
+
+        $(document).ready(function () {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/BudgetView/GetSpacing';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'BudgetView/GetSpacing';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {},
+                success: function (data) {
+                    // //console.log(data);
+                    spacing = JSON.parse(data).data;
+                    var ddlstr = '<select  id="spacing" style="border: #208093 1px solid;color: #208093;margin: 6px 0px;width: 90%;">';
+                    //                    ddlstr += "<option value='" + "0" + "'>" + "None" + "</option>";
+                    ddlstr += "<option value='" + "0" + "'>" + "No" + "</option>";
+                    for (var a = 0; a < spacing.length ; a++) {
+                        ddlstr += "<option value='" + spacing[a].FldID + "'>" + spacing[a].Spacingname + "</option>";
+                    }
+                    ddlstr += '</select>';
+                    $('#spacingddl').html(ddlstr);
+                    // $('body').append(ddlstr);
+                    // alert(ddlstr);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+            //$('.spacing').live('click',function () {
+            //    alert(1);
+            //    setTimeout(function () { cancelselections(); $(this).slideToggle(); }, 0);
+            //});
+        });
+
+
+        function updatespacing(LineitemID, SpacingID) {
+
+
+
+            //var SpacingID = $('#spacing').val();
+            // var LineitemID = $(obj).attr('data-id');
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/BudgetView/changespacing';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'BudgetView/changespacing';
+            }
+
+            var sectionid = $('#Ddl_SelProSec').val();
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'LineitemID': '" + LineitemID + "','SpacingID' : '" + SpacingID + "'}",
+                success: function (data) {
+
+                    $('#popup3').bPopup().close();
+                    loaditems(sectionid);
+
+                    notify('Updated successfully.');
+
+                },
+                error: function () {
+                    notify('Something went wrong.');
+                }
+            });
+
+
+        }
+
+        function editspacingformat(obj) {
+
+
+
+
+            setTimeout(function () {
+                cancelselections();
+            }, 0);
+
+
+            var id = $(obj).attr('data-id');
+            var rw = $(obj).parent().parent();
+            var LineitemID = parseInt($(rw).find("td:eq(5)").html());
+
+            updatespacing(LineitemID, id == 0 ? 5 : 0);
+
+            //$('#updtspcn').attr('data-id', LineitemID);
+
+            //$('#spacing').val();
+
+
+
+
+
+
+            //$('#popup3').bPopup();
+        }
+
+
+        $(document).ready(function () {
+            $('#notes').autosize();
+            $('#edtsvbtn').click(function () {
+                var itemname = $('#edtitemname').val();
+                //if (itemname.trim() == "") {
+                //    notify("Please enter Itemname");
+                //    $('#edtitemname').focus();
+                //    return;
+                //}
+                var itemdescription = $('#edtdesc').val();
+                if (itemdescription.trim() == "") {
+                    notify("Please enter itemdescription");
+                    $('#edtdesc').focus();
+                    return;
+                }
+                var uom = $('#edtuom').val();
+                if (uom == 0) {
+                    //notify("Please select UOM");
+                    //$('#edtuom').focus();
+                    //return;
+                    uom = "56";
+                }
+                var itemquantity = $('#edtqty').val();
+                if (itemquantity.trim() == "" || isNaN(itemquantity) || itemquantity == 0) {
+                    //notify("Please enter valid itemquantity");
+                    //$('#edtqty').focus();
+                    //return;
+                    itemquantity = "0";
+                }
+                var cost = $('#edtcost').val();
+                if (cost.trim() == "" || isNaN(cost) || cost == 0) {
+                    //notify("Please enter valid cost");
+                    //$('#edtcost').focus();
+                    //return;
+                    cost = "0";
+                }
+                var towh = $('#edtwh').is(':checked') ? "1" : "0";
+                var itemID = $('#itemID').val();
+                var BudgetsectionID = $('#Ddl_SelProSec').val();
+                var specnum = $('#edtspecnum').val();
+                if (specnum.trim() == "") {
+                    //notify("Please enter Spec number");
+                    //$('#specnum').focus();
+                    //return;
+                }
+                var vendor = $('#edtvendor').val();
+                if (vendor.trim() == "") {
+                    //notify("Please enter Vendor");
+                    //$('#vendor').focus();
+                    //return;
+                }
+                //var notes = $('#notes').val();
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/BudgetView/editLineItems';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'BudgetView/editLineItems';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'itemname': itemname, 'itemdescription': itemdescription, 'uom': uom, 'itemquantity': itemquantity, 'cost': cost, 'towh': towh, 'BudgetSectionID': BudgetsectionID, 'itemID': itemID, 'specnum': specnum, 'vendor': vendor },
+                    success: function (data) {
+                        if (data == 'SUCCESS') {
+                            var sectionid = $('#Ddl_SelProSec').val();
+                            loaditems(sectionid);
+                            $("#popup").bPopup().close();
+                            notify('Lineitem Successfully Updated.');
+                        }
+                        else {
+                            notify("Listitem not updated(Duplicate exists).");
+                        }
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+            });
+        });
+        function editlineitempopup() {
+            $('#popup').bPopup();
+        }
+
+
+        function areset(st, lt) {
+            st = parseInt(st);
+            lt = parseInt(lt);
+            $('#lineitems tbody tr').each(function () {
+                if (st < lt) {
+                    var prev1 = parseInt($(this).find("td:eq(5)").html());
+                    var prev2 = parseInt($(this).attr('data-id'));
+                    if (prev1 == st) {
+                        $(this).find("td:eq(5)").html(lt);
+                        $(this).attr('data-id', lt);
+                        return;
+                    }
+                    if (prev1 > st && prev1 <= lt) {
+                        prev1 = prev1 - 1;
+                        $(this).find("td:eq(5)").html(prev1);
+                    }
+                    if (prev2 > st && prev1 <= lt) {
+                        prev2 = prev2 - 1;
+                        $(this).attr('data-id', prev2);
+                    }
+                }
+                else {
+                    var prev1 = parseInt($(this).find("td:eq(5)").html());
+                    var prev2 = parseInt($(this).attr('data-id'));
+                    if (prev1 == st) {
+                        $(this).find("td:eq(5)").html(lt);
+                        $(this).attr('data-id', lt);
+                        return;
+                    }
+                    if (prev1 >= lt && prev1 <= st) {
+                        prev1 = prev1 + 1;
+                        $(this).find("td:eq(5)").html(prev1);
+                    }
+                    if (prev2 >= lt && prev1 <= st) {
+                        prev2 = prev2 + 1;
+                        $(this).attr('data-id', prev2);
+                    }
+                }
+            });
+            //var table = $('#lineitems').DataTable();
+            //table.draw();
+        }
+        function EditListitem(obj, lid) {
+            //$('.editlineitempopup').show();
+            for (var a = 0; a < budget.length; a++) {
+                ////console.log(budget[a][5] + ">>>" + lid);
+                if (budget[a][5] == lid) {
+                    var totid = budget[a][2];// = totdata[i].TotalID;
+                    var itemid = budget[a][5];
+                    $('#itemID').val(itemid);
+                    var item = budget[a][7];// = totdata[i].Item;
+                    $('#edtitemname').val(item);
+                    var itemdesc = budget[a][8];// = totdata[i].ItemDescription;
+                    $('#edtdesc').val(itemdesc);
+                    var specnum = budget[a][9];
+                    $('#edtspecnum').val(specnum);
+                    var vendor = budget[a][10];
+                    $('#edtvendor').val(vendor);
+                    var qty = budget[a][11];// = totdata[i].Quantity;
+                    $('#edtqty').val(qty);
+                    var uom = budget[a][21];// = totdata[i].UOMID;
+                    var cost = budget[a][13].replace(',', '');// = totdata[i].Cost;
+                    $('#edtcost').val(cost);
+                    //budget[i][13] = totdata[i].Note;
+                    var wh = budget[a][22];// = totdata[i].ToWarehouse == 1 ? "<i class='fa fa-check'></i>" : "<i class='fa fa-times'></i>";
+                    if (wh == 1) {
+                        $('#edtwh').prop("checked", true);
+                    }
+                    else {
+                        $('#edtwh').prop("checked", false);
+                    }
+                    //budget[i][15] = totdata[i].CommitAmountAdjust;
+                    //budget[i][16] = totdata[i].DateCreated;
+                    //budget[i][17] = totdata[i].CreatedBy_ID;
+                    //budget[i][18] = totdata[i].Status;
+                    var obj = $('#uom').clone();
+                    $(obj).attr('id', 'edtuom');
+                    $('#uomselect').html(obj);
+                    $('#edtuom').val(uom).change();
+                    break;
+                }
+            }
+            editlineitempopup();
+            setTimeout(function () {
+                cancelselections();
+            }, 0);
+        }
+        function DeleteListitem(obj, lid) {
+            setTimeout(function () {
+                cancelselections();
+            }, 0);
+            var proceed = confirm("Do you really want to delete?");
+            if (!proceed) {
+                return;
+            }
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/BudgetView/deletelineitems';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'BudgetView/deletelineitems';
+            }
+            var sectionid = $('#Ddl_SelProSec').val();
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'lineitemid': '" + lid + "'}",
+                success: function (data) {
+
+                    if (data == 'FAILED') {
+                        notify('Line Item exists on PO.');
+                    }
+                    else {
+                        var sectionid = $('#Ddl_SelProSec').val();
+                        loaditems(sectionid);
+                        notify('Deleted successfully.');
+                    }
+                },
+                error: function () {
+                    notify('Something went wrong.');
+                }
+            });
+            //deletelineitems
+        }
+
+        var EditHeadeChk = '0';
+        function opentbx(obj) {
+
+            //$('#lineitems tr').removeAttr('onclick');
+            $("#lineitems tbody").addClass("disable-sort");
+            EditHeadeChk = '1';
+            //$(obj).removeAttr('onclick');
+            $(obj).find('span').hide();
+            $(obj).find('input').show();
+            $(obj).find('input[type=text]').focus();
+
+
+        }
+
+        function HdrKeyUP(e, obj) {
+
+            var k = e.keyCode;
+            if (k == 13) {
+                focusOutHdr(obj);
+
+            }
+
+
+
+        }
+
+        function focusOutHdr(obj) {
+            //$('#lineitems tr').removeAttr('onclick');
+            
+            EditHeadeChk = '0';
+            $(obj).parent().find('span').show();
+            $(obj).parent().find('input').hide();
+
+            var Headerval = $(obj).val();
+            var rw = $(obj).parent().parent().parent();
+            var LineitemID = parseInt($(rw).find("td:eq(5)").html());
+
+
+
+
+            var url3 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url3 = '/BudgetView/UpdateHeader';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url3 = 'BudgetView/UpdateHeader';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url3,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'Headerval': '" + Headerval + "','LineitemID' : '" + LineitemID + "'}",
+                success: function (data) {
+                    notify('Header successfully updated');
+                    // areset(st,lt);
+                    var prevsrch = $('#srchdsc').val();
+                    var sectionid = $('#Ddl_SelProSec').val();
+                    loaditems(sectionid);
+                },
+                error: function () {
+                    notify('Something went wrong.');
+                }
+            });
+
+        }
+        function checkSentForApproval(obj, obj1) {
+
+            if (obj == "1" || obj1 == "1") {
+                $('#svsndAprvl').css('display', 'none');
+            }
+            else {
+                $('#svsndAprvl').css('display', '');
+
+            }
+        }
+
+        function buildrows() {
+
+            $("#lineitems tbody").addClass("disable-sort");
+            getHiddenclass();
+            checkselected();
+            $('#lineitems').css("font-size", "0.9em").css("text-align", "center");
+
+            var chktemp = checklocked();
+
+            if (chktemp == null || chktemp.split('^').length < 1) {
+                return;
+            }
+            var chk = chktemp.split('^')[0];
+            if (chk != 1) {
+                chk = 0;
+            }
+
+            $('#lckbtn').css('display', 'none');
+            $('#unlckbtn').css('display', 'none');
+            $('#AddNwLnItms').css('display', 'none');
+            $('#ImportExportLineItems').css('display', 'none');
+            $('#chk_VrsnCrt').parent().css('display', 'none');
+
+            $('#svsndAprvl').css('display', 'none');
+
+            $('#lineitems tbody tr').each(function () {
+
+                var t1 = $(this).find("td:eq(0)").html();
+
+                var attr = $(this).find("td:eq(0)").attr('data-poid');
+
+
+                if (attr == undefined) {
+                    $(this).find("td:eq(0)").attr('data-poid', t1);
+                }
+
+
+
+
+                var header = $(this).find("td:eq(28)").html();
+                if (header == '') {
+                    header = '&nbsp;';
+                }
+
+                var htm = "<div style='cursor:pointer;' ><input type='text' value='" + header + "' style='display:none'   /><span>" + header + "</span></div>";
+                $(this).find("td:eq(1)").html(htm);
+
+
+                var currselectedspacing = $(this).find("td:eq(27)").html();
+                ////console.log(currselectedspacing);
+
+                if (currselectedspacing == "0") {
+                    var html = "<span class='spacing_span'  data-id='" + 0 + "'>" + "No" + "</span>";
+                    $(this).find("td:eq(27)").html(html);
+                }
+                else {
+                    for (var a = 0; a < spacing.length ; a++) {
+                        if (currselectedspacing == spacing[a].FldID) {
+                            var align = "";
+                            var height = "";
+                            if (spacing[a].Spaceposition == "bottom") {
+                                align = "padding-bottom";
+                            }
+                            else if (spacing[a].Spaceposition == "top") {
+                                align = "padding-top";
+                            }
+
+                            height = spacing[a].SpaceHeight + "px";
+
+                            $(this).find('td').css(align, height);
+
+                            var html = "<span class='spacing_span'  data-id='" + spacing[a].FldID + "'>" + spacing[a].Spacingname + "</span>";
+
+                            $(this).find("td:eq(27)").html(html);
+                        }
+                    }
+                }
+
+
+                $(this).find("td:eq(8)").css('padding-left', '50px');
+                $(this).find("td:eq(8)").css('text-align', 'left');
+
+                $(this).find("td:eq(9)").css('padding-left', '38px');
+                $(this).find("td:eq(9)").css('text-align', 'left');
+
+
+                $(this).find("td:eq(10)").css('padding-left', '38px');
+                $(this).find("td:eq(10)").css('text-align', 'left');
+
+
+                var notes = $(this).find("td:eq(15)").html();
+                var lid = $(this).find("td:eq(5)").html();
+
+                var cost = $(this).find("td:eq(13)").html();
+                cost = isNaN(parseFloat(cost)) ? '0' : cost.replace(',', '');
+
+
+                var total = $(this).find("td:eq(14)").html();
+                total = isNaN(parseFloat(total)) ? '0' : total.replace(',', '');
+
+                cost = Math.round(cost * 100) / 100;
+                total = Math.round(total * 100) / 100;
+
+                //total = numberWithCommas(parseFloat(total));
+
+                if (lid == null) {
+                    return;
+                }
+
+                $(this).find("td:eq(13)").html(numberWithCommas(formatNumber(cost)));
+                $(this).find("td:eq(14)").html(numberWithCommas(total));
+
+                if (chk != "1") {
+
+                    var html = '';
+
+                    var prev = $(this).find("td:eq(0)").attr('data-poid');
+                    if (prev.trim() != '') {
+
+
+                        var url1 = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url1 = '/PurchaseOrderView/POList/';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url1 = 'PurchaseOrderView/POList/';
+                        }
+
+                        url1 += prev;
+
+
+
+                        html += '<div class="edtdiv BDGTEDT"><input style="float: left;" type="button" onclick="EditListitem(this,\'' + lid + '\');" class="buttonedit" />';
+                        html += '<a target="_blank" href="' + url1 + '"><i class="fa fa-info-circle BDGTEDT" style="font-size: 1.3em;left: -4px;position: relative; color: black;" onclick="GoToPoList(this);"></i></a></div>';
+                       
+
+
+
+                    }
+                    else {
+                        html += '<div class="edtdiv BDGTEDT"><input style="float: left;" type="button" onclick="EditListitem(this,\'' + lid + '\');" class="buttonedit" /></div>';
+                        
+                    }
+
+                    if (notes.trim() == "") {
+
+                        html += '<div class="edtnotebtn BDGTEDT" onclick="edtvwnotes(this,\'' + lid + '\');" ><i class="fa fa-pencil-square-o"></i> &nbsp; View Notes</div>';
+
+                    }
+                    else {
+
+                        html += '<div class="edtnotebtn BDGTEDT" onclick="edtvwnotes(this,\'' + lid + '\');" ><i class="fa fa-pencil-square-o"></i> &nbsp; View Notes</div>';
+                    }
+
+                    var prev = $(this).find("td:eq(0)").attr('data-poid');
+
+
+                    $(this).find("td:eq(0)").html(html);
+
+
+
+
+                    var order = $(this).find("td:eq(6)").html();
+                    $(this).attr('data-id', order);
+                }
+                else {
+
+                    $(this).addClass('budgetlocked');
+                    var html = '';
+
+                    html = '<i class="fa fa-lock"></i>&nbsp;&nbsp;Locked';
+
+                    if (notes.trim() == "") {
+
+                        html += '<div class="addnotebtn"><i class="fa fa-times"></i> &nbsp; No Notes</div>';
+
+                    }
+                    else {
+
+                        html += '<div class="edtnotebtn" onclick="edtvwnotes(this,\'' + lid + '\');" ><i class="fa fa-pencil-square-o"></i> &nbsp; View Notes</div>';
+                    }
+                    var objdiv = $(this).find("td:eq(1)").find('div');
+                    $(objdiv).removeAttr('onclick');
+                    $(objdiv).css('cursor', 'default');
+
+                    $(this).find("td:eq(27)").html('');
+                    $(this).find("td:eq(0)").html(html);
+                }
+            });
+
+
+
+            if (chk != 1) {
+                $('#svedtnt').removeClass("displaynone");
+                $('#notesedt').removeAttr("disabled");
+
+               
+                $("#lineitems tbody").sortable(
+                        {
+                            cancel: ".disable-sort",
+                            cursor: "move",
+                            start: function (event, ui) {
+                                // 0 based array, add one
+                                var obj = ui.item;
+                                $(obj).css('background', '#86ABC2');
+                                // //console.log('start');
+                            },
+                            update: function (event, ui) {
+                                // 0 based array, add one
+                                var obj = ui.item;
+                                var obj2 = ui.item.prev('tr');
+                                var st = $(obj).attr('data-id');
+                                var lt = $(obj2).attr('data-id');
+                                if (parseInt(lt) < parseInt(st)) {
+                                    obj2 = ui.item.next('tr');
+                                    lt = $(obj2).attr('data-id');
+                                }
+                                // alert('Prev: ' + st + ' Final: ' + lt);
+                                if (lt == undefined) {
+                                    lt = 1;
+                                }
+                                var url1 = '';
+                                if (LOCALORSERVERNEW == 'LOCAL') {
+                                    url1 = '/BudgetView/sortlineitems';
+                                }
+                                else if (LOCALORSERVERNEW == 'SERVER') {
+                                    url1 = 'BudgetView/sortlineitems';
+                                }
+                                var sectionid = $('#Ddl_SelProSec').val();
+                                //sectionid = 1;
+                                $.ajax({
+                                    type: "POST",
+                                    url: url1,
+                                    async: false,
+                                    dataType: "text",
+                                    contentType: "application/json; charset=utf-8",
+                                    data: "{ 'prev': '" + st + "','current' : '" + lt + "','sectionid' : '" + sectionid + "'}",
+                                    success: function (data) {
+                                        notify('Reordered Successfully row ' + st + ' has been shifted to row ' + lt);
+                                        // areset(st,lt);
+                                        var prevsrch = $('#srchdsc').val();
+                                        var sectionid = $('#Ddl_SelProSec').val();
+                                        loaditems(sectionid);
+                                    },
+                                    error: function () {
+                                        notify('Something went wrong.');
+                                    }
+                                });
+                            },
+                            stop: function (event, ui) {
+                                var obj = ui.item;
+                                $(obj).css('background', '');
+                            }
+                            // end of drag
+                        });
+            }
+            else {
+                $('#svedtnt').addClass("displaynone");
+                $('#notesedt').attr("disabled", "disabled");
+                $("#lineitems tbody").addClass("disable-sort");
+
+            }
+
+
+            for (var a = 0; a < offsecurity.length; a++) {
+
+                if (offsecurity[a].Classname == "BDGTEDT") {
+                    $("#lineitems tbody").addClass("disable-sort");
+                }
+
+            }
+
+
+        }
+
+
+        function GoToPoList(obj) {
+
+            setTimeout(function () {
+                cancelselections();
+            }, 10);
+
+
+
+        }
+
+
+        $(document).ready(function () {
+            $('#uom').val(56);
+        });
+
+        function loaditems(sectionid) {
+
+
+            $("#lineitems tbody").addClass("disable-sort");
+            // $('#lineitems tbody tr').css("background", "rgb(179, 179, 179)");//opacity: 0.6;");
+            $('#lineitems tbody tr').css("opacity", "0.3");//opacity: 0.6;");
+
+
+            var prevsrch = $('#srchdsc').val();
+
+            if (isNaN(sectionid) || sectionid == 0 || sectionid == null) {
+
+                notify("No data found");
+
+                //  $('#Ddl_SelProSec').html("<option>---Select---</option>");
+                var table = $('#lineitems').DataTable();
+
+                table
+                    .clear()
+                    .draw();
+
+
+                return;
+            }
+
+
+            $('#tableloader').show();
+
+
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/BudgetView/getLineItems';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'BudgetView/getLineItems';
+            }
+
+            url1 += "?BudgetsectionID=" + sectionid;
+            var totdata;
+
+
+
+
+            $.get(url1)
+                .success(function (response) {
+                    totdata = JSON.parse(response);
+                    totdata = totdata.data;
+                    // //console.log(totdata);
+                    if (totdata.length == 0) {
+
+
+                        var table = $('#lineitems').DataTable();
+
+                        table
+                            .clear()
+                            .draw();
+                        $('#tableloader').hide();
+
+                        return;
+                    };
+
+                    budget = [];
+
+                    for (i = 0; i < totdata.length ; i++) {
+                        budget[i] = new Array();
+
+                        budget[i][0] = totdata[i].POID;
+
+                        budget[i][1] = "";
+
+                        budget[i][2] = totdata[i].TotalID;
+                        budget[i][3] = totdata[i].ProjectID;
+                        budget[i][4] = totdata[i].BudgetSectionID;
+                        budget[i][5] = totdata[i].LineItemID;
+                        budget[i][6] = totdata[i].ItemOrder;
+                        budget[i][7] = totdata[i].Item;
+                        budget[i][8] = totdata[i].ItemDescription;
+                        budget[i][9] = totdata[i].SpecNum;
+                        budget[i][10] = totdata[i].Vendor;
+                        budget[i][11] = numberWithCommas(formatNumber(parseFloat(totdata[i].Quantity)));
+                        budget[i][12] = totdata[i].UOM;
+                        budget[i][13] = numberWithCommas(formatNumber(parseFloat(totdata[i].Cost)));
+
+
+
+                        budget[i][14] = totdata[i].Quantity * totdata[i].Cost;
+
+
+
+                        budget[i][15] = totdata[i].Note;
+                        budget[i][16] = totdata[i].ToWarehouse == 1 ? "<i class='fa fa-check'></i>" : "<i class='fa fa-times'></i>";
+                        budget[i][17] = "0";//totdata[i].CommitAmountAdjust;
+                        budget[i][18] = totdata[i].DateCreated;
+                        budget[i][19] = totdata[i].CreatedBy_ID;
+                        budget[i][20] = totdata[i].Status;
+                        budget[i][21] = totdata[i].UOMID;
+                        budget[i][22] = totdata[i].ToWarehouse;
+
+
+                        //$new fields 26/11/2015 turya
+
+                        var budget_cost = parseFloat(totdata[i].Quantity * totdata[i].Cost);
+                        var commit = parseFloat(totdata[i].Commit);
+                        var adjust = parseFloat(totdata[i].Adjust);
+                        var remaining = Math.max((budget_cost - commit - adjust), 0);
+                        var variance = Math.max((budget_cost - commit - remaining), (budget_cost - commit - remaining - adjust));
+
+                        budget[i][23] = numberWithCommas(formatNumber(parseFloat(totdata[i].Commit)));
+                        budget[i][24] = numberWithCommas(formatNumber(parseFloat(remaining)));//totdata[i].ToWarehouse;
+                        budget[i][25] = '<input type="text" class="floatonly"   style="width: 50px;;"  value="' + totdata[i].Adjust + '" />';
+                        budget[i][26] = numberWithCommas(formatNumber(parseFloat(variance)));//totdata[i].ToWarehouse;
+
+                        //end of $new fields 26/11/2015 turya
+
+
+
+
+
+                        budget[i][27] = totdata[i].Spacing;
+                        budget[i][28] = totdata[i].Header;
+                        budget[i][29] = totdata[i].ToWarehouse;
+
+                        budget[i][30] = commit;
+                        budget[i][31] = adjust;
+
+                    }
+
+                    $('.exclude_click').remove();
+
+                    //$('#lineitems thead').html('');
+                    $('#lineitems').dataTable().fnDestroy();
+
+
+                    $('#lineitems').dataTable({
+                        "processing": true,
+                        "data": budget,
+                        "columns": [
+                            { "title": "Actions" },
+                            { "title": "Header" },
+                            { "title": "Item#" },
+                            { "title": "ProjectID", "class": "displaynone" },
+                            { "title": "BudgetSectionID", "class": "displaynone" },
+                            { "title": "LineItemID", "class": "displaynone" },
+                            { "title": "ItemOrder", "class": "displaynone" },
+                            { "title": "Item", "class": "displaynone" },
+                            { "title": "ItemDescription" },
+                            { "title": "SpecNum" },
+                            { "title": "Vendor" },
+                            { "title": "Quantity" },
+                            { "title": "UOM" },
+                            { "title": "Cost" },
+
+                            { "title": "Total" },
+
+                            { "title": "Note", "class": "displaynone" },
+                            { "title": "ToWarehouse" },
+
+
+                            { "title": "CommitAmountAdjust", "class": "displaynone" },
+                            { "title": "DateCreated", "class": "displaynone" },
+                            { "title": "CreatedBy_ID", "class": "displaynone" },
+                            { "title": "Status", "class": "displaynone" },
+                            { "title": "UPMID", "class": "displaynone" },
+                        { "title": "UPMID", "class": "displaynone" },
+
+                        { "title": "Commit" },
+                        { "title": "Remaining" },
+                        { "title": "Adjust" },
+                        { "title": "Variance" },
+
+
+
+                        { "title": "Spacing" },
+                        { "title": "heading", "class": "displaynone" }
+                        , { "title": "WarehouseReal", "class": "displaynone" }
+                        , { "title": "Commitreal", "class": "displaynone" }
+                        , { "title": "Adjustreal", "class": "displaynone" }
+
+                        ],
+                        paging: false,
+                        "initComplete": function () {
+
+                            $('#lineitems_filter').find('input').hide();
+                            $('#lineitems_filter').find('label').hide();
+                            $('#lineitems_filter').append('<input type="text" id="srchdsc" placeholder="Search" style="display:none"/>');
+                            buildrows();
+                            $('#tableloader').hide();
+                            //$('#lineitems tbody tr').css("background", "rgb(32, 128, 147)");//opacity: 0.6;");
+                            //$('#lineitems tbody tr').css("opacity", "0.4");//opacity: 0.6;");
+
+
+
+                            if (prevsrch != undefined) {
+
+                                var table = $('#lineitems').DataTable();
+                                table.column(7)
+                                           .search(prevsrch)
+                                           .draw();
+                                buildrows();
+                                $('#srchdsc').val(prevsrch);
+
+
+                            }
+                        },
+                        "order": [[6, "asc"]],
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31] }
+                        ]
+                    });
+
+
+                    html = "<tr class='exclude_click'>"
+                     + "<th class='Resetth' rowspan='1' colspan='1'>"
+                     + "<a><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px;'  tabindex=3/></a>"
+                     + "</th>"
+                     + "<th rowspan='1' colspan='1'></th>"
+                     + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;    width: 80px;' data-indx='2' type='text' tabindex=4></th>"
+
+                     + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;    width: 80px;' data-indx='8' type='text'  tabindex=5></th>"
+                     + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;    width: 80px;' data-indx='9' type='text' tabindex=6></th>"
+                     + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;    width: 80px;' data-indx='10' type='text'  tabindex=7></th>"
+                     + "<th rowspan='1' colspan='1'></th>"
+                     + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;    width: 80px;' data-indx='12' type='text'  tabindex=8></th>"
+                     + "<th rowspan='1' colspan='1'></th>"
+                     + "<th rowspan='1' colspan='1'><span style='border: 1px solid;     font-weight: 400;padding-left: 8px;padding-right: 8px;   border-color: darkgrey; font-weight: 400; padding: 2px' id='totvalue'></span></th>"
+
+                     + "<th rowspan='1' colspan='1'><select class='srch' data-indx='29'><option value='' tabindex=9></option><option value='1'>Yes</option><option value='0'>No</option></select></th>"
+                     + "<th></th>"
+                     + "<th><input class='srch' style='padding: 2px 2%;    width: 80px;' data-indx='24' type='text'  tabindex=10></th>"
+                     + "<th></th>"
+                     + "<th><input class='srch' style='padding: 2px 2%;    width: 80px;' data-indx='26' type='text'  tabindex=11></th>"
+                     + "<th></th>"
+
+                     + "</tr>";
+
+                    $('#lineitems thead').append(html);
+
+                    var tot = 0;
+                    $('#lineitems tbody tr').each(function () {
+
+
+
+                        tot += parseFloat($(this).find('td:eq(14)').text().replace(',', ''));
+
+                        var tmp = $(this).find('td:eq(14)').text().replace(',', '');
+                        tmp = numberWithCommas(formatNumber(tmp));
+                        $(this).find('td:eq(14)').text(tmp);
+
+
+
+
+                    });
+
+                    if (isNaN(tot)) {
+
+                        tot = 0;
+                    }
+
+                    $('#totvalue').text(numberWithCommas(formatNumber(tot)));
+
+
+                    var table = $('#lineitems').DataTable();
+
+                    $('.srch').on('keyup change', function () {
+
+                        var indx = $(this).attr('data-indx');
+                        var txt = this.value;
+
+                        table
+                               .column(indx)
+                               .search(txt)
+                               .draw();
+                        buildrows();
+
+
+
+                        var countr = 0;
+
+                        $('.srch').each(function () {
+
+
+                            if (this.value.trim() != "") {
+
+                                countr++;
+                            }
+                        });
+
+
+                        if (countr > 0) {
+
+                            $("#lineitems tbody").addClass("disable-sort");
+
+                        }
+                        else {
+
+
+                           
+
+                            for (var a = 0; a < offsecurity.length; a++) {
+
+                                if (offsecurity[a].Classname == "BDGTEDT") {
+                                    $("#lineitems tbody").addClass("disable-sort");
+                                }
+
+                            }
+                        }
+
+                    }
+
+                        );
+
+                    $('#srchdsc').hide();
+
+                    $('#srchdsc').on('keyup change', function () {
+
+                        var table = $('#lineitems').DataTable();
+                        var txt = $(this).val().trim();
+
+
+
+                        table.column(7)
+                                   .search(txt)
+                                   .draw();
+                        buildrows();
+
+                        if (txt.length > 0) {
+
+                            $("#lineitems tbody").addClass("disable-sort");
+
+                        }
+                        else {
+
+
+                            
+
+                            for (var a = 0; a < offsecurity.length; a++) {
+
+                                if (offsecurity[a].Classname == "BDGTEDT") {
+                                    $("#lineitems tbody").addClass("disable-sort");
+                                }
+
+                            }
+
+                        }
+
+
+                    });
+
+
+
+                });
+
+
+        }
+
+        function ForAdjustTxt(obj) {
+            $("#lineitems tbody").addClass("disable-sort");
+            EditHeadeChk = '1';
+            $(obj).focus();
+
+        }
+
+        function UpdateAdjust(obj) {
+
+            
+            EditHeadeChk = '0';
+
+            var adjust = $(obj).val();
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/BudgetView/UpdateAdjust';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'BudgetView/UpdateAdjust';
+            }
+
+            var rw = $(obj).parent().parent();
+            var LineitemID = parseInt($(rw).find("td:eq(5)").html());
+
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'LineItemID' : '" + LineitemID + "','AdjustedAmount': '" + adjust + "'}",
+                success: function (data) {
+                    if (data == 'SUCCESS') {
+                        var rw = $(obj).parent().parent();
+
+                        var commit = parseInt($(rw).find("td:eq(30)").html());
+                        $(rw).find("td:eq(31)").html(adjust);
+
+                        var budget_cost = parseInt($(rw).find("td:eq(14)").html());
+
+                        var remaining = Math.max((budget_cost - commit - adjust), 0);
+                        var variance = Math.max((budget_cost - commit - remaining), (budget_cost - commit - remaining - adjust));
+
+                        $(rw).find("td:eq(24)").html(numberWithCommas(formatNumber(parseFloat(remaining))));
+                        $(rw).find("td:eq(26)").html(numberWithCommas(formatNumber(parseFloat(variance))));
+
+                        notify('Successfully Updated.');
+                    }
+
+                },
+                error: function () {
+                    notify('Something went wrong.');
+                }
+            });
+
+
+            $(obj).blur();
+
+
+
+        }
+
+        function AdjstKeyUP(e, obj) {
+
+
+            var k = e.keyCode;
+            if (k == 13) {
+                UpdateAdjust(obj);
+
+            }
+
+
+
+        }
+
+    </script>
+
+
+    <script type="text/javascript">
+
+        function numberWithCommas(x) {
+            var parts = x.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
+
+
+        function getsections(pid) {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/BudgetView/getAllProjectSection';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                //url1 = urlsuffix + "/" + 'Project/getAllProjectList';
+                url1 = 'BudgetView/getAllProjectSection';
+            }
+            url1 += "?projectid=" + pid;
+            // alert(url1);
+            var totdata;
+            $.get(url1)
+               .success(function (response) {
+                   var html = "";
+                   totdata = response;
+                   totdata = JSON.parse(totdata).data;
+                   for (var a = 0; a < totdata.length; a++) {
+                       var id = totdata[a].id;
+                       var name = totdata[a].sectionname;
+                       var Sectionnumber = totdata[a].Sectionnumber;
+                       html += "<option value='" + id + "'>" + Sectionnumber + "-" + name + "</option>";
+                   }
+                   $('#Ddl_SelProSec').html(html);
+
+                   if (html == "") {
+                       //call here
+                   }
+                   var sectionid = $('#Ddl_SelProSec').val();
+
+                   loaditems(sectionid);
+
+
+                   $("#Ddl_SelProSec").multiselect({
+                       multiple: false
+                       //,header: "Select an option"
+                       , noneSelectedText: "Select a Section   "
+                       //,selectedList: 1
+                   }).multiselectfilter();
+               });
+        }
+        $(function () {
+            $('#Ddl_SelPro').change(function () {
+                var pid = $("#Ddl_SelPro option:selected").attr('data-id');
+                getBudgetVersion(pid);
+
+                ProjectNameAtLabel(this);
+
+                $('#FileUpload').replaceWith($('#FileUpload').val('').clone(true));
+
+
+                ShowHideLineitemAction(this);
+
+                if (pid == 0) {
+                    $('#Ddl_SelProSec').html("<option>---Select---</option>");
+                    var table = $('#lineitems').DataTable();
+
+                    table
+                        .clear()
+                        .draw();
+
+                    return;
+                }
+                getsections(pid);
+
+
+
+
+            });
+
+            $('#Ddl_SelProSec').change(function () {
+
+                $('#FileUpload').replaceWith($('#FileUpload').val('').clone(true));
+                var sectionid = $('#Ddl_SelProSec').val();
+
+                loaditems(sectionid);
+            });
+
+            $('#lineitems tr').live('click', function (event) {
+
+
+                if ($(this).hasClass('exclude_click')) {
+
+                    return;
+                }
+
+                if (EditHeadeChk == '1') {
+                    return;
+                }
+
+
+                for (var a = 0; a < offsecurity.length; a++) {
+
+                    if (offsecurity[a].Classname == "BDGTEDT") {
+                        return false;
+                    }
+                }
+
+
+
+                var txt = $('#srchdsc').val().trim();
+
+                if (document.activeElement != document.body) {
+                    document.activeElement.blur();
+                }
+                //$('body').focus();
+
+
+                var clickedrowid = $(this).find("td:eq(5)").html();
+
+                if (clickedrowid == null) {
+                    return;
+                }
+
+                var clickedrowindex = $(this).attr('data-id');
+                var closestrow = "";
+
+                // //console.log(clickedrowid);
+                if ($(this).hasClass('budgetlocked')) {
+                    return;
+                }
+                if (!event.ctrlKey && !event.shiftKey) {
+                    var ln = $('.selectedrow').length;
+                    var hclass = false;
+                    hclass = $(this).hasClass('selectedrow');
+                    cancelselections();
+
+                    if (hclass && ln == 1) {
+                        $(this).addClass('selectedrow');
+                    }
+                }
+
+                if (event.shiftKey) {
+                    // cancelselections();
+
+                    var allids = "";
+                    var short = 999999;
+                    $('.selectedrow').each(function () {
+
+                        var id = $(this).attr('data-id');
+
+                        var diff = clickedrowindex - id;
+
+                        if (diff < 0) {
+                            diff = 0 - diff;
+                        }
+                        if (diff < short) {
+
+                            closestrow = $(this).find("td:eq(5)").html();
+
+                            short = diff;
+                        }
+
+                        if (allids == "") {
+                            allids = id;
+
+                        }
+                        else {
+                            allids += "^" + id;
+                        }
+
+
+                    });
+
+                    $('.selectedrow').each(function () {
+
+
+                        var currtmp = $(this).find("td:eq(5)").html();
+
+                        if (currtmp == closestrow) {
+
+                        }
+
+                        else {
+                            $(this).removeClass('selectedrow');
+
+                            if ($(this).hasClass('odd')) {
+                                $(this).css('background-color', '');
+                            }
+                            else {
+                                $(this).css('background-color', '');
+                            }
+                        }
+
+
+                    });
+
+                    var isunderrange = 0;
+                    $('#lineitems tbody tr').each(function () {
+
+
+
+                        if (isunderrange == 1) {
+
+
+                            if (!$(this).hasClass('selectedrow')) {
+                                $(this).addClass('selectedrow');
+                                $(this).css('background-color', 'rgb(201, 240, 249)');
+                            }
+                            else {
+                                isunderrange = 0;
+                                return;
+                            }
+
+
+                        }
+
+                        else if ($(this).hasClass('selectedrow')) {
+                            isunderrange = 1;
+                        }
+
+
+
+
+                        var currentrowid = $(this).find("td:eq(5)").html();
+                        if (currentrowid == clickedrowid) {
+
+
+
+                            if (isunderrange == 1) {
+                                isunderrange = 0;
+                                return;
+                            }
+                            else {
+                                $(this).addClass('selectedrow');
+                                $(this).css('background-color', 'rgb(201, 240, 249)');
+                                isunderrange = 1;
+                            }
+
+
+                        }
+
+
+                    });
+
+
+                    return;
+
+                }
+
+
+                $(this).toggleClass('selectedrow');
+
+                if (!$(this).hasClass('selectedrow')) {
+                    if ($(this).hasClass('odd')) {
+                        $(this).css('background-color', '');
+                    }
+                    else {
+                        $(this).css('background-color', '');
+                    }
+                }
+                else {
+                    $(this).css('background-color', 'rgb(201, 240, 249)');
+                }
+
+                checkselected();
+
+            });
+
+        });
+
+        function getBudgetVersion(pid) {
+            // alert(pid);
+            $('#lbl_BudgetVersion').html('');
+
+            if (pid == null || pid == undefined || pid == 'undefined') {
+                $('#lbl_BudgetVersion').html('');
+                return;
+            }
+
+            if (pid.toString() == '0') {
+                $('#lbl_BudgetVersion').html('');
+            }
+            else {
+                //$('#lbl_BudgetVersion').html('Selected Project : ' + $(obj).find('option:selected').text());
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/BudgetView/GetBudgetVersion';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'BudgetView/GetBudgetVersion';
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    dataType: "text",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ 'pid': '" + pid + "'}",
+                    success: function (data) {
+                        if (data == '') {
+                            $('#lbl_BudgetVersion').html('Version Number : ');
+                        }
+                        else {
+                            $('#lbl_BudgetVersion').html('Version Number : ' + data);
+                        }
+                    },
+                    error: function () {
+                        notify('Something went wrong.');
+                    }
+                });
+            }
+        }
+
+        function checkselected() {
+            var items = $('.selectedrow').length;
+            if (items == 0) {
+                $('#removemultiple').hide();
+            }
+            else {
+                $('#removemultiple').show();
+            }
+            // alert(items);
+        }
+
+        function deletemultiplelineitems() {
+            var items = $('.selectedrow').length;
+            var allids = "";
+            $('.selectedrow').each(function () {
+
+
+                var id = $(this).find("td:eq(5)").html();
+                if (allids == "") {
+                    allids = id;
+
+                }
+                else {
+                    allids += "^" + id;
+                }
+
+
+            });
+
+
+
+
+
+            var proceed = confirm("Do you really want to delete " + items + " items?");
+            if (!proceed) {
+                return;
+            }
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/BudgetView/deletelineitemsmultiple';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'BudgetView/deletelineitemsmultiple';
+            }
+
+            var sectionid = $('#Ddl_SelProSec').val();
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'lineitemid': '" + allids + "'}",
+                success: function (data) {
+                    $('#removemultiple').hide();
+                    var sectionid = $('#Ddl_SelProSec').val();
+                    loaditems(sectionid);
+                    notify(items + ' items Deleted successfully.');
+
+                },
+                error: function () {
+                    notify('Something went wrong.');
+                }
+            });
+
+
+
+
+        }
+
+        function cancelselections() {
+
+            //$('#lineitems tr').removeClass('selectedrow');
+
+            $('.selectedrow').each(function () {
+
+                $(this).removeClass('selectedrow');
+
+                if ($(this).hasClass('odd')) {
+                    $(this).css('background-color', '#f9f9f9');
+                }
+                else {
+                    $(this).css('background-color', '#fff');
+                }
+
+
+            });
+
+            checkselected();
+
+        }
+
+        $(document).ready(function () {
+
+            $(document).keyup(function (e) {
+                var obj = document.activeElement;
+                obj = obj.nodeName;
+                if (obj != "BODY") {
+                    return;
+                }
+                ////console.log(obj);
+                var ky = e.which;
+                if (ky != 46) {
+                    return;
+                }
+                else {
+                    var ln = $('.selectedrow').length;
+                    if (ln == 0) {
+                        notify('Please select items to delete first');
+                    }
+                    else {
+                        deletemultiplelineitems();
+                    }
+                }
+            });
+
+        });
+
+    </script>
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+
+            $('#notesedt').autosize();
+
+            $('.paginate_button').live('click', function () {
+                RowHtmlRender();
+            });
+
+            $('#lineitems').on('draw.dt', function () {
+
+                var tot = 0;
+                $('#lineitems tbody tr').each(function () {
+
+                    tot += parseFloat($(this).find('td:eq(14)').text().replace(',', ''));
+
+                    //tot += parseFloat($(this).find('td:eq(14)').text().replace(',', ''));
+
+                    //var tmp = $(this).find('td:eq(14)').text();
+                    //tmp = numberWithCommas(formatNumber(tmp));
+                    //$(this).find('td:eq(14)').text(tmp);
+
+
+
+                });
+
+                if (isNaN(tot)) {
+
+                    tot = 0;
+                }
+                $('#totvalue').text(numberWithCommas(formatNumber(tot)));
+
+                buildrows();
+            });
+        });
+
+
+
+
+
+
+
+
+
+        function ResetSearch() {
+            var table = $('#lineitems').DataTable();
+            $('.srch').each(function () {
+                this.value = '';
+                var indx = $(this).attr('data-indx');
+                var txt = this.value;
+                table
+                       .column(indx)
+                       .search(txt)
+                       .draw();
+            });
+        }
+
+    </script>
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+
+
+            $('#btn_CreateBudget').click(function () {
+
+                var BudgetsectionID = $('#Ddl_SelProSec').val();
+
+                if (BudgetsectionID.trim() == "" || isNaN(BudgetsectionID) || BudgetsectionID == 0) {
+
+                    notify("Please Select a Budget section");
+                    $('#btn_CreateBudget').focus();
+                    return;
+
+                }
+
+                var itemheader = $('#itemheader').val();
+
+
+                var itemname = $('#itemname').val();
+                //if (itemname.trim() == "") {
+
+                //    notify("Please enter Itemname");
+                //    $('#itemname').focus();
+                //    return;
+                //}
+
+                var itemdescription = $('#itemdescription').val();
+                if (itemdescription.trim() == "") {
+
+                    notify("Please enter itemdescription");
+                    $('#itemdescription').focus();
+                    return;
+
+                }
+
+
+                var specnum = $('#specnum').val();
+
+                var vendor = $('#vendor').val();
+
+
+
+                var uom = $('#uom').val();
+
+                if (uom == 0) {
+
+                    //notify("Please select UOM");
+                    //$('#uom').focus();
+                    //return;
+                    uom = "56";
+                }
+
+                var itemquantity = $('#itemquantity').val();
+                //if (itemquantity.trim() == "" || isNaN(itemquantity) || itemquantity == 0) {
+
+                //    notify("Please enter valid itemquantity");
+                //    $('#itemquantity').focus();
+                //    return;
+
+                //}
+
+                if (itemquantity.trim() == "" || isNaN(itemquantity)) {
+
+                    itemquantity = 0;
+                    $('#itemquantity').val('0');
+                }
+
+                var cost = $('#cost').val();
+
+
+                //if (cost.trim() == "" || isNaN(cost) || cost == 0) {
+
+                //    notify("Please enter valid cost");
+                //    $('#cost').focus();
+                //    return;
+
+                //}
+                if (cost.trim() == "" || isNaN(cost)) {
+
+                    cost = 0;
+                    $('#cost').val('0');
+                }
+
+
+                var towh = $('#towh').is(':checked') ? "1" : "0";
+
+
+
+                var notes = $('#notes').val();
+
+
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/BudgetView/addnewLineItems';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'BudgetView/addnewLineItems';
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'itemname': itemname, 'itemdescription': itemdescription, 'uom': uom, 'itemquantity': itemquantity, 'cost': cost, 'towh': towh, 'BudgetsectionID': BudgetsectionID, 'specnum': specnum, 'vendor': vendor, 'notes': notes, 'itemheader': itemheader },
+                    success: function (data) {
+
+                        if (data == 'SUCCESS') {
+                            var sectionid = $('#Ddl_SelProSec').val();
+                            loaditems(sectionid);
+                            notify('Lineitem Successfully Added.');
+
+                            $('#itemheader').val('');
+
+                            $('#itemname').val('');
+                            $('#itemdescription').val('');
+
+                            $('#uom').val('0');
+                            $('#itemquantity').val('');
+                            $('#cost').val('');
+                            $('#notes').val('');
+
+                            $('#specnum').val('');
+                            $('#vendor').val('');
+
+                            $('#towh').attr('checked', false); // Checks it
+                        }
+                        else {
+                            notify("Listitem not added(Duplicate exists).");
+                        }
+
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+            });
+        });
+
+        function edtvwnotes(obj, itemid) {
+
+            setTimeout(function () {
+                cancelselections();
+            }, 0);
+
+
+            var content = "";
+            for (var a = 0; a < budget.length; a++) {
+                if (budget[a][5] == itemid) {
+                    content = budget[a][15];
+                    break;
+                }
+            }
+
+
+            var trobj = $(obj).parent().parent();
+
+
+            var itemnum = $(trobj).find("td:eq(2)").html();
+
+            $('#itemnumbercontainer').text("Notes for item-\"" + itemnum + "\"");
+
+            $('#popup2').bPopup({
+                easing: 'easeOutBack', //uses jQuery easing plugin
+                speed: 450,
+                transition: 'slideDown',
+                modalColor: 'rgb(18, 54, 65)'
+
+            });
+
+            $('#itemID').val(itemid);
+
+
+
+            $('#notesedt').val(content).trigger('autosize.resize');
+
+            $('#notesedt').css('max-height', '250px').trigger('autosize.resizeIncludeStyle');
+            $('#notesedt').css('width', '440px').trigger('autosize.resizeIncludeStyle');
+
+
+
+            setTimeout(function () {
+                $('#notesedt').focus();
+            }, 0);
+
+        }
+
+
+        function savenotes() {
+
+
+            var itemid = $('#itemID').val();
+
+            var note = $('#notesedt').val();
+
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/BudgetView/savenote';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'BudgetView/savenote';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'itemid': itemid, 'note': note },
+                success: function (data) {
+
+                    if (data == 'SUCCESS') {
+                        var sectionid = $('#Ddl_SelProSec').val();
+                        loaditems(sectionid);
+
+                        $("#popup2").bPopup().close();
+
+                        notify('Notes Successfully Updated.');
+                    }
+                    else {
+                        notify("Notes not updated(Unknown error!!!).");
+                    }
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+
+    </script>
+
+
+    <script type="text/javascript">
+        function LockBudget() {
+
+            var ProjectID = $("#Ddl_SelPro option:selected").attr('data-id');
+            var SectionID = $('#Ddl_SelProSec').val();
+            var IsBudgetLocked = 1;
+            var IsNewVersion = $('#chk_VrsnCrt').is(':checked') ? "1" : "0";
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/BudgetView/lockbudget';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'BudgetView/lockbudget';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'ProjectID': ProjectID, 'SectionID': SectionID, 'IsBudgetLocked': IsBudgetLocked, 'IsNewVersion': IsNewVersion },
+                success: function (data) {
+                    var sectionid = $('#Ddl_SelProSec').val();
+
+                    loaditems(sectionid);
+
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+        function UnLockBudget() {
+
+
+            var ProjectID = $("#Ddl_SelPro option:selected").attr('data-id');
+            var SectionID = $('#Ddl_SelProSec').val();
+            var IsBudgetLocked = 0;
+            var IsNewVersion = $('#chk_VrsnCrt').is(':checked') ? "1" : "0";
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/BudgetView/lockbudget';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'BudgetView/lockbudget';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'ProjectID': ProjectID, 'SectionID': SectionID, 'IsBudgetLocked': IsBudgetLocked, 'IsNewVersion': IsNewVersion },
+                success: function (data) {
+                    var sectionid = $('#Ddl_SelProSec').val();
+
+                    loaditems(sectionid);
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+            //chk_VrsnCrt
+        }
+        function checklocked() {
+            var res = "";
+            var ProjectID = $("#Ddl_SelPro option:selected").attr('data-id');
+
+            var SectionID = $('#Ddl_SelProSec').val();
+            if (isNaN(SectionID)) {
+                return 0;
+            }
+            var IsBudgetLocked = 1;
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/BudgetView/checklock';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'BudgetView/checklock';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'ProjectID': ProjectID, 'SectionID': SectionID, 'IsBudgetLocked': IsBudgetLocked },
+                async: false,
+                success: function (data) {
+                    res = data;
+                    //if (data == 1) {
+                    //    $('#lineitems tbody tr').each(function () {
+                    //        var html = 'Locked';
+                    //           $(this).find("td:eq(0)").html(html);
+                    //    });
+                    //}
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+            return res;
+        }
+        function SaveNSendFrApprvl() {
+            //chk_VrsnCrt
+
+            var ProjectID = $("#Ddl_SelPro option:selected").attr('data-id');
+            var SectionID = $('#Ddl_SelProSec').val();
+            var IsBudgetLocked = 1;
+            var IsNewVersion = $('#chk_VrsnCrt').is(':checked') ? "1" : "0";
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/BudgetView/SaveNSendFrApprvl';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'BudgetView/SaveNSendFrApprvl';
+            }
+            //$('#tableloader').show();
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'ProjectID': ProjectID, 'SectionID': SectionID, 'IsBudgetLocked': IsBudgetLocked, 'IsNewVersion': IsNewVersion },
+                success: function (data) {
+
+                    $('#svsndAprvl').hide();
+
+                },
+                error: function () { $('#tableloader').hide(); notify('Something went wrong'); }
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+
+            $('#btnExporToExcel').click(function () {
+
+                var lineitemidstoexport = '';
+
+
+
+
+                $('#lineitems tbody tr').each(function () {
+
+
+                    // //console.log($(this).find('td:eq(5)').html());
+                    lineitemidstoexport += lineitemidstoexport == "" ? $(this).find('td:eq(5)').text() : "$" + $(this).find('td:eq(5)').text();
+
+
+                });
+
+                // alert(lineitemidstoexport);
+
+                // return;
+
+
+
+
+                var url = '';
+                var BudgetSecID = $('#Ddl_SelProSec').val();  // Get & Set the value here
+
+                BudgetSecID = lineitemidstoexport;
+
+
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    //url = '/BudgetView/ExportFile/' + BudgetSecID;
+                    url = '/BudgetView/ExportFile/';// + BudgetSecID;
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'BudgetView/ExportFile/' + BudgetSecID;
+                }
+
+                //var w = window.open();
+
+                //var http = new XMLHttpRequest();
+
+
+                //var params = "id=" + BudgetSecID;
+
+                //http.open("POST", url, true);
+
+                ////Send the proper header information along with the request
+                //http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                //http.setRequestHeader("Content-length", params.length);
+                //http.setRequestHeader("Connection", "close");
+
+                //http.onreadystatechange = function () {//Call a function when the state changes.
+                //    if (http.readyState == 4 && http.status == 200) {
+                //        // alert(http.responseText);
+
+                //        $(w.document.body).html(http.responseText);
+                //    }
+                //}
+                //http.send(params);
+
+                $.redirect(url, { 'id': BudgetSecID });
+                //$.ajax({
+                //    type: "POST",
+                //    url: url,
+                //    data: { 'id': BudgetSecID },
+
+                //});
+
+                //  window.location.href = url;
+
+            });
+
+
+        });
+
+
+
+    </script>
+
+    <script type="text/javascript">
+        function ShowHideLineitemAction(obj) {
+
+            if ($(obj).val() == '0') {
+                HideLineitemAction();
+            }
+            else {
+                ShowLineitemAction();
+            }
+        }
+        function ShowLineitemAction() {
+            $('#FrLineitemAction').css('display', '');
+        }
+        function HideLineitemAction() {
+            $('#FrLineitemAction').css('display', 'none');
+        }
+        function LockUnlockBudgetbtn(obj, obj1) {
+            //alert(obj);
+            if (obj == 1) {
+                $('#lckbtn').css('display', 'none');
+                $('#unlckbtn').css('display', '');
+                $('#AddNwLnItms').css('display', 'none');
+                $('#ImportExportLineItems').css('display', 'none');
+                $('#chk_VrsnCrt').parent().css('display', 'none');
+                // $('#svsndAprvl').css('display', 'none');//.attr('disabled', 'disabled');
+            }
+            else {
+                $('#lckbtn').css('display', '');
+                $('#unlckbtn').css('display', 'none');
+                $('#AddNwLnItms').css('display', '');
+                $('#ImportExportLineItems').css('display', '');
+                $('#chk_VrsnCrt').parent().css('display', '');
+                // $('#svsndAprvl').css('display', '');
+                // $('#svsndAprvl').removeAttr('disabled');
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#UpldLineItems").click(function () {
+                //alert(1);
+                var formData = new FormData();
+                var totalFiles = document.getElementById("FileUpload").files.length;
+
+                if (totalFiles > 1) {
+                    notify('Single file at a time');
+                    return;
+                }
+
+                for (var i = 0; i < totalFiles; i++) {
+                    var file = document.getElementById("FileUpload").files[i];
+
+                    formData.append("FileUpload", file);
+                }
+
+
+                var sectionid = $('#Ddl_SelProSec').val();
+
+
+                var upldurl = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    upldurl = '/BudgetView/LineItems1';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    upldurl = 'BudgetView/LineItems1';
+                }
+                var txt = $(this).val();
+                $(this).val('Please wait');
+                upldurl += '?sectionid=' + sectionid;
+                $.ajax({
+                    type: "POST",
+                    url: upldurl,
+                    data: formData,
+                    dataType: 'text',
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        //if (response == "" || response == null || response == undefined) {
+
+                        //}
+                        //else{
+
+                        //    }
+
+                        $('#UpldLineItems').val(txt);
+
+                        if (isNaN(response)) {
+
+                            notify(response);
+                        }
+                        else if (response == "0") {
+                            notify("No items in the excel sheet.");
+                        }
+                        else {
+                            var sectionid = $('#Ddl_SelProSec').val();
+                            loaditems(sectionid);
+                            notify(response + " Items added successfully.");
+                            $('#FileUpload').replaceWith($('#FileUpload').val('').clone(true));
+                        }
+                    },
+                    failed: function (error) {
+                        $('#UpldLineItems').val(txt)
+                        notify("error");
+                    },
+                    error: function (text) {
+
+                        $('#UpldLineItems').val(txt)
+                        notify(text);
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $('.security-title').click(function () {
+
+                // $('.security-detail').css('display', 'none');
+                // $(this).next('.security-detail').toggle();
+
+                if ($(this).next('.security-detail').css('display') != 'block') {
+                    $('.security-detail').css('display', 'none');
+                    $(this).next('.security-detail').css('display', 'block');
+                    $('.security-title').html("<i class='fa fa-minus-circle'></i> &nbsp;&nbsp;  Add Budget Line Items");
+                }
+                else {
+                    $(this).next('.security-detail').css('display', 'none');
+                    $('.security-title').html("<i class='fa fa-plus-circle'></i> &nbsp;&nbsp;  Add Budget Line Items");
+                }
+            });
+        });
+    </script>
+
+    <script>
+
+        function formatNumber(number) {
+            number = parseFloat(number);
+            var number = number.toFixed(2) + '';
+            var x = number.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+
+
+    </script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#Ddl_SelPro").multiselect({
+                multiple: false
+                //,header: "Select an option"
+                , noneSelectedText: "Select a Project"
+                //,selectedList: 1
+            }).multiselectfilter();
+
+            $("#Ddl_SelProSec").multiselect({
+                multiple: false
+                //,header: "Select an option"
+                , noneSelectedText: "Select a Section   "
+                //,selectedList: 1
+            }).multiselectfilter();
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+        });
+        function ProjectNameAtLabel(obj) {
+            var Projectval = $(obj).find("option:selected").attr('data-id');
+            Projectval = Projectval == null ? "" : Projectval.toString();
+
+
+            var ProjectText = $(obj).find('option:selected').text();
+            ProjectText = ProjectText == null ? "" : ProjectText.toString();
+
+
+            if (Projectval.toString() == null || Projectval.toString() == undefined || Projectval.toString() == 'undefined') {
+                $('#lbl_ProjectName').html('No project has been selected.');
+                return;
+            }
+
+            if (Projectval.toString() == '0') {
+                $('#lbl_ProjectName').html('No project has been selected.');
+            }
+            else {
+                $('#lbl_ProjectName').html('Selected Project : ' + $(obj).find('option:selected').text());
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+  
+    <div id="popup" style="height: 200px; width:350px; bottom: 24%;">
+
+        <span class="button b-close"><span>X</span></span>
+
+
+        <input type="hidden" id="itemID" />
+
+
+        <div style="float: left; width: 49%; height: 130px;" class="popupleft">
+
+            <div style="width:100%; display:none;">
+                <label>Name::</label><br />
+                <input id="edtitemname" type="text" />
+            </div>
+            <div style="width:100%;">
+                <label>Spec #::</label><br />
+                <input id="edtspecnum" type="text" />
+            </div>
+
+            <div style="width:100%;">
+                <label> UOM::</label><br />
+                <div id="uomselect" style="width:98%;"></div>
+            </div>
+
+
+            <div style="width:100%;">
+                <label>COST::</label><br />
+                <input class="floatonly" id="edtcost" type="text" />
+            </div>
+
+
+        </div>
+                
+               <div style="float: left; margin-left:2%; width: 49%; height: 150px; " class="popupright">
+                <div style="width:100%;">
+                    <label>Description::</label><br />
+                    <input id="edtdesc" type="text" />
+                </div>
+                <div style="width:100%;">
+                    <label>Vendor::</label><br />
+                    <input id="edtvendor" type="text" />
+                </div>
+                <div style="width:100%;">
+                    <label>QTY::</label><br />
+                    <input class="floatonly" id="edtqty" type="text" />
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        @*<input type="button" id="edtsvbtn" value="Edit and Save <i style="font-size: 1.3em;" class="fa fa-floppy-o"></i> " />*@
+       
+    
+    <div id="popup2" style="height: auto;">
+        <span class="button b-close"><span>X</span></span>
+        <span id="itemnumbercontainer"></span>
+        <br />
+        <textarea style="resize: none; width: 370px;" id="notesedt" autofocus></textarea>
+        <br />
+        
+    </div>
+
+    <div id="popup3" style=" display:none; height: auto;" class="BDGTEDT">
+
+         <span class="button b-close"><span>X</span></span>
+         <div id="spacingddl"></div>
+
+         <input style="border: #208093 1px solid;color: #208093;margin: 6px 0px;width: 90%;" type="button" id="updtspcn" value="Update" data-id="" onclick="updatespacing(this);" />
+
+        </div>
+
+
+    <div class="main_container" id="angulardiv" ng-app="Budget" ng-controller="Budget">
+
+       
+        @* @{ Html.RenderPartial("MenuPage"); }*@
+        <div class="logo_container_heading">Budget Details</div>
+
+        <div class="user_panel_container policy-items">
+            <div class="user_panel_container req">     
+            <label>Select Project</label>
+                <select id="Ddl_SelPro" onchange="ProjectNameAtLabel(this);" tabindex=1 >
+                    <option data-id="0" value="0">--Select Project--</option>
+                    @Html.Raw(ViewData["getAllProjectName"])
+                </select>
+            </div>
+            <div class="user_panel_container">                    
+                <label id="lbl_ProjectName">No project has been selected.</label>
+            </div>
+            <div class="user_panel_container">                    
+                <label id="lbl_BudgetVersion"></label>
+            </div>
+        </div>
+
+        <div class="user_panel_container policy-items req">
+            <label>Select Section</label>
+            <select id="Ddl_SelProSec" tabindex=2>
+                <option value="0">--Select Section--</option>
+                @Html.Raw(ViewData["getAllProjectSectionByPID"])
+            </select>
+        </div>
+
+
+        
+
+        <div class="user_panel_container1 policy-items">
+
+              <fieldset>
+            <legend>Line Items</legend>
+
+                  
+
+              
+
+
+            <div class="user_panel_container1" @*style="max-height:330px; overflow-y:auto;"*@>
+
+
+                <div id="tableloader" style="display: none; position: relative; margin-left: 40%; width: 20%;">
+                    <img style="width: 100%;" src="../Images/h-loading.gif" />
+
+                </div>
+
+
+                <table id="lineitems" class="display  compact" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th></th>
+
+                            <th></th>
+                            <th></th>
+
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+
+                            <th></th>
+                            <th></th>
+
+                            <th></th>
+
+                            <th></th>
+
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+
+
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+
+
+
+
+        </fieldset>
+
+
+       </div>
+
+
+        
+
+
+
+
+
+        @*<div class="user_panel_container" style="margin-top: 3%;">
+            <input type="button" value="Save Budget" id="btn_CreateBudget">
+            <img id="loader_CrtBudget" style="display: none;" src="~/Images/load.gif" />
+        </div>*@
+
+
+
+
+    </div>
+
+
+
+</body>
+
+</html>

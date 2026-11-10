@@ -1,0 +1,62 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="~/Scripts/jquery-1.12.0.js"></script>
+    <script src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+   
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <title>UnaothorizedAccess</title>
+    <script>
+        $(document).ready(function () {
+            $('#breadcrumb').remove();
+
+            var i = 5;
+            window.setInterval(function () {
+
+                $('#countdowntimer').text(i--);
+            }, 1000);
+
+                window.setTimeout(function () {
+
+                    var url1 = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url1 = '/Home/Dashboard';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url1 = '/Home/Dashboard';
+                    }
+
+                    window.location.href = url1;
+
+                }, 5000);
+
+
+        });
+
+
+    </script>
+</head>
+<body>
+
+    <div class="logo_container_B">
+        <img src="~/Images/logo.png" />
+    </div>
+    <div>
+
+       
+
+
+        
+            Unauthorized Access Error : Redirecting to <a style="text-decoration:underline;" href="~/Home/Dashboard"> DashBoard </a>
+        in <label id="countdowntimer">5</label> seconds...
+    </div>
+</body>
+</html>

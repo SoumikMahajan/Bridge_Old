@@ -1,0 +1,1363 @@
+﻿@{
+    ViewBag.Title = "ProjectReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Committed Cost Report</title>
+    @*<script src="~/Scripts/jquery.multiselect.js"></script>
+        <script src="~/Scripts/jquery.multiselect.filter.js"></script>*@
+    @*<link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">*@
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+
+
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    @*<script src="~/Scripts/jquery-1.7.1.js"></script>*@
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            $('#Btn_Excel1').click(function () {
+                
+                var AllProjectID = $('#txt_Project').val();
+
+                var AllVendorID = $('#txt_Vendor').val();
+                var OrderPattern = "";
+                var ReportNo = "";
+
+                var From_Date;
+                var To_date;
+
+                if (AllProjectID == null) {
+                    notify('Please Select Project');
+                    return;
+                }
+
+                if ($("#ddlReportCategory").val() == "1") {
+                    var AllSectionID = $('#ddlSection1').val();
+                    if ($("#txt_FromDate1").val() != '')
+                        From_Date = ($("#txt_FromDate1").val());
+                    else
+                        From_Date = null;
+                    if ($("#txt_ToDate1").val() != '')
+                        To_date = ($("#txt_ToDate1").val());
+                    else
+                        To_date = null;
+
+                    if (AllSectionID == null) {
+                        AllSectionID = "0";
+                    }
+
+                    if (AllVendorID == null) {
+                        AllVendorID = "0";
+                    }
+                    if (OrderPattern == "") {
+                        OrderPattern = "0";
+                    }
+                    ReportNo = "1";
+                }
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/Reports/ProjectToDateReportExportFile';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'Reports/ProjectToDateReportExportFile';
+                }
+                url1 += "?ProjectID=" + AllProjectID;
+                url1 += "&SectionID=" + AllSectionID;
+                url1 += "&VendorID=" + AllVendorID;
+                url1 += "&StartDate=" + From_Date;
+                url1 += "&EndDate=" + To_date;
+                url1 += "&order=" + OrderPattern;
+                url1 += "&ReportNo=" + ReportNo;
+                $("#Btn_Excel1").html('<i class="fa fa-spinner"></i>');
+                var totdata = '';
+                $.get(url1)
+                   .success(function (response) {
+                       var html = "";
+                       var url2 = '';
+                       if (response == '0') {
+                           notify('No records found!!!');
+                           return;
+                       }
+                       if (LOCALORSERVERNEW == 'LOCAL') {
+                           totdata = response;
+                       }
+                       else if (LOCALORSERVERNEW == 'SERVER') {
+                           totdata = "POMS/" + response;
+                       }
+
+
+                       setTimeout(function () {
+                           window.open(totdata, '_blank');
+                           $("#Btn_Excel1").html('<i class="fa fa-file-excel-o"></i> Export to Excel');
+                       }, 1000);
+                   });
+            });
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#Btn_Excel2').click(function () {
+                
+                if ($("#DDl_Sort7").val() == null) {
+                    notify("Please Select Sorting Option", "RED");
+                    return;
+                }
+
+                var AllProjectID = $('#txt_Project').val();
+
+                var AllVendorID = $('#txt_Vendor').val();
+                var OrderPattern = "";
+                var ReportNo = "";
+
+                var From_Date;
+                var To_date;
+
+                if (AllProjectID == null) {
+                    notify('Please Select Project');
+                    return;
+                }
+
+                if ($("#ddlReportCategory").val() == "2") {
+                    var AllSectionID = $('#ddlSection2').val();
+                    if ($("#txt_FromDate2").val() != '')
+                        From_Date = ($("#txt_FromDate2").val());
+                    else
+                        From_Date = null;
+                    if ($("#txt_ToDate2").val() != '')
+                        To_date = ($("#txt_ToDate2").val());
+                    else
+                        To_date = null;
+
+                    if (AllSectionID == null) {
+                        AllSectionID = "0";
+                    }
+
+                    if (AllVendorID == null) {
+                        AllVendorID = "0";
+                    }
+                    if (OrderPattern == "") {
+                        OrderPattern = "0";
+                    }
+                    if ($("#DDl_Sort7").val() == '1') {
+                        ReportNo = "2";
+                    }
+                    else {
+                        ReportNo = "3";
+                    }
+
+
+                }
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/Reports/ProjectToDateReportExportFile';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'Reports/ProjectToDateReportExportFile';
+                }
+                url1 += "?ProjectID=" + AllProjectID;
+                url1 += "&SectionID=" + AllSectionID;
+                url1 += "&VendorID=" + AllVendorID;
+                url1 += "&StartDate=" + From_Date;
+                url1 += "&EndDate=" + To_date;
+                url1 += "&order=" + OrderPattern;
+                url1 += "&ReportNo=" + ReportNo;
+                var totdata = '';
+                $("#Btn_Excel2").html('<i class="fa fa-spinner"></i>');
+                $.get(url1)
+                   .success(function (response) {
+                       var html = "";
+
+                       var url2 = '';
+
+                       if (response == '0') {
+                           notify('No records found!!!');
+                           return;
+                       }
+                       if (LOCALORSERVERNEW == 'LOCAL') {
+                           totdata = response;
+                       }
+                       else if (LOCALORSERVERNEW == 'SERVER') {
+                           totdata = "POMS/" + response;
+                       }
+
+
+                       setTimeout(function () {
+                           window.open(totdata, '_blank');
+                           $("#Btn_Excel2").html('<i class="fa fa-file-excel-o"></i> Export to Excel');
+                       }, 1000);
+                   });
+            });
+        });
+
+    </script>
+
+
+
+
+
+    <style type="text/css">
+        .remove { /* width: 450px; */
+            border: 1px solid #060506;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            display: block;
+            padding: 5px;
+            text-decoration: none;
+            background: rgba(82, 103, 121, 0.75);
+            color: #E2E2E2;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-family: helvetica;
+            font-size: 13px;
+            position: relative;
+        }
+
+            .remove a {
+                cursor: pointer;
+                position: absolute;
+                top: -5px;
+                right: -6px;
+                font-size: 0.9em;
+                color: white;
+                background: black;
+                border-radius: 100px;
+                padding: 7px;
+                line-height: 9px;
+            }
+
+        .ui-widget-header {
+            background: grey;
+        }
+
+        .ui-widget-overlay {
+            position: fixed;
+        }
+
+        .ui-dialog .ui-dialog-titlebar-close span {
+            margin: -8px;
+        }
+
+        #popupforvendorlist .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 0px 0px;
+            width: 100%;
+            height: 35px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+    </style>
+
+
+
+
+
+</head>
+<body>
+
+    <div class="container-fluid" id="angulardiv" ng-app="Reports" ng-controller="Reports">
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header">Project Report</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group req">
+                    <label>Select Project</label>
+                    <select id="txt_Project" multiple="multiple" onchange="ShowProjectsAtLabel(this);">
+                        @*<option value="0">--Select Project--</option>*@
+                        @Html.Raw(ViewData["getAllProjectNameNumber"])
+                    </select>
+
+                </div>
+
+                <div>
+                    <label id="LabelForProject"></label>
+                </div>
+
+            </div>
+
+            <div class="col-sm-6 req">
+                <div class="form-group">
+                    <label>Group By</label>
+                    <select id="ddlReportCategory" multiple="multiple">
+                        @*<option value="0">---Select Category---</option>*@
+                        <option value="1">Vendor</option>
+                        <option value="2">Item</option>
+
+                    </select>
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <div id="section_panel">
+
+            <div id="ByDetail">
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Select Section (Leave Blank For All)</label>
+                            <select multiple="multiple" onchange="ShowSectionsAtLabel(this,1);" id="ddlSection1"></select>
+
+                        </div>
+                        
+
+                        <div class="form-group">
+
+                            <label id="lblSec1"></label>
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                                <label>From Date (Leave Blank For All)</label>
+                                <input type="text" id="txt_FromDate1" onkeypress="return IsNumber(event);" placeholder="Select From Date" class="makedisable form-control"/>
+                           
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label>To Date (Leave Blank For All)</label>
+                            <input type="text" id="txt_ToDate1" onkeypress="return IsNumber(event);" placeholder="Select To Date" class="makedisable form-control" />
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="row">
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <button type="submit" id="Btn_Report" onclick="ProjectToDateReportReportGenerationFilter();" class="btn btn-block btn-primary mrg10T btnReport"><i class="fa fa-file-pdf-o"></i> Export to PDF</button>
+                            @*<input type="button" id="Btn_Report" value="Export to PDF" onclick="BudgetReportByItemReportGenerationFilter();" />*@
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <button type="submit" id="Btn_Excel1" class="btn btn-block btn-primary mrg10T"><i class="fa fa-file-excel-o"></i> Export to Excel</button>
+                            @*<input type="button" id="Btn_Report" value="Export to PDF" onclick="BudgetReportByItemReportGenerationFilter();" />*@
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <div id="summery">
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Select Section (Leave Blank For All)</label>
+                            <select multiple="multiple" onchange="ShowSectionsAtLabel(this,2);" id="ddlSection2"></select>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label id="lblSec2"></label>
+                        </div>
+
+
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Select Vendor (Leave Blank For All)</label>
+                            <select id="txt_Vendor" multiple="multiple" onchange="ShowVendorsAtLabel(this);"></select>
+                            
+
+                        </div>
+                        <div class="form-group">
+                            <label id="LabelForVendor"></label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>From Date (Leave Blank For All)</label>
+                            <input type="text" id="txt_FromDate2" onkeypress="return IsNumber(event);" placeholder="Select From Date" class="makedisable form-control" />
+
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>To Date (Leave Blank For All)</label>
+                            <input type="text" id="txt_ToDate2" onkeypress="return IsNumber(event);" placeholder="Select To Date" class="makedisable form-control" />
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6 req">
+                       
+                            <label>Sorting</label>
+                            <select id="DDl_Sort7" multiple="multiple" class="form-control">
+                                <option value="1" data-id="1" selected="selected">PO</option>
+                                <option value="2" data-id="2">Vendor</option>
+
+                            </select>
+
+                       
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="display:none !important;">
+                            <label>Sorting Order</label>
+                            <div class="sort_div">
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <button type="submit" id="Btn_Report1" onclick="ProjectToDateReportReportGenerationFilter1();" class="btn btn-block btn-primary mrg15T btnReport"><i class="fa fa-file-pdf-o"></i> Export to PDF</button>
+                            @*<input type="button" id="Btn_Report" value="Export to PDF" onclick="BudgetReportByItemReportGenerationFilter();" />*@
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <button type="submit" id="Btn_Excel2" class="btn btn-block btn-primary mrg15T"><i class="fa fa-file-excel-o"></i> Export to Excel</button>
+                            @*<input type="button" id="Btn_Report" value="Export to PDF" onclick="BudgetReportByItemReportGenerationFilter();" />*@
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#txt_Project").multiselect(
+        {
+            header: "Select Project(s)!",
+            close: function () {
+                var project_id = $('#txt_Project').val();
+                if ($("#ddlReportCategory").val() != null) {
+                    bindSectionByProject(project_id, parseInt(($("#ddlReportCategory").val())));
+                    bindVendor(project_id);
+                    $('#LabelForVendor').text('');
+                    Sort7();
+
+                }
+                else {
+                    bindSectionByProject(project_id, 0);
+                }
+                $("#txt_Vendor").multiselect(
+                        {
+                            //header: "Select Vendors!",
+                            click: function (e) {
+                                //if ($(this).multiselect("widget").find("input:checked").length > 3) {
+                                //    e.preventDefault();
+                                //    notify("Select maximum three vendors!")
+                                //    return false;
+                                //}
+                            }
+                        }).multiselectfilter();
+            },
+            click: function (e) {
+                if ($(this).multiselect("widget").find("input:checked").length > 3) {
+                    e.preventDefault();
+                    notify("Select maximum three projects!")
+                    return false;
+                }
+            }
+
+        }).multiselectfilter();
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+
+            $("#ddlReportCategory").multiselect({
+                close: function () {
+
+                },
+                header: 'Select Category',
+                multiple: false
+            });
+
+            $("#section_panel").hide();
+
+            $("#ddlReportCategory").on("change", function () {
+                var project_id = $('#txt_Project').val();
+
+                if ($(this).val() == '1') {
+                    $("#section_panel").show();
+                    $("#ByDetail").show();
+                    $("#summery").hide();
+                    bindSection(project_id, 1);
+                    $('#txt_FromDate1').val('');
+                    $('#txt_ToDate1').val('');
+                    $('#txt_FromDate1').datepicker({
+                        changeMonth: true,
+                        changeYear: true,
+                        dateFormat: 'MM dd yy',
+
+                    });
+
+                    $('#txt_ToDate1').datepicker({
+                        changeMonth: true,
+                        changeYear: true,
+                        dateFormat: 'MM dd yy',
+
+                    });
+                    $("#lblSec1").text('');
+                    $("#lblSec2").text('');
+                    $('#LabelForVendor').text('');
+
+                }
+                else if ($(this).val() == '2') {
+                    $("#section_panel").show();
+                    $("#ByDetail").hide();
+                    $("#summery").show();
+                    bindSection(project_id, 2);
+                    bindVendor(project_id);
+                    $('#LabelForVendor').text('');
+                    $("#lblSec1").text('');
+                    $("#lblSec2").text('');
+                    $('#txt_FromDate2').val('');
+                    $('#txt_ToDate2').val('');
+                    $('#txt_FromDate2').datepicker({
+                        changeMonth: true,
+                        changeYear: true,
+                        dateFormat: 'MM dd yy',
+
+                    });
+
+                    $('#txt_ToDate2').datepicker({
+                        changeMonth: true,
+                        changeYear: true,
+                        dateFormat: 'MM dd yy',
+
+                    });
+                    Sort7();
+                    $("#DDl_Sort7").val('1');
+                    $("#DDl_Sort7").multiselect("refresh");
+                    var width = '100%';
+                    $('.ui-multiselect').css('width', width);
+                    //$('.ui-multiselect-menu').css('width', '39.5%');
+                    $('.ui-multiselect-menu').css('width', '39.5%');
+                    $('.ui-state-default').css('color', '#C31001');
+                    $('.ui-multiselect').css('height', '34px');
+                    $('.ui-multiselect').css('margin-top', '5px');
+                    
+                    var html1 = '';
+                    html1 += "<span class='remove' data-id='" + 1 + "' ><a onclick='deleteorder(this,\"" + 1 + "\")' title='Remove this ordering'>x</a><span>" + "PO" + "</span></span>";
+                    $(".sort_div").append(html1);
+
+                    
+                }
+                else {
+                    $("#section_panel").hide();
+                }
+
+            });
+
+        });
+
+        function ShowProjectsAtLabel(obj) {
+
+            var Projects = $(obj).val();
+            var totalProjects = '';
+
+            $('#LabelForSection').text('');
+            $('#LabelForVendor').text('');
+            if ($(obj).find(":selected").text() == '') {
+                $('#LabelForProject').text('');
+            }
+            else {
+
+                for (var i = 0; i < Projects.length; i++) {
+                    if (totalProjects == '') {
+                        totalProjects = $(obj).find("option[value='" + Projects[i] + "']").text();
+                    }
+                    else {
+                        totalProjects += ' , ' + $(obj).find("option[value='" + Projects[i] + "']").text();
+                    }
+                }
+
+                $('#LabelForProject').text('Selected Project(s) : ' + totalProjects + "");
+
+
+            }
+        }
+        function ShowSectionsAtLabel(obj, option) {
+
+
+            var Sections = $(obj).val();
+
+            var totalSections = '';
+
+            if (option == 1) {
+                $('#lblSec2').text('');
+
+                if (Sections == '' || Sections == null || Sections == undefined) {
+
+                    $('#lblSec1').text('');
+                }
+                else {
+
+                    for (var i = 0; i < Sections.length; i++) {
+                        if (totalSections == '') {
+                            totalSections = $(obj).find("option[value='" + Sections[i] + "']").text();
+                        }
+                        else {
+                            totalSections += ' , ' + $(obj).find("option[value='" + Sections[i] + "']").text();
+                        }
+                    }
+                    $('#lblSec1').text('Selected Section(s) : ' + totalSections);
+
+                }
+            }
+
+            else if (option == 2) {
+                $('#lblSec1').text('');
+
+                if (Sections == '' || Sections == null || Sections == undefined) {
+
+                    $('#lblSec2').text('');
+                }
+                else {
+
+                    for (var i = 0; i < Sections.length; i++) {
+                        if (totalSections == '') {
+                            totalSections = $(obj).find("option[value='" + Sections[i] + "']").text();
+                        }
+                        else {
+                            totalSections += ' , ' + $(obj).find("option[value='" + Sections[i] + "']").text();
+                        }
+                    }
+                    $('#lblSec2').text('Selected Section(s) : ' + totalSections);
+                }
+
+            }
+        }
+
+        function bindSection(project_id, opt) {
+
+
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Reports/getAllProjectSectionByProjectID';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'Reports/getAllProjectSectionByProjectID';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'projectid': '" + project_id + "'}",
+                success: function (data) {
+                    var sections = JSON.parse(data);
+                    var total_section = sections.data.length;
+
+
+                    //if (count > 0) {
+                    //    //$("#txt_Section").multiselect('destroy');
+
+                    //    count++;
+
+                    //}
+                    //else if (count == 0) {
+                    //    count++;
+                    //}
+
+                    var html = '';
+                    for (i = 0; i < total_section; i++) {
+
+                        var option = '<option value="' + sections.data[i].id + '" data-id="' + sections.data[i].id + '">' + sections.data[i].Sectionnumber + '-' + sections.data[i].sectionname + '</option>';
+                        html += option;
+
+
+                    }
+
+
+
+                    if (opt == 1) {
+
+                        $("#ddlSection1").html(html);
+
+                        $("#ddlSection1").multiselect(
+                            {
+
+                                click: function (e) {
+                                    //if ($(this).multiselect("widget").find("input:checked").length > 3) {
+                                    //    e.preventDefault();
+                                    //    notify("Select maximum three sections!")
+                                    //    return false;
+                                    //}
+                                }
+                            }
+                            ).multiselectfilter();
+                        $("#ddlSection1").multiselect("refresh");
+                        var width = '100%';
+                        $('.ui-multiselect').css('width', width);
+                        //$('.ui-multiselect-menu').css('width', '39.5%');
+                        $('.ui-multiselect-menu').css('width', '39.5%');
+                        $('.ui-state-default').css('color', '#C31001');
+                        $('.ui-multiselect').css('height', '34px');
+                        $('.ui-multiselect').css('margin-top', '5px');
+                    }
+                    else if (opt == 2) {
+                        $("#ddlSection2").html(html);
+
+                        $("#ddlSection2").multiselect(
+                            {
+
+                                click: function (e) {
+                                    //if ($(this).multiselect("widget").find("input:checked").length > 3) {
+                                    //    e.preventDefault();
+                                    //    notify("Select maximum three sections!")
+                                    //    return false;
+                                    //}
+                                }
+                            }
+                            ).multiselectfilter();
+                        $("#ddlSection2").multiselect("refresh");
+                        var width = '100%';
+                        $('.ui-multiselect').css('width', width);
+                        //$('.ui-multiselect-menu').css('width', '39.5%');
+                        $('.ui-multiselect-menu').css('width', '39.5%');
+                        $('.ui-state-default').css('color', '#C31001');
+                        $('.ui-multiselect').css('height', '34px');
+                        $('.ui-multiselect').css('margin-top', '5px');
+                    }
+
+
+                },
+                error: function () {
+                    notify('Something went wrong.');
+                }
+            });
+
+        }
+
+        function bindSectionByProject(project_id, opt) {
+
+            if (opt == 0) {
+                $("#section_panel").hide();
+            }
+
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Reports/getAllProjectSectionByProjectID';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'Reports/getAllProjectSectionByProjectID';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'projectid': '" + project_id + "'}",
+                success: function (data) {
+                    var sections = JSON.parse(data);
+                    var total_section = sections.data.length;
+
+
+                    //if (count > 0) {
+                    //    //$("#txt_Section").multiselect('destroy');
+
+                    //    count++;
+
+                    //}
+                    //else if (count == 0) {
+                    //    count++;
+                    //}
+
+                    var html = '';
+                    for (i = 0; i < total_section; i++) {
+
+                        var option = '<option value="' + sections.data[i].id + '" data-id="' + sections.data[i].id + '">' + sections.data[i].Sectionnumber + '-' + sections.data[i].sectionname + '</option>';
+                        html += option;
+
+
+                    }
+
+
+
+                    if (opt == 1) {
+
+                        $("#ddlSection1").html(html);
+
+                        $("#ddlSection1").multiselect(
+                            {
+
+                                click: function (e) {
+                                    //if ($(this).multiselect("widget").find("input:checked").length > 3) {
+                                    //    e.preventDefault();
+                                    //    notify("Select maximum three sections!")
+                                    //    return false;
+                                    //}
+                                }
+                            }
+                            ).multiselectfilter();
+                        $("#ddlSection1").multiselect("refresh");
+                        var width = '100%';
+                        $('.ui-multiselect').css('width', width);
+                        //$('.ui-multiselect-menu').css('width', '39.5%');
+                        $('.ui-multiselect-menu').css('width', '39.5%');
+                        $('.ui-state-default').css('color', '#C31001');
+                        $('.ui-multiselect').css('height', '34px');
+                        $('.ui-multiselect').css('margin-top', '5px');
+                        $("#lblSec1").text('');
+                    }
+                    else if (opt == 2) {
+                        $("#ddlSection2").html(html);
+
+                        $("#ddlSection2").multiselect(
+                            {
+
+                                click: function (e) {
+                                    //if ($(this).multiselect("widget").find("input:checked").length > 3) {
+                                    //    e.preventDefault();
+                                    //    notify("Select maximum three sections!")
+                                    //    return false;
+                                    //}
+                                }
+                            }
+                            ).multiselectfilter();
+                        $("#ddlSection2").multiselect("refresh");
+                        var width = '100%';
+                        $('.ui-multiselect').css('width', width);
+                        //$('.ui-multiselect-menu').css('width', '39.5%');
+                        $('.ui-multiselect-menu').css('width', '39.5%');
+                        $('.ui-state-default').css('color', '#C31001');
+                        $('.ui-multiselect').css('height', '34px');
+                        $('.ui-multiselect').css('margin-top', '5px');
+                        $("#lblSec2").text('');
+                    }
+
+
+                },
+                error: function () {
+                    notify('Something went wrong.');
+                }
+            });
+
+        }
+
+        function bindVendor(project_id) {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Reports/getAllVendorByProjectID';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'Reports/getAllVendorByProjectID';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'projectid': '" + project_id + "'}",
+                success: function (data) {
+                    var vendors = JSON.parse(data);
+                    var total_vendor = vendors.data.length;
+                    //if (count > 1) {
+                    //    //$("#txt_Vendor").multiselect('destroy')
+
+                    //}
+                    //else if (count == 1) {
+                    //    count++;
+                    //}
+
+                    var html = '';
+                    for (i = 0; i < total_vendor; i++) {
+                        var option = '<option value="' + vendors.data[i].id + '" data-id="' + vendors.data[i].id + '">' + vendors.data[i].vendorname + '( ' + vendors.data[i].parentvendor + ' )' + '</option>';
+                        html += option;
+
+                    }
+                    
+
+                    $("#txt_Vendor").html(html);
+                    $("#txt_Vendor").multiselect(
+                        {
+                            //header: "Select Vendors!",
+                            click: function (e) {
+                                //if ($(this).multiselect("widget").find("input:checked").length > 3) {
+                                //    e.preventDefault();
+                                //    notify("Select maximum three vendors!")
+                                //    return false;
+                                //}
+                            }
+                        }).multiselectfilter();
+
+                    $("#txt_Vendor").multiselect("refresh");
+                    var width = '100%';
+                    $('.ui-multiselect').css('width', width);
+                    //$('.ui-multiselect-menu').css('width', '39.5%');
+                    $('.ui-multiselect-menu').css('width', '39.5%');
+                    $('.ui-state-default').css('color', '#C31001');
+                    $('.ui-multiselect').css('height', '34px');
+                    $('.ui-multiselect').css('margin-top', '5px');
+                },
+                error: function () {
+                    notify('Something went wrong.');
+                }
+            });
+
+        }
+
+        function ShowVendorsAtLabel(obj) {
+            var Vendors = $(obj).val();
+
+            var totalVendors = '';
+            if (Vendors == '' || Vendors == null || Vendors == undefined) {
+
+                $('#LabelForVendor').text('');
+            }
+            else {
+
+                for (var i = 0; i < Vendors.length; i++) {
+                    if (totalVendors == '') {
+                        totalVendors = $(obj).find("option[value='" + Vendors[i] + "']").text();
+                    }
+                    else {
+                        totalVendors += ' , ' + $(obj).find("option[value='" + Vendors[i] + "']").text();
+                    }
+                }
+                $('#LabelForVendor').text('Selected Vendor(s) : ' + totalVendors);
+
+            }
+        }
+
+        function Sort7() {
+            $(".sort_div").find("span").each(function (index, item) {
+                $(this).remove();
+
+            });
+            
+            $("#DDl_Sort7").multiselect({
+                close: function () {
+
+                },
+
+
+                click: function (event, ui) {
+                    var html = '';
+                    var text = '';
+                    var exists = false;
+                    $(".sort_div").find("span").each(function (index, item) {
+                        $(this).remove();
+
+                    });
+                    if (exists == false) {
+                        if (ui.value == "1")
+                            text += "PO"
+                        else if (ui.value == "2")
+                            text += "Vendor"
+
+                        html += "<span class='remove' data-id='" + ui.value + "' ><a onclick='deleteorder(this,\"" + ui.value + "\")' title='Remove this ordering'>x</a><span>" + text + "</span></span>";
+                        $(".sort_div").append(html);
+
+                    }
+                },
+                multiple:false
+
+            });
+
+            $("#DDl_Sort7").multiselect("uncheckAll");
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+            
+        }
+
+        function deleteorder(obj, orderid) {
+            // $(obj).parent().remove();
+
+            var isconfirmed = confirm("Do you really want to delete?");
+            if (!isconfirmed) {
+                return;
+            }
+            $(".sort_div").find("span").each(function (index, item) {
+                if ($(this).attr("data-id") == orderid && $(this).attr("data-id") != typeof (undefined)) {
+                    $(this).remove();
+                    $("#DDl_Sort7").find("option").each(function (index, item) {
+
+                        if ($(this).attr("data-id") == orderid) {
+                            $(this).removeAttr('selected');
+
+                        }
+
+                    });
+                    $("#DDl_Sort7").multiselect("refresh");
+                    var width = '100%';
+                    $('.ui-multiselect').css('width', width);
+                    //$('.ui-multiselect-menu').css('width', '39.5%');
+                    $('.ui-multiselect-menu').css('width', '39.5%');
+                    $('.ui-state-default').css('color', '#C31001');
+                    $('.ui-multiselect').css('height', '34px');
+                    $('.ui-multiselect').css('margin-top', '5px');
+                    
+                }
+            });
+        }
+
+    </script>
+
+
+
+    <script>
+        // Project To Date Report Start
+
+        function ProjectToDateReportReportGenerationFilter() {
+            var AllProjectID = $('#txt_Project').val();
+            
+            var AllVendorID = $('#txt_Vendor').val();
+            var OrderPattern = "";
+            var ReportNo = "";
+
+            var From_Date;
+            var To_date;
+
+            if (AllProjectID == null) {
+                notify('Please Select Project');
+                return;
+            }
+
+            if ($("#ddlReportCategory").val() == "1") {
+                var AllSectionID = $('#ddlSection1').val();
+                if ($("#txt_FromDate1").val() != '')
+                    From_Date = ($("#txt_FromDate1").val());
+                else
+                    From_Date = null;
+                if ($("#txt_ToDate1").val() != '')
+                    To_date = ($("#txt_ToDate1").val());
+                else
+                    To_date = null;
+
+                if (AllSectionID == null) {
+                    AllSectionID = "0";
+                }
+
+                if (AllVendorID == null) {
+                    AllVendorID = "0";
+                }
+                if (OrderPattern == "") {
+                    OrderPattern = "0";
+                }
+                ReportNo = "1";
+            }
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Reports/ProjectToDateReportReportGeneration';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Reports/ProjectToDateReportReportGeneration';
+            }
+            url1 += "?ProjectID=" + AllProjectID;
+            url1 += "&SectionID=" + AllSectionID;
+            url1 += "&VendorID=" + AllVendorID;
+            url1 += "&StartDate=" + From_Date;
+            url1 += "&EndDate=" + To_date;
+            url1 += "&order=" + OrderPattern;
+            url1 += "&ReportNo=" + ReportNo;
+
+            $("#Btn_Report").html('<i class="fa fa-spinner"></i>');
+            var totdata = '';
+            $.get(url1)
+               .success(function (response) {
+                   var html = "";
+                   var url2 = '';
+                   if (response == '0') {
+                       notify('No records found!!!');
+                       return;
+                   }
+                   if (LOCALORSERVERNEW == 'LOCAL') {
+                       totdata = response;
+                   }
+                   else if (LOCALORSERVERNEW == 'SERVER') {
+                       totdata = "POMS/" + response;
+                   }
+
+
+                   setTimeout(function () {
+                       window.open(totdata, '_blank');
+                       $("#Btn_Report").html('<i class="fa fa-file-pdf-o"></i> Export to PDF ');
+                   }, 1000);
+               });
+        }
+
+        // Project To Date Report End
+
+        // Project To Date Report Start
+
+        function ProjectToDateReportReportGenerationFilter1() {
+            if ($("#DDl_Sort7").val() == null) {
+                notify("Please Select Sorting Option", "RED");
+                return;
+            }
+
+            var AllProjectID = $('#txt_Project').val();
+
+            var AllVendorID = $('#txt_Vendor').val();
+            var OrderPattern = "";
+            var ReportNo = "";
+
+            var From_Date;
+            var To_date;
+
+            if (AllProjectID == null) {
+                notify('Please Select Project');
+                return;
+            }
+
+            if ($("#ddlReportCategory").val() == "2") {
+                var AllSectionID = $('#ddlSection2').val();
+                if ($("#txt_FromDate2").val() != '')
+                    From_Date = ($("#txt_FromDate2").val());
+                else
+                    From_Date = null;
+                if ($("#txt_ToDate2").val() != '')
+                    To_date = ($("#txt_ToDate2").val());
+                else
+                    To_date = null;
+
+                if (AllSectionID == null) {
+                    AllSectionID = "0";
+                }
+
+                if (AllVendorID == null) {
+                    AllVendorID = "0";
+                }
+                if (OrderPattern == "") {
+                    OrderPattern = "0";
+                }
+                if ($("#DDl_Sort7").val() == '1') {
+                    ReportNo = "2";
+                }
+                else {
+                    ReportNo = "3";
+                }
+
+                
+            }
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Reports/ProjectToDateReportReportGeneration';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Reports/ProjectToDateReportReportGeneration';
+            }
+            url1 += "?ProjectID=" + AllProjectID;
+            url1 += "&SectionID=" + AllSectionID;
+            url1 += "&VendorID=" + AllVendorID;
+            url1 += "&StartDate=" + From_Date;
+            url1 += "&EndDate=" + To_date;
+            url1 += "&order=" + OrderPattern;
+            url1 += "&ReportNo=" + ReportNo;
+
+            $("#Btn_Report1").html('<i class="fa fa-spinner"></i>');
+            var totdata = '';
+            $.get(url1)
+               .success(function (response) {
+                   var html = "";
+                   var url2 = '';
+                   if (response == '0') {
+                       notify('No records found!!!');
+                       return;
+                   }
+                   if (LOCALORSERVERNEW == 'LOCAL') {
+                       totdata = response;
+                   }
+                   else if (LOCALORSERVERNEW == 'SERVER') {
+                       totdata = "POMS/" + response;
+                   }
+
+
+                   setTimeout(function () {
+                       window.open(totdata, '_blank');
+                       $("#Btn_Report1").html('<i class="fa fa-file-pdf-o"></i> Export to PDF ');
+                   }, 1000);
+               });
+        }
+
+        // Project To Date Report End
+    </script>
+
+    <script>
+
+
+
+        var ProjectDdlForPage = $('#txt_Project'); //The project dropdown ID
+
+
+        $(document).ready(function () {
+
+            var selectedpreferredpid = getProjectPreferencemulti();
+
+            if (selectedpreferredpid.split(',').length == 0) {
+                $(ProjectDdlForPage).find('option[value="' + selectedpreferredpid[i] + '"]').attr("selected", "true");
+            }
+
+            else {
+                for (var i = 0; i < 3; i++) {
+
+                    $(ProjectDdlForPage).find('option[value="' + selectedpreferredpid.split(',')[i] + '"]').attr("selected", "true");
+
+                }
+            }
+
+
+
+
+            $(ProjectDdlForPage).multiselect('refresh');
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+
+
+            //To call page specific dropdown change event
+            ShowProjectsAtLabel(ProjectDdlForPage);
+            //close_project_dropdown(selectedpreferredpid);
+
+
+
+
+        });
+
+
+
+        $(document).on('change', ProjectDdlForPage, function () {
+
+            setProjectPreference(ProjectDdlForPage);
+
+        });
+
+
+    </script>
+
+
+
+
+
+</body>
+
+</html>
+

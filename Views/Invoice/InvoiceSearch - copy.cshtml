@@ -1,0 +1,1145 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Search Invoice</title>
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.js"></script>
+
+    @* <script src="~/Scripts/angular.min.js"></script>*@
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    @*<script src="~/Scripts/AddUser.js"></script>*@
+    <script src="~/Scripts/Project.js"></script>
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/swfupload.js"></script>
+    <script src="~/Scripts/jquery.swfupload.js"></script>
+    <link href="~/css/stylesForFileUpload.css" rel="stylesheet" />
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+    <style>
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+
+        label {
+            color: #333333;
+            font-weight: 500;
+            margin-bottom: 1px;
+        }
+
+        .section-header {
+            padding: 2px 4px;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .nav > li > a {
+            position: relative !important;
+            display: block !important;
+            padding: 4px 15px !important;
+        }
+
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+            color: rgb(246, 251, 252) !important;
+            cursor: default;
+            background-color: #7792a8;
+            border: 1px solid #ddd;
+            border-bottom-color: transparent;
+            color: #7792a8;
+            font-size: 16.5px;
+        }
+
+        .remove {
+            /*width: 450px;*/
+            border: 1px solid #060506;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            display: block;
+            padding: 1px;
+            text-decoration: none;
+            background: #526779;
+            color: #E2E2E2;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-family: helvetica;
+            font-size: 13px;
+            position: relative;
+        }
+
+            .remove a {
+                /*cursor: pointer;
+                position: absolute;
+                top: -2px;
+                right: -2px;
+                font-size: 1.2em;
+                color:white;
+                background: black;
+                border-radius:100px;
+                padding: 3px;*/
+                cursor: pointer;
+                position: absolute;
+                top: -5px;
+                right: -6px;
+                font-size: 0.9em;
+                color: white;
+                background: black;
+                border-radius: 100px;
+                padding: 7px;
+                line-height: 9px;
+            }
+
+            table.dataTable thead th, table.dataTable thead td {
+    padding: 5px !important;
+    border-bottom: 1px solid #111;
+}
+
+
+
+
+    </style>
+
+
+
+    <script>
+        var InvoiceList = new Array();
+
+        $(document).ready(function () {
+
+            $('#txt_Project3').on('change', function () {
+
+                var vendorid = $(this).val();
+                if (vendorid == null) {
+                    vendorid = '';
+                }
+
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/getprojectlistforsearch';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/getprojectlistforsearch';
+                }
+
+                url += "?VendorID=" + vendorid;
+
+
+                $.get(url)
+              .success(function (response) {
+
+                  //console.log(response);
+
+                  $('#txt_Project').html(response);
+
+                  $("#txt_Project").multiselect('refresh');
+
+                  //$('#txt_Project').find('option:eq(0)').prop('selected', 'selected');
+
+
+
+
+
+              });
+
+
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/GetAllInvoiceNumber';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/GetAllInvoiceNumber';
+                }
+
+                url += "?VendorID=" + vendorid;
+
+
+                $.get(url)
+              .success(function (response) {
+
+                  //console.log(response);
+
+                 // $('#txt_invoice').html(response);
+
+                  //$("#txt_invoice").multiselect('refresh');
+                  //$("#txt_invoice").multiselect('refresh');
+
+                  //$('#txt_Project').find('option:eq(0)').prop('selected', 'selected');
+
+
+
+
+
+              });
+
+
+
+
+
+            });
+
+            var date = new Date();
+            var currentMonth = date.getMonth();
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+
+
+
+            $('#fromsearch').datepickercustom({
+                changeMonth: true,
+                changeYear: true,
+                //dateFormat: 'MM dd yy'
+                dateFormat: 'yy/mm/dd'
+                //,minDate: new Date(currentYear, currentMonth, currentDate)
+            });
+
+            $('#tosearch').datepickercustom({
+                changeMonth: true,
+                changeYear: true,
+                //dateFormat: 'MM dd yy'
+                dateFormat: 'yy/mm/dd'
+                //,minDate: new Date(currentYear, currentMonth, currentDate)
+            });
+
+            setTimeout(function () {
+
+                $('.datecontrol').val('13');
+                var from = $('.datecontrol').attr('data-from');
+                var to = $('.datecontrol').attr('data-to');
+                from = $('#' + from);
+                to = $('#' + to);
+                //startdate = moment().startOf('month').format("YYYY.MM.DD");
+                //enddate = moment().format("YYYY.MM.DD");
+
+
+                startdate = moment().subtract(365, "days").format("YYYY.MM.DD");
+                enddate = moment().format("YYYY.MM.DD");
+                startdate = '';
+                enddate = '';
+
+
+                $(from).datepicker("option", "disabled", true);
+                $(to).datepicker("option", "disabled", true);
+
+                $(from).datepicker('setDate', startdate);
+                $(to).datepicker('setDate', enddate);
+
+            }, 0);
+
+            //$('#fromsearch').datepicker("setDate", date);
+            //$('#tosearch').datepicker("setDate", date);
+
+            var table = $('#tblinvoice').DataTable();
+
+            table
+                .clear()
+                .draw();
+            $('#tblinvoice_filter').hide();
+            $('#tblinvoice_length').hide();
+
+
+
+            $("#txt_Project").multiselect({ maxTextWrapSize: 80 }).multiselectfilter();
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+
+            $("#txt_Project3").multiselect({ maxTextWrapSize: 80 }).multiselectfilter();
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+
+            //$("#txt_invoice").multiselect().multiselectfilter();
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+
+
+        });
+
+
+        function SearchInvoiceFirst1() {
+
+
+            var poidhdn = $('#poidhdn').val();
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/GetInvoiceListNew';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/GetInvoiceListNew';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "{ \"POID\" : \"" + poidhdn + "\"}",
+                success: function (data) {
+
+
+                    totdata = JSON.parse(data);
+                    totdata = totdata.data;
+
+                    if (totdata.length == 0) {
+
+
+                        var table = $('#tblinvoice').DataTable();
+
+                        table
+                            .clear()
+                            .draw();
+
+
+                        return;
+                    };
+
+                    InvoiceList = [];
+
+                    var url = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url = '/Invoice/InvoiceEdit/';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url = urlchanger('Invoice/InvoiceEdit/');
+                    }
+
+                    for (i = 0; i < totdata.length ; i++) {
+                        InvoiceList[i] = new Array();
+
+                        InvoiceList[i][0] = '<a target="_blank" href="' + url + totdata[i].InvoiceNumber + '">' + '<i class="fa fa-hand-o-right selectable" style="cursor:pointer;"></i>' + '</a>';
+
+                        InvoiceList[i][1] = totdata[i].InvoiceNumberVendor;
+                        InvoiceList[i][1] = '<a target="_blank" href="' + url + totdata[i].InvoiceNumber + '">'
+                            + totdata[i].InvoiceNumberVendor + '</a>';
+
+
+                        InvoiceList[i][2] = totdata[i].LegalName;
+                        InvoiceList[i][3] = totdata[i].ProjectNumber;
+                        InvoiceList[i][4] = totdata[i].Subtotal;
+                        InvoiceList[i][5] = formatNumber(totdata[i].Tax1);
+                        InvoiceList[i][6] = formatNumber(totdata[i].Tax2);
+                        InvoiceList[i][7] = formatNumber(totdata[i].Tax3);
+                        InvoiceList[i][8] = formatNumber(totdata[i].TotalInvoice.replace(',', ''));
+
+                        InvoiceList[i][9] = totdata[i].InvoiceNumber;
+
+
+                    }
+
+                    $('#tblinvoice').dataTable().fnDestroy();
+
+                    $('#tblinvoice').dataTable({
+                        "processing": true,
+                        "data": InvoiceList,
+                        "columns": [
+                                        { "title": "", "class": "displaynone" },
+                                        { "title": "Invoice #", "class": "leftposition" },
+                                        { "title": "Vendor", "class": "leftposition" },
+                                        { "title": "Project Number", "class": "leftposition" },
+                                        { "title": "Sub Total", "class": "rightposition" },
+                                        { "title": "Tax1", "class": "rightposition" },
+                                        { "title": "Tax2", "class": "rightposition" },
+                                        { "title": "Tax3", "class": "rightposition" },
+                                        { "title": "Total Invoice", "class": "rightposition" },
+                                        { "title": "", "class": "displaynone" }
+
+                        ],
+                        paging: false,
+                        "initComplete": function () {
+                            $('#tblinvoice_filter').hide();
+                            $('#tblinvoice_length').hide();
+                            AddtableTdTextAlign('#tblinvoice', '4^5^6^7^8', 'right', false);
+                            AddtableThTextAlign('#tblinvoice', '4^5^6^7^8', 'center', true);
+
+
+
+
+                        },
+                        "order": [[1, "asc"]],
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0] }
+                        ]
+                    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+        }
+
+
+        function SearchInvoiceFirst() {
+
+            var poidhdn = $('#poidhdn').val();
+           
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/GetInvoiceListFirst';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/GetInvoiceListFirst';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "{ \"poid\" : \"" + poidhdn + "\"}",
+                success: function (data) {
+
+
+                    totdata = JSON.parse(data);
+                    totdata = totdata.data;
+
+                    if (totdata.length == 0) {
+
+
+                        var table = $('#tblinvoice').DataTable();
+
+                        table
+                            .clear()
+                            .draw();
+
+
+                        return;
+                    };
+
+                    InvoiceList = [];
+
+                    var url = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url = '/Invoice/InvoiceEdit/';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url = 'Invoice/InvoiceEdit/';
+                    }
+
+                    for (i = 0; i < totdata.length ; i++) {
+                        InvoiceList[i] = new Array();
+
+                        //InvoiceList[i][0] = '<a  target="_blank" href="' + url + totdata[i].InvoiceNumber + '">' + '<i class="fa fa-hand-o-right selectable" style="cursor:pointer;"></i>' + '</a>';
+
+                        //InvoiceList[i][1] = totdata[i].InvoiceNumberVendor;
+                        //InvoiceList[i][1] = '<a target="_blank" href="' + url + totdata[i].InvoiceNumber + '">'
+                        //    + totdata[i].InvoiceNumberVendor + '</a>';
+                        //InvoiceList[i][2] = totdata[i].LegalName;
+                        //InvoiceList[i][3] = totdata[i].ProjectNumber;
+                        //InvoiceList[i][4] = totdata[i].Subtotal;
+                        //InvoiceList[i][5] = formatNumber(totdata[i].Tax1);
+                        //InvoiceList[i][6] = formatNumber(totdata[i].Tax2);
+                        //InvoiceList[i][7] = formatNumber(totdata[i].Tax3);
+                        //InvoiceList[i][8] = formatNumber(totdata[i].TotalInvoice.replace(',', ''));
+
+                        //InvoiceList[i][9] = totdata[i].InvoiceNumber;
+
+                        InvoiceList[i][0] = totdata[i].InvoiceNumber;
+
+                        InvoiceList[i][1] = totdata[i].InvoiceDate;
+                        InvoiceList[i][2] = totdata[i].LegalName;
+                        InvoiceList[i][3] = totdata[i].InvoiceNumberVendor;
+                        InvoiceList[i][4] = totdata[i].ProjectNumber;
+                        InvoiceList[i][5] = totdata[i].CurrencyCode;
+                        InvoiceList[i][6] = formatNumber4(totdata[i].Exrate);
+
+                        InvoiceList[i][7] = formatNumber(totdata[i].Subtotal.replace(',', ''));
+                        InvoiceList[i][8] = formatNumber(totdata[i].Tax1);
+                        InvoiceList[i][9] = formatNumber(totdata[i].Tax2);
+                        InvoiceList[i][10] = formatNumber(totdata[i].Tax3);
+                        InvoiceList[i][11] = formatNumber(totdata[i].Paymenttotal.replace(',', ''));
+
+                        // InvoiceList[i][12] = totdata[i].Paymenttotal;
+
+
+
+
+
+
+
+
+                    }
+
+                    $('#tblinvoice').dataTable().fnDestroy();
+
+                    $('#tblPayment').dataTable().fnDestroy();
+                    if ($('#tblinvoice thead tr').length > 1) {
+                        $('#tblinvoice thead tr:eq(1)').remove();
+                    }
+
+
+
+                    $('#tblinvoice').dataTable({
+                        "processing": true,
+                        "data": InvoiceList,
+                        "columns": [
+                                        { "title": "", "class": "displaynone" },
+                                        { "title": "Date", "class": "leftposition" },
+                                        { "title": "Vendor", "class": "leftposition" },
+                                        { "title": "Invoice #", "class": "leftposition" },
+                                        { "title": "Project", "class": "leftposition" },
+                                        { "title": "Currency", "class": "rightposition" },
+                                        { "title": "Fx Rate", "class": "rightposition" },
+                                        { "title": "Subtotal", "class": "rightposition" },
+                                        { "title": "Tax1", "class": "rightposition" },
+                                        { "title": "Tax2", "class": "rightposition" },
+                                        { "title": "Tax3", "class": "rightposition" },
+                                        { "title": "Payment", "class": "rightposition" }
+
+                        ],
+                        paging: false,
+                        "initComplete": function () {
+                            $('#tblinvoice_filter').hide();
+                            $('#tblinvoice_length').hide();
+                            AddtableTdTextAlign('#tblinvoice', '4^5^6^7^8', 'right', false);
+                            AddtableThTextAlign('#tblinvoice', '4^5^6^7^8', 'center', true);
+
+                            $('#tblinvoice tbody tr').each(function () {
+                                var id = $(this).find('td:eq(0)').html();
+                              
+
+                                var amtt = parseFloat($(this).find('td:eq(7)').html());
+
+                                if (amtt >= 0) {
+                                    $(this).find('td').attr('onclick', 'gotoInvoice("' + id + '")');
+                                }
+                                else {
+                                    $(this).find('td').attr('onclick', 'gotoCredit("' + id + '")');
+
+                                }
+
+                                $(this).find('td').css('cursor', 'pointer');
+
+                                if ($(this).find('td:eq(11)').html() != '0.00') {
+                                    $(this).find('td:eq(11)').attr('onclick', 'gotoPayment("' + id + '")');
+                                    $(this).find('td:eq(11)').css('cursor', 'pointer');
+                                    $(this).find('td:eq(11)').css('text-decoration', 'underline');
+                                    $(this).find('td:eq(11)').css('color', 'blue');
+                                }
+
+                            });
+
+
+                        },
+                        "order": [[1, "desc"]],
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0] }
+                        ]
+                    });
+
+                    var html = "";
+                    html = "<tr>"
+                          //+ "<th class='Resetth' rowspan='1' colspan='1'>"
+                          //+ "<a><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px;width:110px;' /></a>"
+                          //+ "</th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='3' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='4' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='5' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='6' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='7' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='8' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='9' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='10' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='11' type='text'></th>"
+                          + "</tr>";
+
+                    if ($('#tblinvoice thead tr').length == 1) {
+                        $('#tblinvoice thead').append(html);
+                    }
+
+                    var table = $('#tblinvoice').DataTable();
+                    $('.srch').on('keyup change', function () {
+                        var indx = $(this).attr('data-indx');
+                        var txt = this.value;
+                        table
+                               .column(indx)
+                               .search(txt)
+                               .draw();
+                        //RowHtmlRendernew();
+                    });
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+        }
+
+        function SearchInvoice() {
+
+            var fromdate = $('#fromsearch').val();
+            var todate = $('#tosearch').val();
+
+
+            var invoicenumber = $('#txt_invoice').val();
+            if (invoicenumber == null) {
+                invoicenumber = "";
+            }
+
+            var vendorid = $('#txt_Project3').val();
+            if (vendorid == null) {
+                vendorid = "";
+            }
+            //if (invoicenumber == '' && vendorid == '')
+            //{
+            //    notify('Please enter a search crieteria');
+            //    return;
+            //}
+            var ProjectID = $('#txt_Project').val();
+            if (ProjectID == null) {
+                ProjectID = "";
+            }
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/GetInvoiceList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/GetInvoiceList';
+            }
+            text="Loading Invoices. Please wait...";
+            mode = "alert-warning";
+            sign = "<i class='fa fa-spinner fa-spin mrg5R'></i>";
+            var html = "<div class='container alert " + mode + "  notification col-sm-12' role='alert' style='z-index:99999; cursor: pointer;' onclick='removenotification();'>"
+                + "<span style='width:90%;float:left;'>"
+                + sign
+                + text
+                + "</span>"
+                + "</div>";
+
+            $('body').append(html);
+            setTimeout(function () {
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "{ \"VendorID\" : \"" + vendorid + "\",\"InvoiceNumber\" : \"" + invoicenumber
+                    + "\",\"ProjectID\": \"" + ProjectID + "\",\"fromdate\" : \"" + fromdate + "\",\"todate\":\"" + todate + "\"}",
+                success: function (data) {
+
+
+                    totdata = JSON.parse(data);
+                    //totdata = totdata.data;
+
+                    if (totdata.length == 0) {
+
+
+                        var table = $('#tblinvoice').DataTable();
+
+                        table
+                            .clear()
+                            .draw();
+
+
+                        return;
+                    };
+
+                    InvoiceList = [];
+
+                    var url = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url = '/Invoice/InvoiceEdit/';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url = 'Invoice/InvoiceEdit/';
+                    }
+
+                    for (i = 0; i < totdata.length ; i++) {
+                        InvoiceList[i] = new Array();
+                        InvoiceList[i][0] = totdata[i].InvoiceNumber;
+                        InvoiceList[i][1] = totdata[i].InvoiceDate;
+                        InvoiceList[i][2] = totdata[i].LegalName;
+                        InvoiceList[i][3] = totdata[i].InvoiceNumberVendor;
+                        InvoiceList[i][4] = totdata[i].ProjectNumber;
+                        InvoiceList[i][5] = totdata[i].CurrencyCode;
+                        InvoiceList[i][6] = formatNumber4(totdata[i].Exrate);
+                        InvoiceList[i][7] = formatNumber(totdata[i].Subtotal.replace(',', ''));
+                        InvoiceList[i][8] = formatNumber(totdata[i].Tax1);
+                        InvoiceList[i][9] = formatNumber(totdata[i].Tax2);
+                        InvoiceList[i][10] = formatNumber(totdata[i].Tax3);
+                        InvoiceList[i][11] = formatNumber(totdata[i].Paymenttotal.replace(',', ''));
+                    }
+
+                    $('#tblinvoice').dataTable().fnDestroy();
+
+                    $('#tblPayment').dataTable().fnDestroy();
+                    if ($('#tblinvoice thead tr').length > 1) {
+                        $('#tblinvoice thead tr:eq(1)').remove();
+                    }
+
+
+
+                    $('#tblinvoice').dataTable({
+                        "processing": true,
+                        "data": InvoiceList,
+                        "columns": [
+                                        { "title": "", "class": "displaynone" },
+                                        { "title": "Date", "class": "leftposition" },
+                                        { "title": "Vendor", "class": "leftposition" },
+                                        { "title": "Invoice #", "class": "leftposition" },
+                                        { "title": "Project", "class": "leftposition" },
+                                        { "title": "Currency", "class": "rightposition" },
+                                        { "title": "Fx Rate", "class": "rightposition" },
+                                        { "title": "Subtotal", "class": "rightposition" },
+                                        { "title": "Tax1", "class": "rightposition" },
+                                        { "title": "Tax2", "class": "rightposition" },
+                                        { "title": "Tax3", "class": "rightposition" },
+                                        { "title": "Payment", "class": "rightposition" }
+
+                        ],
+                        paging: false,
+                        "initComplete": function () {
+                            $('#tblinvoice_filter').hide();
+                            $('#tblinvoice_length').hide();
+                            AddtableTdTextAlign('#tblinvoice', '4^5^6^7^8', 'right', false);
+                            AddtableThTextAlign('#tblinvoice', '4^5^6^7^8', 'center', true);
+
+                            $('#tblinvoice tbody tr').each(function () {
+                                var id = $(this).find('td:eq(0)').html();
+
+                                var amtt = parseFloat($(this).find('td:eq(7)').html());
+
+                                if (amtt >= 0) {
+                                    $(this).find('td').attr('onclick', 'gotoInvoice("' + id + '")');
+                                }
+                                else {
+                                    $(this).find('td').attr('onclick', 'gotoCredit("' + id + '")');
+
+                                }
+
+                               
+                                $(this).find('td').css('cursor', 'pointer');
+
+                                if ($(this).find('td:eq(11)').html() != '0.00') {
+                                    $(this).find('td:eq(11)').attr('onclick', 'gotoPayment("' + id + '")');
+                                    $(this).find('td:eq(11)').css('cursor', 'pointer');
+                                    $(this).find('td:eq(11)').css('text-decoration', 'underline');
+                                    $(this).find('td:eq(11)').css('color', 'blue');
+                                }
+
+                            });
+
+
+                        },
+                        "order": [[1, "desc"]],
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0] }
+                        ]
+                    });
+
+                    var html = "";
+                    html = "<tr>"
+                          + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='3' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='4' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='5' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='6' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='7' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='8' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='9' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='10' type='text'></th>"
+                          + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='11' type='text'></th>"
+                          + "</tr>";
+
+                    if ($('#tblinvoice thead tr').length == 1) {
+                        $('#tblinvoice thead').append(html);
+                    }
+
+                    var table = $('#tblinvoice').DataTable();
+                    $('.srch').on('keyup change', function () {
+                        var indx = $(this).attr('data-indx');
+                        var txt = this.value;
+                        table
+                               .column(indx)
+                               .search(txt)
+                               .draw();
+                    });
+                    $('.notification').fadeOut(3000);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }, 100);
+
+        }
+
+        function formatNumber4(number) {
+            number = parseFloat(number);
+            var number = number.toFixed(4) + '';
+            var x = number.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+
+
+        function gotoPayment(id) {
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/setFormanualsearch';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/setFormanualsearch';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                async : false,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "{ \"id\" : \"" + id + "\"}",
+                success: function (data) {
+
+                    var url = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url = '/Invoice/ManualPaymentSearch';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url = 'Invoice/ManualPaymentSearch';
+                    }
+
+                 
+                    window.open(url);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+
+        }
+
+        function gotoCredit(id) {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+               // url = '/Invoice/EditCreditNote/';
+                url = '/Invoice/InvoiceEdit/';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+               // url = 'Invoice/EditCreditNote/';
+                url = '/Invoice/InvoiceEdit/';
+            }
+
+            url += id;
+            window.open(url);
+
+        }
+
+        //function gotoCredit(id) {
+        //    var url = '';
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url = '/Invoice/CreditNoteEdit/';
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+        //        url = 'Invoice/CreditNoteEdit/';
+        //    }
+
+        //    url += id;
+        //    window.open(url);
+
+        //}
+
+        function gotoInvoice(id) {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/InvoiceEdit/';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/InvoiceEdit/';
+            }
+
+            url += id;
+            window.open(url);
+
+        }
+        function PopulateVendor() {
+
+            return;
+
+            var projectid = $('#txt_Project').val();
+            if (projectid == null) {
+                projectid = "";
+            }
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/GetAllParentVendorSearch';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/GetAllParentVendorSearch';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "{ \"ProjectID\" : \"" + projectid + "\"}",
+                success: function (data) {
+
+
+                    $('#txt_Project3').html(data);
+                    $("#txt_Project3").multiselect("refresh").multiselectfilter();
+
+                    var width = '100%';
+                    $('.ui-multiselect').css('width', width);
+                    $('.ui-multiselect-menu').css('width', '39.5%');
+                    $('.ui-state-default').css('color', '#C31001');
+                    $('.ui-multiselect').css('height', '34px');
+                    $('.ui-multiselect').css('margin-top', '5px');
+
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+        }
+
+        function formatNumber(number) {
+            number = parseFloat(number);
+            var number = number.toFixed(2) + '';
+            var x = number.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+    </script>
+</head>
+<body>
+
+    <input type="hidden" id="poidhdn" value="@ViewData["poidhdn"]" />
+
+
+    <div class="container-fluid" id="angulardiv" style="zoom:0.95;">
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header">Invoice Search</h3>
+            </div>
+        </div>
+
+
+        <div class="row">
+
+
+
+
+            <div class="col-sm-3">
+                <label>Vendor</label>
+                <select id="txt_Project3" multiple="multiple" class="form-control">
+                    @*<option value="0">--Select Project--</option>*@
+                    @Html.Raw(ViewData["parentVendor"])
+                </select>
+            </div>
+
+
+
+
+            <div class="col-sm-2">
+                <label>Vendor Invoice #</label>
+                <input type="text" id="txt_invoice" class="form-control" />
+                @*<select id="txt_invoice" multiple="multiple" class="form-control">
+                   
+                    @Html.Raw(ViewData["invoicenumber"])
+                </select>*@
+
+            </div>
+
+            <div class="form-group col-sm-1">
+                <label>Date</label>
+
+                <select class="form-control datecontrol" data-from="fromsearch" data-to="tosearch">
+                     <option value="13" data-val="All">ALL</option>
+                    <option value="1" data-val="custom">Custom</option>
+                    <option value="2" data-val="last365">Last 365 Days</option>
+                    <option value="3" data-val="today">Today</option>
+                    <option value="4" data-val="yesterday">Yesterday</option>
+                    <option value="5" data-val="thisweek">This Week</option>
+                    <option value="6" data-val="thismonth">This Month</option>
+                    <option value="7" data-val="thisquarter">This Quarter</option>
+                    <option value="8" data-val="thisyear">This Year</option>
+
+                    <option value="9" data-val="lastweek">Last Week</option>
+                    <option value="10" data-val="lastmonth">Last Month</option>
+                    <option value="11" data-val="lastquarter">Last Quarter</option>
+                    <option value="12" data-val="lastyear">Last Year</option>
+
+                </select>
+            </div>
+
+
+            <div class="col-sm-1">
+                <label>From</label>
+                <input type="text" id="fromsearch"  placeholder="YYYY.MM.DD" class="form-control" />
+            </div>
+
+
+
+            <div class="col-sm-1">
+                <label>To</label>
+                <input type="text" id="tosearch"  placeholder="YYYY.MM.DD" class="form-control" />
+            </div>
+
+            <div class="col-sm-3">
+                <label>Project</label>
+                <select id="txt_Project" multiple="multiple" onchange="PopulateVendor();" class="form-control">
+                    @*<option value="0">--Select Project--</option>*@
+                    @Html.Raw(ViewData["getAllProjectNameNumber"])
+                </select>
+            </div>
+
+
+
+            <div class="col-sm-1">
+                <button type="button" class="btn btn-poms mrg20T" style="height: 26px;padding: 2px;width: 100px;" value="Search" onclick="SearchInvoice();">Search</button>
+            </div>
+
+        </div>
+
+        <div class="row mrg10T">
+            <div class="col-sm-12">
+                <h3 class="section-header">Invoice List</h3>
+            </div>
+        </div>
+
+        <div class="row mrg10T">
+
+            <div class="col-sm-12">
+                <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblinvoice" style="text-align: center;">
+                    <thead>
+                        <tr>
+                            <th class="displaynone">Action</th>
+                            <th style="width:150px !important;" class="leftposition">Date</th>
+                            <th style="width:200px !important;" class="leftposition">Vendor</th>
+                            <th style="width:150px !important;" class="leftposition">Invoice #</th>
+                            <th style="width:200px !important;" class='rightposition'>Project</th>
+                            <th style="width:100px !important;" class='rightposition'>Currency</th>
+                            <th style="width:150px !important;" class='rightposition'>FX Rate</th>
+                            <th style="width:150px !important;" class='rightposition'>Subtotal</th>
+                            <th style="width:150px !important;" class='rightposition'>Tax 1</th>
+                            <th style="width:150px !important;">Tax 2</th>
+                            <th style="width:150px !important;">Tax 3</th>
+                            <th style="width:150px !important;">Payment</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+        </div>
+
+
+
+        <script>
+            $(document).ready(function () {
+                var id = $('#poidhdn').val();
+                if (id != "") {
+                    SearchInvoiceFirst();
+                }
+            });
+        </script>
+
+
+
+
+
+    </div>
+</body>
+</html>

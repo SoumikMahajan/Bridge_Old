@@ -1,0 +1,635 @@
+﻿@{    
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PO History</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/Misc.css" rel="stylesheet" />
+
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+
+    <style type="text/css">
+        .displayForTableHeader {
+            display: none;
+        }
+    </style>
+
+
+    <script type="text/javascript">
+
+        function LoadPOLineItems(sectionid) {
+            var table = $('#POLineItemsDetail').DataTable();
+            table.clear().draw();
+
+            var POID = $('#Hdn_PurchaseOrderID').val();
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/getPOlineitemsByPONo';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/getPOlineitemsByPONo';
+            }
+            url1 += "?POID=" + POID;
+
+            var totdata;
+
+
+
+
+            $.get(url1)
+               .success(function (response) {
+                   totdata = JSON.parse(response);
+                   totdata = totdata.data;
+
+                   if (totdata.length == 0) {
+                       var table = $('#POLineItemsDetail').DataTable();
+                       table
+                           .clear()
+                           .draw();
+                       //$('#tableloader').hide();
+                       return;
+                   };
+                   POLineItems = [];
+                   for (i = 0; i < totdata.length ; i++) {
+                       POLineItems[i] = new Array();
+                       POLineItems[i][0] = totdata[i].POLineItemID;
+                       POLineItems[i][1] = "";
+                       POLineItems[i][2] = totdata[i].TotalID;
+                       POLineItems[i][3] = totdata[i].ProjectID;
+                       POLineItems[i][4] = totdata[i].BudgetSectionID;
+                       POLineItems[i][5] = totdata[i].LineItemID;
+                       POLineItems[i][6] = totdata[i].ItemOrder;
+                       POLineItems[i][7] = totdata[i].Item;
+                       POLineItems[i][8] = totdata[i].SpecNum;
+                       POLineItems[i][9] = totdata[i].ItemDescription;
+                       POLineItems[i][10] = totdata[i].Vendor;
+                       POLineItems[i][11] = totdata[i].Quantity;
+                       POLineItems[i][12] = totdata[i].UOM;
+                       POLineItems[i][13] = totdata[i].Cost;
+                       POLineItems[i][14] = totdata[i].Quantity * totdata[i].Cost;
+                       POLineItems[i][15] = totdata[i].Note;
+                       POLineItems[i][16] = totdata[i].ToWarehouse == 1 ? "<i class='fa fa-check'></i>" : "<i class='fa fa-times'></i>";
+                       POLineItems[i][17] = "0";//totdata[i].CommitAmountAdjust;
+                       POLineItems[i][18] = totdata[i].DateCreated;
+                       POLineItems[i][19] = totdata[i].CreatedBy_ID;
+                       POLineItems[i][20] = totdata[i].Status;
+                       POLineItems[i][21] = totdata[i].UOMID;
+                       POLineItems[i][22] = totdata[i].ToWarehouse;
+                       POLineItems[i][23] = totdata[i].Spacing;
+                       POLineItems[i][24] = totdata[i].Header;
+                       POLineItems[i][25] = totdata[i].ItemDtldDesc;
+                       POLineItems[i][26] = totdata[i].Extended;
+                       POLineItems[i][27] = totdata[i].ReceivedQuantity;
+
+                   }
+                   $('#POLineItemsDetail').dataTable().fnDestroy();
+                   $('#POLineItemsDetail').dataTable({
+                       "processing": true,
+                       "data": POLineItems,
+                       "columns": [
+                           { "title": "Actions" },
+                           { "title": "Header", "class": "displaynone" },
+                           { "title": "Item#" },
+                           { "title": "ProjectID", "class": "displaynone" },
+                           { "title": "BudgetSectionID", "class": "displaynone" },
+                           { "title": "LineItemID", "class": "displaynone" },
+                           { "title": "ItemOrder", "class": "displaynone" },
+                           { "title": "Item", "class": "displaynone" },
+                           { "title": "Spec" },
+                           { "title": "Description" },
+                           { "title": "Vendor", "class": "displaynone" },
+                           { "title": "Qty" },
+                           { "title": "Units" },
+                           { "title": "Cost" },
+                           { "title": "Total", "class": "displaynone" },
+                           { "title": "Note", "class": "displaynone" },
+                           { "title": "ToWarehouse", "class": "displaynone" },
+                           { "title": "CommitAmountAdjust", "class": "displaynone" },
+                           { "title": "DateCreated", "class": "displaynone" },
+                           { "title": "CreatedBy_ID", "class": "displaynone" },
+                           { "title": "Status", "class": "displaynone" },
+                           { "title": "UPMID", "class": "displaynone" },
+                           { "title": "UPMID", "class": "displaynone" },
+                           { "title": "Spacing", "class": "displaynone" },
+                           { "title": "heading", "class": "displaynone" },
+                           { "title": "ItemDtldDesc", "class": "displaynone" },
+                           { "title": "Extended" },
+                           { "title": "R-Qty" },
+                       ],
+                       paging: false,
+                       "initComplete": function () {
+                           // $('#POLineItemsDetail_filter').find('input').hide();
+                           // $('#POLineItemsDetail_filter').find('label').text('Search Description::');
+                           // $('#POLineItemsDetail_filter').append('<input type="text" id="srchdsc" placeholder="Search"/>');
+
+                           // $('#tableloader').hide();
+
+                           // if (prevsrch != undefined) {
+                           //     var table = $('#POLineItemsDetail').DataTable();
+                           //     table.column(7)
+                           //                .search(prevsrch)
+                           //                .draw();
+                           //    // buildrows();
+                           //     $('#srchdsc').val(prevsrch);
+                           // }
+
+                           RowHtmlRender();
+                       },
+                       "order": [[6, "asc"]],
+                       "aoColumnDefs": [
+                           { 'bSortable': false, 'aTargets': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 22, 23] }
+                       ]
+                   });
+                   //$('#srchdsc').on('keyup change', function () {
+                   //    // cancelselections();
+                   //    var table = $('#POLineItemsDetail').DataTable();
+                   //    var txt = $(this).val().trim();
+                   //    table.column(7)
+                   //               .search(txt)
+                   //               .draw();
+                   //    buildrows();
+                   //    if (txt.length > 0) {
+                   //        $("#POLineItemsDetail tbody").addClass("disable-sort");
+                   //    }
+                   //    else {
+                   //        $("#POLineItemsDetail tbody").removeClass("disable-sort");
+                   //        for (var a = 0; a < offsecurity.length; a++) {
+                   //            if (offsecurity[a].Classname == "BDGTEDT") {
+                   //                $("#POLineItemsDetail tbody").addClass("disable-sort");
+                   //            }
+                   //        }
+                   //    }
+                   //});
+               });
+
+
+        }
+
+
+        $(document).ready(function () {
+
+            LoadPOLineItems('');
+
+            //var table = $('#UnCommittedPODetail').DataTable();
+            //table.clear().draw();
+
+            // var table = $('#POLineItemsDetail').DataTable();
+            // table.clear().draw();
+
+        });
+
+        function RowHtmlRender() {
+            // alert(1);
+            //  $('#project_filter').css('display', 'none');
+            $('#POLineItemsDetail tbody tr').find("td:eq(0)").each(function () {
+                var pid = $(this).html();
+                $(this).html('<input type="button" class="buttonedit" onclick="EditPOLineItems(this,\'' + pid + '\');" style="margin-bottom:6px;" data-id="' + pid + '" /><input type="button" class="buttondelete" onclick="DeletePOLineItems(this,\'' + pid + '\');" style="margin-bottom:6px;" data-id="' + pid + '" />');
+
+            });
+        }
+        function NvgtToAdditmsToPO() {
+            var PurchaseOrderID = $('#Hdn_PurchaseOrderID').val();
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/AddItemsToPO';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/AddItemsToPO';
+            }
+            url1 += "/" + PurchaseOrderID;
+            window.location.href = url1;
+        }
+
+
+        function EditPOLineItems(obj, pid) {
+            var url1 = '';
+
+            var PurchsOrdrID = $('#Hdn_PurchaseOrderID').val();
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/EditPOLineItems';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/EditPOLineItems';
+            }
+
+            url1 += "?PurchsOrdrID=" + PurchsOrdrID;
+            url1 += "&POLineItemID=" + pid;
+
+            window.location.href = url1;
+        }
+
+        function DeletePOLineItems(obj, pid) {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/DeletePOLineItems/' + pid;
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/DeletePOLineItems/' + pid;
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        //function areset(st, lt) {
+        //    st = parseInt(st);
+        //    lt = parseInt(lt);
+        //    $('#lineitems tbody tr').each(function () {
+        //        if (st < lt) {
+        //            var prev1 = parseInt($(this).find("td:eq(5)").html());
+        //            var prev2 = parseInt($(this).attr('data-id'));
+        //            if (prev1 == st) {
+        //                $(this).find("td:eq(5)").html(lt);
+        //                $(this).attr('data-id', lt);
+        //                return;
+        //            }
+        //            if (prev1 > st && prev1 <= lt) {
+        //                prev1 = prev1 - 1;
+        //                $(this).find("td:eq(5)").html(prev1);
+        //            }
+        //            if (prev2 > st && prev1 <= lt) {
+        //                prev2 = prev2 - 1;
+        //                $(this).attr('data-id', prev2);
+        //            }
+        //        }
+        //        else {
+        //            var prev1 = parseInt($(this).find("td:eq(5)").html());
+        //            var prev2 = parseInt($(this).attr('data-id'));
+        //            if (prev1 == st) {
+        //                $(this).find("td:eq(5)").html(lt);
+        //                $(this).attr('data-id', lt);
+        //                return;
+        //            }
+        //            if (prev1 >= lt && prev1 <= st) {
+        //                prev1 = prev1 + 1;
+        //                $(this).find("td:eq(5)").html(prev1);
+        //            }
+        //            if (prev2 >= lt && prev1 <= st) {
+        //                prev2 = prev2 + 1;
+        //                $(this).attr('data-id', prev2);
+        //            }
+        //        }
+        //    });
+        //}
+        //$(function () {
+
+        //    $('#lineitems tr').live('click', function (event) {
+        //        if (EditHeadeChk == '1') {
+        //            return;
+        //        }
+        //        for (var a = 0; a < offsecurity.length; a++) {
+        //            if (offsecurity[a].Classname == "BDGTEDT") {
+        //                return false;
+        //            }
+        //        }
+        //        var txt = $('#srchdsc').val().trim();
+        //        if (document.activeElement != document.body) {
+        //            document.activeElement.blur();
+        //        }
+        //        //$('body').focus();
+        //        var clickedrowid = $(this).find("td:eq(5)").html();
+        //        if (clickedrowid == null) {
+        //            return;
+        //        }
+        //        var clickedrowindex = $(this).attr('data-id');
+        //        var closestrow = "";
+        //        // //console.log(clickedrowid);
+        //        if ($(this).hasClass('budgetlocked')) {
+        //            return;
+        //        }
+        //        if (!event.ctrlKey && !event.shiftKey) {
+        //            var ln = $('.selectedrow').length;
+        //            var hclass = false;
+        //            hclass = $(this).hasClass('selectedrow');
+        //            cancelselections();
+        //            if (hclass && ln == 1) {
+        //                $(this).addClass('selectedrow');
+        //            }
+        //        }
+        //        if (event.shiftKey) {
+        //            // cancelselections();
+        //            var allids = "";
+        //            var short = 999999;
+        //            $('.selectedrow').each(function () {
+        //                var id = $(this).attr('data-id');
+        //                var diff = clickedrowindex - id;
+        //                if (diff < 0) {
+        //                    diff = 0 - diff;
+        //                }
+        //                if (diff < short) {
+        //                    closestrow = $(this).find("td:eq(5)").html();
+        //                    short = diff;
+        //                }
+        //                if (allids == "") {
+        //                    allids = id;
+        //                }
+        //                else {
+        //                    allids += "^" + id;
+        //                }
+        //            });
+        //            $('.selectedrow').each(function () {
+        //                var currtmp = $(this).find("td:eq(5)").html();
+        //                if (currtmp == closestrow) {
+        //                }
+        //                else {
+        //                    $(this).removeClass('selectedrow');
+        //                    if ($(this).hasClass('odd')) {
+        //                        $(this).css('background-color', '');
+        //                    }
+        //                    else {
+        //                        $(this).css('background-color', '');
+        //                    }
+        //                }
+        //            });
+        //            var isunderrange = 0;
+        //            $('#lineitems tbody tr').each(function () {
+        //                if (isunderrange == 1) {
+        //                    if (!$(this).hasClass('selectedrow')) {
+        //                        $(this).addClass('selectedrow');
+        //                        $(this).css('background-color', 'rgb(201, 240, 249)');
+        //                    }
+        //                    else {
+        //                        isunderrange = 0;
+        //                        return;
+        //                    }
+        //                }
+        //                else if ($(this).hasClass('selectedrow')) {
+        //                    isunderrange = 1;
+        //                }
+        //                var currentrowid = $(this).find("td:eq(5)").html();
+        //                if (currentrowid == clickedrowid) {
+        //                    if (isunderrange == 1) {
+        //                        isunderrange = 0;
+        //                        return;
+        //                    }
+        //                    else {
+        //                        $(this).addClass('selectedrow');
+        //                        $(this).css('background-color', 'rgb(201, 240, 249)');
+        //                        isunderrange = 1;
+        //                    }
+        //                }
+        //            });
+        //            return;
+        //        }
+        //        $(this).toggleClass('selectedrow');
+        //        if (!$(this).hasClass('selectedrow')) {
+        //            if ($(this).hasClass('odd')) {
+        //                $(this).css('background-color', '');
+        //            }
+        //            else {
+        //                $(this).css('background-color', '');
+        //            }
+        //        }
+        //        else {
+        //            $(this).css('background-color', 'rgb(201, 240, 249)');
+        //        }
+        //        checkselected();
+        //    });
+
+        //});
+        //function checkselected() {
+        //    var items = $('.selectedrow').length;
+        //    if (items == 0) {
+        //        $('#removemultiple').hide();
+        //    }
+        //    else {
+        //        $('#removemultiple').show();
+        //    }
+        //    // alert(items);
+        //}
+
+        //function deletemultiplelineitems() {
+        //    var items = $('.selectedrow').length;
+        //    var allids = "";
+        //    $('.selectedrow').each(function () {
+
+
+        //        var id = $(this).find("td:eq(5)").html();
+        //        if (allids == "") {
+        //            allids = id;
+
+        //        }
+        //        else {
+        //            allids += "^" + id;
+        //        }
+
+
+        //    });
+
+
+
+
+
+        //    var proceed = confirm("Do you really want to delete " + items + " items?");
+        //    if (!proceed) {
+        //        return;
+        //    }
+        //    var url1 = '';
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url1 = '/Budget/deletelineitemsmultiple';
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+
+        //        url1 = 'Budget/deletelineitemsmultiple';
+        //    }
+
+        //    var sectionid = $('#Ddl_SelProSec').val();
+
+        //    $.ajax({
+        //        type: "POST",
+        //        url: url1,
+        //        async: false,
+        //        dataType: "text",
+        //        contentType: "application/json; charset=utf-8",
+        //        data: "{ 'lineitemid': '" + allids + "'}",
+        //        success: function (data) {
+        //            $('#removemultiple').hide();
+        //            var sectionid = $('#Ddl_SelProSec').val();
+        //            loaditems(sectionid);
+        //            notify(items + ' items Deleted successfully.');
+
+        //        },
+        //        error: function () {
+        //            notify('Something went wrong.');
+        //        }
+        //    });
+
+
+
+
+        //}
+
+        //function cancelselections() {
+
+        //    //$('#lineitems tr').removeClass('selectedrow');
+
+        //    $('.selectedrow').each(function () {
+
+        //        $(this).removeClass('selectedrow');
+
+        //        if ($(this).hasClass('odd')) {
+        //            $(this).css('background-color', '#f9f9f9');
+        //        }
+        //        else {
+        //            $(this).css('background-color', '#fff');
+        //        }
+
+
+        //    });
+
+        //    checkselected();
+
+        //}
+
+        //$(document).ready(function () {
+
+        //    $(document).keyup(function (e) {
+        //        var obj = document.activeElement;
+        //        obj = obj.nodeName;
+        //        if (obj != "BODY") {
+        //            return;
+        //        }
+        //        ////console.log(obj);
+        //        var ky = e.which;
+        //        if (ky != 46) {
+        //            return;
+        //        }
+        //        else {
+        //            var ln = $('.selectedrow').length;
+        //            if (ln == 0) {
+        //                notify('Please select items to delete first');
+        //            }
+        //            else {
+        //                deletemultiplelineitems();
+        //            }
+        //        }
+        //    });
+
+        //});
+    </script>
+
+
+</head>
+<body>
+    <input type="hidden" id="Hdn_PurchaseOrderID" value="@ViewBag.PurchaseOrderID" />
+
+    <div class="main_container" id="angulardiv" ng-app="Project" ng-controller="PO">
+
+       
+        <div class="logo_container_heading">Line Items under Purchase Order </div>
+
+        <div class="edit_vendor_full">
+
+            @*<div class="user_panel_container">
+            <label>PO #</label>         
+             <input type="text" id="txt_SearchPO" ng-model="PO.PO_No" placeholder="Enter PO# Number" style="  width: 30%;" />  
+            <span>
+                <input type="button" value="Search" />
+            </span>
+        </div>  *@
+
+            <div class="user_panel_container" style="margin-top: 2%;">
+                @*<a href="/PurchaseOrder/AddItemsToPO/@ViewBag.PurchaseOrderID">Add Items to PO</a>*@
+                <input type="button" id="btn_NvgtToAdditmsToPO" value="Add Items to PO" onclick="NvgtToAdditmsToPO();" />
+            </div>
+            <div id="removemultiple" style="display: none;">
+                <div style="cursor: pointer; z-index: 9999; position: absolute; background: rgb(32, 128, 147); width: 175px; color: white; padding: 3px; border-radius: 5px;">
+                    <div onclick="deletemultiplelineitems();">
+                        <span>&nbsp; <i class="fa fa-trash-o"></i>&nbsp;&nbsp;Delete selected Items</span>
+                    </div>
+
+                </div>
+
+                <div id="removemultiple2" style="cursor: pointer; z-index: 9999; position: relative; background: rgb(32, 128, 147); width: 175px; color: white; padding: 3px; border-radius: 5px; left: 190px;">
+                    <div onclick="cancelselections();">
+                        <span>&nbsp; <i class="fa fa-times-circle"></i>&nbsp;&nbsp;Cancel all selections</span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="user_panel_container1" style="margin-top: 2%;">
+                <fieldset>
+                    <legend>Line Items Under Purchase Order</legend>
+                    <div>
+                        <table cellpadding="0" cellspacing="0" border="0" class="display" id="POLineItemsDetail" style="text-align: center;">
+                            <thead>
+                                <tr>
+                                    <th></th>
+
+                                    <th></th>
+                                    <th></th>
+
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+
+                                    <th></th>
+                                    <th></th>
+
+                                    <th></th>
+
+                                    <th></th>
+
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+
+
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
+
+
+        </div>
+
+       
+
+    </div>
+
+
+</body>
+
+
+</html>

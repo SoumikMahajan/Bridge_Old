@@ -1,0 +1,700 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>FAQ Admin</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+     <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+
+    <script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+    @*<script src="~/Scripts/editor_plugin.js"></script>*@
+    <script src="~/Scripts/tinymce/js/tinymce/plugins/textcolor/plugin.min.js"></script>
+
+    <script src="~/Scripts/jquery.DB_PROC.js"></script>
+    <script>
+        function initmce() {
+
+            var fontsize = "";
+            for (var a = 5 ; a <= 22 ; a = a + 0.5) {
+                fontsize += fontsize == "" ? a + "px" : " " + a + "px";
+            }
+
+
+            tinymce.init({
+                selector: "#Answer",
+                // paste_retain_style_properties: "font-size,color",
+                fontsize_formats: fontsize,// "8px 9px 10px 12px 14px 18px 24px 36px",
+                plugins: "textcolor,paste,autolink",
+                paste_auto_cleanup_on_paste: false,
+                //plugins: "paste",
+                paste_postprocess: function (pl, o) {
+                    // Content DOM node containing the DOM structure of the clipboard
+                    //alert(o.node.innerHTML);
+
+                    o.node.innerHTML = replaceAll(o.node.innerHTML.toUpperCase(), '&NBSP;', '&nbsp');
+                    //o.node.innerHTML = o.node.innerHTML.toUpperCase();
+                },
+
+                toolbar: " undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent| forecolor backcolor | fontsizeselect",
+
+                //fontsize_formats: fontsize,//"8pt 8.5pt 9pt 9.5pt 10pt 10.5pt 11pt 12pt 14pt 18pt 24pt 36pt"
+                menubar: false
+                
+
+            });
+
+            tinymce.init({
+                selector: "#editAnswer",
+                // paste_retain_style_properties: "font-size,color",
+                fontsize_formats: fontsize,// "8px 9px 10px 12px 14px 18px 24px 36px",
+                plugins: "textcolor,paste",
+                paste_auto_cleanup_on_paste: false,
+                //plugins: "paste",
+                paste_postprocess: function (pl, o) {
+                    // Content DOM node containing the DOM structure of the clipboard
+                    //alert(o.node.innerHTML);
+
+                    o.node.innerHTML = replaceAll(o.node.innerHTML.toUpperCase(), '&NBSP;', '&nbsp');
+                    //o.node.innerHTML = o.node.innerHTML.toUpperCase();
+                },
+
+                toolbar: " undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent| forecolor backcolor | fontsizeselect",
+
+                //fontsize_formats: fontsize,//"8pt 8.5pt 9pt 9.5pt 10pt 10.5pt 11pt 12pt 14pt 18pt 24pt 36pt"
+                menubar: false
+
+
+            });
+
+
+        }
+        $(document).ready(function () {
+
+            getFAQ();
+            initmce();
+            
+
+            $("#Ddl_Category").multiselect().multiselectfilter();
+
+            $("#Ddl_Category").multiselect({ 'multiple': false });
+
+            $("#Ddl_Category2").multiselect().multiselectfilter();
+
+            $("#Ddl_Category2").multiselect({ 'multiple': false });
+
+            $('#tblfaq').dataTable();
+
+            populatecat();
+
+        });
+
+
+        
+        //Category CRUD
+        function populatecat() {
+            var obj = new Object();
+            obj.Mode = 'ADMINCATGET';
+
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_FAQALL";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var Categorylist = DBSP.call_DB_Procedure();
+            Categorylist = Categorylist.data;
+
+           
+            var html = "";
+            for (var a = 0; a < Categorylist.length; a++) {
+                html += "<option value='" + Categorylist[a].FldID + "'>" + Categorylist[a].Category + "</option>";
+            }
+
+            $("#Ddl_Category").html(html);
+            $("#Ddl_Category2").html(html);
+
+            $("#Ddl_Category").multiselect('refresh');
+            $("#Ddl_Category2").multiselect('refresh');
+        }
+        function SaveCat() {
+
+            var cattext = $('#Cattext').val().trim();
+            var active = $('#activecat').is(':checked') ? '1' : '0';
+            if (cattext == '') {
+                notify("Category can not be blank.");
+                return;
+            }
+
+            var obj = new Object();
+            obj.Mode = 'ADMINCATSAVE';
+            obj.Category = cattext;
+            obj.IsActive = active;
+            obj.SESSIONUSERBACKEND = "InsertedBy";
+
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_FAQALL";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var Categorylist = DBSP.call_DB_Procedure();
+            Categorylist = Categorylist.data;
+
+            populatecat();
+            $('#AddCatModal').modal('hide');
+            $('#Cattext').val('');
+            $('#activecat').prop('checked','checked')
+        }
+        function EditCat() {
+
+            var cattext = $('#editCattext').val().trim();
+            var active = $('#editactivecat').is(':checked') ? '1' : '0';
+
+            var catid = $('#Ddl_Category').val();
+            if (cattext == '') {
+                notify("Category can not be blank.");
+                return;
+            }
+
+            var obj = new Object();
+            obj.Mode = 'ADMINCATEDIT';
+            obj.Category = cattext;
+            obj.IsActive = active;
+            obj.FldID = catid;
+            obj.SESSIONUSERBACKEND = "InsertedBy";
+
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_FAQALL";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var Categorylist = DBSP.call_DB_Procedure();
+            Categorylist = Categorylist.data;
+
+            populatecat();
+            $('#EditCatModal').modal('hide');
+            
+
+
+        }
+        function DeleteCat() {
+        }
+        function addCategory() {
+            $('#AddCatModal').modal('show');
+        }
+        function editCategory() {
+            var catid = $('#Ddl_Category').val();
+
+            var obj = new Object();
+            obj.Mode = 'ADMINCATGETBYID';
+            obj.FldID = catid;
+
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_FAQALL";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var Categorylist = DBSP.call_DB_Procedure();
+            Categorylist = Categorylist.data;
+
+            $('#editCattext').val(Categorylist[0].Category);
+
+            if (Categorylist[0].IsActive == "True") {
+                $('#editactivecat').prop('checked', true);
+            }
+            else {
+                $('#editactivecat').prop('checked', false);
+
+            }
+
+
+            $('#EditCatModal').modal('show');
+        }
+        //Category CRUD End
+
+        function getFAQ() {
+
+            var obj = new Object();
+            obj.Mode = 'GETFAQADMIN';
+          
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_FAQALL";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var FAQList = DBSP.call_DB_Procedure();
+            var o = FAQList.data;
+
+            $('#tblfaq').dataTable().fnDestroy();
+
+            var ob = new Array();
+
+            for (var a = 0; a < o.length; a++) {
+                var lnk = '<i style="color: #7792a8;cursor:pointer;" title="Edit FAQ" onclick="editFaq(\'' + o[a].FldID + '\');" class="fa fa-pencil mrg5L"></i>';
+               
+                ob[a] = new Array();
+                ob[a][0] = lnk;
+                ob[a][1] = o[a].Category;
+                ob[a][2] = o[a].Question;
+                ob[a][3] = o[a].Answer;
+                ob[a][4] = o[a].FldID;
+              
+
+                ob[a][5] = o[a].IsActive == 'True' ? 'Y' : 'N';
+
+            }
+           
+
+            //$('#tblhistory')
+            $('#tblfaq').dataTable({
+                "processing": true,
+                fixedHeader: true,
+                "data": ob,
+                //"autoWidth": false,
+                "columns":
+                  [
+                  { "title": "ID" },
+
+                    { "title": "Category" },
+                    { "title": "Question", },
+                     { "title": "Answer" },
+                  { "title": "ID","class" : "displaynone" },
+                  { "title": "Active?" }
+
+                  ],
+
+                "initComplete": function () {
+
+                },
+                "aoColumnDefs": [
+                    { 'bSortable': false, 'aTargets': [0] }
+                ]
+            });
+
+
+        }
+
+        function saveFAQ() {
+            
+
+            var Question = $('#question_cat').val().trim();
+            var Answer = tinyMCE.get('Answer').getContent();
+            var Answer2 = $('#Answer').text();
+            var Catid = $('#Ddl_Category').val();
+
+            if (Question == '') {
+                notify("Question can not be blank.");
+                return;
+            }
+
+            if (Answer == '<div>&nbsp;</div>') {
+                notify("Answer can not be blank.");
+                return;
+            }
+           
+            var obj = new Object();
+            obj.Mode = 'SAVEFAQ';
+            obj.CategoryID = Catid;
+            obj.Question = Question;
+            obj.Answer = Answer;
+            obj.SESSIONUSERBACKEND = "InsertedBy";
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_FAQALL";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var Categorylist = DBSP.call_DB_Procedure();
+            getFAQ();
+            $('#question_cat').val('');
+            tinymce.get('Answer').setContent('');
+        }
+
+        function editFaq(id) {
+           
+            var obj = new Object();
+            obj.Mode = 'GETFAQADMINBYID';
+            obj.FldID = id;
+
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_FAQALL";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var FAQList = DBSP.call_DB_Procedure();
+            var o = FAQList.data;
+            
+
+            $('#EditFAQModal').modal('show');
+            $('#editFAQID').val(o[0].FldID);
+            $('#editFAQQuestion').val(o[0].Question);
+            $('#Ddl_Category2').val(o[0].CategoryID);
+            $('#Ddl_Category2').multiselect('refresh');
+            //$('#editAnswer').val(o[0].Answer);
+            tinymce.get('editAnswer').setContent(o[0].Answer);
+            if (o[0].IsActive == 'True') {
+
+                $('#editactivefaq').prop('checked', true);
+            }
+            else {
+                $('#editactivefaq').prop('checked', false);
+
+            }
+           // $('#Ddl_Category2').val(o[a]).
+        }
+
+        function EditSaveFAQ() {
+
+            var FldID = $('#editFAQID').val();
+            var catid = $('#Ddl_Category2').val();
+            var question = $('#editFAQQuestion').val();
+            var answer = tinyMCE.get('editAnswer').getContent();
+            var isActive = $('#editactivefaq').is(':checked') ? '1' : '0';
+
+            var obj = new Object();
+            obj.Mode = 'EDITFAQ';
+            obj.FldID = FldID;
+            obj.CategoryID = catid;
+            obj.Question = question;
+            obj.Answer = answer;
+            obj.IsActive = isActive;
+
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_FAQALL";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var FAQList = DBSP.call_DB_Procedure();
+            var o = FAQList.data;
+            $('#EditFAQModal').modal('hide');
+            getFAQ();
+        }
+        
+    </script>
+    <style>
+        .form-control {
+            height: 25px;
+            padding: 2px !important;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        .ui-multiselect-menu {
+            width: 370px !important;
+        }
+
+        .ui-multiselect {
+            width: 100% !important;
+            /*color: rgb(195, 16, 1) !important;*/
+            height: 25px !important;
+            margin-top: 0px !important;
+        }
+
+        label {
+            color: #333333;
+            font-weight: 500;
+        }
+
+        #txt_VendorName, #txt_CurrencyCode, #txt_VendorCO {
+            height: 25px;
+            padding: 2px;
+        }
+
+          .remove {
+            border: 1px solid #060506;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            display: block;
+               padding: 4px;
+               height:25px;
+            text-decoration: none;
+            background: #7792A8;
+            color: #E2E2E2;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-family: helvetica;
+            font-size: 13px;
+            position: relative;
+        }
+
+            .remove a {
+                cursor: pointer;
+                position: absolute;
+                top: -5px;
+                right: -6px;
+                font-size: 0.9em;
+                color: white;
+                background: black;
+                border-radius: 100px;
+                padding: 7px;
+                line-height: 9px;
+
+            }
+    </style>
+    <style>
+         .ui-multiselect {
+            width: 100% !important;
+            /*color: rgb(195, 16, 1) !important;*/
+            height: 25px !important;
+            margin-top: 0px !important;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Modal -->
+<div id="AddCatModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add Category</h4>
+      </div>
+      <div class="modal-body">
+       <div class="row">
+           <div class="col-sm-12">
+               <label>Category Name</label>
+               <input type="text" id="Cattext" class="form-control" />
+           </div>
+           <div class="col-sm-4">
+               <label for="activecat">Active?</label>
+               <input type="checkbox" id="activecat" checked />
+           </div>
+       </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" onclick="SaveCat();">Save</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+    <!-- Modal -->
+<div id="EditCatModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Edit Category</h4>
+      </div>
+      <div class="modal-body">
+       <div class="row">
+           <div class="col-sm-12">
+               <label>Category Name</label>
+               <input type="text" id="editCattext" class="form-control" />
+           </div>
+           <div class="col-sm-4">
+               <label for="editactivecat">Active?</label>
+               <input type="checkbox" id="editactivecat" checked />
+           </div>
+       </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" onclick="EditCat();">Edit</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+      <!-- Modal -->
+<div id="EditFAQModal" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width:70%;">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Edit Category</h4>
+      </div>
+      <div class="modal-body">
+       <div class="row">
+           <input type="hidden" id="editFAQID" />
+           <div class="col-sm-6">
+               <label>Category Name</label>
+               <select id="Ddl_Category2" class="form-control">
+                        <option>1</option>
+                        <option>1</option>
+                        <option>1</option>
+                    </select>
+           </div>
+           <div class="col-sm-6">
+               <label>Question</label>
+             <input type="text" id="editFAQQuestion" class="form-control" />
+              
+           </div>
+
+           <div class="col-sm-12">
+               <label>Answer</label>
+              <textarea id="editAnswer"></textarea>
+              
+           </div>
+           <div class="col-sm-4">
+                <label for="editactivefaq">Active?</label>
+               <input type="checkbox" id="editactivefaq" checked />
+           </div>
+       </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" onclick="EditSaveFAQ();">Edit</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+
+    <div class="container-fluid" id="angulardiv" ng-app="Project" ng-controller="PO">
+
+
+        <div class="row mrg10B">
+            <div class="col-sm-12">
+                <h3 class="section-header" style="margin-top: -20px; margin-bottom: 0px;">Add/Edit FAQ</h3>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <label style="width:100%;">Select Category
+                        <span style="float:right;">
+                            <i style="color: #7792a8;cursor:pointer;" title="Add New Category" onclick="addCategory();" class="fa fa-plus"></i>
+                            <i style="color: #7792a8;cursor:pointer;" title="Edit Selected Category" onclick="editCategory();" class="fa fa-pencil mrg5L"></i>
+
+                        </span>
+                    </label>
+                    <select id="Ddl_Category" class="form-control">
+                        <option>1</option>
+                        <option>1</option>
+                        <option>1</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-8">
+                    <label>Type Question</label>
+                    <input type="text" id="question_cat" class="form-control" />
+
+                </div>
+            </div>
+
+            <div class="col-sm-12 mrg10T" >
+                <label>Answer</label>
+                <textarea id="Answer" class="form-control" ></textarea>
+            </div>
+
+
+        </div>
+
+
+
+         <div class="float-panel-container">
+        <ul>
+            <li onclick="saveFAQ();" title="Save FAQ" ><a href="javascript:void(0);"><i class="fa fa-save mrg5R"data-toggle="tooltip"></i><span class="tooltip-toggle">Save FAQ</span></a></li>
+          
+        </ul>
+    </div>
+        <hr />
+
+            <div class="col-sm-12 mrg10T">
+                <h3 class="section-header" style="margin-top: -20px; margin-bottom: 0px;">FAQ List</h3>
+            </div>
+
+
+        <div class="col-sm-12 mrg10T">
+             <table id="tblfaq">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Category</th>
+                    <th>Question</th>
+                    <th>Answer</th>
+                    <th>ID</th>
+                    <th>Active?</th>
+                </tr>
+            </thead>
+        </table>
+
+        </div>
+
+
+    </div>
+</body>
+
+</html>

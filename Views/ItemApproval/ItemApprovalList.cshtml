@@ -1,0 +1,448 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ItemApprovalList</title>
+    
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">     
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" /> 
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>    
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>    
+    <link href="~/css/Misc.css" rel="stylesheet" /> 
+
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+     <script src="~/Scripts/jquery.bpopup.min.js"></script>
+    <style>
+           #popupforedit .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+
+    </style>
+    <script type="text/javascript">
+        var us = new Array();
+
+        function getData() {
+
+            us = [];
+
+            var dataTable = "";
+            var dt = "";
+            
+            var url = '';
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/itemapproval/GetAllItemApprovalList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'itemapproval/GetAllItemApprovalList';
+            }
+
+           
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+
+                    if (data != '') {
+
+                        dt = data.data;
+                        if (dt.length == 0) {
+                            return;
+                        }
+
+                        $('#ItemApproval').dataTable().fnDestroy();
+
+                        if (dt.length > 0) {
+
+                            for (i = 0; i < dt.length ; i++) {
+
+                                us[i] = new Array();
+
+                                us[i][0] = '<i style="color : rgb(32, 128, 147);cursor:pointer;" class="fa fa-pencil-square-o" data-id="' + dt[i].ItemApprovalID + '" onclick="edititemapproval(this);"></i>';
+
+                                us[i][1] = dt[i].ItemApprovalID;
+                                us[i][2] = dt[i].ItemName;
+                                if (dt[i].IsActive == 1) {
+                                    us[i][3] = '<i class="fa fa-check" style="color: green;" data-id="' + dt[i].ItemApprovalID + '" ></i>';
+                                }
+                                else {
+                                    us[i][3] = '<i class="fa fa fa-times" style="color: red;" data-id="' + dt[i].ItemApprovalID + '"></i>';
+                                }
+                                us[i][4] = dt[i].IsActive;
+
+                            }
+
+                            $('#ItemApproval').dataTable({
+                                "processing": true,
+                                "data": us,
+                                "columns":
+                                  [
+                                    { "title": "Action" },
+                                    { "title": "ItemApprovalID", "class": "displaynone" },
+                                    { "title": "ItemName" },
+                                    { "title": "IsActive" },
+                                    { "title": "IsActive", "class": "displaynone" }
+                                  ],
+                                "initComplete": function () {
+                                   
+                                },
+                                "aoColumnDefs": [
+                           { 'bSortable': false, 'aTargets': [0] }
+                                ]
+                            });
+
+
+
+
+
+                        }
+                        else {
+                            var table = $('#UnCommittedPODetail').DataTable();
+                            table.clear().draw();
+                        }
+                        $('#UnCommittedPODetail').show();
+                    }
+                    else {
+                        alert('Wrong');
+                    }
+                }
+            });
+        }
+
+
+
+        $(document).ready(function () {
+
+            getData();
+
+          
+        });
+
+
+        function edititemapproval(obj) {
+
+            var id = $(obj).attr('data-id');
+            $('#hdn_itmid').val(id);
+
+            //console.log(us);
+            for (i = 0; i < us.length ; i++) {
+
+                
+
+                if (us[i][1] == id) {
+
+                    var itemapprovalname = us[i][2];
+
+                    $('#edit_itemapprovalname').val(itemapprovalname);
+
+                    var isactive = us[i][4];
+                    if (isactive == "1") {
+                        $('#edit_isactive').attr('checked', 'checked');
+                    }
+                    else {
+
+                        $('#edit_isactive').removeAttr('checked');
+                    }
+                    
+                    $('#popupforedit').bPopup({
+                        easing: 'easeOutBack', //uses jQuery easing plugin
+                        speed: 450,
+                        transition: 'slideDown',
+                        modalColor: 'rgb(18, 54, 65)'
+
+
+                    });
+                    break;
+
+                }
+
+            }
+
+
+        }
+
+        function saveedited() {
+
+            var id = $('#hdn_itmid').val();
+
+              var name = $('#edit_itemapprovalname').val();
+
+            
+              var isactive;
+              if ($('#edit_isactive').is(':checked')) {
+                  isactive = '1';
+              }
+              else {
+                  isactive = '0';
+              }
+
+
+              var url = '';
+
+              if (LOCALORSERVERNEW == 'LOCAL') {
+                  url = '/itemapproval/EditItemApproval';
+              }
+              else if (LOCALORSERVERNEW == 'SERVER') {
+                  url = 'itemapproval/EditItemApproval';
+              }
+              $.ajax({
+                  type: "POST",
+                  url: url,
+                  contentType: "application/json; charset=utf-8",
+                  dataType: "text",
+                  data: "{ 'ApprovalID': '" +  id + "', 'Name':'" +  name + "', 'isActive':'" +  isactive +"'}",
+                  
+                  success: function (data) {
+
+                      if (data == "SUCCESS") {
+                          getData();
+                          $('#popupforedit').bPopup().close();
+                          notify("Updated Successfully");
+                      }
+                  }
+              });
+
+        }
+
+        function savenew() {
+
+            var id = $('#hdn_itmid').val();
+
+            var name = $('#edit_itemapprovalname').val();
+
+
+            var isactive;
+            if ($('#edit_isactive').is(':checked')) {
+                isactive = '1';
+            }
+            else {
+                isactive = '0';
+            }
+
+
+            var url = '';
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/itemapproval/EditItemApproval';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'itemapproval/EditItemApproval';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                data: "{ 'ApprovalID': '" + id + "', 'Name':'" + name + "', 'isActive':'" + isactive + "'}",
+
+                success: function (data) {
+                    
+                    if (data == "SUCCESS") {
+                        getData();
+                        $('#popupforedit').bPopup().close();
+                        notify("Updated Successfully");
+                    }
+                    else {
+                        
+                        $('#popupforedit').bPopup().close();
+                        notify("Duplicate Exists");
+                    }
+                }
+            });
+
+        }
+
+
+
+        function addnew() {
+
+            //var id = $('#hdn_itmid').val();
+
+            var name = $('#new_itemapprovalname').val();
+
+            if(name.trim() == "")
+            {
+                notify("Name can not be blank");
+                return;
+            }
+
+
+            var isactive;
+            if ($('#new_isactive').is(':checked')) {
+                isactive = '1';
+            }
+            else {
+                isactive = '0';
+            }
+
+
+            var url = '';
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/itemapproval/AddItemApproval';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'itemapproval/AddItemApproval';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                data: "{ 'Name':'" + name + "', 'isActive':'" + isactive + "'}",
+
+                success: function (data) {
+
+                    if (data == "SUCCESS") {
+                        getData();
+                        $('#new_itemapprovalname').val('');
+                        $('#new_isactive').removeAttr('checked');
+                        notify("Added Successfully");
+                    }
+
+                    else {
+                        notify("Duplicate Exists");
+                    }
+                }
+            });
+
+
+        }
+    </script>
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+
+
+
+
+
+
+     <div id="popupforedit" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+        <span class="button b-close"><span>X</span></span>
+         
+         <input type="hidden" id="hdn_itmid" />
+
+         <div class="user_panel_container">
+         <label>Approval Name</label>
+         <input type="text" id="edit_itemapprovalname" /> 
+         </div>
+
+         <div class="user_panel_container">
+         <label>Is Active</label>
+         <input type="checkbox" id="edit_isactive" />
+         </div>
+        <div class="user_panel_container">
+        <input type="button" value="Save" onclick="saveedited();" />
+        </div>
+    </div>
+
+
+      <div class="main_container" id="angulardiv" ng-app="Project" ng-controller="PO">
+
+       
+
+    <div>
+      
+        <fieldset style="margin-bottom:30px;">
+                        <legend>Add New Approval Item</legend>
+            
+        <div class="user_panel_container req">
+            <label>Fabrication Approval Name</label>
+            <input type="text" id="new_itemapprovalname" placeholder="Enter Fabrication Approval Name" />
+        </div>
+
+        <div class="user_panel_container ">
+            <label>Is active?</label>
+            <input type="checkbox" id="new_isactive" />
+        </div>
+
+        <div class="user_panel_container req">
+            <input type="button" value="Add New" onclick="addnew();" />
+        </div>
+</fieldset>
+
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="ItemApproval" style="text-align: center;">
+               <thead>
+                <tr>
+                              
+                 <th></th>
+                 <th></th>
+                 <th></th>
+                 <th></th>
+                 <th></th>
+                                    
+               </tr>
+             </thead>  
+         </table>
+        
+        
+        </div>
+          
+    </div>
+</body>
+</html>

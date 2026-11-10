@@ -1,0 +1,620 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Add Vendor</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    @*<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />*@
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+
+
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+
+    <script src="~/Scripts/jquery.autosize.js"></script>
+
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <script src="~/Scripts/AddUser.js"></script>
+
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+    <script src="~/Scripts/jquery.DB_PROC.js"></script>
+    @*------------------------------------Added JS & css source by Subhabrata 7_11_2015--------------------------------------*@
+
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    @*------------------------------------End JS & css source by Subhabrata 7_11_2015--------------------------------------*@
+   
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            //    BindControls();
+            $('textarea').autosize();
+        });
+
+        //function BindControls() {
+        //    var Countries = ['ARGENTINA', 'AUSTRALIA', 'BRAZIL', 'BELARUS', 'BHUTAN',
+        //        'CHILE', 'CAMBODIA', 'CANADA', 'CHILE', 'DENMARK', 'DOMINICA'];
+
+        //    $('#txt_City').autocomplete({
+        //        source: Countries,
+        //        minLength: 0,
+        //        scroll: true
+        //    }).focus(function () {
+        //        $(this).autocomplete("search", "");
+        //    });
+        //}
+
+    </script>
+
+    <style>
+        .ui-autocomplete {
+            cursor: pointer;
+            height: 120px;
+            overflow-y: scroll;
+        }
+
+        .user_panel_container select {
+            padding: 7px 1%;
+        }
+
+        .edit_vendor_full {
+            margin-bottom: 12px;
+        }
+
+        .user_panel_container {
+            padding: 0px 0px 0px 0px;
+        }
+
+            .user_panel_container label {
+                padding: 8px 0px 4px;
+            }
+
+            .user_panel_container select {
+                padding: 7px 1%;
+            }
+    </style>
+
+    <style type="text/css">
+        #sidebar {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+        }
+    </style>
+
+    <style>
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        .ui-multiselect {
+            width: 100% !important;
+            /*color: rgb(195, 16, 1) !important;*/
+            height: 25px !important;
+            margin-top: 0px !important;
+        }
+
+        label {
+            color: #333333;
+            font-weight: 500;
+        }
+
+        .col-sm-2 .col-sm-12 {
+            padding : 0px !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid" id="angulardiv" ng-app="customer" ng-controller="customer" style="zoom:0.95;">
+
+
+
+        <div class="row">
+            <div class="col-sm-12" style="margin-top:-20px;">
+                <h3 class="section-header">
+                    Add Vendor
+                    <i style="cursor:pointer;" class="fa fa-info-circle mrg5L" data-toggle="popover" data-content="Here you will add the vendor and the address for accounting purposes. Afterwards you will be prompted to add a contact"></i>
+                </h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-5 mrg10B">
+                Invoice Terms: <select id="txt_Terms" ng-model="User.Terms_ID" style="width: 300px;">
+                    <option value="0">--Select Terms--</option>
+                    @Html.Raw(ViewData["getAllTerms"])
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+
+
+            <div class="col-sm-2 req">
+                <label>Legal Name</label>
+                <input type="text" id="txt_LegalName" class="form-control text-uppercase" ng-model="User.FName" onkeyup="buildcommonname();" />
+            </div>
+
+
+            <div class="col-sm-2 req">
+                <label>Common Name</label>
+                <input type="text" id="txt_Name" ng-model="User.FName" class="form-control text-uppercase" />
+            </div>
+
+            <div class="col-sm-2 req">
+                <label>Currency</label>
+                <select id="Ddl_Currency" class="form-control">
+                    @Html.Raw(ViewData["GetAllCurency"])
+                </select>
+            </div>
+
+
+            <div class="col-sm-6">
+                <label>Classification</label>
+                <select id="Ddl_Clftion" multiple='multiple' class="form-control">
+                    @Html.Raw(ViewData["GetClassification"])
+                </select>
+            </div>
+
+        </div>
+
+
+        <div class="row mrg10T">
+            <div class="col-sm-2">
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label>Address</label>
+                        <textarea id="txt_Addr" style="height:70px;" ng-model="User.Address1" class="form-control no-resize"></textarea>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <label>City</label>
+                        <input type="text" id="txt_City" ng-model="User.City" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label>Country</label>
+                        <select id="Ddl_Country" onchange="GetCtryID(this);" class="form-control">
+                            @Html.Raw(ViewData["GetAllCountry"])
+                        </select>
+                    </div>
+                    <div class="col-sm-12">
+                        <label>State/Prov</label>
+                        <select id="Ddl_State" onchange="GetStateID(this);" class="form-control">
+                            <option value="0" name="ddlState_0">--Select State/Prov--</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <label>Postal/Zip Code</label>
+                        <input type="text" id="txt_ZipCode" ng-model="User.ZipCode" class="form-control postalcode" />
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="col-sm-2 displaynone">
+
+                <div class="col-sm-12">
+                    <label>Email address</label>
+                    <input type="text" id="txt_Email" ng-model="User.Email" class="form-control" />
+                </div>
+
+                <div class="col-sm-12">
+                    <label>Phone</label>
+                    <input type="text" id="txt_Phone" ng-model="User.Contact" class="form-control" />
+                </div>
+
+                <div class="col-sm-12">
+                    <label>Phone 2</label>
+                    <input type="text" id="txt_Phone2" ng-model="User.Contact2" class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-sm-2 displaynone">
+                <div class="col-sm-12">
+                    <label>Website</label>
+                    <input type="text" id="txt_WebSiteUrl" ng-model="User.Address2" class="form-control" />
+                </div>
+
+                <div class="col-sm-12">
+                    <label>Ext</label>
+                    <input type="text" id="txt_Extension" ng-model="User.Extension" class="form-control" />
+
+                </div>
+
+
+
+                <div class="col-sm-12">
+                    <label>Fax</label>
+                    <input type="text" id="txt_Fax" ng-model="User.Fax" class="form-control" />
+                </div>
+
+
+            </div>
+
+            <div class="col-sm-4">
+
+                <label>Internal Notes</label>
+                <textarea id="txt_VndrNotes" style="height:115px;" class="form-control no-resize"></textarea>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="row mrg5T">
+            <div class="col-sm-12">
+                <label>
+                    Minority Owned Business
+                    <input class="mrg5L" type="checkbox" id="Minority_check" />
+                </label>
+            </div>
+
+        </div>
+
+        <div class="row mrg5T">
+            <div class="col-sm-12">
+                <label>
+                    Women Owned Business
+                    <input class="mrg5L" type="checkbox" id="Woman_check" />
+                </label>
+            </div>
+
+        </div>
+
+        <div class="row mrg5T">
+            <div class="col-sm-12">
+                <label>
+                    Remit To address different than Main address
+                    <input class="mrg5L" onclick="r_chk(this);" type="checkbox" id="Remit_chk" />
+                </label>
+            </div>
+
+        </div>
+
+        <div class="row displaynone" id="r_div">
+
+            <div class="col-sm-4">
+
+
+
+                <div class="col-sm-6">
+                    <label>Address</label>
+                    <textarea id="Rtxt_Addr" ng-model="User.RAddress1" style="height:70px;" class="form-control no-resize"></textarea>
+
+                    <label>City</label>
+                    <input type="text" id="Rtxt_City" ng-model="User.RCity" class="form-control" />
+
+
+
+                </div>
+
+
+                <div class="col-sm-6">
+
+
+                    <div class="col-sm-12" style="padding-left:2px;padding-right:0px;">
+                        <label>Country</label>
+                        <select id="RDdl_Country" onchange="GetCtryID2(this);" class="form-control">
+                            @Html.Raw(ViewData["GetAllCountry"])
+                        </select>
+                    </div>
+                    <div class="col-sm-12" style="padding-left:2px;padding-right:0px;">
+                        <label>State/Prov</label>
+                        <select id="RDdl_State" onchange="GetStateID(this);" class="form-control">
+                            <option value="0" name="RddlState_0">--Select State/Prov--</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12" style="padding-left:2px;padding-right:0px;">
+                        <label>Postal/Zip Code</label>
+                        <input type="text" class="postalcode form-control " id="Rtxt_ZipCode" ng-model="User.RZipCode" />
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="user_panel_container" style="width: 5%; margin-left: 2%; margin-top: 55px; float: right; display: none;">
+            <span style="float: right;">Active</span>
+            <input type="checkbox" id="txt_Actv" style="margin-left: 1%; margin-top: 1.5%; float: right;" ng-model="User.IsActive" />
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="user_panel_container" style="display: none;">
+            <label>Short Name</label>
+            <input type="text" id="txt_ShrtName" ng-model="User.LName" />
+        </div>
+
+
+
+
+
+        @*----------------------------------------Designed Start By Subhabrata Mondal 7_11_2015----------------------------------------*@
+
+        <div class="edit_vendor_full" style="display: none;">
+            <div class="user_panel_container" style="width: 10%;">
+                <label>Upload Files : </label>
+            </div>
+            <div class="user_panel_container">
+                <div class="user_panel_container1" style="margin-top: 20px; width: 50%;">
+
+                    <fieldset>
+                        <legend align="left">Vendor Files</legend>
+                        <div class="upload-verify-container" style="padding: 12px;">
+                            <div class="button-container">
+                                <!-- Button to select & upload files -->
+                                <span class="btn btn-success fileinput-button">
+                                    <!-- The file input field used as target for the file upload widget -->
+                                    Drop a file or click here to upload!
+                                    <input id="fileupload" type="file" name="files[]" multiple class="upload-button-drag-style" />
+                                </span>
+                                <!-- The global progress bar -->
+                                <!-- The list of files uploaded -->
+                                <p style="float: left; clear: left;">
+                                    Files selected&nbsp;:&nbsp;
+                                </p>
+                                <ul class="filelist" style="float: left;"></ul>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="user_panel_container1" style="margin-top: 20px; width: 50%;">
+                </div>
+            </div>
+        </div>
+
+        @*----------------------------------------Designed End By Subhabrata Mondal 7_11_2015----------------------------------------*@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="user_panel_container" style="margin-bottom: 12px;">
+        </div>
+
+
+
+
+
+    </div>
+
+
+    <div class="float-panel-container">
+        <ul>
+            <li id="btn_CrtPrntVndr"><a href="javascript:void(0);"><i class="fa fa-save mrg5R" title="Update" data-toggle="tooltip"></i><span class="tooltip-toggle">Update</span></a></li>
+
+            <li id="btn_CnclPrntVndr"><a href="javascript:void(0);"><i class="fa fa-remove" title="Cancel" data-toggle="tooltip"></i><span class="tooltip-toggle">Cancel</span></a></li>
+
+        </ul>
+    </div>
+
+    @*  <div class="sidebar_btn">
+            <ul>
+                <li>
+                    <a href="javascript:void(0);" class="hvr-icon-save" title="Update" id="btn_CrtPrntVndr"></a>
+                </li>   
+                <li>
+                    <a href="javascript:void(0);" class="hvr-icon-cancel" title="Cancel" id="btn_CnclPrntVndr"></a>                
+                </li>
+                <li>
+                    <img id="loader_createuser" style="display: none;" src="~/Images/load.gif" />
+                </li>
+            </ul>
+		</div>*@
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#txt_Terms').val('24');
+
+            $("#Ddl_Clftion").multiselect().multiselectfilter();
+
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            $('.ui-multiselect-menu').css('width', '84%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+            $('.ui-multiselect-menu').css('width', '24%');
+
+        });
+
+    </script>
+    @*-----------------------------------------Started By Subhabrata Mondal 7_11_2015------------------------------------*@
+
+    <script type="text/javascript">
+        var filedata = {};
+        var filedatacount = 0;
+        var formData = new FormData();
+
+        function delobject1(val, obj) {
+
+            delete filedata[val];
+            $(obj).parent().remove();
+        }
+
+        $("#fileupload").live("change", function () {
+            filedata["fileupload" + filedatacount] = $('input[type=file]')[0].files[0];
+            html = "<ul class='filesul'>";
+            html += $('input[type=file]')[0].files[0].name;
+            html += "<input type='button' class='delfile' onclick='delobject1(\"" + "fileupload" + filedatacount + "\",this)' /></ul>";
+            filedatacount++;
+            $(this).parent().parent().find('.filelist').append(html);
+
+
+        })
+
+    </script>
+
+    @*-----------------------------------------End By Subhabrata Mondal 7_11_2015------------------------------------*@
+
+    <script type="text/javascript">
+        function ifduplicated() {
+            if ($("#Ddl_Currency").val() != '0') {
+                var curr = $("#Ddl_Currency").val();
+                var lname = $("#txt_LegalName").val();
+
+                var obj = new Object();
+                obj.curr = curr;
+                obj.lname = lname;
+
+               
+                var DBSP = new DB_SP_CONNECT();
+                DBSP.ProcedureName = "POMS_CheckParentvendorexistense";
+                DBSP.obj = obj;
+                DBSP.isasync = false;
+                var o = DBSP.call_DB_Procedure();
+                o = o.data;
+                console.log(o);
+                if (parseInt(o[0].result) > 0) {
+                    $('#txt_LegalName').addClass('errorClass');
+                    $('#txt_LegalName').attr('title', 'This vendor already exists');
+
+                    $('#Ddl_Currency').addClass('errorClass');
+                    $('#Ddl_Currency').attr('title', 'This vendor already exists');
+
+                    
+                }
+                else {
+                    $('#txt_LegalName').attr('title', '');
+                    $('#txt_LegalName').removeClass('errorClass');
+
+                    $('#Ddl_Currency').attr('title', '');
+                    $('#Ddl_Currency').removeClass('errorClass');
+
+                }
+
+
+
+            }
+        }
+        $("#Ddl_Currency").on("change", function () {
+
+            ifduplicated();
+            var p1 = $('#txt_Name').val().lastIndexOf(" (");
+            console.log(p1);
+            var nm = '';
+            if (p1 == -1) {
+                nm = $('#txt_Name').val();
+            }
+            else {
+                nm = $('#txt_Name').val().substring(0, p1);
+            }
+            if (nm == '') {
+                nm = $('#txt_LegalName').val();
+            } 
+            console.log(nm);
+
+            if ($("#Ddl_Currency").val() != '0') {
+                $("#txt_Name").val(nm + " (" + $("#Ddl_Currency option:selected").attr('data-currcode') + ")");
+            }
+            else {
+                $("#txt_Name").val(nm);
+            }
+        });
+
+        function buildcommonname() {
+            ifduplicated();
+
+            if ($("#Ddl_Currency").val() != '0') {
+                $("#txt_Name").val($("#txt_LegalName").val() + " (" + $("#Ddl_Currency option:selected").attr('data-currcode') + ")");
+            }
+            else {
+                $("#txt_Name").val($("#txt_LegalName").val());
+            }
+        }
+
+        function r_chk(obj) {
+            if ($(obj).is(':checked')) {
+                $('#r_div').show();
+            }
+            else {
+                $('#r_div').hide();
+            }
+        }
+    </script>
+
+
+</body>
+</html>

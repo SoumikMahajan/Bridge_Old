@@ -1,0 +1,142 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ProjectList</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <link href="~/css/style.css" rel="stylesheet" />
+  
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    
+
+    @*<script src="~/Scripts/jquery-1.7.1.js"></script>*@
+    @*<script src="~/design/js/jquery.1.11.3.min.js"></script>*@
+    <script src="~/Scripts/angular.min.js"></script>
+  
+    <script src="~/Scripts/GlobalJS.js"></script>
+   
+
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+    <script src="~/Scripts/project.js"></script>
+   
+    <script src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
+     
+    <style>
+        table.fixedHeader-floating {
+            top: 53px !important;
+            position: fixed !important;
+            background-color: white;
+        }
+
+            table.fixedHeader-floating.no-footer {
+                border-bottom-width: 0;
+            }
+
+        table.fixedHeader-locked {
+            position: absolute !important;
+            background-color: white;
+        }
+
+
+        .leftaligned {
+            text-align: left;
+        }
+
+        .widercolumn {
+            width: 110px !important;
+        }
+    </style>
+
+    <style type="text/css">
+
+        .display_none
+        {
+            display:none;
+        }
+
+    </style>
+
+    <style>
+        table.dataTable.compact thead th, table.dataTable.compact thead td {
+    padding: 2px 2px !important;
+}
+    </style>
+
+</head>
+<body>
+    
+
+     <div class="main_container">
+       
+         <h3 class="section-header" style="margin-top:-20px;">PROJECT LIST</h3>
+          
+
+             <div class="user_panel_container1">
+
+                 <table id="project" class="display  compact" cellspacing="0" style="zoom:0.95;">
+                     <thead>
+
+                         <tr>
+                             <th></th>
+                             <th style='width:4%;'></th>
+                             <th style='width:5%;'></th>
+                             <th style='width:14%;'></th>
+                             <th style='width:14%;'></th>
+                             <th style='width:11%;'></th>
+                             <th style='width:12%;'></th>
+                             <th></th>
+                             <th style='width:10%;'></th>
+                             @*@
+                             <th style='width:11%;'></th>@*@
+                             <th style='min-width:7.5%;'></th>
+                             <th style='width:7.5%;'></th>
+                             <th style='width:5%;'></th>
+                             <th></th>
+                         </tr>
+                     </thead>
+
+
+
+
+
+                 </table>
+
+             </div>
+
+
+
+</div>
+
+
+<script type="text/javascript">
+
+
+$(document).ready(function () {
+
+    clicknew();
+
+    
+    $('#project').on('draw.dt', function () {
+        RowHtmlRender();
+    });
+});
+
+    </script>   
+
+
+
+
+
+</body>
+</html>

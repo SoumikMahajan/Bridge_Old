@@ -1,0 +1,2423 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Purchase Order Vendor</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+
+    <script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+    @*<script src="~/Scripts/editor_plugin.js"></script>*@
+    <script src="~/Scripts/tinymce/js/tinymce/plugins/textcolor/plugin.min.js"></script>
+
+
+    <style type="text/css">
+        .remove { /* width: 450px; */
+            border: 1px solid #060506;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            display: block;
+            padding: 5px;
+            text-decoration: none;
+            background: rgba(82, 103, 121, 0.75);
+            ;
+            color: #E2E2E2;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-family: helvetica;
+            font-size: 13px;
+            position: relative;
+        }
+
+            .remove a {
+                cursor: pointer;
+                position: absolute;
+                top: -5px;
+                right: -6px;
+                font-size: 0.9em;
+                color: white;
+                background: black;
+                border-radius: 100px;
+                padding: 7px;
+                line-height: 9px;
+            }
+
+        .ui-widget-header {
+            background: grey;
+        }
+
+        .ui-widget-overlay {
+            position: fixed;
+        }
+
+        .ui-dialog .ui-dialog-titlebar-close span {
+            margin: -8px;
+        }
+
+        #popupforvendorlist .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 0px 0px;
+            width: 100%;
+            height: 35px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+    </style>
+    <script type="text/javascript">
+
+        function alreadyconfirmed() {
+            notify("Already Confirmed");
+        }
+
+        function confirmpo() {
+            var POID = $('#Hdn_PurchaseOrderID').val();
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/VendorConfirmPO';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'PurchaseOrder/VendorConfirmPO';
+            }
+
+
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: { 'POID': POID },
+                success: function (data) {
+
+                    $('#Vendorconfirmation').removeAttr('onclick');
+                    $('#Vendorconfirmation').attr('onclick', 'alreadyconfirmed();');
+
+                    $('#Vendorconfirmation').css('background', '#556A77');
+                    $('#Vendorconfirmation').val('Confirmed');
+
+                    notify("Vendor Confirmed");
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+        }
+
+        $(document).ready(function () {
+
+            var tmp = $('#Hdn_IsVendorConfirmation').val();
+            if (tmp == "0") {
+                $('#Vendorconfirmation').remove();
+            }
+            else if (tmp == "2") {
+
+                $('#Vendorconfirmation').removeAttr('onclick');
+                $('#Vendorconfirmation').attr('onclick', 'alreadyconfirmed();');
+                $('#Vendorconfirmation').css('background', '#556A77');
+                $('#Vendorconfirmation').val('Confirmed');
+
+            }
+        });
+
+    </script>
+
+
+    <script type="text/javascript">
+
+
+
+        $(document).ready(function () {
+
+
+
+            getpoexpeditenotes();
+
+
+            var POID = $('#Hdn_PurchaseOrderID').val();
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/PO_GetRequiredAndAssignedApprovers';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'PurchaseOrder/PO_GetRequiredAndAssignedApprovers';
+            }
+
+
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: { 'POID': POID },
+                success: function (data) {
+                    if (parseInt(data) > 0) {
+                        $('#btn_CommitPONSndApprvl').hide();
+                        notify("This PO does not have enough Approvers. Need to assign " + data + " more PO Approver(s).");
+                    }
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+
+        });
+
+
+
+        $(document).ready(function () {
+            SearchText();
+
+
+            $('#txt_ArrivalDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_CheckDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+
+        });
+
+        function SearchText() {
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/GetVendorList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/GetVendorList';
+            }
+
+            $(function () {
+                $('#txt_VendorName').autocomplete({
+                    source: function (request, response) {
+                        $.getJSON("/PurchaseOrder/GetVendorList?VendorName=" + request.term, function (data) {
+                            response(data);
+                        });
+                    },
+                    minLength: 1,
+                    delay: 100
+                });
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            var date = new Date();
+            var currentMonth = date.getMonth();
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+
+            $('#txt_ArrivalDate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'MM dd yy',
+                minDate: new Date(currentYear, currentMonth, currentDate)
+            });
+
+            $('#txt_CheckDate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'MM dd yy',
+                minDate: new Date(currentYear, currentMonth, currentDate)
+            });
+
+        });
+
+
+        function IsNumber(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            if ((keyCode > 47 && keyCode < 58) || (keyCode == 8) || (keyCode == 46)) {
+                return true;
+            }
+            else {
+                notify('Use Only Numeric value');
+                return false;
+            }
+        }
+
+
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('#btn_CreatePO').click(function () {
+
+                var InvRcvdPartial = 'complete';
+                if ($('input:radio[name=InvRcvdPartial]:checked').val() == 'partial') {
+                    InvRcvdPartial = 'partial';
+                }
+                else if ($('input:radio[name=InvRcvdPartial]:checked').val() == 'complete') {
+                    InvRcvdPartial = 'complete';
+                }
+
+
+                var Project = $('#Ddl_Project').val().trim();
+                if (Project == "0") {
+                    $('#Ddl_Project').attr("style", "height:40px");
+                    // $('#Ddl_Project').css('border-color', 'red');
+                    notify('You must select Project before saving the Project');
+                    $('#Ddl_Project').focus();
+                    return;
+                }
+                // $('#Ddl_Project').css('border-color', '');
+
+
+                var VendorID = $('#txt_VendorName').attr('data-id').trim(); //$('#txt_VendorName').val().trim();
+                // notify(VendorID);
+
+                if (VendorID == "0") {
+                    //$('#txt_VendorName').attr("style", "height:30px");
+                    // $('#txt_VendorName').css('border-color', 'red');
+                    errorfunc('txt_VendorName', 'You must select Vendor before saving the Project');
+                    return;
+                }
+                //$('#txt_VendorName').css('border-color', '');
+
+
+                var txt_ConversionRate = $('#txt_ConversionRate').val().trim();
+                //if (txt_ConversionRate == "") {
+                //    $('#txt_ConversionRate').attr("style", "height:30px");
+                //    // $('#txt_ConversionRate').css('border-color', 'red');
+                //    errorfunc('txt_ConversionRate', 'You must enter Conversion Rate before saving the Project');
+                //    return;
+                //}
+                ////$('#txt_ConversionRate').css('border-color', '');
+
+
+                var Ddl_Buyer = $('#Ddl_Buyer').val();//.trim();
+                if (Ddl_Buyer == "0") {
+                    $('#Ddl_Buyer').attr("style", "height:40px");
+                    // $('#Ddl_Buyer').css('border-color', 'red');
+                    notify('You must select Buyer before saving the Project');
+                    $('#Ddl_Buyer').focus();
+                    return;
+                }
+                // $('#Ddl_Buyer').css('border-color', '');
+
+
+                var Ddl_Shipment = $('#Ddl_Shipment').val().trim();
+                //if (Ddl_Shipment == "0") {
+                //    $('#Ddl_Shipment').attr("style", "height:40px");
+                //    //$('#Ddl_Shipment').css('border-color', 'red');
+                //    notify('You must select Shipment method before saving the Project');
+                //    $('#Ddl_Shipment').focus();
+                //    return;
+                //}
+                ////$('#Ddl_Shipment').css('border-color', '');
+
+
+                var txt_Terms = $('#txt_Terms').val();//.trim();
+                //if (txt_Terms == "0") {
+                //    $('#txt_Terms').attr("style", "height:40px");
+                //    // $('#txt_Terms').css('border-color', 'red');
+                //    notify('You must select terms method before saving the Project');
+                //    $('#txt_Terms').focus();
+                //    return;
+                //}
+                //// $('#txt_Terms').css('border-color', '');
+
+
+                var txt_FOB = $('#txt_FOB').val().trim();
+                //if (txt_FOB == "") {
+                //    $('#txt_FOB').attr("style", "height:30px");
+                //    // $('#txt_FOB').css('border-color', 'red');
+                //    errorfunc('txt_FOB', 'You must enter FOB before saving the Project');
+                //    return;
+                //}
+                ////  $('#txt_FOB').css('border-color', '');
+
+
+                var txt_ShipTo = $('#txt_ShipTo').val().trim();
+                if (txt_ShipTo == "") {
+                    $('#txt_ShipTo').attr("style", "height:30px");
+                    //$('#txt_ShipTo').css('border-color', 'red');
+                    errorfunc('txt_ShipTo', 'You must enter ShipTo before saving the Project');
+                    return;
+                }
+                // $('#txt_ShipTo').css('border-color', '');
+
+
+                var VendorCO = $('#txt_VendorCO').attr('data-id').trim(); //$('#txt_VendorCO').val().trim();
+                //if (VendorCO == "0") {
+                //    //$('#txt_VendorCO').attr("style", "height:30px");
+                //    // $('#txt_VendorCO').css('border-color', 'red');
+                //    errorfunc('txt_VendorCO', 'You must enter Vendor C/O before saving the Project');
+                //    return;
+                //}
+                ////$('#txt_VendorCO').css('border-color', '');
+
+
+                var txt_InvoiceTo = $('#txt_InvoiceTo').val().trim();
+                if (txt_InvoiceTo == "") {
+                    $('#txt_InvoiceTo').attr("style", "height:30px");
+                    // $('#txt_InvoiceTo').css('border-color', 'red');
+                    errorfunc('txt_InvoiceTo', 'You must enter Invoice address before saving the Project');
+                    return;
+                }
+                //$('#txt_InvoiceTo').css('border-color', '');
+
+
+
+
+                poid = $('#poid').val();
+
+                var address1 = $('#txt_addr1').val();
+
+                if (address1 == "") {
+                    errorfunc('txt_addr1', 'You must enter address before saving the Project');
+                    return;
+                }
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/UpdatePurchaseOrderDetailNew';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/UpdatePurchaseOrderDetailNew';
+                }
+                var address1 = $('#txt_addr1').val();
+                //notify($("#txt_Terms option:selected").attr('data-id'));
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        'VendorID': VendorID, 'ProjectID': $('#Ddl_Project').val(), 'ConversionRate': $('#txt_ConversionRate').val(),
+                        'CurrencyCode': $('#txt_CurrencyCode').attr('data-id'), 'BuyerID': $('#Ddl_Buyer').val(), 'ShipMethod': $('#Ddl_Shipment').val(),
+                        'ShipDate': $('#txt_ArrivalDate').val(), 'CheckBackDate': $('#txt_CheckDate').val(), 'Terms': $("#txt_Terms option:selected").attr('data-id'),// $('#txt_Terms').val(),
+                        'FOB': $('#txt_FOB').val(), 'Frieght': $('#txt_Freight').val(), 'Remark': $('#txt_Remarks').val(),
+                        'ShipTo': $('#txt_ShipTo').val(), 'VendorCO': VendorCO, 'InVoiceAddress': $('#txt_InvoiceTo').val(),
+                        'Notes': $('#txt_Notes').val(), 'poid': poid, 'address1': address1, 'InvRcvdPartial': InvRcvdPartial
+                    },
+                    success: function (data) {
+                        if (data != '') {
+                            //notify('succesas');
+                            irrrrr = 0;
+                            notify("PO updated Successfully",'green');
+                            irrrrr = 0;
+                            window.location.reload();
+
+
+
+                            var url1 = '';
+                            if (LOCALORSERVERNEW == 'LOCAL') {
+                                url1 = '/PurchaseOrder/POList';
+                            }
+                            else if (LOCALORSERVERNEW == 'SERVER') {
+                                url1 = 'PurchaseOrder/POList';
+                            }
+
+
+
+                            // window.location.href = url1;
+                        }
+                        else {
+                            notify('Something going wrong');
+                        }
+                    }
+                });
+
+
+            });
+
+        });
+
+    </script>
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+
+
+    <script type="text/javascript">
+
+        var selectedpopup;
+
+        $(document).ready(function () {
+
+            $(document).tooltip();
+
+            var classarray = new Array();
+            var clsearch = '';
+            var ddlfrcllsfictn;
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/getClassification';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'PurchaseOrder/getClassification';
+            }
+
+
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: {},
+                success: function (data) {
+
+                    ddlfrcllsfictn = "<select id='Ddl_Clftion' multiple='multiple'>"
+
+                    data = JSON.parse(data);
+                    ////console.log(data);
+                    classarray = data.data;
+
+                    for (var a = 0; a < classarray.length ; a++) {
+
+                        //ddlfrcllsfictn += "<opiton>" + 'test' + "</option>";
+                        ddlfrcllsfictn += "<option text='" + classarray[a].classname + "' value='" + classarray[a].classid + "'>" + deletespaces(classarray[a].classname) + "</option>";
+                    }
+
+                    ddlfrcllsfictn += "</select>";
+
+                    //notify(ddlfrcllsfictn);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+
+
+            url1 = '';
+
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/getVendors';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'PurchaseOrder/getVendors';
+            }
+
+
+            var totdata;
+
+            var vendors = new Array();
+
+            //$('#vendorlist tfoot th').each(function () {
+            //    var title = $('#example thead th').eq($(this).index()).text();
+            //    $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            //});
+
+            $.get(url1)
+                .success(function (response) {
+
+
+                    totdata = JSON.parse(response);
+                    totdata = totdata.data;
+
+                    for (i = 0; i < totdata.length ; i++) {
+                        vendors[i] = new Array();
+                        var id = totdata[i].Vendor_ID;
+                        var txt = 'Click to select ' + totdata[i].ContactFirstname + ' ' + totdata[i].ContactLastname + ' At ' + totdata[i].ParentVendorName;
+                        vendors[i][0] = '<i class="fa fa-hand-o-right" style="font-size: 1.5em;cursor:pointer;" data-id="' + id + '" title="' + txt + '" onclick="selectvendor(this);"></i>';
+                        vendors[i][1] = totdata[i].ParentVendorName;
+                        vendors[i][2] = totdata[i].ContactFirstname + ' ' + totdata[i].ContactLastname;
+                        vendors[i][3] = deletespaces(totdata[i].Classifications);
+                        vendors[i][4] = totdata[i].Currency;
+                        vendors[i][5] = totdata[i].City;
+                        vendors[i][6] = totdata[i].State;
+                        vendors[i][7] = totdata[i].CurrCode;
+                    }
+
+                    $('#vendorlist').dataTable({
+                        "processing": true,
+                        "data": vendors,
+                        "columns": [
+                            { "title": "Actions" },
+                            { "title": "Vendor" },
+                            { "title": "Contact Name" },
+                            { "title": "Vendor Category", 'class': 'desktoponly-datatable' },
+                            { "title": "Currency" },
+                            { "title": "City", 'class': 'desktoponly-datatable' },
+                            { "title": "State/Prov", 'class': 'desktoponly-datatable' },
+                            { "title": "Currcode", "class": "displaynone" }
+
+
+                        ],
+                        //"lengthMenu": [[5, 10, 50, -1], [5, 10, 50, "All"]],
+                        "initComplete": function () {
+
+                            //var ddl = "<select><option>1</option><option>2</option></select>";
+                            var html = "";
+                            html = "<tr >"
+                                + "<th><span onclick='resetsrch();' style='cursor:pointer;'><i class='fa fa-undo'></i></span></th>"
+                                + "<th rowspan='1' colspan='1' ><input class='srch' type='text' data-indx='1' placeholder='Search Vendor'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='2' placeholder='Search Contact Name'></th>"
+                                //+ "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='3' placeholder='Search Vendor Category'></th>"
+                                + "<th rowspan='1' colspan='1' class='desktoponly-datatable'>" + ddlfrcllsfictn + "</th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='4' placeholder='Search Currency'></th>"
+                                + "<th rowspan='1' colspan='1' class='desktoponly-datatable'><input class='srch' type='text' data-indx='5' placeholder='Search City'></th>"
+                                + "<th rowspan='1' colspan='1' class='desktoponly-datatable'><input class='srch' type='text' data-indx='6' placeholder='Search State/Prov'></th>";
+
+
+                            $('#vendorlist thead').append(html);
+
+                            $("#Ddl_Clftion").multiselect().multiselectfilter();
+
+                            $("#Ddl_Clftion").multiselect({
+
+                                //click: function (event, ui) {
+                                //    //$callback.text(ui.value + ' ' + (ui.checked ? 'checked' : 'unchecked'));
+                                //    //alert(ui.value);
+                                //    //console.log(ui);
+                                //    alert(ui.title);
+                                //}
+
+                                close: function () {
+                                    var clsearch = $('#Ddl_Clftion').val();
+                                    if (clsearch == null)
+                                        clsearch = '';
+                                    var srchtxt = '';
+                                    var tmp = clsearch;
+
+                                    for (var i = 0; i < tmp.length; i++) {
+
+                                        var id = tmp[i];
+
+
+                                        for (var a = 0; a < classarray.length ; a++) {
+
+
+                                            if (classarray[a].classid == id) {
+                                                if (srchtxt == '') {
+                                                    srchtxt += deletespaces(classarray[a].classname);
+                                                }
+                                                else {
+                                                    srchtxt += '|' + deletespaces(classarray[a].classname);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    var table = $('#vendorlist').DataTable();
+                                    table.column(3).search(srchtxt, true).draw();
+                                }
+                            });
+
+
+                            var table = $('#vendorlist').DataTable();
+                            // table.column(2).search("fname|ff", true).draw();
+
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+                                table
+                                       .column(indx)
+                                       .search(txt)
+                                       .draw();
+                                //RowHtmlRender();
+                            });
+
+
+                            $('#vendorlist_filter').remove();
+                            $('#vendorlist_length').remove();
+
+                        },
+                        "pagingType": "full_numbers",
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0] }
+                        ]
+                    });
+                });
+
+            $('#Ddl_Project').change(function () {
+
+                var pid = $(this).val();
+
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/PurchaseOrder/shiptoaddress';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+
+                    url1 = 'PurchaseOrder/shiptoaddress';
+                }
+
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    data: { 'pid': pid },
+                    success: function (data) {
+                        var hoteladdress = data.split('^')[0];
+                        var legalname = data.split('^')[1];
+                        var projectname = data.split('^')[2];
+
+                        $('#txt_ShipTo').val(projectname);
+                        $('#txt_InvoiceTo').val(legalname);
+                        $('#txt_addr1').text(hoteladdress);
+
+
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+            });
+        });
+        function resetsrch() {
+            $("#Ddl_Clftion").multiselect("uncheckAll");
+
+            var table = $('#vendorlist').DataTable();
+            table.column(3).search('').draw();
+            $('.srch').each(function () {
+                this.value = '';
+                var indx = $(this).attr('data-indx');
+                var txt = this.value;
+                table
+                       .column(indx)
+                       .search(txt)
+                       .draw();
+            });
+        }
+
+        function openvendors(obj) {
+
+            resetsrch();
+
+            selectedpopup = obj;
+
+
+            $('#popupforvendorlist').bPopup({
+                easing: 'easeOutBack', //uses jQuery easing plugin
+                speed: 450,
+                transition: 'slideDown',
+                modalColor: 'rgb(18, 54, 65)'
+
+            });
+        }
+
+        function selectvendor(obj) {
+            var id = $(obj).attr('data-id');
+            var rw = $(obj).parent().parent();
+            // var cname = $(rw).find("td:eq(1)").html() + '-' + $(rw).find("td:eq(2)").html();
+
+            var cname = "";
+
+            if (selectedpopup == 'vendor') {
+                cname = $(rw).find("td:eq(1)").html() + '-' + $(rw).find("td:eq(2)").html();
+            }
+            else {
+                cname = $(rw).find("td:eq(2)").html();
+            }
+
+
+            var currency = $(rw).find("td:eq(4)").html();
+            var currencycode = $(rw).find("td:eq(7)").html();
+
+            //alert(rw);
+
+            $('#popupforvendorlist').bPopup().close();
+
+            if (selectedpopup == 'vendor') {
+
+                $('#txt_CurrencyCode').text(currency);
+                $('#txt_CurrencyCode').attr('data-id', currencycode);
+
+                $('#txt_VendorName').text(cname + "(" + currency + ")");
+                $('#txt_VendorName').attr('data-id', id);
+            }
+            else {
+
+                $('#txt_VendorCO').text(cname);
+                $('#txt_VendorCO').attr('data-id', id);
+                // notify('still working');
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/PurchaseOrder/vendoraddress';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'PurchaseOrder/vendoraddress';
+                }
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    data: { 'vendorid': id },
+                    success: function (data) {
+                        $('#txt_addr1').text(data);
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+            }
+        }
+
+
+
+
+        function deletespaces(str) {
+            var newstr = '';
+            for (var i = 0; i < str.length; i++) {
+                if (str[i] != ' ') {
+                    newstr += str[i];
+                }
+            }
+            return newstr;
+        }
+
+    </script>
+    <script>
+
+        $(document).ready(function () {
+
+
+            var poid = $('#poid').val();
+
+
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/getpobyid';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/getpobyid';
+            }
+
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'poid': poid },
+                success: function (data) {
+
+                    var obj = JSON.parse(data).data[0];
+                    ////console.log(obj);
+
+                    var project_Number = '';
+                    var BuyerID = '';
+                    var PurchaseOrderNumber = '';
+
+                    if (obj.Buyer_ID < 10)
+                        BuyerID = '000' + obj.Buyer_ID;
+                    else if (obj.Buyer_ID < 100)
+                        BuyerID = '00' + obj.Buyer_ID;
+                    else if (obj.Buyer_ID < 1000)
+                        BuyerID = '0' + obj.Buyer_ID;
+
+                    if (obj.PurchaseOrderID < 10)
+                        PurchaseOrderNumber = '000' + obj.PurchaseOrderID;
+                    else if (obj.PurchaseOrderID < 100)
+                        PurchaseOrderNumber = '00' + obj.PurchaseOrderID;
+                    else if (obj.PurchaseOrderID < 1000)
+                        PurchaseOrderNumber = '0' + obj.PurchaseOrderID;
+
+                    if (obj.Project_ID < 10)
+                        project_Number = '100' + obj.Project_ID;
+                    else if (obj.Project_ID < 100)
+                        project_Number = '10' + obj.Project_ID;
+                    else if (obj.Project_ID < 1000)
+                        project_Number = '1' + obj.Project_ID;
+
+                    $("#purchaseOrderNumber").append(" (" + project_Number + "-" + PurchaseOrderNumber + ") ");
+
+                    var iscommited = obj.IsCommited;
+                    var IsSentForApproval = obj.IsSentForApproval;
+
+
+
+                    if (iscommited == "0") {
+                        $('#Hdn_iscommited').val("0");
+                        $('#btn_RevisePO').hide();
+                        $("#btn_CreatePO").attr('value', "Edit PO");
+                        $('.makedisable').removeAttr('disabled');
+
+                        $('#btn_ViewPOPDF').hide();
+                    }
+                    else {
+                        $('#Hdn_iscommited').val("1");
+                        //$('#btn_CreatePO').hide();
+                        $("#btn_CreatePO").attr('value', "Save Notes");
+                        $('#btn_CommitPO').hide();
+                        $('#btn_CommitPONSndApprvl').hide();
+                        $('#btn_ProofPONSndApprvl').hide();
+
+                        $('#btn_ViewPOPDF').show();
+
+                        $('#openvendor1').removeAttr('onclick');
+                        $('#openvendor2').removeAttr('onclick');
+                        $('.makedisable').attr('disabled', 'disabled');
+                        $('#txt_Notes').attr('disabled', 'disabled');
+                        $('#saveCommentTaxDtl').hide();
+                        $('#saveCommentTaxDtl2').hide();
+                        $('#btn_NvgtToAdditmsToPO').hide();
+
+                        $('.notforcommitted').hide();
+
+                        $("#POLineItemsDetail tbody").addClass('disable-sort');
+                        
+                        
+
+                    }
+
+                    if (IsSentForApproval == "1") {
+                        $('#btn_RevisePO').hide();
+
+                        $('.makedisable').removeAttr('disabled');
+                    }
+
+                    $('#Ddl_Project').val(obj.Project_ID);
+                    $('#Ddl_Project').attr('disabled', 'disabled');
+
+                    $('#txt_ShipTo').val(obj.ShipTo);
+                    $('#txt_VendorName').text(obj.VendorName + "(" + obj.Currency + ")");
+                    $('#txt_VendorName').attr('data-id', obj.Vendor_ID);
+                    $('#txt_VendorCO').text(obj.VendorCareOfName);
+                    $('#txt_VendorCO').attr('data-id', obj.VendorCO);
+
+                    $('#txt_ConversionRate').val(obj.ConversionRate);
+                    $('#txt_InvoiceTo').val(obj.InvoiceTo);
+                    $('#txt_addr1').text(obj.Address1);
+
+                    $('#txt_CurrencyCode').text(obj.Currency);
+                    $('#Ddl_Buyer').val(obj.Buyer_ID);
+                    $('#Ddl_Shipment').val(obj.ShipMethod);
+                    $('#txt_ArrivalDate').val(obj.ArrivalDate);
+                    $('#txt_CheckDate').val(obj.CheckBackDate);
+                    $('#txt_Terms').val(obj.Terms);
+                    $('#txt_FOB').val(obj.FOB);
+                    $('#txt_Freight').val(obj.Freight);
+                    //$('#txt_Notes').val(obj.Freight);
+                    $('#txt_Remarks').val(obj.Remarks);
+
+                    $('#txt_Notes').val(obj.Notes);
+                }
+            });
+
+        });
+
+
+    </script>
+
+
+
+    <style type="text/css">
+        .displayForTableHeader {
+            display: none;
+        }
+
+        .edit_vendor_full {
+            margin-bottom: 12px;
+        }
+
+        .user_panel_container label, .logo_container_heading {
+            padding: 4px 0px;
+        }
+    </style>
+
+
+    <script type="text/javascript">
+
+        function LoadPOLineItems(sectionid) {
+
+            $('#POLineItemsDetail tbody tr').css("opacity", "0.3");
+            var table = $('#POLineItemsDetail').DataTable();
+            table.clear().draw();
+
+            var POID = $('#Hdn_PurchaseOrderID').val();
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/getPOlineitemsByPONo';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/getPOlineitemsByPONo';
+            }
+            url1 += "?POID=" + POID;
+
+            var totdata;
+
+
+
+
+            $.get(url1)
+               .success(function (response) {
+                   totdata = JSON.parse(response);
+                   totdata = totdata.data;
+
+                   if (totdata.length == 0) {
+                       var table = $('#POLineItemsDetail').DataTable();
+                       table
+                           .clear()
+                           .draw();
+                       //$('#tableloader').hide();
+                       return;
+                   };
+                   POLineItems = [];
+                   for (i = 0; i < totdata.length ; i++) {
+                       POLineItems[i] = new Array();
+                       POLineItems[i][0] = totdata[i].POLineItemID;
+                       POLineItems[i][1] = "";
+                       POLineItems[i][2] = totdata[i].TotalID;
+                       POLineItems[i][3] = totdata[i].ProjectID;
+                       POLineItems[i][4] = totdata[i].BudgetSectionID;
+                       POLineItems[i][5] = totdata[i].LineItemID;
+                       POLineItems[i][6] = totdata[i].ItemOrder;
+                       POLineItems[i][7] = totdata[i].Item;
+                       POLineItems[i][8] = totdata[i].SpecNum;
+                       POLineItems[i][9] = totdata[i].ItemDescription;
+                       POLineItems[i][10] = totdata[i].Vendor;
+                       POLineItems[i][11] = totdata[i].Quantity;
+                       POLineItems[i][12] = totdata[i].UOM;
+                       POLineItems[i][13] = numberWithCommas(parseFloat(totdata[i].Cost).toFixed(2));
+                       POLineItems[i][14] = numberWithCommas(parseFloat(totdata[i].Quantity * totdata[i].Cost).toFixed(2));
+                       POLineItems[i][15] = totdata[i].Note;
+                       POLineItems[i][16] = totdata[i].ToWarehouse == 1 ? "<i class='fa fa-check'></i>" : "<i class='fa fa-times'></i>";
+                       POLineItems[i][17] = "0";//totdata[i].CommitAmountAdjust;
+                       POLineItems[i][18] = totdata[i].DateCreated;
+                       POLineItems[i][19] = totdata[i].CreatedBy_ID;
+                       POLineItems[i][20] = totdata[i].Status;
+                       POLineItems[i][21] = totdata[i].UOMID;
+                       POLineItems[i][22] = totdata[i].ToWarehouse;
+                       POLineItems[i][23] = totdata[i].Spacing;
+                       POLineItems[i][24] = totdata[i].Header;
+                       POLineItems[i][25] = totdata[i].ItemDtldDesc;
+                       POLineItems[i][26] = numberWithCommas(parseFloat(totdata[i].Extended).toFixed(2));
+                       POLineItems[i][27] = totdata[i].ReceivedQuantity;
+                       POLineItems[i][28] = totdata[i].IsExceeded;
+                   }
+                   //console.log(POLineItems);
+
+                   $('#POLineItemsDetail').dataTable().fnDestroy();
+                   $('#POLineItemsDetail').dataTable({
+                       "processing": true,
+                       "data": POLineItems,
+                       "columns": [
+                           { "title": "Actions","class" : "notforcommitted" },
+                           { "title": "Header", "class": "displaynone" },
+                           { "title": "Item#" },
+                           { "title": "ProjectID", "class": "displaynone" },
+                           { "title": "BudgetSectionID", "class": "displaynone" },
+                           { "title": "LineItemID", "class": "displaynone" },
+                           { "title": "ItemOrder", "class": "displaynone" },
+                           { "title": "Item", "class": "displaynone" },
+                           { "title": "Spec" },
+                           { "title": "Description" },
+                           { "title": "Vendor", "class": "displaynone" },
+                           { "title": "Qty" },
+                           { "title": "Units" },
+                           { "title": "Cost" },
+                           { "title": "Total", "class": "displaynone" },
+                           { "title": "Note", "class": "displaynone" },
+                           { "title": "ToWarehouse", "class": "displaynone" },
+                           { "title": "CommitAmountAdjust", "class": "displaynone" },
+                           { "title": "DateCreated", "class": "displaynone" },
+                           { "title": "CreatedBy_ID", "class": "displaynone" },
+                           { "title": "Status", "class": "displaynone" },
+                           { "title": "UPMID", "class": "displaynone" },
+                           { "title": "UPMID", "class": "displaynone" },
+                           { "title": "Spacing", "class": "displaynone" },
+                           { "title": "heading", "class": "displaynone" },
+                           { "title": "ItemDtldDesc", "class": "displaynone" },
+                           { "title": "Extended" },
+                           { "title": "R-Qty" },
+                           { "title": "IsExceeded", "class": "displaynone" }
+                       ],
+                       
+                       paging: false,
+                       "initComplete": function () {
+                           //var html = "";
+                           //html = "<tr>"
+                           //     + "<th class='notforcommitted'></th>"
+                           //      + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='1' type='text' placeholder='Search Item'></th>"
+                           //      + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='2' type='text' placeholder='Proj Name'></th>"
+                           //      + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='3' type='text' placeholder='vendor Common '></th>"
+                           //      + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='4' type='text' placeholder='Buyer '></th>"
+                           //      + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='5' type='text' placeholder='shipdate'></th>"
+                           //      + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='6' type='text' placeholder='Chack Back'></th>"
+                           //      + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='7' type='text' placeholder='Commet'></th>"
+
+                           //      + "</tr>";
+                           //$('#POLineItemsDetail thead').append(html);
+                           //var table = $('#UnCommittedPODetail').DataTable();
+                           $('.srch').on('keyup change', function () {
+                               var indx = $(this).attr('data-indx');
+                               var txt = this.value;
+                               table
+                                      .column(indx)
+                                      .search(txt)
+                                      .draw();
+                               //RowHtmlRendernew();
+                           });
+
+
+
+
+                           RowHtmlRender();
+                           AddtableTdTextAlign('#POLineItemsDetail', '13^26', 'right', false);
+                           //AddtableTdTextAlign('#POLineItemsDetail', 26, 'right', false);
+                       },
+                       "order": [[6, "asc"]],
+                       "aoColumnDefs": [
+                           { 'bSortable': false, 'aTargets': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 22, 23] }
+                       ]
+                   });
+                   //$('#srchdsc').on('keyup change', function () {
+                   //    // cancelselections();
+                   //    var table = $('#POLineItemsDetail').DataTable();
+                   //    var txt = $(this).val().trim();
+                   //    table.column(7)
+                   //               .search(txt)
+                   //               .draw();
+                   //    buildrows();
+                   //    if (txt.length > 0) {
+                   //        $("#POLineItemsDetail tbody").addClass("disable-sort");
+                   //    }
+                   //    else {
+                   //        $("#POLineItemsDetail tbody").removeClass("disable-sort");
+                   //        for (var a = 0; a < offsecurity.length; a++) {
+                   //            if (offsecurity[a].Classname == "BDGTEDT") {
+                   //                $("#POLineItemsDetail tbody").addClass("disable-sort");
+                   //            }
+                   //        }
+                   //    }
+                   //});
+               });
+
+
+        }
+
+
+        $(document).ready(function () {
+
+            LoadPOLineItems('');
+
+
+
+        });
+
+        function RowHtmlRender() {
+            var count = 1;
+            $('#POLineItemsDetail tbody tr').each(function () {
+                //var order = $(this).find("td:eq(6)").html();
+
+                $(this).attr('data-id', count++);
+
+            });
+            // notify(1);
+            //  $('#project_filter').css('display', 'none');
+            $('#POLineItemsDetail tbody tr').find("td:eq(0)").each(function () {
+
+
+                var pid = $(this).html();
+                $(this).html('<input type="button" class="buttonedit notforcommitted" onclick="EditPOLineItems(this,\'' + pid + '\');" style="margin-bottom:6px;" data-id="' + pid + '" /><input type="button" class="buttondelete notforcommitted" onclick="DeletePOLineItems(this,\'' + pid + '\');" style="margin-bottom:6px;" data-id="' + pid + '" />');
+
+            });
+
+            setTimeout(function () {
+                $('#POLineItemsDetail tbody tr').find("td:eq(28)").each(function () {
+
+                    var Isexceeded = $(this).html();
+
+                    if ($('#Hdn_iscommited').val() == '1') {
+                        if (Isexceeded == "1") {
+                            $(this).parent().css('background-color', 'rgba(10, 52, 205, 0.24)');
+                        }
+                        else {
+                            $(this).parent().css('background-color', '');
+                        }
+                    }
+                    else {
+                        $(this).parent().css('background-color', '');
+                    }
+                });
+            }, 100);
+
+
+        }
+        function NvgtToAdditmsToPO() {
+
+            var ponumber = $('#purchaseOrderNumber').html().split('(')[1].split(')')[0];
+            var PurchaseOrderID = $('#Hdn_PurchaseOrderID').val();
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/AddItemsToPO';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/AddItemsToPO';
+            }
+            url1 += "/" + PurchaseOrderID + "?ponumber=" + ponumber;
+            window.location.href = url1;
+        }
+
+
+        function EditPOLineItems(obj, pid) {
+            var url1 = '';
+
+            var PurchsOrdrID = $('#Hdn_PurchaseOrderID').val();
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/EditPOLineItems';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/EditPOLineItems';
+            }
+
+            url1 += "?PurchsOrdrID=" + PurchsOrdrID;
+            url1 += "&POLineItemID=" + pid;
+
+            window.location.href = url1;
+        }
+        function DeletePOLineItems(obj, POLineItemID) {
+            if (confirm("Are you sure want to delete this PO?")) {
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/PurchaseOrder/DeletePOLineItems';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'PurchaseOrder/DeletePOLineItems';// + pid
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    dataType: "text",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ 'POLineItemID': '" + POLineItemID + "'}",
+                    success: function (data) {
+                        if (data == 'SUCCESS') {
+                            // loaditems(sectionid);
+                            irrrrr = 0;
+                            notify('Item Deleted successfully.');
+                            window.location.reload();
+                        }
+                        else {
+                            notify('Something went wrong.');
+                        }
+                    },
+                    error: function () {
+                        notify('Something went wrong.');
+                    }
+                });
+            }
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        function GoBack() {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/POList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/POList';
+            }
+            window.location.href = url1;
+        }
+    </script>
+
+    <script>
+
+
+        $(document).ready(function () {
+
+
+            $("#POLineItemsDetail tbody").sortable(
+                          {
+                              cancel: ".disable-sort",
+                              cursor: "move",
+                              start: function (event, ui) {
+                                  // 0 based array, add one
+                                  var obj = ui.item;
+                                  $(obj).css('background', '#86ABC2');
+                                  // //console.log('start');
+                              },
+                              update: function (event, ui) {
+
+                                  // 0 based array, add one
+                                  var obj = ui.item;
+                                  var obj2 = ui.item.prev('tr');
+                                  var st = $(obj).attr('data-id');
+                                  var lt = $(obj2).attr('data-id');
+                                  if (parseInt(lt) < parseInt(st)) {
+                                      obj2 = ui.item.next('tr');
+                                      lt = $(obj2).attr('data-id');
+                                  }
+                                  // alert('Prev: ' + st + ' Final: ' + lt);
+                                  if (lt == undefined) {
+                                      lt = 1;
+                                  }
+                                  var url1 = '';
+                                  if (LOCALORSERVERNEW == 'LOCAL') {
+                                      url1 = '/Purchaseorder/sortlineitems';
+                                  }
+                                  else if (LOCALORSERVERNEW == 'SERVER') {
+                                      url1 = 'Purchaseorder/sortlineitems';
+                                  }
+                                  var poid = $('#Hdn_PurchaseOrderID').val();
+
+                                  //alert("start:  " + st + ",Last ::  " + lt);
+                                  //return;
+                                  //sectionid = 1;
+                                  $.ajax({
+                                      type: "POST",
+                                      url: url1,
+                                      async: false,
+                                      dataType: "text",
+                                      contentType: "application/json; charset=utf-8",
+                                      data: "{ 'prev': '" + st + "','current' : '" + lt + "','poid' : '" + poid + "'}",
+                                      success: function (data) {
+                                          notify('Reordered Successfully row ' + st + ' has been shifted to row ' + lt);
+                                          LoadPOLineItems('');
+                                      },
+                                      error: function () {
+                                          notify('Something went wrong.');
+                                      }
+                                  });
+                              },
+                              stop: function (event, ui) {
+                                  var obj = ui.item;
+                                  //$(obj).css('background', '');
+                              }
+                              // end of drag
+                          });
+
+
+        });
+
+
+    </script>
+
+    <script type="text/javascript">
+        function OpenTaxComment() {
+
+            $('#popupforTaxComment').bPopup({
+                easing: 'easeOutBack', //uses jQuery easing plugin
+                speed: 450,
+                transition: 'slideDown',
+                modalColor: 'rgb(18, 54, 65)'
+
+            });
+
+            //$('#txt_Comment').focus();
+
+        }
+
+        function OpenTax() {
+
+            $('#popupforTaxComment2').bPopup({
+                easing: 'easeOutBack', //uses jQuery easing plugin
+                speed: 450,
+                transition: 'slideDown',
+                modalColor: 'rgb(18, 54, 65)'
+
+            });
+
+            //$('#GSTHSTName').focus();
+
+        }
+
+
+
+
+        $(function () {
+            //$('#Ddl_CmntID').change(function () {
+            //    var CommentID = $('#Ddl_CmntID').val();
+            //    if (CommentID == "0") {
+            //        $('#txt_Title').val('');
+            //        $('#txt_Comment').val('');
+            //        $('#saveCommentTaxDtl').val('Add');
+            //    }
+            //    else {
+            //        $('#saveCommentTaxDtl').val('Update');
+            //        var url = '';
+            //        if (LOCALORSERVERNEW == 'LOCAL') {
+            //            url = '/PurchaseOrder/GetCommentTitleByCommentID';
+            //        }
+            //        else if (LOCALORSERVERNEW == 'SERVER') {
+            //            url = 'PurchaseOrder/GetCommentTitleByCommentID';
+            //        }
+            //        $.ajax({
+            //            type: "POST",
+            //            url: url,
+            //            data: { 'CommentID': CommentID },
+            //            success: function (data) {
+            //                if (data != '') {
+            //                    var val = jQuery.parseJSON(data);
+            //                    $('#txt_Title').val(val.Title);
+            //                    $('#txt_Comment').val(val.Comment);
+            //                }
+            //                else {
+            //                }
+            //            }
+            //        });
+            //    }
+            //});
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/GetCommentsByPOID';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/GetCommentsByPOID';
+            }
+            url += '/' + $('#Hdn_PurchaseOrderID').val();
+
+            $.get(url).success(function (data) {
+
+                if (data != '') {
+                    $('#txt_Comment').text(data);
+                }
+            });
+
+
+            $('#btn_TaxComment').click(function () {
+                var PONo = $('#Hdn_PurchaseOrderID').val();
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/CheckGetCommentTaxByPoNo';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/   ';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'PONo': PONo },
+                    success: function (data) {
+                        if (data != '') {
+                            var val = jQuery.parseJSON(data);
+
+                            $('#txt_GSTHST').val(val.GSTPSTValue);
+                            $('#txt_PSTValue').val(val.PSTTypeValue);
+                            $('#txt_StateTax').val(val.StateTaxValue);
+                            //$('#saveCommentTaxDtl').val('Update');
+                            $('#Ddl_GSTPST').val(val.GSTPSTType);
+                            $('#Ddl_PST').val(val.PSTType);
+                            $('#Ddl_StateTax').val(val.StateTaxType);
+
+
+
+                            $('#GSTHSTName').val(val.GSTHSTName);
+                            $('#PSTName').val(val.PSTName);
+                            $('#StateTaxName').val(val.StateTaxName);
+
+
+
+                            $('#BackGroundCng').show();
+                            //$('#popupforTaxComment').show();
+                        }
+                        else {
+                            $('#BackGroundCng').show();
+
+                            // $('#popupforTaxComment').show();
+                        }
+                    }
+                });
+            });
+
+            $('#btn_TaxComment2').click(function () {
+                var PONo = $('#Hdn_PurchaseOrderID').val();
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/CheckGetCommentTaxByPoNo';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/CheckGetCommentTaxByPoNo';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'PONo': PONo },
+                    success: function (data) {
+                        if (data != '') {
+                            var val = jQuery.parseJSON(data);
+
+                            $('#txt_GSTHST').val(val.GSTPSTValue);
+                            $('#txt_PSTValue').val(val.PSTTypeValue);
+                            $('#txt_StateTax').val(val.StateTaxValue);
+                            //$('#saveCommentTaxDtl').val('Update');
+                            $('#Ddl_GSTPST').val(val.GSTPSTType);
+                            $('#Ddl_PST').val(val.PSTType);
+                            $('#Ddl_StateTax').val(val.StateTaxType);
+
+                            $('#GSTHSTName').val(val.GSTHSTName);
+                            $('#PSTName').val(val.PSTName);
+                            $('#StateTaxName').val(val.StateTaxName);
+
+
+                            $('#BackGroundCng').show();
+                            //$('#popupforTaxComment').show();
+                        }
+                        else {
+                            $('#BackGroundCng').show();
+                            //$('#popupforTaxComment').show();
+                        }
+                    }
+                });
+            });
+            $('.b-close').click(function () {
+                $('#popupforTaxComment').hide();
+                $('#BackGroundCng').hide();
+            });
+            $('#saveCommentTaxDtl').click(function () {
+                var CommentID = 0;
+                var GSTPSTType = $('#Ddl_GSTPST').val();
+                var StateTaxType = $('#Ddl_StateTax').val();
+                var PSTType = $('#Ddl_PST').val();
+                var Title = '';
+
+                var Comment = $('#txt_Comment').val();
+                //if (Comment == "") {
+                //    $('#txt_Comment').attr("style", "height:332px;width: 537px;");
+                //    // $('#txt_Comment').attr("style", "width:538px");
+                //    errorfunc('txt_Comment', 'You must enter Comment before saving');
+                //    $('#txt_Comment').focus();
+                //    return;
+                //}
+                var GSTPSTValue = $('#txt_GSTHST').val();
+                //if (GSTPSTValue == "") {
+                //    $('#txt_GSTHST').attr("style", "height:40px");
+                //    $('#txt_GSTHST').attr("style", "width:538px");
+                //    errorfunc('txt_GSTHST', 'You must enter GSTPST Value before saving');
+                //    $('#txt_GSTHST').focus();
+                //    return;
+                //}
+                var PSTTypeValue = $('#txt_PSTValue').val();
+                //if (PSTTypeValue == "") {
+                //    $('#txt_PSTValue').attr("style", "height:40px");
+                //    $('#txt_PSTValue').attr("style", "width:538px");
+                //    errorfunc('txt_PSTValue', 'You must enter PSTType Value before saving');
+                //    $('#txt_PSTValue').focus();
+                //    return;
+                //}
+                var GSTPSTValue = $('#txt_GSTHST').val();
+                //if (GSTPSTValue == "") {
+                //    $('#txt_PSTValue').attr("style", "height:40px");
+                //    $('#txt_PSTValue').attr("style", "width:538px");
+                //    errorfunc('txt_PSTValue', 'You must enter GSTPST Value Value before saving');
+                //    notify('');
+                //    $('#txt_PSTValue').focus();
+                //    return;
+                //}
+                var StateTaxValue = $('#txt_StateTax').val();
+                //if (StateTaxValue == "") {
+                //    $('#txt_StateTax').attr("style", "height:40px");
+                //    $('#txt_StateTax').attr("style", "width:538px");
+                //    errorfunc('txt_StateTax', 'You must enter StateTax Value Value Value before saving');
+                //    $('#txt_StateTax').focus();
+                //    return;
+                //}
+                var PONo = $('#Hdn_PurchaseOrderID').val();
+
+
+
+
+                var GSTHSTName = $('#GSTHSTName').val();
+                var PSTName = $('#PSTName').val();
+                var StateTaxName = $('#StateTaxName').val();
+
+
+                //  alert(GSTHSTName);
+
+
+
+
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/SaveUpdateCommentTax';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/SaveUpdateCommentTax';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        'CommentID': CommentID, 'Title': Title, 'Comment': Comment, 'GSTPSTType': GSTPSTType,
+                        'GSTPSTValue': GSTPSTValue, 'PSTType': PSTType, 'PSTTypeValue': PSTTypeValue,
+                        'StateTaxType': StateTaxType, 'StateTaxValue': StateTaxValue, 'PONo': PONo,
+                        'GSTHSTName': GSTHSTName, 'PSTName': PSTName, 'StateTaxName': StateTaxName
+                    },
+                    success: function (data) {
+                        if (data != '') {
+                            notify('Updated.');
+                            // $('#popupforTaxComment').hide();
+                            // $('#BackGroundCng').hide();
+
+                            $('#popupforTaxComment').modal('hide');
+
+                        }
+                        else {
+                            notify('Fail');
+                        }
+                    }
+                });
+            });
+
+            $('#saveCommentTaxDtl2').click(function () {
+                var CommentID = 0;
+                var GSTPSTType = $('#Ddl_GSTPST').val();
+                var StateTaxType = $('#Ddl_StateTax').val();
+                var PSTType = $('#Ddl_PST').val();
+                var Title = '';
+
+                var Comment = $('#txt_Comment').val();
+                //if (Comment == "") {
+                //    $('#txt_Comment').attr("style", "height:332px;width: 537px;");
+                //    // $('#txt_Comment').attr("style", "width:538px");
+                //    errorfunc('txt_Comment', 'You must enter Comment before saving');
+                //    $('#txt_Comment').focus();
+                //    return;
+                //}
+                var GSTPSTValue = $('#txt_GSTHST').val();
+                if (GSTPSTValue == "") {
+                    GSTPSTValue == "0";
+                }
+                //if (GSTPSTValue == "") {
+                //    $('#txt_GSTHST').attr("style", "height:40px");
+                //    $('#txt_GSTHST').attr("style", "width:538px");
+                //    errorfunc('txt_GSTHST', 'You must enter GSTPST Value before saving');
+                //    $('#txt_GSTHST').focus();
+                //    return;
+                //}
+                var PSTTypeValue = $('#txt_PSTValue').val();
+                if (PSTTypeValue == "") {
+                    PSTTypeValue == "0";
+                }
+                //if (PSTTypeValue == "") {
+                //    $('#txt_PSTValue').attr("style", "height:40px");
+                //    $('#txt_PSTValue').attr("style", "width:538px");
+                //    errorfunc('txt_PSTValue', 'You must enter PSTType Value before saving');
+                //    $('#txt_PSTValue').focus();
+                //    return;
+                //}
+                var GSTPSTValue = $('#txt_GSTHST').val();
+                if (GSTPSTValue == "") {
+                    GSTPSTValue == "0";
+                }
+                //if (GSTPSTValue == "") {
+                //    $('#txt_PSTValue').attr("style", "height:40px");
+                //    $('#txt_PSTValue').attr("style", "width:538px");
+                //    errorfunc('txt_PSTValue', 'You must enter GSTPST Value Value before saving');
+                //    notify('');
+                //    $('#txt_PSTValue').focus();
+                //    return;
+                //}
+                var StateTaxValue = $('#txt_StateTax').val();
+                if (StateTaxValue == "") {
+                    StateTaxValue == "0";
+                }
+                //if (StateTaxValue == "") {
+                //    $('#txt_StateTax').attr("style", "height:40px");
+                //    $('#txt_StateTax').attr("style", "width:538px");
+                //    errorfunc('txt_StateTax', 'You must enter StateTax Value Value Value before saving');
+                //    $('#txt_StateTax').focus();
+                //    return;
+                //}
+
+                var GSTHSTName = $('#GSTHSTName').val();
+                var PSTName = $('#PSTName').val();
+                var StateTaxName = $('#StateTaxName').val();
+
+                var PONo = $('#Hdn_PurchaseOrderID').val();
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/SaveUpdateCommentTax';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/SaveUpdateCommentTax';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        'CommentID': CommentID, 'Title': Title, 'Comment': Comment, 'GSTPSTType': GSTPSTType,
+                        'GSTPSTValue': GSTPSTValue, 'PSTType': PSTType, 'PSTTypeValue': PSTTypeValue,
+                        'StateTaxType': StateTaxType, 'StateTaxValue': StateTaxValue, 'PONo': PONo,
+                        'GSTHSTName': GSTHSTName, 'PSTName': PSTName, 'StateTaxName': StateTaxName
+                    },
+                    success: function (data) {
+                        if (data != '') {
+                            notify('Updated.');
+                            irrrrr = 0;
+                            // $('#popupforTaxComment').hide();
+                            // $('#BackGroundCng').hide();
+
+                            $('#popupforTaxComment2').modal('hide');
+
+                        }
+                        else {
+                            notify('Fail');
+                        }
+                    }
+                });
+            });
+        });
+        function onlyAmount(myfield, e, dec) {
+            var str = myfield.value;
+            var decPos = str.split('.');
+
+            var key;
+            var keychar;
+
+            if (window.event)
+                key = window.event.keyCode;
+            else if (e)
+                key = e.which;
+            else
+                return true;
+
+            keychar = String.fromCharCode(key);
+
+            if ((key == null) || (key == 0) || (key == 8) || (key == 9) || (key == 13) || (key == 27)) // control keys
+                return true;
+            else if ((decPos.length > 1) && ((key > 47 && key < 58))) {
+                decPos = decPos[1];
+                if (decPos.length >= 4) return false;
+            }
+            else if ((("0123456789.").indexOf(keychar) > -1)) // numbers
+                return true;
+            else if (dec && (keychar == ".")) // decimal point jump
+            {
+                myfield.form.elements[dec].focus();
+                return false;
+            }
+            else
+                return false;
+        }
+
+    </script>
+    <script type="text/javascript">
+
+
+        //function RevisePO() {
+        //    var isnewversion = confirm("Create New Version?");
+        //    var IsNewVersion;
+        //    var poid = $("#Hdn_PurchaseOrderID").val();
+        //    if (isnewversion) {
+        //        IsNewVersion = "1";
+        //    }
+        //    else {
+        //        IsNewVersion = "0";
+        //    }
+        //    var url1 = '';
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url1 = '/PurchaseOrder/PORevise';
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+        //        url1 = 'PurchaseOrder/PORevise';
+        //    }
+        //    $.ajax({
+        //        type: "POST",
+        //        url: url1,
+        //        async: false,
+        //        data: { 'poid': poid, 'IsNewVersion': IsNewVersion },
+        //        success: function (data) {
+        //            if (data == "SUCCESS") {
+        //                window.location.reload();
+        //            }
+        //            //notify(ddlfrcllsfictn);
+        //        },
+        //        error: function () { notify('Something went wrong'); }
+        //    });
+        //}
+
+        function RevisePO() {
+
+            var IsNewVersion;
+            $("#dialog-message").dialog({
+                modal: true,
+                buttons: {
+                    YES: function () {
+                        $(this).dialog("close");
+                        RevisePO1(1);
+
+
+                    },
+                    NO: function () {
+                        $(this).dialog("close");
+                        RevisePO1(0);
+
+                    }
+                }
+            });
+
+
+        }
+
+
+        function RevisePO1(IsNewVersion) {
+
+
+
+            //var IsNewVersion;
+            //$("#dialog-message").dialog({
+            //    modal: true,
+            //    buttons: {
+            //        YES: function () {
+            //            $(this).dialog("close");
+            //            IsNewVersion = "1";
+            //        },
+            //        NO: function () {
+            //            $(this).dialog("close");
+            //        }
+            //    }
+            //});
+
+
+            // var isnewversion = confirm("Create New Version?");
+
+            var poid = $("#Hdn_PurchaseOrderID").val();
+            //if (isnewversion) {
+            //    IsNewVersion = "1";
+            //}
+            //else {
+            //    IsNewVersion = "0";
+            //}
+
+
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/PORevise';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/PORevise';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: { 'poid': poid, 'IsNewVersion': IsNewVersion },
+                success: function (data) {
+                    if (data == "SUCCESS") {
+                        irrrrr = 0;
+                        window.location.reload();
+                    }
+                    //notify(ddlfrcllsfictn);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+        function CommitPO() {
+            var poid = $("#Hdn_PurchaseOrderID").val();
+
+
+
+            var url2 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url2 = '/PurchaseOrder/CheckBeforePOCommit';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url2 = 'PurchaseOrder/CheckBeforePOCommit';
+            }
+            $.ajax({
+                type: "POST",
+                url: url2,
+                async: false,
+                data: { 'poid': poid },
+                success: function (data) {
+                    if (data != "") {
+                        if (data == "OVERCOMMITED") {
+                            $("#dialog-confirm").html("By committing this item the value is going to be in excess of the budget value on a line item basis");
+
+                            // Define the Dialog and its properties.
+                            $("#dialog-confirm").dialog({
+                                resizable: false,
+                                modal: true,
+                                // title: "Modal",
+                                height: 200,
+                                width: 340,
+                                buttons: {
+                                    "Yes": function () {
+                                        $(this).dialog('close');
+                                        var url1 = '';
+                                        if (LOCALORSERVERNEW == 'LOCAL') {
+                                            url1 = '/PurchaseOrder/POCommit';
+                                        }
+                                        else if (LOCALORSERVERNEW == 'SERVER') {
+                                            url1 = 'PurchaseOrder/POCommit';
+                                        }
+                                        $.ajax({
+                                            type: "POST",
+                                            url: url1,
+                                            async: false,
+                                            data: { 'poid': poid },
+                                            success: function (data) {
+                                                if (data == "SUCCESS") {
+                                                    irrrrr = 0;
+                                                    window.location.reload();
+                                                }
+                                                //notify(ddlfrcllsfictn);
+                                            },
+                                            error: function () { notify('Something went wrong'); }
+                                        });
+                                    },
+                                    "No": function () {
+                                        $(this).dialog('close');
+                                    }
+                                }
+                            });
+                        }
+                        else if (data == "NOTOVERCOMMITED") {
+                            var url1 = '';
+                            if (LOCALORSERVERNEW == 'LOCAL') {
+                                url1 = '/PurchaseOrder/POCommit';
+                            }
+                            else if (LOCALORSERVERNEW == 'SERVER') {
+                                url1 = 'PurchaseOrder/POCommit';
+                            }
+                            $.ajax({
+                                type: "POST",
+                                url: url1,
+                                async: false,
+                                data: { 'poid': poid },
+                                success: function (data) {
+                                    if (data == "SUCCESS") {
+                                        irrrrr = 0;
+                                        window.location.reload();
+                                    }
+                                    //notify(ddlfrcllsfictn);
+                                },
+                                error: function () { notify('Something went wrong'); }
+                            });
+                        }
+                    }
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+
+
+
+
+        }
+
+        function CommitSendPO() {
+            var poid = $("#Hdn_PurchaseOrderID").val();
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/POCommitSend';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/POCommitSend';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: { 'poid': poid },
+                success: function (data) {
+                    if (data == "SUCCESS") {
+                        irrrrr = 0;
+                        window.location.reload();
+                    }
+                    //notify(ddlfrcllsfictn);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function ProofPO(mode) {
+            var poid = $("#Hdn_PurchaseOrderID").val();
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Reports/PurchaseOrderReportGeneration';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Reports/PurchaseOrderReportGeneration';
+            }
+            url1 += "?ProjectID=" + "";
+            url1 += "&SectionID=" + "";
+            url1 += "&PurchaseOrder=" + poid;
+            url1 += "&showImageFlag=" + mode;
+
+            var totdata = '';
+
+            $.get(url1)
+                .success(function (response) {
+
+                    if (response == '0') {
+                        notify('No records found!!!');
+                        return;
+                    }
+
+                    var html = "";
+                    var url2 = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        totdata = response;
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        totdata = "POMS/POMS/" + response;
+                    }
+                    setTimeout(function () {
+                        window.open(totdata, '_blank');
+                    }, 1000);
+                });
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        function ExpediteNotesTwistee(obj) {
+            if ($(obj).hasClass('collapsed') == true) {
+                $('#txt_ExpediteNotes').show();
+                $('#btn_ExpediteNotes').show();
+                $('#expeditenotelist').show();
+                $(obj).removeClass('collapsed');
+                $(obj).addClass('opened');
+
+                $(obj).html('<i class="fa fa-minus-circle"></i>  ' + 'Expedite Notes');
+
+            }
+            else {
+                $('#txt_ExpediteNotes').hide();
+                $('#btn_ExpediteNotes').hide();
+                $('#expeditenotelist').hide();
+                $(obj).removeClass('opened');
+                $(obj).addClass('collapsed');
+
+                $(obj).html('<i class="fa fa-plus-circle"></i>  ' + 'Expedite Notes');
+            }
+        }
+    </script>
+    <style type="text/css">
+                .collapsed::before {
+                    /*content: '';/*url(image.jpg);*/ */;
+                }
+                /*.name::before {
+          content: "Name: ";
+        }*/
+    </style>
+
+    <style type="text/css">
+        .ui-dialog .ui-dialog-titlebar-close span {
+            margin: -8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="dialog-message" title="Create Version" style="display: none;">
+        <p>
+            Do you want to create New version?
+        </p>
+    </div>
+    <div id="dialog-confirm"></div>
+    <input type="hidden" value="@ViewData["POID"]" id="poid" />
+    <input type="hidden" id="Hdn_PurchaseOrderID" value="@ViewBag.PurchaseOrderID" />
+    <input type="hidden" id="Hdn_IsVendorConfirmation" value="@ViewBag.IsVendorConfirmation" />
+    <input type="hidden" id="Hdn_iscommited" />
+
+  
+
+
+
+    
+
+
+
+    <div class="container-fluid" id="angulardiv" ng-app="Project" ng-controller="PO">
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header" id="purchaseOrderNumber">PURCHASE ORDER</h3>
+            </div>
+            
+        </div>
+
+         <button type="button" onclick="confirmpo();" id="Vendorconfirmation" class="btn btn-poms" >Vendor Confirmation</button>
+
+       
+ <button type="button" class="btn btn-poms" id="btn_ViewPOPDF" onclick="ProofPO(0);" style="display: none;">View PDF</button>
+   
+
+
+  
+
+</div>
+
+  
+      <div class="float-panel-container">
+        <ul>
+  
+            <li id="btn_CancelPO" onclick="GoBack();" ><a  title="Cancel" data-toggle="tooltip" data-placement="left" href="javascript:void(0);"><i class="fa fa-times mrg5R" ></i><span class="tooltip-toggle">Cancel</span></a></li>
+                  </ul>
+    </div>
+
+
+<script type="text/javascript">
+   
+    function addpoexpeditenotes() {
+
+        var POID = $('#Hdn_PurchaseOrderID').val();
+
+        var ExpediteNote = $('#txt_ExpediteNotes').val().trim();
+        if (ExpediteNote == "") {
+            notify("Please enter note");
+            return;
+        }
+
+
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/PurchaseOrder/addPOExpediteNote';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+
+            url1 = 'PurchaseOrder/addPOExpediteNote';
+        }
+
+
+
+        $.ajax({
+            type: "POST",
+            url: url1,
+            async: false,
+            data: { 'POID': POID, 'ExpediteNote': ExpediteNote },
+            success: function (data) {
+                $('#txt_ExpediteNotes').val('');
+                getpoexpeditenotes();
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+
+
+
+    }
+
+
+    function getpoexpeditenotes() {
+
+        var POID = $('#Hdn_PurchaseOrderID').val();
+
+
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/PurchaseOrder/getPOExpediteNote';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+
+            url1 = 'PurchaseOrder/getPOExpediteNote';
+        }
+
+
+
+        $.ajax({
+            type: "POST",
+            url: url1,
+            async: false,
+            data: { 'POID': POID },
+            success: function (data) {
+                if (data == "") {
+                    $('#expeditenotelist').html("No Notes available.");
+                    return;
+                }
+                var html = "";
+
+                for (var i = 0; i < data.split(',').length; i++) {
+                    html += "<span class='remove'><a onclick='removeexpeditenote(\"" + data.split(',')[i].split('^')[2] + "\");'>x</a><span>" + data.split(',')[i].split('^')[0] + "( " + data.split(',')[i].split('^')[1] + " )</span></span>";
+                }
+
+
+
+                $('#expeditenotelist').html(html);
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+
+
+
+    }
+
+    function removeexpeditenote(FldID) {
+
+        var c = confirm("Are you sure you want to delete?");
+
+        if (!c) {
+            return;
+        }
+
+
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/PurchaseOrder/deletePOExpediteNote';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+
+            url1 = 'PurchaseOrder/deletePOExpediteNote';
+        }
+
+
+
+        $.ajax({
+            type: "POST",
+            url: url1,
+            async: false,
+            data: { 'FldID': FldID },
+            success: function (data) {
+                getpoexpeditenotes();
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+    }
+
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        var POID = $('#Hdn_PurchaseOrderID').val();
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/PurchaseOrder/checkInvoiceExistance';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+
+            url1 = 'PurchaseOrder/checkInvoiceExistance';
+        }
+        $.ajax({
+            type: "POST",
+            url: url1,
+            async: false,
+            data: { 'POID': POID },
+            success: function (data) {
+
+                if (data == 'Not Exists') {
+                    $('input:radio[name=InvRcvdPartial]').parent("fieldset").hide();
+                    return;
+                }
+
+                if (data == 'Full') {
+                    $("#radioPartial").prop("checked", false);
+                    $("#radioComplete").prop("checked", true);
+
+
+                }
+                else {
+                    $("#radioPartial").prop("checked", true);
+                    $("#radioComplete").prop("checked", false);
+                }
+
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+
+
+
+
+    });
+
+</script>
+
+
+<script>
+
+    function openpopupformailtovendormail() {
+
+
+
+
+
+
+        $(window).scrollTop(0);
+
+        var poid = $('#poid').val();
+
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/PurchaseOrder/VendorMail';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'PurchaseOrder/VendorMail';
+        }
+
+        $.ajax({
+            type: "POST",
+            url: url1,
+            data: "{ \"POID\" : \"" + poid + "\"}",
+            async: false,
+            dataType: 'text',
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+
+                response = unescape(response);
+
+                $('#sendmailtovendor').modal('show');
+
+                $('#vendormail').text(response);
+
+                tinymce.init({
+                    selector: "#vendormail",
+                    plugins: "textcolor,fullscreen",
+                    toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent| forecolor backcolor"
+                    , menubar: false
+                    , height: "300px"
+                });
+
+                //tinymce.get('textarea').setContent(response);
+
+            },
+            error: function (error) {
+                //alert("errror");
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+    function setvendormailcontent() {
+
+        var poid = $('#poid').val();
+
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/PurchaseOrder/VendorMailSet';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'PurchaseOrder/VendorMailSet';
+        }
+
+        var BODY = tinyMCE.get('vendormail').getContent();//$('#vendormail').val();
+
+        $.ajax({
+            type: "POST",
+            url: url1,
+            data: "{ \"POID\" : \"" + poid + "\",\"BODY\" : \"" + escape(BODY) + "\"}",
+            async: false,
+            dataType: 'text',
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $('#sendmailtovendor').modal('hide');
+
+            },
+            error: function (error) {
+                //alert("errror");
+            }
+        });
+
+
+    }
+
+    function setdynamicfieldformail(obj) {
+        var vl = $(obj).val();
+
+        if (vl == '1') {
+            var poid = $('#poid').val();
+            var url = "THESERVERLINKBASEURL" + "<<\(" + "POID" + "\)>>";
+            tinymce.activeEditor.execCommand('mceInsertContent', true, "<a data-mce-href=\"" + url + "\" href=\"" + url + "\"><input type='button' style='border-radius: 4px;color: white;background: grey;cursor: pointer;' value='Go to Purchase Order' /></a>");
+        }
+        else if (vl != '0') {
+            insertTextAtCursor(vl);
+        }
+
+    }
+
+
+    function insertTextAtCursor(text) {
+        tinymce.activeEditor.execCommand('mceInsertContent', true, "<a><<\(" + text + "\)>></a>");
+    }
+
+    function numberWithCommas(x) {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join(".");
+    }
+
+</script>
+
+
+
+
+</body>
+
+
+</html>

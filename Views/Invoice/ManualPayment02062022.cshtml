@@ -1,0 +1,2956 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Enter Payment</title>
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    @* <script src="~/Scripts/angular.min.js"></script>*@
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    @*<script src="~/Scripts/AddUser.js"></script>*@
+    <script src="~/Scripts/Project.js"></script>
+    
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/swfupload.js"></script>
+    <script src="~/Scripts/jquery.swfupload.js"></script>
+    <link href="~/css/stylesForFileUpload.css" rel="stylesheet" />
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+    
+
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/MakePayment.js"></script>
+
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+
+    <script src="~/Scripts/jquery.DB_PROC.js"></script>
+
+    <script>
+        var selection_couter = 0;
+
+        $(document).ready(function () {
+
+            console.log($('#PrjtDdl').css('width').split('px')[0]);
+
+            var mtws = $('#PrjtDdl').css('width').split('px')[0] / 10;
+            console.log(mtws + "    as ssss");
+            $('#PrjtDdl').multiselect({ maxTextWrapSize: 5, multiple: false });
+
+            window.setTimeout(function () {
+                console.log($('#PrjtDdl').css('width').split('px')[0]);
+                $('#PrjtDdl').multiselect({ maxTextWrapSize: 80, multiple: false },'refresh');
+            },2000);
+           
+                $('#PrjtDdl').multiselect().multiselectfilter();
+            
+
+
+            PreventTwoDecimalPlace("#txtconvrate", 5);
+
+            //var table = $('#tblInvoice').dataTable().fnDestroy();
+
+            // $("#DDl_Bank").attr("disabled", true);
+
+
+            $('#tblInvoice').DataTable({
+                "processing": true,
+
+                "columns": [
+                    { "title": "InvoiceID", "class": "displaynone" },
+                    {
+                        "title": "",
+                    },
+                    { "title": "Vendor" },
+
+                    { "title": "Invoice #" },
+                    { "title": "Date" },
+                    { "title": "Terms" },
+                    { "title": "Currency" },
+                    { "title": "Amount Owing" },
+                    { "title": "Payment Amount" },
+                    { "title": "RowIndex", "class": "displaynone" },
+
+
+                ],
+
+                //"aoColumns": [{"sTitle": "<input type='checkbox' id='selectAll'></input>"}],
+                paging: false,
+                "aoColumnDefs": [
+     { "bSortable": false, "aTargets": [1] }
+                ],
+                "order": [[2, "asc"], [4, "asc"], [3, "asc"]],
+                "initComplete": function () {
+                    $('#tblInvoice_filter').hide();
+                    $('#checkAll').html('<input type="checkbox" onchange="check_uncheck_all(this);"/>');
+
+
+                    $(".txtPaid").each(function (index, items) {
+                        $(this).attr("disabled", true);
+
+                    });
+
+                }
+
+            });
+
+            $("#Ddl_Vendors").on('change', function () {
+                var Vendor_Id = $(this).val();
+
+
+
+                var str = "";
+                $("select option:selected").each(function () {
+                    str += $(this).text() + " ";
+                });
+
+
+
+                if (Vendor_Id != null) {
+                    var totdata;
+                    var url = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url = '/Invoice/GetAllInvoiceListByVendor/';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url = 'Invoice/GetAllInvoiceListByVendor/';
+                    }
+
+
+                    url += '?Vendor_Id=' + Vendor_Id;
+
+                    $.get(url)
+                     .success(function (response) {
+                         totdata = JSON.parse(response);
+                         totdata = totdata.data;
+
+                         var url = '';
+                         if (LOCALORSERVERNEW == 'LOCAL') {
+                             url = '/Invoice/GetVendorLastPaymentStatus/';
+                         }
+                         else if (LOCALORSERVERNEW == 'SERVER') {
+                             url = 'Invoice/GetVendorLastPaymentStatus/';
+                         }
+
+
+                         url += '?Vendor_Id=' + Vendor_Id;
+                         $.get(url)
+                                .success(function (response) {
+
+
+
+
+                                    var prev_Payment = response;
+
+                                    if (prev_Payment != '') {
+                                        $("#Ddl_PaymentType").val(prev_Payment);
+                                        $("#Ddl_PaymentType").trigger("change");
+                                        if (prev_Payment == "8") {
+                                            $("#Ddl_PaymentType").val('2');
+                                            $("#Ddl_PaymentType").trigger("change");
+                                            //$("#DDl_Bank").attr("disabled", false);
+                                        }
+                                    }
+
+                                });
+
+                         var InvoiceItemSelector = new Array();
+                         var currency = str.substr(str.lastIndexOf("("), (str.lastIndexOf(")") - str.lastIndexOf("(")) + 1);
+                         for (i = 0; i < totdata.length ; i++) {
+                             InvoiceItemSelector[i] = new Array();
+                             InvoiceItemSelector[i][0] = totdata[i].InvoiceID;
+                             InvoiceItemSelector[i][1] = "<input type='checkbox' class='chkItems' onchange='EnableForPay(this);' />";
+                             InvoiceItemSelector[i][2] = "<input type='checkbox' class='chkItems' onchange='EnableForPay(this);' />";
+                             InvoiceItemSelector[i][3] = totdata[i].InvoiceNumber;
+                             InvoiceItemSelector[i][4] = totdata[i].InvoiceDate;
+                             InvoiceItemSelector[i][5] = totdata[i].Terms;
+                             InvoiceItemSelector[i][6] = "Curr";
+                             InvoiceItemSelector[i][7] = formatNumber(totdata[i].TotalInvoice);
+                             InvoiceItemSelector[i][8] = "<input type='text' class='txtPaid floatonly' data-maxValCheck='" + totdata[i].TotalInvoice.replace(',', '') + "' onkeyup='AddTotalNew(this,event);' value='" + formatNumber(totdata[i].TotalInvoice).replace(',', '') + "' />";
+                             InvoiceItemSelector[i][7] = (i + 1);
+                         }
+
+
+
+                         var table = $('#tblInvoice').dataTable().fnDestroy();
+
+
+                         $('#tblInvoice').DataTable({
+                             "processing": true,
+                             "data": InvoiceItemSelector,
+                             "columns": [
+                                 { "title": "InvoiceID", "class": "displaynone" },
+                                 {
+                                     "title": "",
+                                 },
+                                  { "title": "Vendor" },
+                                 { "title": "Invoice #" },
+                                 { "title": "Date" },
+                                 { "title": "Terms" },
+                                 { "title": "Currency" },
+                                 { "title": "Amount Owing" },
+                                 { "title": "Payment Amount" },
+                                 { "title": "RowIndex", "class": "displaynone" },
+
+
+                             ],
+
+                             //"aoColumns": [{"sTitle": "<input type='checkbox' id='selectAll'></input>"}],
+                             paging: false,
+                             "aoColumnDefs": [
+                  { "bSortable": false, "aTargets": [1] }
+                             ],
+                             paging: false,
+                             "initComplete": function () {
+
+                                 var objnow = $('#tblInvoice thead tr').find('th:eq(8)');
+                                 //console.log($(objnow).html());
+                                 $(objnow).html($(objnow).html() + "<br/>" + currency);
+
+                                 $('#tblInvoice_filter').hide();
+                                 $('#checkAll').html('<input type="checkbox" onchange="check_uncheck_all(this);"/>');
+
+
+                                 $(".txtPaid").each(function (index, items) {
+                                     $(this).attr("disabled", true);
+
+                                 });
+
+                             }
+
+                         });
+                     });
+                }
+
+                else {
+                    var table = $('#tblInvoice').DataTable();
+                    table
+                       .clear()
+                       .draw();
+                }
+
+            });
+
+
+            $(".makedisable").each(function (index, item) {
+
+                $(this).attr("disabled", true);
+            });
+
+
+            $("#txtTotalAmount").val(formatNumber(0));
+
+            $("#Ddl_PaymentType").on("change", function () {
+                $(this).attr('data-changed', '1');
+
+                getallpaymentnumberforchange();
+
+                //getallpaymentnumber();
+
+                if ($("#Ddl_PaymentType").val() != "1") {
+                    // $("#DDl_Bank").prop('selectedIndex', 0);
+                    //$("#txtPaymentNumber").val("");
+                    // $("#DDl_Bank").attr("disabled", true);
+                }
+                else {
+                    //$("#DDl_Bank").prop('selectedIndex', 0);
+                    //$("#DDl_Bank").attr("disabled", false);
+                }
+
+            });
+
+            $("#DDl_Bank").on("change", function () {
+
+                if ($("#DDl_Bank").val() == 0 && $("#Ddl_PaymentType").val() === "1") {
+                    notify("Please Select Bank Account");
+                    $("#txtPaymentNumber").val("");
+                    return;
+                }
+
+                getallpaymentnumberforchange();
+                getallpaymentnumber();
+                calculateexrate();
+
+                var bankname = $('#DDl_Bank option:selected').attr('data-accountname');
+                getbalance(bankname);
+
+
+
+                return;
+
+
+                if ($("#Ddl_PaymentType").val() === "1") {
+                    var url = '';
+                    var BankAccount_ID = $("#DDl_Bank").val();
+                    if (BankAccount_ID != 0) {
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = '/Invoice/GetPaymentNumber/';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'Invoice/GetPaymentNumber/';
+                        }
+
+
+                        url += '?BankAccount_ID=' + (BankAccount_ID);
+
+                        $.get(url)
+                         .success(function (response) {
+                             var totdata;
+                             totdata = JSON.parse(response);
+                             totdata = totdata.data;
+                             var InvoiceItemSelector = new Array();
+                             for (i = 0; i < totdata.length ; i++) {
+                                 //console.log(totdata[i].PaymentNumber);
+                                 $("#txtPaymentNumber").val(totdata[i].PaymentNumber);
+                                 checkpaymentnumberexistence($('#txtPaymentNumber'));
+                             }
+
+                         });
+                    }
+                    else {
+                        notify("Please Select Bank Account");
+                        $("#Ddl_PaymentType").prop('selectedIndex', 0);
+                    }
+                }
+
+
+
+
+            });
+
+
+
+            $("#Ddl_Vendors").multiselect(
+                {
+
+                    header: "Select only One Vendor!",
+                    //click: function (e, ui) {
+                    //    if (ui.checked) {
+                    //        //console.log(ui);
+                    //    }
+                    //    if ($(this).multiselect("widget").find("input:checked").length > 1) {
+                    //        $(this).multiselect("uncheckAll");
+
+
+
+                    //    }
+                    //}
+                    multiple: false
+                }
+
+                ).multiselectfilter();
+
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            $('.ui-multiselect-menu').css('width', '84%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+            $('#txt_PaymentDate').datepickercustom({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'MM dd yy',
+
+            }).datepicker("setDate", new Date());;
+
+            $('#txt_PaymentDate').on("keypress", function (e) {
+                e.preventDefault();
+            });
+
+            $("#btn_SavePaymentQB").on("click", function () {
+                delete_cookie("IssenttoQB");
+
+                setCookie("IssenttoQB", "true", 1);
+
+                setTimeout(function () {
+
+                    $('#btn_SavePayment').click();
+                });
+            });
+
+
+
+
+
+            function SendToQBO(id) {
+                EditPayment(id, 1);
+
+            }
+
+            
+            function populateBankAccount(PaymentID) {
+                console.log('PaymentID : ' + PaymentID);
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/populateBankAccount';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/populateBankAccount';
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: "{ 'PaymentID': '" + PaymentID + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "text",
+                    async: false,
+                    success: function (data) {
+                        //console.log(data);
+                        $('#DDl_EditBank').html(data);
+                    }
+                });
+
+            }
+
+
+            function EditPayment(PaymentID, mode) {
+                var checker = getCookie("checker");
+                setCookie("checker-" + checker, "false", 7);
+
+
+                populateBankAccount(PaymentID);
+
+
+                $("#hdnEditPayment").val(PaymentID);
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/getPaymentDetailsByPaymentID';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/getPaymentDetailsByPaymentID';
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: "{ 'ManualPaymentID': '" + PaymentID + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "JSON",
+                    async: false,
+                    success: function (data) {
+
+                        //console.log(data);
+
+                        if (data != '') {
+                            dt = data.data;
+                            if (dt.length == 0) {
+                                return;
+                            }
+                            //console.log(dt);
+
+                            if (dt.length > 0) {
+                                for (i = 0; i < dt.length ; i++) {
+                                    //$("#txt_EditPaymentDate").val(dt[i].PaymentDate);
+                                    $("#Ddl_EditPaymentType").val(dt[i].PaymentType);
+                                    $("#DDl_EditBank").val(dt[i].BankAccountID);
+                                    $("#txtEditPaymentNumber").val(dt[i].PaymentNumber);
+                                    $("#txtEditTotalAmount").val(dt[i].TotalPayment);
+                                    $("#txtEditMemo").val(dt[i].Memo);
+                                    $("#hdnEditPaymentType").val(dt[i].PaymentType);
+                                    $("#hdnEditBankAccount").val(dt[i].BankAccountID);
+                                    $("#hdnEditPaymentNumber").val(dt[i].PaymentNumber);
+                                    $("#txtEditExrate").val(dt[i].ConvRate);
+
+
+                                    $('#txt_EditPaymentDate').datepickercustom({
+                                        changeMonth: true,
+                                        changeYear: true,
+                                        dateFormat: 'MM dd yy',
+
+                                    }).datepicker("setDate", new Date(dt[i].PaymentDate));
+
+                                    url = '';
+                                    if (LOCALORSERVERNEW == 'LOCAL') {
+                                        url = '/Invoice/getPaymentItemDetailsByPaymentID';
+                                    }
+                                    else if (LOCALORSERVERNEW == 'SERVER') {
+                                        url = 'Invoice/getPaymentItemDetailsByPaymentID';
+                                    }
+
+                                    $.ajax({
+                                        type: "POST",
+                                        url: url,
+                                        data: "{ 'ManualPaymentID': '" + PaymentID + "'}",
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "JSON",
+                                        async: false,
+                                        success: function (data) {
+                                            $('#tblInvoiceDetails').dataTable().fnDestroy();
+                                            if (data != '') {
+                                                dt = data.data;
+                                                if (dt.length == 0) {
+                                                    return;
+                                                }
+                                                var payment = new Array();
+                                                if (dt.length > 0) {
+                                                    for (i = 0; i < dt.length ; i++) {
+                                                        payment[i] = new Array();
+                                                        payment[i][0] = dt[i].LegalName;
+
+                                                        payment[i][1] = dt[i].InvoiceNumberVendor;
+                                                        payment[i][2] = dt[i].InvoiceDate;
+                                                        payment[i][3] = dt[i].Terms;
+                                                        payment[i][4] = dt[i].CurrencyCode;
+
+                                                        payment[i][5] = dt[i].AmountOwing;
+                                                        payment[i][6] = "<input style='text-align:right;' type='text' value='" + dt[i].InvoiceAmountPaid.replace(',', '') + "' class='floatonly' onkeyup='AddTotalUpdate(this,event);' />";
+                                                        payment[i][7] = i;
+                                                        payment[i][8] = dt[i].InvoiceNumber;
+                                                        payment[i][9] = PaymentID;
+                                                        payment[i][10] = dt[i].FldID;
+                                                        payment[i][11] = dt[i].InvoiceAmountPaid;
+                                                        payment[i][12] = dt[i].Exrate;
+                                                        payment[i][13] = dt[i].ParentVendor_ID;
+                                                        payment[i][14] = dt[i].LegalName;
+
+
+                                                    }
+
+                                                    $('#tblInvoiceDetails').dataTable({
+                                                        "paging": false,
+                                                        "processing": true,
+                                                        "data": payment,
+                                                        "columns":
+                                                          [
+                                                            { "title": "Vendor", "class": "leftposition" },
+                                                            { "title": "Invoice #", "class": "leftposition" },
+                                                            { "title": "Date", "class": "leftposition" },
+                                                            { "title": "Terms", "class": "leftposition" },
+                                                            { "title": "Currency", "class": "leftposition" },
+                                                            { "title": "Amount Owing", "class": "rightposition" },
+                                                            { "title": "Payment Amount", "class": "rightposition" },
+                                                            { "title": "RowIndex", "class": "displaynone" },
+                                                            { "title": "InvoiceID", "class": "displaynone" },
+                                                            { "title": "ManualpaymentID", "class": "displaynone" },
+                                                            { "title": "ManualpaymentItemID", "class": "displaynone" },
+                                                            { "title": "PaidAmount", "class": "displaynone" },
+                                                          { "title": "exrate", "class": "displaynone" },
+                                                          { "title": "parentid", "class": "displaynone" },
+                                                          { "title": "legalname", "class": "displaynone" }
+
+                                                            //{ "title": "IsCommitted", "class": "displaynone" },
+                                                            //{ "title": "IsDeleted" }
+                                                          ],
+                                                        "initComplete": function () {
+                                                            $("#tblInvoiceDetails_filter").hide();
+                                                            $("#editPayment").modal('show');
+                                                            if (mode == "1") {
+
+                                                                setTimeout(function () {
+
+                                                                    $('#qbmodal').modal({ backdrop: 'static', keyboard: false });
+                                                                    $('#qbmodal').modal('show');
+
+
+                                                                    QBCheck();
+                                                                }, 300);
+
+
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }, error: function () { notify('Something went wrong'); }
+                                    });
+
+                                }
+                            }
+                        }
+                    }, error: function () { notify('Something went wrong'); }
+                });
+            }
+
+            var tmpindex = 0;
+            var tmpindex1 = 0;
+            var tmpindex3 = 0;
+
+            function QBCheck() {
+                var name = $('#DDl_EditBank option:selected').attr('data-bankname');
+                $('#qbchecker').html("<span id='bnkchk'>Checking Bank Account- " + name + '<i class="fa fa-spinner fa-spin mrg5L" aria-hidden="true"></i><span>');
+                var tttt = 0;
+                setTimeout(function () {
+                    qbcheckbankaccount(name);
+                }, 300);
+            }
+            function qbcheckbankaccount(name) {
+                console.log('qbcheckbankaccount' + name);
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/QuickBook/CheckBankAccount';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'QuickBook/CheckBankAccount';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: "{ 'name': '" + name + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "text",
+                    async: false,
+                    success: function (data) {
+                        if (data == 'Unauthorized-401') {
+                            notify("Unauthorized access to QBO. System not yet authorized to use any QB account");
+                            var htm = '<i style="color:red;" class="fa fa-exclamation-triangle" aria-hidden="true"></i>';
+                            $('#bnkchk').html(htm + " Unauthorized access to QBO.");
+                            setTimeout(function () {
+                                $('#qbmodal').modal('hide');
+                            }, 5000);
+                        }
+                        else if (data != "INVALID") {
+                            var htm = '<i style="color:green;" class="fa fa-check-circle mrg5R" aria-hidden="true"></i>';
+                            $('#bnkchk').html(htm + name + " Balance:" + data.split('^^^')[0]);
+                            $('#DDl_EditBank').attr('data-qboid', data.split('^^^')[1]);
+                            var invoices = new Array();
+                            var invids = '';
+                            $('#tblInvoiceDetails tbody tr').each(function () {
+                                var invoiceid = $(this).find('td:eq(8)').html();
+                                var obj = $(this);
+                                var url = '';
+                                if (LOCALORSERVERNEW == 'LOCAL') {
+                                    url = '/QuickBook/getAllInvoiceAccounts';
+                                }
+                                else if (LOCALORSERVERNEW == 'SERVER') {
+                                    url = 'QuickBook/getAllInvoiceAccounts';
+                                }
+                                $.ajax({
+                                    type: "POST",
+                                    url: url,
+                                    data: "{ 'invoices': '" + invoiceid + "'}",
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "text",
+                                    async: false,
+                                    success: function (data) {
+                                        for (var a = 0; a < data.split("^^^").length; a++) {
+                                            var accountname = data.split("^^^")[a].split('|||')[0];
+                                            var accountdesc = data.split("^^^")[a].split('|||')[1];
+                                            $(obj).attr('data-accountname', accountname);
+                                            $(obj).attr('data-accountdesc', accountdesc);
+                                        }
+                                    }, error: function () { notify('Something went wrong'); }
+                                });
+                            });
+                            $('#tblInvoiceDetails tbody tr').each(function () {
+                                var obj = $(this);
+                                var accountname = $(obj).attr('data-accountname');
+                                var accountdesc = $(obj).attr('data-accountdesc');
+                                var tmp = 0;
+                                for (var a = 0; a < invoices.length; a++) {
+                                    if (invoices[a].accountname == accountname) {
+                                        tmp = 1;
+                                    }
+                                }
+                                if (tmp == 0) {
+                                    invoices.push({ 'accountname': accountname, 'accountdesc': accountdesc });
+                                }
+                            });
+                            invoiceaccountcheck(invoices);
+                            return 1;
+                        }
+                        else {
+                            var htm = '<i style="color:red;" class="fa fa-times-circle mrg5R" aria-hidden="true"></i>';
+                            $('#bnkchk').html(htm + name + " does not exist.");
+                            setTimeout(function () {
+                                notify('QBO Validation error');
+                                $('#qbmodal').modal('hide');
+                            }, 3000);
+                            return 0;
+                        }
+                    }, error: function () { notify('Something went wrong'); }
+                });
+            }
+
+            function invoiceaccountcheck(invoices) {
+                var accountname = invoices[tmpindex1].accountname;
+                var url2 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url2 = '/QuickBook/CheckInvoiceAccount';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url2 = 'QuickBook/CheckInvoiceAccount';
+                }
+                var name = invoices[tmpindex1].accountname + "-" + invoices[tmpindex1].accountdesc;;
+                $('#qbchecker').append("<br /><span id='invchk_" + tmpindex1 + "'>Checking Invoice Account - " + name + '<i class="fa fa-spinner fa-spin mrg5L" aria-hidden="true"></i><span>');
+                setTimeout(function () {
+                    $.ajax({
+                        type: "POST",
+                        url: url2,
+                        data: "{ 'name': '" + accountname + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "text",
+                        async: false,
+                        success: function (data) {
+                            if (data != "INVALID") {
+                                var htm = '<i style="color:green;" class="fa fa-check-circle mrg5R" aria-hidden="true" data-qboid="' + "" + '"></i>';
+                                $('#invchk_' + tmpindex1).html(htm + name + " Balance:" + data.split('^^^')[0]);
+                                var accountid = data.split("^^^")[1];
+                                $('#tblInvoiceDetails tbody tr').each(function () {
+                                    var obj = $(this);
+                                    var accountnamenow = $(obj).attr('data-accountname');
+                                    var accountdescnow = $(obj).attr('data-accountdesc');
+                                    if (accountnamenow == accountname) {
+                                        $(obj).attr('data-accountid', accountid);
+                                    }
+                                });
+                                setTimeout(function () {
+                                    tmpindex1++;
+                                    if (invoices.length > tmpindex1) {
+                                        invoiceaccountcheck(invoices);
+                                    }
+                                    else {
+                                        tmpindex1 = 0;
+                                        vendorloadnow();
+                                    }
+                                }, 300);
+                                return;
+                            }
+                            else {
+                                var htm = '<i style="color:red;" class="fa fa-times-circle mrg5R" aria-hidden="true"></i>';
+                                $('#invchk_' + tmpindex1).html(htm + name + " does not exist.");
+                                setTimeout(function () {
+                                    notify('QBO Validation error');
+                                    $('#qbmodal').modal('hide');
+                                }, 3000);
+                            }
+                        }, error: function () { notify('Something went wrong'); }
+                    });
+                }, 300);
+            }
+            function vendorloadnow() {
+                var vnames = new Array();
+                $('#tblInvoiceDetails tbody tr').each(function () {
+                    var vname = $(this).find('td:eq(0)').html();
+                    var vcurr = $(this).find('td:eq(4)').html();
+                    var VLegalName = $(this).find('td:eq(14)').html();
+
+                    var tmp = 0;
+                    for (var i = 0; i < vnames.length; i++) {
+                        if (vnames[i].vname == vname) {
+                            tmp++;
+                        }
+                    }
+                    if (tmp == 0) {
+                        vnames.push({ 'vname': vname, 'vcurr': vcurr, 'VLegalName': VLegalName });
+                    }
+                });
+                qbcheckvendor(vnames);
+            }
+            function qbcheckvendor(vnames) {
+                var url2 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url2 = '/QuickBook/CheckVendor';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url2 = 'QuickBook/CheckVendor';
+                }
+                var name = vnames[tmpindex].vname + '(' + $('#DDl_EditBank option:selected').attr('data-currid') + ')';
+                var bridge_name = vnames[tmpindex].vname;
+                var name2 = vnames[tmpindex].VLegalName + ' ' + $('#DDl_EditBank option:selected').attr('data-currid') + '';
+
+
+                var cr = $('#DDl_EditBank option:selected').attr('data-currid');
+                $('#qbchecker').append("<br /><span id='vndchk_" + tmpindex + "'>Checking Vendor- " + vnames[tmpindex].vname + '<i class="fa fa-spinner fa-spin mrg5L" aria-hidden="true"></i><span>');
+                setTimeout(function () {
+                    $.ajax({
+                        type: "POST",
+                        url: url2,
+                        data: "{ \"name\": \"" + bridge_name + "\",\"vname\" : \"" + name2 + "\",\"Curr\":\"" + cr + "\"}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "text",
+                        async: false,
+                        success: function (data) {
+                            if (data != "INVALID" && data != "0") {
+                                var htm = '<i style="color:green;" class="fa fa-check-circle mrg5R" aria-hidden="true" data-qboid="' + data + '"></i>';
+                                $('#vndchk_' + tmpindex).html(htm + name + "");
+                                ////console.log(htm + name + '   #vndchk_' + i);
+                                var vendorid = data;
+                                $('#tblInvoiceDetails tbody tr').each(function () {
+                                    var obj = $(this);
+                                    var vendorname = $(obj).find('td:eq(0)').html();
+                                    if (vendorname == vnames[tmpindex].vname) {
+                                        $(obj).attr('data-vendorid', vendorid);
+                                    }
+                                });
+                                setTimeout(function () {
+                                    tmpindex++;
+                                    if (vnames.length > tmpindex) {
+                                        qbcheckvendor(vnames);
+                                    }
+                                    else {
+                                        tmpindex = 0;
+                                        qbgeneratecheck();
+                                    }
+                                }, 300);
+                                return;
+                            }
+                            else if (data != "0") {
+                                setTimeout(function () {
+                                    //var c = confirm("Vendor '" + name2 + " does not exist in QBO, Do you want to create the vendor?");
+                                    //if (!c) {
+                                    //    notify('QBO Validation error');
+                                    //    $('#qbmodal').modal('hide');
+                                    //}
+                                    //else {
+                                        if (true) {
+                                        var currncy = $('#DDl_EditBank option:selected').attr('data-currid');//vnames[tmpindex].vcurr
+
+                                        $('#vndchk_' + tmpindex).html('Creating Vendor- ' + name2 + '<i class="fa fa-spinner fa-spin mrg5L" aria-hidden="true"></i>');
+                                        setTimeout(function () {
+                                            var urlvcreate = '';
+                                            if (LOCALORSERVERNEW == 'LOCAL') {
+                                                urlvcreate = '/QuickBook/saveVendor';
+                                            }
+                                            else if (LOCALORSERVERNEW == 'SERVER') {
+                                                urlvcreate = 'QuickBook/saveVendor';
+                                            }
+                                            $.ajax({
+                                                type: "POST",
+                                                url: urlvcreate,
+                                                data: "{ \"name\": \"" + bridge_name + "\",\"curr\" : \"" + currncy + "\",\"vname\" : \"" + name2 + "\"}",
+                                                contentType: "application/json; charset=utf-8",
+                                                dataType: "text",
+                                                async: false,
+                                                success: function (data) {
+                                                    var htm = '<i style="color:green;" class="fa fa-check-circle mrg5R" aria-hidden="true" data-qboid="' + data + '"></i>';
+                                                    $('#vndchk_' + tmpindex).html(htm + "New vendor created - " + name2 + "");
+                                                    var vendorid = data;
+                                                    $('#tblInvoiceDetails tbody tr').each(function () {
+                                                        var obj = $(this);
+                                                        var vendorname = $(obj).find('td:eq(0)').html();
+                                                        if (vendorname == vnames[tmpindex].vname) {
+                                                            $(obj).attr('data-vendorid', vendorid);
+                                                        }
+                                                    });
+                                                    setTimeout(function () {
+                                                        tmpindex++;
+                                                        if (vnames.length > tmpindex) {
+                                                            qbcheckvendor(vnames);
+                                                        }
+                                                        else {
+                                                            tmpindex = 0;
+                                                            qbgeneratecheck();
+                                                        }
+                                                    }, 300);
+                                                }, error: function () { notify('Something went wrong in Quick book Save vendor'); }
+                                            });
+                                        }, 300);
+                                    }
+                                }, 3000);
+                            }
+                            else if (data == "0") {
+
+                                //var c = confirm("Vendor '" + name2 + "' exist in QBO with different currency, Do you want to update the vendor?");
+                                //if (!c) {
+                                //    notify('QBO Validation error');
+                                //    $('#qbmodal').modal('hide');
+                                //    if (ismultiplepayment) {
+                                //        SendMultiplePayments();
+                                //    }
+
+
+                                //}
+
+                                //else {
+                                if (true) {
+                                    var url22 = '';
+                                    if (LOCALORSERVERNEW == 'LOCAL') {
+                                        url22 = '/QuickBook/checkandsavevendor';
+                                    }
+                                    else if (LOCALORSERVERNEW == 'SERVER') {
+                                        url22 = 'QuickBook/checkandsavevendor';
+                                    }
+                                    var currncy = $('#DDl_EditBank option:selected').attr('data-currid');//vnames[tmpindex].vcurr
+
+                                    $.ajax({
+                                        type: "POST",
+                                        url: url22,
+                                        data: "{\"curr\":\"" + currncy + "\"}",
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "text",
+                                        async: false,
+                                        success: function (data) {
+
+                                            var htm = '<i style="color:green;" class="fa fa-check-circle mrg5R" aria-hidden="true" data-qboid="' + data + '"></i>';
+                                            $('#vndchk_' + tmpindex).html(htm + name + "");
+                                            var vendorid = data;
+
+                                            $('#tblInvoiceDetails tbody tr').each(function () {
+                                                var obj = $(this);
+                                                var vendorname = $(obj).find('td:eq(0)').html();
+
+
+
+                                                if (vendorname == vnames[tmpindex].vname) {
+                                                    $(obj).attr('data-vendorid', vendorid);
+                                                    var currncy = $('#DDl_EditBank option:selected').attr('data-currid');//vnames[tmpindex].vcurr
+                                                    $(obj).attr('data-vendorcurr', currncy);
+                                                }
+
+
+
+                                            });
+
+
+
+
+                                            setTimeout(function () {
+                                                tmpindex++;
+                                                if (vnames.length > tmpindex) {
+
+                                                    qbcheckvendor(vnames);
+                                                }
+                                                else {
+                                                    tmpindex = 0;
+                                                    qbgeneratecheck();
+                                                }
+
+                                            }, 300);
+                                            return;
+
+
+                                        }, error: function () { notify('Something went wrong in Quick book Check and save vendor'); }
+                                    });
+
+                                }
+
+
+
+
+
+
+
+
+
+                            }
+
+                        }, error: function () { notify('Something went wrong in Quick book check vendor'); }
+                    });
+                }, 300);
+            }
+            function qbgeneratecheck() {
+                notify('QBO Validation completed successfully', 'green');
+                $('#qbmodal').modal('hide');
+                $('#qbgeratemodal').modal('show');
+                var vnames = new Array();
+                $('#tblInvoiceDetails tbody tr').each(function () {
+                    var vname = $(this).find('td:eq(0)').html();
+                    var vcurr = $(this).find('td:eq(4)').html();
+                    var BridgeVendorID = $(this).find('td:eq(13)').html();
+                    var VLegalName = $(this).find('td:eq(14)').html();
+
+
+                    var tmp = 0;
+                    for (var i = 0; i < vnames.length; i++) {
+                        if (vnames[i].vname == vname) {
+                            tmp++;
+                        }
+                    }
+                    if (tmp == 0) {
+                        vnames.push({ 'vname': vname, 'vcurr': vcurr, 'BridgeVendorID': BridgeVendorID, 'VLegalName': VLegalName });
+                    }
+                });
+                generatefinalinvoice(vnames);
+            }
+            function generatefinalinvoice(vnames) {
+                var vname = vnames[tmpindex3].vname;
+                var vcurr = vnames[tmpindex3].vcurr;
+                var BridgeVendorID = vnames[tmpindex3].BridgeVendorID;
+                if ($('#qbsendinfo').html() != '') {
+                    $('#qbsendinfo').append("<br /><span id='finalsendinvoice_" + tmpindex3 + "'>Generating Cheque for -" + vnames[tmpindex3].vname + '<i class="fa fa-spinner fa-spin mrg5L" aria-hidden="true"></i><span>');
+                }
+                else {
+                    $('#qbsendinfo').append("<span id='finalsendinvoice_" + tmpindex3 + "'>Generating Cheque for -" + vnames[tmpindex3].vname + '<i class="fa fa-spinner fa-spin mrg5L" aria-hidden="true"></i><span>');
+                }
+                var items = new Array();
+                setTimeout(function () {
+                    var total = 0;
+                    var vendorid = '';
+                    $('#tblInvoiceDetails tbody tr').each(function () {
+                        var obj = $(this);
+                        var vnamenow = $(this).find('td:eq(0)').html();
+                        if (vname == vnamenow) {
+                            vendorid = $(obj).attr('data-vendorid');
+                            var tmpcrate = $('#txtEditExrate').val();
+                           
+                            var vl = parseFloat($(obj).find('td:eq(6)').find('input').val());
+                            total += parseFloat(tmpcrate) * vl;
+                            items.push({
+                                'accountid': $(obj).attr('data-accountid'),
+                                'total': parseFloat(tmpcrate) * vl,
+                                'description': $(obj).attr('data-accountdesc')
+                            });
+                        }
+                    });
+                    var invobject;
+                    invobject = {};
+                    invobject.Paymentdate = $('#txt_EditPaymentDate').val();
+                    invobject.Bank = $('#DDl_EditBank').attr('data-qboid');
+                    var checknumber = $('#txtEditPaymentNumber').val();
+                    if (vnames.length > 1) {
+                        checknumber += "/" + (tmpindex3 + 1);
+                    }
+                    invobject.Checknumber = checknumber;
+                    invobject.Memo = $('#txtEditMemo').val();
+                    invobject.Total = total;
+                    invobject.items = new Array();
+                    invobject.items = items;
+                    invobject.VendorID = vendorid;
+                    invobject.VendorCurrency = vcurr;
+                    invobject.BankCurr = $('#DDl_EditBank option:selected').attr('data-currid');
+                    invobject.ExchangeRate = $('#txtEditExrate').val();
+                    invobject.BridgeVendorID = BridgeVendorID;
+                    invobject.BridgePaymentID = $("#hdnEditPayment").val();
+                    invobject.MailingAddress = "hi";
+                    invobject.Type = $('#Ddl_PaymentType option:selected').text();
+
+
+                    var url2 = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url2 = '/QuickBook/senddatatoqbo';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url2 = 'QuickBook/senddatatoqbo';
+                    }
+                    setTimeout(function () {
+                        var obj2 = JSON.stringify(invobject);
+                        console.log(obj2);
+                        //return;
+
+                        $.ajax({
+                            type: "POST",
+                            url: url2,
+                            data: obj2,
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "text",
+                            async: false,
+                            success: function (data) {
+                                if (data.split('^^^')[0] != 'INVALID') {
+                                    var htm = '<i style="color:green;" class="fa fa-check-circle mrg5R" aria-hidden="true"></i>';
+                                    $('#finalsendinvoice_' + tmpindex3).html(htm + "Cheque(" + checknumber + ") generated for -" + vnames[tmpindex3].vname + "");
+                                }
+                                else {
+                                    var htm = '<i style="color:red;" class="fa fa-times-circle mrg5R" aria-hidden="true"></i>';
+                                    $('#finalsendinvoice_' + tmpindex3).html(htm + "Unable to send Cheque(" + checknumber + ") to QBO");
+                                    $('#finalsendinvoice_' + tmpindex3).append("<br/>" + data.split('^^^')[1]);
+                                }
+                                //$("#finalsendinvoice_" + tmpindex3).html('');
+                                setTimeout(function () {
+                                    if (data.split('^^^')[0] != 'INVALID') {
+                                        tmpindex3++;
+                                        if (vnames.length > tmpindex3) {
+                                            generatefinalinvoice(vnames);
+                                        }
+                                        else {
+                                            tmpindex3 = 0;
+
+                                            setTimeout(function () {
+                                                $('#qbgeratemodal').modal('hide');
+                                                $('#qbsendinfo').html('');
+                                                $('#editPayment').modal('hide');
+                                            }, 1000);
+                                            var currid = returncurrentoperationidforqbosendbatch();
+                                            if (currid != '0') {
+                                                notify("Please Wait, Generating next cheque.", 'green');
+                                               
+                                            }
+                                            if (currid != '0') {
+                                                setTimeout(function () {
+                                                    EditPayment(currid, 1);
+                                                }, 2000);
+                                            }
+                                            else {
+                                                notify("Successfully sent data to QBO", 'green');
+                                                setTimeout(function () {
+                                                    irrrrr = 0;
+                                                    window.location.reload();
+                                                }, 3000);
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        notify(data.split('^^^')[1]);
+                                    }
+                                }, 300);
+                            }, error: function () { notify('Something went wrong in Send data to QBO'); }
+                        });
+                    }, 300);
+                }, 300);
+            }
+
+            var manualpaymentids = new Array();
+
+            function checkInvoicestatus() {
+
+                var rflag = true;
+
+
+                $('#tblInvoice tbody tr').each(function () {
+                    if (rflag && $(this).find('td:eq(1)').find('.chkItems').is(':checked')) {
+                        var invn = $(this).find('td:eq(0)').html();
+
+                        var obj = new Object();
+                        obj.Invoicenumber = invn;
+
+
+                        var DBSP = new DB_SP_CONNECT();
+                        DBSP.ProcedureName = "poms_checkmanualpaymentitem";
+                        DBSP.obj = obj;
+                        DBSP.isasync = false;
+                        var o = DBSP.call_DB_Procedure();
+                        o = o.data;
+
+                        if (o.length > 0) {
+                            if (parseFloat(o[0].Paid) + parseFloat($(this).find('td:eq(8) input').val()) > parseFloat(o[0].TotalInvoice)) {
+                                notify("You are trying to pay extra for Invoice " + $(this).find('td:eq(3)').html() + "(" + formatNumber(parseFloat(o[0].Paid)) + " is already paid.)");
+                                rflag = false;
+                            }
+                        }
+                        //console.log(rflag);
+
+                    }
+                    else {
+                        //console.log("HIII");
+                        console.log($(this).find('td:eq(0)').find('.chkItems').is(':checked'));
+
+                    }
+
+
+                });
+
+                return rflag;
+            }
+
+            $("#btn_SavePayment").on("click", function () {
+
+                var flag = checkInvoicestatus();
+                if (!flag)
+                    return;
+
+                //return;
+
+                checkpaymentnumberexistence($('#txtPaymentNumber'));
+
+                if ($('#txtPaymentNumber').hasClass('existingnumber')) {
+                    notify("Use another Payment Number");
+                    return;
+                }
+                var table = $('#tblInvoice').dataTable();
+
+                if (table.fnGetData().length === 0) {
+                    notify("You have nothing to save");
+                    return;
+                }
+
+                if ($('#txt_PaymentDate').val() === '') {
+                    errorfunc('txt_PaymentDate', "Please Select Date");
+                    return;
+                }
+
+                if ($("#DDl_Bank").val() === "0" && $("#Ddl_PaymentType").val() === "1") {
+                    errorfunc('DDl_Bank', "Please Select Bank Account");
+                    return;
+                }
+
+                if ($("#Ddl_PaymentType").val() === "1") {
+
+                    if ($("#txtPaymentNumber").val() === '') {
+                        notify("Please Enter Payment Number");
+                        return;
+
+                    }
+                }
+
+                if (selection_couter == 0) {
+
+                    notify("You have nothing to save");
+                    return;
+                }
+
+
+
+                var varray = new Array();
+
+                $('#tblInvoice tbody tr').each(function () {
+                    if ($(this).find('td:eq(1)').find('input:checkbox').is(':checked')) {
+                        var vendorid = $(this).find('td:eq(10)').html();
+                        //console.log(vendorid);
+                        var tmp = 0;
+                        for (var a = 0; a < varray.length; a++) {
+                            if (vendorid == varray[a]) {
+                                tmp = 1;
+                            }
+                        }
+                        if (tmp == 0) {
+                            varray.push(vendorid);
+                        }
+                    }
+                });
+
+                var ss = 0;
+                for (var a = 0; a < varray.length; a++) {
+
+
+
+
+
+
+
+
+                    if ($("#Ddl_PaymentType").val() === "1" && $("#DDl_Bank").val() != "0" && $("#txtPaymentNumber").val() != '') {
+                    }
+
+                    var convrate = $('#txtconvrate').val();
+                    var convrate1 = $('#txtconvrate1').val();
+
+                    convrate = isNaN(convrate) ? '1.00' : convrate;
+
+                    var url = '';
+
+                    var total = 0;
+                    $("#tblInvoice tbody").find("tr").each(function () {
+
+                        var vendorid = $(this).find('td:eq(10)').html();
+
+                        if (($(this).find('td:eq(1)').find('input:checkbox').is(':checked')) && vendorid == varray[a]) {
+
+                            total += parseFloat($(this).find('td:eq(8)').find('input:text').val());
+                        }
+
+                    });
+                    var PaymentType = $("#Ddl_PaymentType").val();
+
+                    var cat = $("#txtPaymentNumber").val().split('-')[0];
+                    var val = parseInt($("#txtPaymentNumber").val().split('-')[1]);
+                    if (isNaN(val) && PaymentType != '2') {
+                        notify("Enter a valid Payment number");
+                        return;
+                    }
+                    var nm = val + ss;
+                    if (nm < 10) {
+                        nm = '000' + nm;
+                    }
+                    else if (nm < 100) {
+                        nm = '00' + nm;
+                    }
+                    else if (nm < 1000) {
+                        nm = '0' + nm;
+                    }
+                    var pnumber = cat + '-' + nm;
+
+
+
+
+
+
+
+                    var BankAccount_ID = $("#DDl_Bank").val();
+                   
+
+
+
+                    if (total < 0 && 1 < 0) {
+                        var ptype = '6';
+                        var bankaccnt = $('#DDl_Bank').val();
+
+                        var url11 = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url11 = '/Invoice/getpaymentnumberforall';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url11 = 'Invoice/getpaymentnumberforall';
+                        }
+
+
+                        url11 += "?paymenttype=" + ptype + "&accntnumber=" + bankaccnt;
+
+                        $.ajax({
+                            type: "POST",
+                            url: url11,
+                            datatype: "text",
+                            contentType: "application/json; charset=utf-8",
+                            data: {},
+                            async: false,
+                            success: function (response) {
+                                //   $('#txtPaymentNumber').val($("#Ddl_PaymentType option:selected").attr('data-code') + '-' + response);
+
+                                var cat = "RE";
+                                var val = parseInt(response);
+
+                                var nm = val;
+                                if (nm < 10) {
+                                    nm = '000' + nm;
+                                }
+                                else if (nm < 100) {
+                                    nm = '00' + nm;
+                                }
+                                else if (nm < 1000) {
+                                    nm = '0' + nm;
+                                }
+                                pnumber = cat + '-' + nm;
+
+
+
+
+
+
+
+
+                                PaymentType = "6";
+
+
+                            }
+                        });
+
+
+                    }
+                    else {
+                        ss++;
+                    }
+
+                    var PaymentNumber = pnumber;
+
+                    if (PaymentType == '2') {
+                        PaymentNumber = $('#txtPaymentNumber').val();
+
+                    }
+                     //$("#txtPaymentNumber").val();
+                    var PaymentDate;
+                    var VendorID = varray[a];
+                    var TotalPayment = total;//$("#txtTotalAmount").val();
+                    var Memo = $("#txtMemo").val();
+
+
+                    if ($("#txt_PaymentDate").val() != '')
+                        PaymentDate = ($("#txt_PaymentDate").val());
+                    else
+                        PaymentDate = null;
+
+
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url = '/Invoice/SaveManualPayment/';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url = 'Invoice/SaveManualPayment/';
+                    }
+                    url += '?BankAccount_ID=' + BankAccount_ID;
+                    url += '&PaymentType=' + PaymentType;
+                    url += '&PaymentNumber=' + PaymentNumber;
+                    url += '&PaymentDate=' + PaymentDate;
+                    url += '&VendorID=' + VendorID;
+                    url += '&TotalPayment=' + TotalPayment;
+                    url += '&Memo=' + Memo;
+                    url += '&convrate=' + convrate;
+                    url += '&convrate1=' + convrate1;
+
+
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        datatype: "text",
+                        contentType: "application/json; charset=utf-8",
+                        // data: "{ \"InvoiceID\" : \"" + InvoiceID + "\", \"vl\" : \"" + vl + "\",\"ManualPaymentID\" :\"" + ManualPaymentID + "\"}",
+                        async: false,
+                        success: function (response) {
+                            console.log('response :'+response);
+                            var result = response;
+                            if (result != 'INVALID') {
+                                var ManualPaymentID = result.split("^")[1];
+                                manualpaymentids.push(ManualPaymentID);
+
+                                var InvoiceNumber;
+                                var InvoiceAmount;
+
+                                if (response == 'FAILED') {
+                                    alert("Checknumber already exists.")
+                                }
+                                else {
+
+                                    var InvoiceID = '';
+                                    var vl = '';
+
+                                    $("#tblInvoice tbody").find("tr").each(function () {
+
+                                        var vendorid = $(this).find('td:eq(10)').html();
+
+                                        if (($(this).find('td:eq(1)').find('input:checkbox').is(':checked')) && vendorid == varray[a]) {
+                                            InvoiceID += InvoiceID == "" ? $(this).find('td:eq(0)').html() : '^' + $(this).find('td:eq(0)').html();
+                                            vl += vl == "" ? parseFloat($(this).find('td:eq(8)').find('input:text').val()) : '^' + parseFloat($(this).find('td:eq(8)').find('input:text').val());
+                                        }
+
+                                    });
+
+                                    InvoiceID = InvoiceID.replace(",", "");
+                                    vl = vl.replace(",", "");
+
+
+                                    var url = '';
+                                    if (LOCALORSERVERNEW == 'LOCAL') {
+                                        url = '/Invoice/savePaymentItem';
+                                    }
+                                    else if (LOCALORSERVERNEW == 'SERVER') {
+                                        url = 'Invoice/savePaymentItem';
+                                    }
+
+
+                                    $.ajax({
+                                        type: "POST",
+                                        url: url,
+                                        datatype: "json",
+                                        contentType: "application/json; charset=utf-8",
+                                        data: "{ \"InvoiceID\" : \"" + InvoiceID + "\", \"vl\" : \"" + vl + "\",\"ManualPaymentID\" :\"" + ManualPaymentID + "\"}",
+                                        async: false,
+                                        success: function (data) {
+                                            if (data == 'SUCCESS') {
+
+
+                                            }
+
+                                        },
+                                        error: function () { notify('Something went wrong'); }
+                                    });
+
+
+
+
+                                }
+                            }
+                            else {
+                                notify("Some thing went wrong.")
+                            }
+                        },
+
+                        error: function () { notify('Something went wrong'); }
+                    });
+
+
+
+
+
+
+                }
+
+                notify('Successfully generated ' + varray.length + ' Payment(s)', 'green');
+                var IssenttoQB = getCookie("IssenttoQB");
+                if (IssenttoQB == 'true') {
+                    batchqbofinal();
+                }
+                else {
+
+                    setTimeout(function () {
+                        irrrrr = 0;
+                        window.location.reload();
+                    }, 4000);
+                }
+
+                //if($("#Ddl_Vendors").val() ===)
+
+            });
+
+            function batchqbofinal() {
+                //$('#batchqbo').modal('hide');
+                generateInvoicesinBatch(0);
+            }
+
+            function generateInvoicesinBatch(id) {
+
+                var obj = $('#batchqbopayment .remove:eq(' + id + ')');
+
+                var arr = '';
+                for (var i = 0; i < manualpaymentids.length; i++) {
+                    arr += arr == '' ? manualpaymentids[i] : ',' + manualpaymentids[i];
+                }
+
+                delete_cookie("checker");
+                setCookie("checker", arr, 3);
+                var currid = returncurrentoperationidforqbosendbatch();
+
+                notify("Sending to QBO", 'green');
+                setTimeout(function () {
+                    EditPayment(currid, 1);
+                }, 300);
+
+            }
+        });
+
+
+
+
+        function returncurrentoperationidforqbosendbatch() {
+            var tmp = getCookie("checker");
+
+            var tmp2 = '';
+            var rtn = '0';
+
+            for (var a = 0; a < tmp.split(',').length; a++) {
+                if (a == 0) {
+                    rtn = tmp.split(',')[a];
+                }
+                else {
+                    tmp2 += tmp2 == "" ? tmp.split(',')[a] : ',' + tmp.split(',')[a];
+                }
+            }
+            delete_cookie("checker");
+            if (tmp != '') {
+                setCookie("checker", tmp2, 3);
+            }
+            else {
+                rtn = '0';
+            }
+            return rtn;
+
+
+        }
+
+
+
+
+        function IsNumber(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            if ((keyCode > 47 && keyCode < 58) || (keyCode == 8) || (keyCode == 46)) {
+                return true;
+            }
+            else {
+                if ($('#Ddl_PaymentType').val() != '2') {
+                    alert('Use Only Numeric value');
+                    return false;
+                }
+            }
+        }
+
+        function AddTotal(obj, e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            var totalAmount;
+            var tobePaid;
+
+            alert(String.fromCharCode(e.keyCode));
+
+            if ((keyCode > 47 && keyCode < 58) || (keyCode == 8) || (keyCode == 46)) {
+                if ($(obj).val() != '') {
+                    totalAmount = $("#txtTotalAmount").val().replace(',', '');
+
+                }
+                else {
+                    tobePaid = $(obj).parent("td").parent("tr").find("td:eq(7)").html().replace(',', '');
+                    totalAmount = parseFloat(totalAmount) - parseFloat(tobePaid);
+                    $("#txtTotalAmount").val(formatNumber(totalAmount));;
+
+                }
+
+                return true;
+            }
+            else {
+                alert('Use Only Numeric value');
+                return false;
+            }
+        }
+
+
+        function AddTotalNew(obj, e) {
+
+            //console.log($(obj).parent("td").parent("tr").find("td:eq(7)").html());
+
+
+            // var tot = replaceAll($(obj).parent("td").parent("tr").find("td:eq(7)").html().replace(',', ''), ',', '');
+
+            var tobePaid = parseFloat($(obj).parent("td").parent("tr").find("td:eq(7)").html());
+            var currval = parseFloat($(obj).val());
+            currval = isNaN(parseFloat(currval)) ? 0 : currval;
+
+            var tot = 0;
+            $('#tblInvoice tr').each(function () {
+                if ($(this).find('td:eq(1)').find('input:checkbox').is(':checked')) {
+                    var vl = $(this).find('td:eq(8)').find('input:text').val();
+                    //console.log(vl);
+                    vl = isNaN(parseFloat(vl)) ? 0 : vl;
+                    tot += parseFloat(vl);
+                }
+            });
+            $("#txtTotalAmount").val(formatNumber(tot));;
+
+
+
+        }
+
+
+
+
+
+
+
+
+        function formatNumber(number) {
+            number = parseFloat(number);
+            var number = number.toFixed(2) + '';
+            var x = number.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+
+
+        function formatNumber4(number) {
+            number = parseFloat(number);
+            var number = number.toFixed(4) + '';
+            var x = number.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+
+        function calculateexrate() {
+
+            $('#Ddl_PaymentType option[value="1"]').removeAttr('disabled');
+            $('#Ddl_PaymentType option[value="2"]').removeAttr('disabled');
+            $('#Ddl_PaymentType option[value="3"]').removeAttr('disabled');
+            $('#Ddl_PaymentType option[value="4"]').removeAttr('disabled');
+            $('#Ddl_PaymentType option[value="5"]').removeAttr('disabled');
+            $('#Ddl_PaymentType option[value="6"]').removeAttr('disabled');
+
+            
+            $('#Ddl_PaymentType option[value="6"]').attr('disabled', 'disabled');
+            $('#Ddl_PaymentType option[value="7"]').attr('disabled', 'disabled');
+
+
+            //console.log($('#DDl_Bank option:selected').attr('data-currid') + "==" +  $('#CurrDdl').val());
+            if ($('#DDl_Bank option:selected').attr('data-currid') == $('#CurrDdl option:selected').attr('data-id')) {
+                $('#txtconvrate').val("1.00");
+                //$('#txtconvrate').attr("disabled", "disabled");
+                return;
+            }
+            $('#txtconvrate').removeAttr("disabled");
+
+            if ($('#txtconvrate').attr('data-edited') == "true") {
+                return;
+            }
+            var tot = 0;
+            var totconverted = 0;
+
+            $('.chkItems').each(function () {
+                if ($(this).is(':checked')) {
+                    var totowed = $(this).parent().parent().find('td:eq(7)').html();
+                    var conv = $(this).parent().parent().find('td:eq(8) input').attr('data-exrate');
+                    tot += parseFloat(totowed);
+                    totconverted += parseFloat(totowed) * parseFloat(conv);
+
+                }
+
+            });
+
+            var convrate = isNaN(totconverted / tot) ? 1.00 : totconverted / tot;
+            $('#txtconvrate').val(formatNumber4(convrate));
+
+        }
+        function EnableForPay(obj) {
+            var ischecked;
+            calculateexrate();
+            if ($(obj).is(':checked')) {
+                ischecked = true;
+
+            }
+            else {
+                ischecked = false;
+            }
+            var iscontinue = true;
+
+            if (!iscontinue) {
+                return;
+            }
+
+            var totalAmount = 0;
+            if (ischecked == true) {
+
+                var table = $('#tblInvoice').dataTable();
+                var totalRecords = $('#tblInvoice tbody tr').length;
+                selection_couter++;
+
+
+                if (selection_couter == totalRecords) {
+                    $('#tblInvoice thead tr').find('th:eq(1)').find("input:checkbox").prop('checked', true);
+                }
+
+                var oamt = $(obj).parent("td").parent("tr").find("td:eq(7)").html();
+                oamt = replaceAll(oamt, ',', '');
+                $(obj).parent("td").parent("tr").find("td:eq(8)")
+                   .find("input:text").val(oamt);
+
+                $(obj).parent("td").parent("tr").find("td:eq(8)")
+                    .find("input:text").attr("disabled", false);
+
+                totalAmount = $("#txtTotalAmount").val().replace(',', '');
+
+
+                totalAmount = parseFloat(totalAmount) + parseFloat($(obj).parent("td").parent("tr").find("td:eq(8)")
+                    .find("input:text").val());
+
+                $("#txtTotalAmount").val(formatNumber(totalAmount));;
+
+            }
+            else {
+
+
+                selection_couter--;
+                $('#tblInvoice thead tr').find('th:eq(1)').find("input:checkbox").prop('checked', false);
+
+                $(obj).parent("td").parent("tr").find("td:eq(8)").find("input:text").attr("disabled", true);
+                $(obj).parent("td").parent("tr").find("td:eq(8)").find("input:text")
+                    .val($(obj).parent("td").parent("tr").find("td:eq(7)").html().replace(',', ''));
+
+                $(obj).parent("td").parent("tr").find("td:eq(8)")
+                   .find("input:text").val('0.00');
+
+                $('#tblInvoice tbody tr').each(function () {
+                    if ($(this).find('td:eq(1)').find('input:checkbox').is(':checked')) {
+                        totalAmount += parseFloat($(this).find('td:eq(8)').find('input:text').val());
+
+                    }
+                });
+
+                $("#txtTotalAmount").val(formatNumber(totalAmount));;
+
+
+
+            }
+
+
+            if (totalAmount < 0) {
+                $('#Ddl_PaymentType').val('6');
+               // $("#Ddl_PaymentType").trigger("change");
+                $('#Ddl_PaymentType option[value="6"]').removeAttr('disabled');
+                $('#Ddl_PaymentType option[value="7"]').removeAttr('disabled');
+                $('#Ddl_PaymentType option[value="1"]').attr('disabled', 'disabled');
+                $('#Ddl_PaymentType option[value="2"]').attr('disabled', 'disabled');
+                $('#Ddl_PaymentType option[value="3"]').attr('disabled', 'disabled');
+                $('#Ddl_PaymentType option[value="4"]').attr('disabled', 'disabled');
+                $('#Ddl_PaymentType option[value="5"]').attr('disabled', 'disabled');
+                //$('#Ddl_PaymentType option[value="6"]').attr('disabled', 'disabled');
+
+                //$('#Ddl_PaymentType').attr('disabled', 'disabled');
+                $("#Ddl_PaymentType").trigger("change");
+            }
+            else {
+                //if (Ddl_PaymentType.options[Ddl_PaymentType.selectedIndex].value == '2') {
+                //    $('#Ddl_PaymentType').val('2');
+                //}
+                //else if (Ddl_PaymentType.options[Ddl_PaymentType.selectedIndex].value == '1') {
+                //    $('#Ddl_PaymentType').val('1');
+                //}
+                //else if (Ddl_PaymentType.options[Ddl_PaymentType.selectedIndex].value == '3') {
+                //    $('#Ddl_PaymentType').val('3');
+                //}
+                //else if (Ddl_PaymentType.options[Ddl_PaymentType.selectedIndex].value == '4') {
+                //    $('#Ddl_PaymentType').val('4');
+                //}
+                //else if (Ddl_PaymentType.options[Ddl_PaymentType.selectedIndex].value == '5') {
+                //    $('#Ddl_PaymentType').val('5');
+                //}
+                var indexes = ["2", "1", "3", "4","5"];
+                var selectedVal = Ddl_PaymentType.options[Ddl_PaymentType.selectedIndex].value;
+                if (indexes.includes(selectedVal)) {
+                    $('#Ddl_PaymentType').val(selectedVal);
+
+                }
+                else {
+                    $('#Ddl_PaymentType').val('2');
+                }
+
+                getallpaymentnumber();
+                //$('#Ddl_PaymentType').val('2');
+                //$('#Ddl_PaymentType').removeAttr('disabled');
+                //$("#Ddl_PaymentType").trigger("change");
+                //$('#Ddl_PaymentType option[value="6"]').attr('disabled', 'disabled');
+
+
+            }
+
+
+
+
+        }
+
+
+        function CheckPaymentNumberExists() {
+
+
+        }
+
+
+        //Turya Da
+
+        $(document).ready(function () {
+            delete_cookie("IssenttoQB");
+            $('#checkAll').html('<input type="checkbox" onchange="check_uncheck_all(this);"/>');
+        });
+
+        function check_uncheck_all(obj) {
+
+            var ischecked;
+            var totalAmount = 0;
+
+            if ($(obj).is(':checked')) {
+                ischecked = true;
+
+            }
+            else {
+                ischecked = false;
+            }
+
+            $('#tblInvoice tr').each(
+                   function () {
+
+                       $(this).find('td:eq(1)').find("input:checkbox").prop('checked', ischecked);
+                   }
+                   );
+
+            if (ischecked == true) {
+                $('#tblInvoice tbody tr').each(function () {
+                    $(this).find("td:eq(8)").find("input:text").attr("disabled", false);
+                    $(this).find("td:eq(8)").find("input:text")
+                        .val($(this).find("td:eq(7)").html().replace(',', ''));
+                    totalAmount += parseFloat($(this).find('td:eq(8)').find('input:text').val());
+                });
+                $("#txtTotalAmount").val(formatNumber(totalAmount));;
+
+                var table = $('#tblInvoice').dataTable();
+
+                var totalRecords = $('#tblInvoice tbody tr').length;
+                selection_couter = totalRecords;
+
+            }
+            else {
+                $('#tblInvoice tbody tr').each(function () {
+                    $(this).find("td:eq(8)").find("input:text").attr("disabled", true);
+                    $(this).find("td:eq(8)").find("input:text")
+                        .val($(this).find("td:eq(7)").html().replace(',', ''));
+
+                });
+                $("#txtTotalAmount").val(formatNumber(totalAmount));;
+
+                selection_couter = 0;
+            }
+
+            calculateexrate();
+
+        }
+    </script>
+
+
+    <script>
+
+        var tmp = 0;
+        $('#tblInvoice tbody tr').each(function () {
+
+
+            if ($(this).find("td:eq(1)").is(':checked')) { tmp++; }
+
+        });
+
+
+    </script>
+
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+    <div class="container-fluid" style="zoom: 0.95;" id="angulardiv" ng-app="makePayment" ng-controller="makePayment">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header" style="margin-top: -20px; margin-bottom: 0px;">ENTER PAYMENT</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 displaynone">
+                <label>Vendor Selector</label>
+                <select id="Ddl_Vendors" onchange="ProjectNameAtLabel(this);" name="Vendors" multiple="multiple" class="form-control">
+                    @Html.Raw(ViewData["AllParentVendor"])
+                </select>
+                <label id="lbl_ProjectName">No vendor has been selected.</label>
+            </div>
+
+        </div>
+
+        <div class="row mrg10T">
+
+            <div class="col-sm-3">
+                <label>Project</label>
+                <select id="PrjtDdl" onchange="ProjectNameAtLabel(this);" class="form-control">
+                    <option data-id="0" value="0">Select Project</option>
+                    @Html.Raw(ViewData["getAllProjectName"])
+                </select>
+            </div>
+            <div class="col-sm-1">
+                <label>Currency</label>
+                <select id="CurrDdl" onchange="currencyddlchange();" class="form-control">
+                    <option data-id='0'>---Select Currency---</option>
+                </select>
+            </div>
+
+
+            <div class="col-sm-1">
+                <label>Payment Date</label>
+                <input type="text" id="txt_PaymentDate" class="form-control" onkeypress="return IsNumber(event);" placeholder="Select To Date" />
+            </div>
+            <div class="col-sm-1">
+                <label>Payment Type</label>
+                <select id="Ddl_PaymentType" class="form-control">
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <label>Bank Account</label><span id="bnkbalance" style="float: right;"></span>
+                <select id="DDl_Bank" class="form-control" onchange="getprojectConvRate();">
+                    <option value="0">---Select Bank Account---</option>
+                    @* name="Bank" ng-options="o.Val for o in option1s"
+                        ng-model="selectedOption1" class="form-control">*@
+                </select>
+            </div>
+            <div class="col-sm-1">
+                <label>Start #</label>
+                <input type="text" id="txtPaymentNumber" onkeyup="checkpaymentnumberexistence(this);" value="CH-" onkeypress="return IsNumber(event);" placeholder="Enter Payment Number" class="form-control" />
+            </div>
+
+           
+            <div class="col-sm-1">
+                <label title="Invoice to Bank Account Fx rate">I-B Fx Rate</label>
+                <input type="text" id="txtconvrate" title="Invoice to Bank Account Fx rate" onkeypress="javascript: document.getElementById('txtconvrate').setAttribute('data-edited', true);" placeholder="Enter exchange rate" data-edited="false" class="form-control floatonly rightposition" />
+            </div>
+
+             <div class="col-sm-1">
+                <label title="Project to Bank Account Fx Rate">P-A Fx Rate</label>
+                <input type="text" id="txtconvrate1"  title="Project to Bank Account Fx Rate" placeholder="Enter exchange rate" class="form-control floatonly rightposition" />
+            </div>
+
+            <div class="col-sm-1">
+                <label>Memo</label>
+                <textarea id="txtMemo" style="height: 25px; overflow: hidden;" class="no-resize form-control" rows="1"></textarea>
+            </div>
+
+        </div>
+
+        <div class="row mrg10T">
+            <div class="col-sm-12">
+                <h3 class="section-header" style="margin-bottom: 0px;">Invoice Selector</h3>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-sm-12">
+                <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblInvoice" style="text-align: center;">
+                    <thead>
+                        <tr class="theader">
+                            <th class="displaynone">InvoiceID</th>
+                            <th id="checkAll" style="width: 5%;"></th>
+                            <th style="width: 15%;">Vendor</th>
+                            <th style="width: 5%;">Invoice #</th>
+                            <th style="width: 10%;">Date</th>
+                            <th style="width: 20%;">Terms</th>
+                            <th style="width: 10%;">Currency</th>
+                            <th style="width: 10%;">Amount Owing</th>
+                            <th style="width: 10%;">Payment Amount</th>
+                            <th class="displaynone">RowIndex</th>
+                            <th class="displaynone">aaa</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-sm-4" style="float: right;">
+                <label>Total Payment Amount</label>
+                <input type="text" id="txtTotalAmount" onkeypress="return IsNumber(event);" class="makedisable form-control" />
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="float-panel-container">
+        <ul>
+            <li id="btn_SavePaymentQB" title="Save and Send Payment to QBO"><a href="javascript:void(0);"><i class="fa fa-share-square-o mrg5R" data-toggle="tooltip"></i><span class="tooltip-toggle">Save And Send Payment</span></a></li>
+
+            <li id="btn_SavePayment" title="Save Payment"><a href="javascript:void(0);"><i class="fa fa-save mrg5R" data-toggle="tooltip"></i><span class="tooltip-toggle">Save Payment</span></a></li>
+            <li onclick="cancel();" title="Cancel"><a href="javascript:void(0);"><i class="fa fa-remove" data-toggle="tooltip"></i><span class="tooltip-toggle">Cancel</span></a></li>
+
+        </ul>
+    </div>
+
+
+
+    <div id="editPayment" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="width: 95%;">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit Payment</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <input type="hidden" id="hdnEditPayment" />
+                        <input type="hidden" id="hdnEditPaymentType" />
+                        <input type="hidden" id="hdnEditBankAccount" />
+                        <input type="hidden" id="hdnEditPaymentNumber" />
+
+                        <div class="row">
+                            @*<div class="col-sm-2">
+                                    <label>Project</label>
+                                    <input type="text" id="txt_project" disabled placeholder="Select To Date" class="form-control" />
+                                </div>
+
+                                <div class="col-sm-1">
+                                    <label>Currency</label>
+                                    <input type="text" id="txt_currency" disabled placeholder="Select To Date" class="form-control" />
+                                </div>*@
+
+
+                            <div class="col-sm-1">
+                                <label>Payment Date</label>
+                                <input type="text" id="txt_EditPaymentDate" onkeypress="return IsNumber(event);" placeholder="Select To Date" class="form-control" />
+                            </div>
+                            <div class="col-sm-1">
+                                <label>Payment Type</label>
+                                <select id="Ddl_EditPaymentType" name="PaymentType" class=" form-control"></select>
+                            </div>
+                            <div class="col-sm-3">
+                                <label>Bank Account</label>
+                                <select id="DDl_EditBank" name="Bank" class="form-control"></select>
+                            </div>
+
+                            <div class="col-sm-1">
+                                <label>Payment #</label>
+                                <input type="text" id="txtEditPaymentNumber" onkeypress="return IsNumber(event);" placeholder="Enter Payment Number" class="form-control" />
+                            </div>
+                            <div class="col-sm-1">
+                                <label>Exchng. Rate</label>
+                                <input type="text" style="text-align: right;" onkeyup="javascript: document.getElementById('txtconvrate').setAttribute('data-edited', true);" id="txtEditExrate" onkeypress="return IsNumber(event);" placeholder="Enter Exchange Rate" class="form-control" />
+                            </div>
+
+                            <div class="col-sm-3">
+                                <label>Memo</label>
+                                <input type="text" id="txtEditMemo" class="form-control" />
+                            </div>
+
+
+                            <div class="col-sm-2">
+                                <label>Total Payment Amount</label>
+                                <input type="text" id="txtEditTotalAmount" onkeypress="return IsNumber(event);" class="form-control makedisable" />
+                            </div>
+
+                        </div>
+
+
+
+
+                        <div class="row mrg10T">
+                            <div class="col-sm-12" style="max-height: 450px; overflow: auto;">
+
+                                <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblInvoiceDetails" style="text-align: center;" width="100%">
+                                    <thead>
+                                        <tr class="theader">
+                                            <th class="leftposition">Vendor</th>
+                                            <th class="leftposition">Invoice #</th>
+                                            <th class="leftposition">Date</th>
+                                            <th class="leftposition">Terms</th>
+                                            <th class="leftposition">Currency</th>
+                                            <th class="rightposition">Amount Owing</th>
+                                            <th class="rightposition">Payment Amount</th>
+                                            <th class="displaynone">RowIndex</th>
+                                            <th class="displaynone">InvoiceID</th>
+                                            <th class="displaynone">ManualpaymentID</th>
+                                            <th class="displaynone">ManualpaymentItemID</th>
+                                            <th class="displaynone">PaidAmount</th>
+                                            <th class="displaynone">fxrate</th>
+                                            <th class="displaynone">parentid</th>
+                                            <th class="displaynone">legalname</th>
+
+
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="btnUpdatePayment">Update Payment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="qbmodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" style="margin-top: 175px;">
+                <div class="modal-header">
+
+                    <h4 class="modal-title">QBO Validating</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="qbchecker"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div id="qbdetailsmodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" style="margin-top: 175px;">
+                <div class="modal-header">
+
+                    <h4 class="modal-title">QBO Cheque Expense(s)</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="qbstatus"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+    <div id="qbgeratemodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" style="margin-top: 175px;">
+                <div class="modal-header">
+
+                    <h4 class="modal-title">QBO Sending Data</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="qbsendinfo"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <style type="text/css">
+        /** { margin: 0; padding: 0; }
+        body { font: 14px/1.4 Georgia, serif; }
+        #page-wrap { width: 600px; margin: 15px auto; }
+        p { margin: 0 0 15px 0; }
+        p:first-child { background: #fffcde; padding: 10px; }
+        #sidebar ul { background: #eee; padding: 10px; }
+        li { margin: 0 0 0 20px; }
+        #main { width: 390px; float: left; }*/
+        /*#sidebar { width: 190px; float: right; }*/
+        #sidebar
+        {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+            z-index: 9999;
+        }
+        /*#sidebar ul { background: #eee; padding: 10px; }*/
+        /*li { margin: 0 0 0 20px; }*/
+    </style>
+
+    <style>
+        .form-control
+        {
+            height: 25px;
+        }
+
+        select
+        {
+            padding: 0px !important;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9
+        {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+        .float-panel-container ul li a
+        {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+            .float-panel-container ul li a i
+            {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .container-fluid
+        {
+            padding-right: 22px;
+        }
+
+        .ui-multiselect
+        {
+            width: 100% !important;
+            /*color: rgb(195, 16, 1) !important;*/
+            height: 25px !important;
+            margin-top: 0px !important;
+        }
+
+        label
+        {
+            color: #333333;
+            font-weight: 500;
+        }
+
+        .existingnumber
+        {
+            border-color: rgba(255, 0, 0, 0.47) !important;
+        }
+    </style>
+
+    <script>
+
+
+
+        function cancel() {
+            window.location.reload();
+        }
+
+        function ProjectNameAtLabel(obj) {
+            var Projectval = $(obj).find("option:selected").attr('data-id');
+            Projectval = Projectval == null ? "" : Projectval.toString();
+
+
+            var ProjectText = $(obj).find('option:selected').text();
+            ProjectText = ProjectText == null ? "" : ProjectText.toString();
+
+
+            if (Projectval.toString() == null || Projectval.toString() == undefined || Projectval.toString() == 'undefined') {
+                $('#lbl_ProjectName').html('No vendor has been selected.');
+                return;
+            }
+
+            if (Projectval.toString() == '0') {
+                $('#lbl_ProjectName').html('No vendor has been selected.');
+            }
+            else {
+                $('#lbl_ProjectName').html('Selected vendor : ' + $(obj).find('option:selected').text());
+            }
+
+
+        }
+    </script>
+
+    <script>
+
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + "; " + expires;
+        }
+
+        function delete_cookie(name) {
+            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1);
+                if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+            }
+            return "";
+        }
+
+
+
+
+        function getbalance(name) {
+
+            $('#bnkbalance').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+
+            setTimeout(function () {
+
+                var data = qbcheckbankaccount1(name);
+
+                $('#bnkbalance').html('');
+                if (data == 'Unauthorized-401') {
+                    notify("Unauthorized access to QBO. System not yet authorized to use any QB account");
+
+
+                }
+                else if (data != "INVALID") {
+                    var blnc = data.split('^^^')[0];
+                    if (blnc.split(' (')[0] == '-.00') {
+                        blnc = "0.00 " + blnc.split(' (')[1].split(')')[0] + "";
+                    }
+                    else {
+                        blnc = formatNumber(data.split('^^^')[0].split(' (')[0]) + ' ' + data.split('^^^')[0].split(' (')[1].split(')')[0];
+
+                        // blnc = formatNumber(data.split('^^^')[0].split(' (')[0]) + ' (' + data.split('^^^')[0].split(' (')[1];
+                    }
+
+                    $('#bnkbalance').html(blnc);
+                }
+                else {
+                    $('#bnkbalance').html('Not such Account in QBO');
+                }
+            }, 200);
+
+        }
+        function qbcheckbankaccount1(name) {
+            console.log('qbcheckbankaccount1' + name);
+            var response = '';
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/QuickBook/CheckBankAccount';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'QuickBook/CheckBankAccount';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'name': '" + name + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                async: false,
+                success: function (data) { response = data; }
+            });
+
+            return response;
+
+        }
+
+
+        $(document).ready(function () {
+
+
+            $('#PrjtDdl').change(function () {
+                var pid = $('#PrjtDdl option:selected').attr('data-id');
+                if (pid == '0') {
+                    return;
+                }
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/getCurrency';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/getCurrency';
+                }
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    datatype: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ \"PID\" : \"" + pid + "\"}",
+                    async: false,
+                    success: function (data) {
+
+                        $('#CurrDdl').html(data);
+                        calculateexrate();
+
+                        currencyddlchange();
+
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+
+            });
+
+
+
+
+        });
+
+        function currencyddlchange() {
+
+
+            var projectid = $('#PrjtDdl option:selected').attr('data-id');
+
+
+            var curr = $('#CurrDdl option:selected').attr('data-id');
+
+
+
+            var url11 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url11 = '/Invoice/getAccountsForPaymentPage/';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url11 = 'Invoice/getAccountsForPaymentPage/';
+            }
+
+
+            url11 += '?ProjectID=' + projectid;
+
+            $.get(url11)
+             .success(function (response) {
+
+                 response = JSON.parse(response).data;
+                 var html = "";
+
+
+                 var indx = 0;
+
+                 for (var a = 0; a < response.length ; a++) {
+                     if (response[a].IsProjectCurrency == 'Y') {
+                         indx = a;
+                         a = response.length;
+                     }
+
+                 }
+
+                 for (var a = 0; a < response.length ; a++) {
+                     if (response[a].CurrCode == curr) {
+                         indx = a;
+                     }
+
+                 }
+
+
+
+                 for (var a = 0; a < response.length ; a++) {
+                     if (indx == a) {
+                         html += "<option data-accountname='" + response[a].Bank_Account + "' data-currid='" + response[a].CurrencyID + "' selected value='" + response[a].Fld_ID + "'>" + response[a].Bank_Account + "-" + response[a].Desc + "(" + response[a].CurrencyCode + ")</option>";
+                     }
+                     else {
+                         html += "<option data-accountname='" + response[a].Bank_Account + "'  data-currid='" + response[a].CurrencyID + "'  value='" + response[a].Fld_ID + "'>" + response[a].Bank_Account + "-" + response[a].Desc + "(" + response[a].CurrencyCode + ")</option>";
+                     }
+                 }
+
+                 $('#DDl_Bank').html(html);
+
+                 var bankname = $('#DDl_Bank option:selected').attr('data-accountname');
+                 getbalance(bankname);
+
+
+
+                 getallpaymentnumber();
+
+             });
+
+
+
+
+
+
+            if (curr != null) {
+                var totdata;
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/Invoice/GetAllInvoiceListByVendor2/';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'Invoice/GetAllInvoiceListByVendor2/';
+                }
+
+
+                url += '?curr=' + curr + "&ProjectID=" + $('#PrjtDdl option:selected').attr('data-id');
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    async: false,
+                    //dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                        totdata = JSON.parse(response);
+                        totdata = totdata.data;
+
+
+
+                        var InvoiceItemSelector = new Array();
+                        // var currency = str.substr(str.lastIndexOf("("), (str.lastIndexOf(")") - str.lastIndexOf("(")) + 1);
+                        for (i = 0; i < totdata.length; i++) {
+                            InvoiceItemSelector[i] = new Array();
+                            InvoiceItemSelector[i][0] = totdata[i].InvoiceID;
+                            InvoiceItemSelector[i][1] = "<input type='checkbox' class='chkItems' onchange='EnableForPay(this);' />";
+                            InvoiceItemSelector[i][2] = totdata[i].ParentVendorName;
+                            InvoiceItemSelector[i][3] = totdata[i].InvoiceNumber;
+                            InvoiceItemSelector[i][4] = totdata[i].InvoiceDate;
+                            InvoiceItemSelector[i][5] = totdata[i].Terms;
+                            InvoiceItemSelector[i][6] = totdata[i].Currency;
+                            InvoiceItemSelector[i][7] = formatNumber(totdata[i].TotalInvoice);
+                            //InvoiceItemSelector[i][8] = "<input data-exrate='" + totdata[i].Exrate + "' type='text' class='txtPaid floatonly rightposition' data-maxValCheck='" + totdata[i].TotalInvoice.replace(',', '') + "' onkeyup='AddTotalNew(this,event);' value='" + formatNumber(totdata[i].TotalInvoice).replace(',', '') + "' />";
+                            InvoiceItemSelector[i][8] = "<input data-exrate='" + totdata[i].Exrate + "' type='text' class='txtPaid floatonly rightposition' data-maxValCheck='" + totdata[i].TotalInvoice.replace(',', '') + "' onkeyup='AddTotalNew(this,event);' value='" + '0.00' + "' />";
+                            InvoiceItemSelector[i][9] = (i + 1);
+                            InvoiceItemSelector[i][10] = totdata[i].ParentVendor_ID;
+
+                        }
+                        var table = $('#tblInvoice').dataTable().fnDestroy();
+                        $('#tblInvoice').DataTable({
+                            "processing": true,
+                            "data": InvoiceItemSelector,
+                            "columns": [
+                                { "title": "InvoiceID", "class": "displaynone" },
+                                {
+                                    "title": "",
+                                },
+                                { "title": "Vendor", "class": "leftposition" },
+                                { "title": "Invoice #", "class": "leftposition" },
+                                { "title": "Date", "class": "leftposition" },
+                                { "title": "Terms", "class": "leftposition" },
+                                { "title": "Currency", "class": "leftposition" },
+                                { "title": "Amount Owing", "class": "rightposition" },
+                                { "title": "Payment Amount", "class": "rightposition" },
+                                { "title": "RowIndex", "class": "displaynone" },
+                                { "title": "RowIndex", "class": "displaynone" }
+                            ],
+                            "order": [[2, "asc"], [4, "asc"], [3, "asc"]],
+                            paging: false,
+                            "aoColumnDefs": [
+                                { "bSortable": false, "aTargets": [1] }
+                            ],
+                            paging: false,
+                            "initComplete": function () {
+                                var objnow = $('#tblInvoice thead tr').find('th:eq(8)');
+                                $('#tblInvoice_filter').hide();
+                                $('#checkAll').html('<input type="checkbox" onchange="check_uncheck_all(this);"/>');
+                                $(".txtPaid").each(function (index, items) {
+                                    $(this).attr("disabled", true);
+                                });
+                            }
+                        });
+                        getprojectConvRate();
+
+                    }
+                })
+
+              //  $.get(url)
+              //   .success(function (response) {
+              //       totdata = JSON.parse(response);
+              //       totdata = totdata.data;
+
+
+
+              //       var InvoiceItemSelector = new Array();
+              //       // var currency = str.substr(str.lastIndexOf("("), (str.lastIndexOf(")") - str.lastIndexOf("(")) + 1);
+              //       for (i = 0; i < totdata.length ; i++) {
+              //           InvoiceItemSelector[i] = new Array();
+              //           InvoiceItemSelector[i][0] = totdata[i].InvoiceID;
+              //           InvoiceItemSelector[i][1] = "<input type='checkbox' class='chkItems' onchange='EnableForPay(this);' />";
+              //           InvoiceItemSelector[i][2] = totdata[i].ParentVendorName;
+              //           InvoiceItemSelector[i][3] = totdata[i].InvoiceNumber;
+              //           InvoiceItemSelector[i][4] = totdata[i].InvoiceDate;
+              //           InvoiceItemSelector[i][5] = totdata[i].Terms;
+              //           InvoiceItemSelector[i][6] = totdata[i].Currency;
+              //           InvoiceItemSelector[i][7] = formatNumber(totdata[i].TotalInvoice);
+              //           //InvoiceItemSelector[i][8] = "<input data-exrate='" + totdata[i].Exrate + "' type='text' class='txtPaid floatonly rightposition' data-maxValCheck='" + totdata[i].TotalInvoice.replace(',', '') + "' onkeyup='AddTotalNew(this,event);' value='" + formatNumber(totdata[i].TotalInvoice).replace(',', '') + "' />";
+              //           InvoiceItemSelector[i][8] = "<input data-exrate='" + totdata[i].Exrate + "' type='text' class='txtPaid floatonly rightposition' data-maxValCheck='" + totdata[i].TotalInvoice.replace(',', '') + "' onkeyup='AddTotalNew(this,event);' value='" + '0.00' + "' />";
+              //           InvoiceItemSelector[i][9] = (i + 1);
+              //           InvoiceItemSelector[i][10] = totdata[i].ParentVendor_ID;
+
+              //       }
+              //       var table = $('#tblInvoice').dataTable().fnDestroy();
+              //       $('#tblInvoice').DataTable({
+              //           "processing": true,
+              //           "data": InvoiceItemSelector,
+              //           "columns": [
+              //               { "title": "InvoiceID", "class": "displaynone" },
+              //               {
+              //                   "title": "",
+              //               },
+              //               { "title": "Vendor", "class": "leftposition" },
+              //               { "title": "Invoice #", "class": "leftposition" },
+              //               { "title": "Date", "class": "leftposition" },
+              //               { "title": "Terms", "class": "leftposition" },
+              //               { "title": "Currency", "class": "leftposition" },
+              //               { "title": "Amount Owing", "class": "rightposition" },
+              //               { "title": "Payment Amount", "class": "rightposition" },
+              //               { "title": "RowIndex", "class": "displaynone" },
+              //               { "title": "RowIndex", "class": "displaynone" }
+              //           ],
+              //           "order": [[2, "asc"], [4, "asc"], [3, "asc"]],
+              //           paging: false,
+              //           "aoColumnDefs": [
+              //{ "bSortable": false, "aTargets": [1] }
+              //           ],
+              //           paging: false,
+              //           "initComplete": function () {
+              //               var objnow = $('#tblInvoice thead tr').find('th:eq(8)');
+              //               $('#tblInvoice_filter').hide();
+              //               $('#checkAll').html('<input type="checkbox" onchange="check_uncheck_all(this);"/>');
+              //               $(".txtPaid").each(function (index, items) {
+              //                   $(this).attr("disabled", true);
+              //               });
+              //           }
+              //       });
+              //       getprojectConvRate();
+
+              //   });
+            }
+
+            else {
+                var table = $('#tblInvoice').DataTable();
+                table
+                   .clear()
+                   .draw();
+            }
+
+
+        }
+
+        $(document).ready(function () {
+
+
+            var url11 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url11 = '/Invoice/getPaymentForManualPayment';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url11 = 'Invoice/getPaymentForManualPayment';
+            }
+
+
+
+
+            $.get(url11)
+             .success(function (response) {
+
+
+                 $('#Ddl_PaymentType').html(response);
+                 $('#Ddl_EditPaymentType').html(response);
+                 $('#Ddl_PaymentType').val('2');
+                 $('#Ddl_EditPaymentType').val('2');
+                 $('#Ddl_PaymentType option[value="6"]').attr('disabled', 'disabled');
+                 $('#Ddl_PaymentType option[value="7"]').attr('disabled', 'disabled');
+                 $('#Ddl_PaymentType option[value="8"]').remove();
+
+                 $('#txtPaymentNumber').val($("#Ddl_PaymentType option:selected").attr('data-code') + '-');
+
+             });
+
+
+            var readOnlyLength = 3;
+
+            $('#txtPaymentNumber').on('keypress, keydown', function (event) {
+                if ((event.which != 37 && (event.which != 39))
+                    && ((this.selectionStart < readOnlyLength)
+                    || ((this.selectionStart == readOnlyLength) && (event.which == 8)))) {
+                    if ($('#Ddl_PaymentType').val() != '2') {
+                        return false;
+                    }
+                }
+            });
+
+        });
+
+        function getprojectConvRate() {
+
+            var ProjectID = $('#PrjtDdl option:selected').attr('data-id');
+            var BnkID = $('#DDl_Bank').val();
+            
+
+            var obj = new Object();
+            obj.ProjectID = ProjectID;
+            obj.BankID = BnkID;
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_GetProjectConvRate";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            o = o[0];
+            console.log(o);
+            var Bcurr, Crate, Pcurr;
+            Bcurr = o.Bcurr;
+            Crate = o.Crate;
+            Pcurr = o.Pcurr;
+            if (Bcurr == Pcurr) {
+                //$('#txtconvrate1').attr('disabled', 'disabled');
+                $('#txtconvrate1').val('1.0000');
+
+            }
+            else {
+                $('#txtconvrate1').removeAttr('disabled');
+                $('#txtconvrate1').val(Crate);
+
+            }
+
+        }
+
+
+
+        function getallpaymentnumber() {
+
+            var ic = $('#Ddl_PaymentType').attr('data-changed');
+            if (ic == '1')
+                return;
+
+            var ptype = $('#Ddl_PaymentType').val();
+            var bankaccnt = $('#DDl_Bank').val();
+
+            var obj = new Object();
+            obj.Bankaccountid = bankaccnt;
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_getLastPaymentMode";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            if (o[0].PaymentType == '8') {
+                $('#Ddl_PaymentType').val('2');
+            }
+            else {
+                $('#Ddl_PaymentType').val(o[0].PaymentType);
+
+            }
+
+            $("#Ddl_PaymentType").trigger("change");
+            //if (ptype == '2') {
+
+            //    $('#txtPaymentNumber').val('To be printed');
+            //    return;
+            //}
+            var tmp = 0;
+
+            $('.chkItems').each(function () {
+                if ($(this).is(':checked')) {
+                    tmp++;
+                }
+            });
+            if (tmp == 0) {
+                return;
+            }
+
+
+            var url11 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url11 = '/Invoice/getpaymentnumberforall';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url11 = 'Invoice/getpaymentnumberforall';
+            }
+
+
+            url11 += "?paymenttype=" + ptype + "&accntnumber=" + bankaccnt;
+
+            $.ajax({
+                type: "POST",
+                url: url11,
+                datatype: "text",
+                contentType: "application/json; charset=utf-8",
+                data: {},
+                async: false,
+                success: function (response) {
+                    if ($("#Ddl_PaymentType option:selected").val() == '2') {
+                        $('#txtPaymentNumber').val('To be printed');
+
+                    }
+                    else {
+                        $('#txtPaymentNumber').val($("#Ddl_PaymentType option:selected").attr('data-code') + '-' + response);
+                        $('#txtPaymentNumber').removeClass('existingnumber');
+                    }
+                }
+            });
+
+            //$.get(url11)
+            // .success(function (response) {
+
+            //     $('#txtPaymentNumber').val($("#Ddl_PaymentType option:selected").attr('data-code') + '-' + response);
+
+
+            // });
+        }
+
+        function getallpaymentnumberforchange() {
+            var ptype = $('#Ddl_PaymentType').val();
+            var bankaccnt = $('#DDl_Bank').val();
+
+
+            
+            if (ptype == '2') {
+
+                $('#txtPaymentNumber').val('To be printed');
+                return;
+            }
+
+
+            var url11 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url11 = '/Invoice/getpaymentnumberforall';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url11 = 'Invoice/getpaymentnumberforall';
+            }
+
+
+            url11 += "?paymenttype=" + ptype + "&accntnumber=" + bankaccnt;
+
+            $.ajax({
+                type: "POST",
+                url: url11,
+                datatype: "text",
+                contentType: "application/json; charset=utf-8",
+                data: {},
+                async: false,
+                success: function (response) {
+                    $('#txtPaymentNumber').val($("#Ddl_PaymentType option:selected").attr('data-code') + '-' + response);
+                    $('#txtPaymentNumber').removeClass('existingnumber');
+
+                }
+            });
+
+            //$.get(url11)
+            // .success(function (response) {
+
+            //     $('#txtPaymentNumber').val($("#Ddl_PaymentType option:selected").attr('data-code') + '-' + response);
+
+
+            // });
+        }
+
+        function checkpaymentnumberexistence(obj) {
+            var paymentnumber = $(obj).val();
+            if (paymentnumber != '') {
+
+                var accntnum = $('#DDl_Bank').val();
+                var ptype = $('#Ddl_PaymentType').val();
+
+                var allowedwirenumber = true;
+
+                if (ptype == '3') {
+                    var pint = parseInt($('#txtPaymentNumber').val().split('-')[1]);
+                    if (pint > 99999) {
+                        allowedwirenumber = false;
+                    }
+                }
+
+                var url11 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url11 = '/Invoice/checkpaymentnumberexistence';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url11 = 'Invoice/checkpaymentnumberexistence';
+                }
+
+
+                url11 += "?paymenttype=" + ptype + "&accntnumber=" + accntnum + "&paymentnumber=" + paymentnumber;
+
+                $.ajax({
+                    type: "POST",
+                    url: url11,
+                    datatype: "text",
+                    contentType: "application/json; charset=utf-8",
+                    data: {},
+                    async: false,
+                    success: function (response) {
+                        if (response != '0') {
+                            $(obj).addClass('existingnumber');
+                        }
+                        else {
+                            if (allowedwirenumber) {
+                                $(obj).removeClass('existingnumber');
+                            }
+                            else {
+                                $(obj).addClass('existingnumber');
+                            }
+                        }
+                    }
+                });
+
+                //$.get(url11)
+                // .success(function (response) {
+
+                //     if (response != '0') {
+                //         $(obj).addClass('existingnumber');
+                //     }
+                //    else {
+                //         $(obj).removeClass('existingnumber');
+                //     }
+
+                // });
+
+            }
+            else {
+                $(obj).addClass('existingnumber');
+            }
+        }
+    </script>
+</body>
+</html>
+

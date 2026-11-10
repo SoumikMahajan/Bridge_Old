@@ -1,0 +1,1784 @@
+﻿@{    
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Purchase Order</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+    <style>
+        #popupforvendorlist .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 6px 0px;
+            width: 96%;
+            height: 20px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            SearchText();
+
+
+
+
+            $('#txt_ArrivalDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_CheckDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+
+
+        });
+
+        function SearchText() {
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/GetVendorList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/GetVendorList';
+            }
+
+            $(function () {
+                $('#txt_VendorName').autocomplete({
+                    source: function (request, response) {
+                        $.getJSON("/PurchaseOrder/GetVendorList?VendorName=" + request.term, function (data) {
+                            response(data);
+                        });
+                    },
+                    minLength: 1,
+                    delay: 100
+                });
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            var date = new Date();
+            var currentMonth = date.getMonth();
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+
+            $('#txt_ArrivalDate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'MM dd yy',
+                minDate: new Date(currentYear, currentMonth, currentDate)
+            });
+
+            $('#txt_CheckDate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'MM dd yy',
+                minDate: new Date(currentYear, currentMonth, currentDate)
+            });
+
+        });
+
+
+        function IsNumber(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            if ((keyCode > 47 && keyCode < 58) || (keyCode == 8) || (keyCode == 46)) {
+                return true;
+            }
+            else {
+                alert('Use Only Numeric value');
+                return false;
+            }
+        }
+
+
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('#btn_CreatePO').click(function () {
+
+
+
+
+                var Project = $('#Ddl_Project').val().trim();
+                if (Project == "0") {
+                    $('#Ddl_Project').attr("style", "height:40px");
+                    // $('#Ddl_Project').css('border-color', 'red');
+                    alert('You must select Project before saving the Project');
+                    $('#Ddl_Project').focus();
+                    return;
+                }
+                // $('#Ddl_Project').css('border-color', '');
+
+
+                var VendorID = $('#txt_VendorName').attr('data-id').trim(); //$('#txt_VendorName').val().trim();
+                // alert(VendorID);
+
+                if (VendorID == "0") {
+                    //$('#txt_VendorName').attr("style", "height:30px");
+                    // $('#txt_VendorName').css('border-color', 'red');
+                    errorfunc('txt_VendorName', 'You must select Vendor before saving the Project');
+                    return;
+                }
+                //$('#txt_VendorName').css('border-color', '');
+
+
+                var txt_ConversionRate = $('#txt_ConversionRate').val().trim();
+                if (txt_ConversionRate == "") {
+                    $('#txt_ConversionRate').attr("style", "height:30px");
+                    // $('#txt_ConversionRate').css('border-color', 'red');
+                    errorfunc('txt_ConversionRate', 'You must enter Conversion Rate before saving the Project');
+                    return;
+                }
+                //$('#txt_ConversionRate').css('border-color', '');
+
+
+                var Ddl_Buyer = $('#Ddl_Buyer').val().trim();
+                if (Ddl_Buyer == "0") {
+                    $('#Ddl_Buyer').attr("style", "height:40px");
+                    // $('#Ddl_Buyer').css('border-color', 'red');
+                    alert('You must select Buyer before saving the Project');
+                    $('#Ddl_Buyer').focus();
+                    return;
+                }
+                // $('#Ddl_Buyer').css('border-color', '');
+
+
+                var Ddl_Shipment = $('#Ddl_Shipment').val().trim();
+                if (Ddl_Shipment == "0") {
+                    $('#Ddl_Shipment').attr("style", "height:40px");
+                    //$('#Ddl_Shipment').css('border-color', 'red');
+                    alert('You must select Shipment method before saving the Project');
+                    $('#Ddl_Shipment').focus();
+                    return;
+                }
+                //$('#Ddl_Shipment').css('border-color', '');
+
+
+                var txt_Terms = $('#txt_Terms').val().trim();
+                if (txt_Terms == "0") {
+                    $('#txt_Terms').attr("style", "height:40px");
+                    // $('#txt_Terms').css('border-color', 'red');
+                    alert('You must select terms method before saving the Project');
+                    $('#txt_Terms').focus();
+                    return;
+                }
+                // $('#txt_Terms').css('border-color', '');
+
+
+                var txt_FOB = $('#txt_FOB').val().trim();
+                if (txt_FOB == "") {
+                    $('#txt_FOB').attr("style", "height:30px");
+                    // $('#txt_FOB').css('border-color', 'red');
+                    errorfunc('txt_FOB', 'You must enter FOB before saving the Project');
+                    return;
+                }
+                //  $('#txt_FOB').css('border-color', '');
+
+
+                var txt_ShipTo = $('#txt_ShipTo').val().trim();
+                if (txt_ShipTo == "") {
+                    $('#txt_ShipTo').attr("style", "height:30px");
+                    //$('#txt_ShipTo').css('border-color', 'red');
+                    errorfunc('txt_ShipTo', 'You must enter ShipTo before saving the Project');
+                    return;
+                }
+                // $('#txt_ShipTo').css('border-color', '');
+
+
+                var VendorCO = $('#txt_VendorCO').attr('data-id').trim(); //$('#txt_VendorCO').val().trim();
+                if (VendorCO == "0") {
+                    //$('#txt_VendorCO').attr("style", "height:30px");
+                    // $('#txt_VendorCO').css('border-color', 'red');
+                    errorfunc('txt_VendorCO', 'You must enter Vendor C/O before saving the Project');
+                    return;
+                }
+                //$('#txt_VendorCO').css('border-color', '');
+
+
+                var txt_InvoiceTo = $('#txt_InvoiceTo').val().trim();
+                if (txt_InvoiceTo == "") {
+                    $('#txt_InvoiceTo').attr("style", "height:30px");
+                    // $('#txt_InvoiceTo').css('border-color', 'red');
+                    errorfunc('txt_InvoiceTo', 'You must enter Invoice address before saving the Project');
+                    return;
+                }
+                //$('#txt_InvoiceTo').css('border-color', '');
+
+
+
+
+                poid = $('#poid').val();
+
+
+
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/UpdatePurchaseOrderDetail';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/UpdatePurchaseOrderDetail';
+                }
+                var address1 = $('#txt_addr1').val();
+                //alert($("#txt_Terms option:selected").attr('data-id'));
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        'VendorID': VendorID, 'ProjectID': $('#Ddl_Project').val(), 'ConversionRate': $('#txt_ConversionRate').val(),
+                        'CurrencyCode': $('#txt_CurrencyCode').attr('data-id'), 'BuyerID': $('#Ddl_Buyer').val(), 'ShipMethod': $('#Ddl_Shipment').val(),
+                        'ShipDate': $('#txt_ArrivalDate').val(), 'CheckBackDate': $('#txt_CheckDate').val(), 'Terms': $("#txt_Terms option:selected").attr('data-id'),// $('#txt_Terms').val(),
+                        'FOB': $('#txt_FOB').val(), 'Frieght': $('#txt_Freight').val(), 'Remark': $('#txt_Remarks').val(),
+                        'ShipTo': $('#txt_ShipTo').val(), 'VendorCO': VendorCO, 'InVoiceAddress': $('#txt_InvoiceTo').val(),
+                        'Notes': $('#txt_Notes').val(), 'poid': poid, 'address1': address1
+                    },
+                    success: function (data) {
+                        if (data != '') {
+                            //alert('succesas');
+                            notify("PO updated Successfully");
+                            //window.location.reload();
+
+
+
+                            var url1 = '';
+                            if (LOCALORSERVERNEW == 'LOCAL') {
+                                url1 = '/PurchaseOrder/POList';
+                            }
+                            else if (LOCALORSERVERNEW == 'SERVER') {
+                                url1 = 'PurchaseOrder/POList';
+                            }
+
+
+
+                            window.location.href = url1;
+                        }
+                        else {
+                            notify('Something going wrong');
+                        }
+                    }
+                });
+
+
+            });
+
+        });
+
+    </script>
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+
+
+    <script type="text/javascript">
+
+        var selectedpopup;
+
+        $(document).ready(function () {
+
+            $(document).tooltip();
+
+            var classarray = new Array();
+            var clsearch = '';
+            var ddlfrcllsfictn;
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/getClassification';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'PurchaseOrder/getClassification';
+            }
+
+
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: {},
+                success: function (data) {
+
+                    ddlfrcllsfictn = "<select id='Ddl_Clftion' multiple='multiple'>"
+
+                    data = JSON.parse(data);
+                    ////console.log(data);
+                    classarray = data.data;
+
+                    for (var a = 0; a < classarray.length ; a++) {
+
+                        //ddlfrcllsfictn += "<opiton>" + 'test' + "</option>";
+                        ddlfrcllsfictn += "<option text='" + classarray[a].classname + "' value='" + classarray[a].classid + "'>" + deletespaces(classarray[a].classname) + "</option>";
+                    }
+
+                    ddlfrcllsfictn += "</select>";
+
+                    //alert(ddlfrcllsfictn);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+
+
+
+            url1 = '';
+
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/getVendors';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'PurchaseOrder/getVendors';
+            }
+
+
+            var totdata;
+
+            var vendors = new Array();
+
+            //$('#vendorlist tfoot th').each(function () {
+            //    var title = $('#example thead th').eq($(this).index()).text();
+            //    $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+            //});
+
+            $.get(url1)
+                .success(function (response) {
+
+
+                    totdata = JSON.parse(response);
+                    totdata = totdata.data;
+
+                    for (i = 0; i < totdata.length ; i++) {
+                        vendors[i] = new Array();
+                        var id = totdata[i].Vendor_ID;
+                        var txt = 'Click to select ' + totdata[i].ContactFirstname + ' ' + totdata[i].ContactLastname + ' At ' + totdata[i].ParentVendorName;
+                        vendors[i][0] = '<i class="fa fa-hand-o-right" style="font-size: 1.5em;cursor:pointer;" data-id="' + id + '" title="' + txt + '" onclick="selectvendor(this);"></i>';
+                        vendors[i][1] = totdata[i].ParentVendorName;
+                        vendors[i][2] = totdata[i].ContactFirstname + ' ' + totdata[i].ContactLastname;
+                        vendors[i][3] = deletespaces(totdata[i].Classifications);
+                        vendors[i][4] = totdata[i].Currency;
+                        vendors[i][5] = totdata[i].City;
+                        vendors[i][6] = totdata[i].State;
+                        vendors[i][7] = totdata[i].CurrCode;
+
+                    }
+
+                    $('#vendorlist').dataTable({
+                        "processing": true,
+                        "data": vendors,
+                        "columns": [
+                            { "title": "Actions" },
+                            { "title": "Vendor" },
+                            { "title": "Contact Name" },
+                            { "title": "Vendor Category" },
+                            { "title": "Currency" },
+                            { "title": "City" },
+                            { "title": "State" },
+                            { "title": "Currcode", "class": "displaynone" }
+
+
+                        ],
+                        //"lengthMenu": [[5, 10, 50, -1], [5, 10, 50, "All"]],
+                        "initComplete": function () {
+
+                            //var ddl = "<select><option>1</option><option>2</option></select>";
+                            var html = "";
+                            html = "<tr>"
+                                + "<th><span onclick='resetsrch();' style='cursor:pointer;'><i class='fa fa-undo'></i></span></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='1' placeholder='Search Vendor'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='2' placeholder='Search Contact Name'></th>"
+                                //+ "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='3' placeholder='Search Vendor Category'></th>"
+                                + "<th rowspan='1' colspan='1'>" + ddlfrcllsfictn + "</th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='4' placeholder='Search Currency'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='5' placeholder='Search City'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='6' placeholder='Search State'></th>";
+
+
+                            $('#vendorlist thead').append(html);
+
+
+                            $("#Ddl_Clftion").multiselect({
+
+                                //click: function (event, ui) {
+                                //    //$callback.text(ui.value + ' ' + (ui.checked ? 'checked' : 'unchecked'));
+                                //    //alert(ui.value);
+                                //    //console.log(ui);
+                                //    alert(ui.title);
+                                //}
+
+                                close: function () {
+                                    var clsearch = $('#Ddl_Clftion').val();
+                                    if (clsearch == null)
+                                        clsearch = '';
+                                    var srchtxt = '';
+                                    var tmp = clsearch;
+
+                                    for (var i = 0; i < tmp.length; i++) {
+
+                                        var id = tmp[i];
+
+
+                                        for (var a = 0; a < classarray.length ; a++) {
+
+
+                                            if (classarray[a].classid == id) {
+                                                if (srchtxt == '') {
+                                                    srchtxt += deletespaces(classarray[a].classname);
+                                                }
+                                                else {
+                                                    srchtxt += '|' + deletespaces(classarray[a].classname);
+                                                }
+                                            }
+
+                                        }
+
+
+
+
+
+
+
+
+
+                                    }
+
+
+
+
+                                    var table = $('#vendorlist').DataTable();
+                                    table.column(3).search(srchtxt, true).draw();
+
+
+                                }
+
+                            });
+
+
+                            var table = $('#vendorlist').DataTable();
+                            // table.column(2).search("fname|ff", true).draw();
+
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+                                table
+                                       .column(indx)
+                                       .search(txt)
+                                       .draw();
+                                //RowHtmlRender();
+                            });
+
+
+
+
+
+                            $('#vendorlist_filter').remove();
+                            $('#vendorlist_length').remove();
+
+
+
+
+
+                        },
+                        "pagingType": "full_numbers",
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0] }
+                        ]
+                    });
+
+
+
+                });
+
+            $('#Ddl_Project').change(function () {
+
+                var pid = $(this).val();
+
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/PurchaseOrder/shiptoaddress';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+
+                    url1 = 'PurchaseOrder/shiptoaddress';
+                }
+
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    data: { 'pid': pid },
+                    success: function (data) {
+                        var hoteladdress = data.split('^')[0];
+                        var legalname = data.split('^')[1];
+                        var projectname = data.split('^')[2];
+
+                        $('#txt_ShipTo').val(projectname);
+                        $('#txt_InvoiceTo').val(legalname);
+                        $('#txt_addr1').val(hoteladdress);
+
+
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+
+
+
+            });
+
+
+
+
+        });
+
+        function resetsrch() {
+            $("#Ddl_Clftion").multiselect("uncheckAll");
+
+            var table = $('#vendorlist').DataTable();
+            table.column(3).search('').draw();
+            $('.srch').each(function () {
+                this.value = '';
+                var indx = $(this).attr('data-indx');
+                var txt = this.value;
+                table
+                       .column(indx)
+                       .search(txt)
+                       .draw();
+            });
+        }
+
+        function openvendors(obj) {
+
+            resetsrch();
+
+            selectedpopup = obj;
+
+
+            $('#popupforvendorlist').bPopup({
+                easing: 'easeOutBack', //uses jQuery easing plugin
+                speed: 450,
+                transition: 'slideDown',
+                modalColor: 'rgb(18, 54, 65)'
+
+            });
+        }
+
+        function selectvendor(obj) {
+            var id = $(obj).attr('data-id');
+            var rw = $(obj).parent().parent();
+            var cname = $(rw).find("td:eq(2)").html();
+            var currency = $(rw).find("td:eq(4)").html();
+            var currencycode = $(rw).find("td:eq(7)").html();
+
+            $('#popupforvendorlist').bPopup().close();
+
+            if (selectedpopup == 'vendor') {
+
+
+                $('#txt_CurrencyCode').text(currency);
+                $('#txt_CurrencyCode').attr('data-id', currencycode);
+
+                $('#txt_VendorName').text(cname);
+                $('#txt_VendorName').attr('data-id', id);
+            }
+            else {
+
+                $('#txt_VendorCO').text(cname);
+                $('#txt_VendorCO').attr('data-id', id);
+                // alert('still working');
+
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/PurchaseOrder/vendoraddress';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+
+                    url1 = 'PurchaseOrder/vendoraddress';
+                }
+
+
+
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    data: { 'vendorid': id },
+                    success: function (data) {
+
+                        $('#txt_addr1').val(data);
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            }
+
+
+        }
+
+        function deletespaces(str) {
+            var newstr = '';
+            for (var i = 0; i < str.length; i++) {
+                if (str[i] != ' ') {
+                    newstr += str[i];
+                }
+            }
+            return newstr;
+
+        }
+
+    </script>
+    <script>
+
+        $(document).ready(function () {
+
+
+            var poid = $('#poid').val();
+
+
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/getpobyid';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/getpobyid';
+            }
+
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'poid': poid },
+                success: function (data) {
+
+                    var obj = JSON.parse(data).data[0];
+                    //console.log(obj);
+
+
+                    var iscommited = obj.IsCommited;
+                    if (iscommited == "0") {
+                        $('#btn_RevisePO').hide();
+                    }
+                    else {
+                        $('#btn_CreatePO').hide();
+                        $('#btn_CommitPO').hide();
+                    }
+
+                    $('#Ddl_Project').val(obj.Project_ID);
+                    $('#Ddl_Project').attr('disabled', 'disabled');
+
+                    $('#txt_ShipTo').val(obj.ShipTo);
+                    $('#txt_VendorName').text(obj.VendorName);
+                    $('#txt_VendorName').attr('data-id', obj.Vendor_ID);
+                    $('#txt_VendorCO').text(obj.VendorCareOfName);
+                    $('#txt_VendorCO').attr('data-id', obj.VendorCO);
+
+                    $('#txt_ConversionRate').val(obj.ConversionRate);
+                    $('#txt_InvoiceTo').val(obj.InvoiceTo);
+                    $('#txt_addr1').val(obj.Address1);
+
+                    $('#txt_CurrencyCode').text(obj.Currency);
+                    $('#Ddl_Buyer').val(obj.Buyer_ID);
+                    $('#Ddl_Shipment').val(obj.ShipMethod);
+                    $('#txt_ArrivalDate').val(obj.ArrivalDate);
+                    $('#txt_CheckDate').val(obj.CheckBackDate);
+                    $('#txt_Terms').val(obj.Terms);
+                    $('#txt_FOB').val(obj.FOB);
+                    $('#txt_Freight').val(obj.Freight);
+                    //$('#txt_Notes').val(obj.Freight);
+                    $('#txt_Remarks').val(obj.Remarks);
+
+
+                }
+            });
+
+        });
+
+
+    </script>
+
+
+
+
+
+
+
+
+
+      <style type="text/css">
+        .displayForTableHeader {
+            display: none;
+        }
+    </style>
+
+
+    <script type="text/javascript">
+
+        function LoadPOLineItems(sectionid) {
+
+            $('#POLineItemsDetail tbody tr').css("opacity", "0.3");
+            var table = $('#POLineItemsDetail').DataTable();
+            table.clear().draw();
+
+            var POID = $('#Hdn_PurchaseOrderID').val();
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/getPOlineitemsByPONo';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/getPOlineitemsByPONo';
+            }
+            url1 += "?POID=" + POID;
+
+            var totdata;
+
+
+
+
+            $.get(url1)
+               .success(function (response) {
+                   totdata = JSON.parse(response);
+                   totdata = totdata.data;
+
+                   if (totdata.length == 0) {
+                       var table = $('#POLineItemsDetail').DataTable();
+                       table
+                           .clear()
+                           .draw();
+                       //$('#tableloader').hide();
+                       return;
+                   };
+                   POLineItems = [];
+                   for (i = 0; i < totdata.length ; i++) {
+                       POLineItems[i] = new Array();
+                       POLineItems[i][0] = totdata[i].POLineItemID;
+                       POLineItems[i][1] = "";
+                       POLineItems[i][2] = totdata[i].TotalID;
+                       POLineItems[i][3] = totdata[i].ProjectID;
+                       POLineItems[i][4] = totdata[i].BudgetSectionID;
+                       POLineItems[i][5] = totdata[i].LineItemID;
+                       POLineItems[i][6] = totdata[i].ItemOrder;
+                       POLineItems[i][7] = totdata[i].Item;
+                       POLineItems[i][8] = totdata[i].SpecNum;
+                       POLineItems[i][9] = totdata[i].ItemDescription;
+                       POLineItems[i][10] = totdata[i].Vendor;
+                       POLineItems[i][11] = totdata[i].Quantity;
+                       POLineItems[i][12] = totdata[i].UOM;
+                       POLineItems[i][13] = totdata[i].Cost;
+                       POLineItems[i][14] = totdata[i].Quantity * totdata[i].Cost;
+                       POLineItems[i][15] = totdata[i].Note;
+                       POLineItems[i][16] = totdata[i].ToWarehouse == 1 ? "<i class='fa fa-check'></i>" : "<i class='fa fa-times'></i>";
+                       POLineItems[i][17] = "0";//totdata[i].CommitAmountAdjust;
+                       POLineItems[i][18] = totdata[i].DateCreated;
+                       POLineItems[i][19] = totdata[i].CreatedBy_ID;
+                       POLineItems[i][20] = totdata[i].Status;
+                       POLineItems[i][21] = totdata[i].UOMID;
+                       POLineItems[i][22] = totdata[i].ToWarehouse;
+                       POLineItems[i][23] = totdata[i].Spacing;
+                       POLineItems[i][24] = totdata[i].Header;
+                       POLineItems[i][25] = totdata[i].ItemDtldDesc;
+                       POLineItems[i][26] = totdata[i].Extended;
+                       POLineItems[i][27] = totdata[i].ReceivedQuantity;
+
+                   }
+                   $('#POLineItemsDetail').dataTable().fnDestroy();
+                   $('#POLineItemsDetail').dataTable({
+                       "processing": true,
+                       "data": POLineItems,
+                       "columns": [
+                           { "title": "Actions" },
+                           { "title": "Header", "class": "displaynone" },
+                           { "title": "Item#" },
+                           { "title": "ProjectID", "class": "displaynone" },
+                           { "title": "BudgetSectionID", "class": "displaynone" },
+                           { "title": "LineItemID", "class": "displaynone" },
+                           { "title": "ItemOrder", "class": "displaynone" },
+                           { "title": "Item", "class": "displaynone" },
+                           { "title": "Spec" },
+                           { "title": "Description" },
+                           { "title": "Vendor", "class": "displaynone" },
+                           { "title": "Qty" },
+                           { "title": "Units" },
+                           { "title": "Cost" },
+                           { "title": "Total", "class": "displaynone" },
+                           { "title": "Note", "class": "displaynone" },
+                           { "title": "ToWarehouse", "class": "displaynone" },
+                           { "title": "CommitAmountAdjust", "class": "displaynone" },
+                           { "title": "DateCreated", "class": "displaynone" },
+                           { "title": "CreatedBy_ID", "class": "displaynone" },
+                           { "title": "Status", "class": "displaynone" },
+                           { "title": "UPMID", "class": "displaynone" },
+                           { "title": "UPMID", "class": "displaynone" },
+                           { "title": "Spacing", "class": "displaynone" },
+                           { "title": "heading", "class": "displaynone" },
+                           { "title": "ItemDtldDesc", "class": "displaynone" },
+                           { "title": "Extended" },
+                           { "title": "R-Qty" },
+                       ],
+                       paging: false,
+                       "initComplete": function () {
+                           // $('#POLineItemsDetail_filter').find('input').hide();
+                           // $('#POLineItemsDetail_filter').find('label').text('Search Description::');
+                           // $('#POLineItemsDetail_filter').append('<input type="text" id="srchdsc" placeholder="Search"/>');
+
+                           // $('#tableloader').hide();
+
+                           // if (prevsrch != undefined) {
+                           //     var table = $('#POLineItemsDetail').DataTable();
+                           //     table.column(7)
+                           //                .search(prevsrch)
+                           //                .draw();
+                           //    // buildrows();
+                           //     $('#srchdsc').val(prevsrch);
+                           // }
+
+                           RowHtmlRender();
+                       },
+                       "order": [[6, "asc"]],
+                       "aoColumnDefs": [
+                           { 'bSortable': false, 'aTargets': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 22, 23] }
+                       ]
+                   });
+                   //$('#srchdsc').on('keyup change', function () {
+                   //    // cancelselections();
+                   //    var table = $('#POLineItemsDetail').DataTable();
+                   //    var txt = $(this).val().trim();
+                   //    table.column(7)
+                   //               .search(txt)
+                   //               .draw();
+                   //    buildrows();
+                   //    if (txt.length > 0) {
+                   //        $("#POLineItemsDetail tbody").addClass("disable-sort");
+                   //    }
+                   //    else {
+                   //        $("#POLineItemsDetail tbody").removeClass("disable-sort");
+                   //        for (var a = 0; a < offsecurity.length; a++) {
+                   //            if (offsecurity[a].Classname == "BDGTEDT") {
+                   //                $("#POLineItemsDetail tbody").addClass("disable-sort");
+                   //            }
+                   //        }
+                   //    }
+                   //});
+               });
+
+
+        }
+
+
+        $(document).ready(function () {
+
+            LoadPOLineItems('');
+
+            //var table = $('#UnCommittedPODetail').DataTable();
+            //table.clear().draw();
+
+            // var table = $('#POLineItemsDetail').DataTable();
+            // table.clear().draw();
+
+        });
+
+        function RowHtmlRender() {
+            var count = 1;
+            $('#POLineItemsDetail tbody tr').each(function () {
+                //var order = $(this).find("td:eq(6)").html();
+
+                $(this).attr('data-id', count++);
+
+            });
+            // alert(1);
+            //  $('#project_filter').css('display', 'none');
+            $('#POLineItemsDetail tbody tr').find("td:eq(0)").each(function () {
+
+
+                var pid = $(this).html();
+                $(this).html('<input type="button" class="buttonedit" onclick="EditPOLineItems(this,\'' + pid + '\');" style="margin-bottom:6px;" data-id="' + pid + '" /><input type="button" class="buttondelete" onclick="DeletePOLineItems(this,\'' + pid + '\');" style="margin-bottom:6px;" data-id="' + pid + '" />');
+
+            });
+        }
+        function NvgtToAdditmsToPO() {
+            var PurchaseOrderID = $('#Hdn_PurchaseOrderID').val();
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/AddItemsToPO';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/AddItemsToPO';
+            }
+            url1 += "/" + PurchaseOrderID;
+            window.location.href = url1;
+        }
+
+
+        function EditPOLineItems(obj, pid) {
+            var url1 = '';
+
+            var PurchsOrdrID = $('#Hdn_PurchaseOrderID').val();
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/EditPOLineItems';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/EditPOLineItems';
+            }
+
+            url1 += "?PurchsOrdrID=" + PurchsOrdrID;
+            url1 += "&POLineItemID=" + pid;
+
+            window.location.href = url1;
+        }
+        function DeletePOLineItems(obj, POLineItemID) {
+            if (confirm("Are you sure want to delete this PO?")) {
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/PurchaseOrder/DeletePOLineItems';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'PurchaseOrder/DeletePOLineItems';// + pid
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    dataType: "text",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ 'POLineItemID': '" + POLineItemID + "'}",
+                    success: function (data) {
+                        if (data == 'SUCCESS') {
+                            // loaditems(sectionid);
+                            notify('Item Deleted successfully.');
+                            window.location.reload();
+                        }
+                        else {
+                            notify('Something went wrong.');
+                        }
+                    },
+                    error: function () {
+                        notify('Something went wrong.');
+                    }
+                });
+            }
+        }
+
+    </script>
+    
+
+
+    <script type="text/javascript">
+        function GoBack() {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrder/POList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrder/POList';
+            }
+            window.location.href = url1;
+        }
+    </script>
+
+    <script>
+
+
+        $(document).ready(function () {
+
+
+            $("#POLineItemsDetail tbody").sortable(
+                          {
+                              cancel: ".disable-sort",
+                              cursor: "move",
+                              start: function (event, ui) {
+                                  // 0 based array, add one
+                                  var obj = ui.item;
+                                  $(obj).css('background', '#86ABC2');
+                                  // //console.log('start');
+                              },
+                              update: function (event, ui) {
+
+                                  // 0 based array, add one
+                                  var obj = ui.item;
+                                  var obj2 = ui.item.prev('tr');
+                                  var st = $(obj).attr('data-id');
+                                  var lt = $(obj2).attr('data-id');
+                                  if (parseInt(lt) < parseInt(st)) {
+                                      obj2 = ui.item.next('tr');
+                                      lt = $(obj2).attr('data-id');
+                                  }
+                                  // alert('Prev: ' + st + ' Final: ' + lt);
+                                  if (lt == undefined) {
+                                      lt = 1;
+                                  }
+                                  var url1 = '';
+                                  if (LOCALORSERVERNEW == 'LOCAL') {
+                                      url1 = '/Purchaseorder/sortlineitems';
+                                  }
+                                  else if (LOCALORSERVERNEW == 'SERVER') {
+                                      url1 = 'Purchaseorder/sortlineitems';
+                                  }
+                                  var poid = $('#Hdn_PurchaseOrderID').val();
+
+                                  //alert("start:  " + st + ",Last ::  " + lt);
+                                  //return;
+                                  //sectionid = 1;
+                                  $.ajax({
+                                      type: "POST",
+                                      url: url1,
+                                      async: false,
+                                      dataType: "text",
+                                      contentType: "application/json; charset=utf-8",
+                                      data: "{ 'prev': '" + st + "','current' : '" + lt + "','poid' : '" + poid + "'}",
+                                      success: function (data) {
+                                          notify('Reordered Successfully row ' + st + ' has been shifted to row ' + lt);
+                                          LoadPOLineItems('');
+                                      },
+                                      error: function () {
+                                          notify('Something went wrong.');
+                                      }
+                                  });
+                              },
+                              stop: function (event, ui) {
+                                  var obj = ui.item;
+                                  $(obj).css('background', '');
+                              }
+                              // end of drag
+                          });
+
+
+        });
+
+
+    </script>
+
+
+
+    <script type="text/javascript">
+        function OpenTaxComment() {
+
+            $('#popupforTaxComment').bPopup({
+                easing: 'easeOutBack', //uses jQuery easing plugin
+                speed: 450,
+                transition: 'slideDown',
+                modalColor: 'rgb(18, 54, 65)'
+
+            });
+
+        }
+
+
+
+
+        $(function () {
+            $('#Ddl_CmntID').change(function () {
+                var CommentID = $('#Ddl_CmntID').val();
+                if (CommentID == "0") {
+                    $('#txt_Title').val('');
+                    $('#txt_Comment').val('');
+                    $('#saveCommentTaxDtl').val('Add');
+                }
+                else {
+                    $('#saveCommentTaxDtl').val('Update');
+                    var url = '';
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url = '/PurchaseOrder/GetCommentTitleByCommentID';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url = 'PurchaseOrder/GetCommentTitleByCommentID';
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: { 'CommentID': CommentID },
+                        success: function (data) {
+                            if (data != '') {
+                                var val = jQuery.parseJSON(data);
+                                $('#txt_Title').val(val.Title);
+                                $('#txt_Comment').val(val.Comment);
+                            }
+                            else {
+                            }
+                        }
+                    });
+                }
+            });
+            $('#btn_TaxComment').click(function () {
+                var PONo = $('#Hdn_PurchaseOrderID').val();
+                $('#txt_Title').val('');
+                $('#txt_Comment').val('');
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/CheckGetCommentTaxByPoNo';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/CheckGetCommentTaxByPoNo';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'PONo': PONo },
+                    success: function (data) {
+                        if (data != '') {
+                            var val = jQuery.parseJSON(data);
+                            //$('#Ddl_CmntID').val(val.CommentID);
+                            // $('#txt_Title').val(val.Title);
+                            //  $('#txt_Comment').val(val.Comment);
+                            $('#txt_GSTHST').val(val.GSTPSTValue);
+                            $('#txt_PSTValue').val(val.PSTTypeValue);
+                            $('#txt_StateTax').val(val.StateTaxValue);
+                            //$('#saveCommentTaxDtl').val('Update');
+                            $('#Ddl_GSTPST').val(val.GSTPSTType);
+                            $('#Ddl_PST').val(val.PSTType);
+                            $('#Ddl_StateTax').val(val.StateTaxType);
+                            $('#BackGroundCng').show();
+                            $('#popupforTaxComment').show();
+                        }
+                        else {
+                            $('#BackGroundCng').show();
+                            $('#popupforTaxComment').show();
+                        }
+                    }
+                });
+            });
+            $('.b-close').click(function () {
+                $('#popupforTaxComment').hide();
+                $('#BackGroundCng').hide();
+            });
+            $('#saveCommentTaxDtl').click(function () {
+                var CommentID = $('#Ddl_CmntID').val();
+                var GSTPSTType = $('#Ddl_GSTPST').val();
+                var StateTaxType = $('#Ddl_StateTax').val();
+                var PSTType = $('#Ddl_PST').val();
+                var Title = $('#txt_Title').val();
+                if (Title == "") {
+                    $('#txt_Title').attr("style", "height:40px");
+                    $('#txt_Title').attr("style", "width:538px");
+                    errorfunc('txt_Title', 'You must enter Title before saving');
+                    $('#txt_Title').focus();
+                    return;
+                }
+                var Comment = $('#txt_Comment').val();
+                if (Comment == "") {
+                    $('#txt_Comment').attr("style", "height:332px;width: 537px;");
+                    // $('#txt_Comment').attr("style", "width:538px");
+                    errorfunc('txt_Comment', 'You must enter Comment before saving');
+                    $('#txt_Comment').focus();
+                    return;
+                }
+                var GSTPSTValue = $('#txt_GSTHST').val();
+                if (GSTPSTValue == "") {
+                    $('#txt_GSTHST').attr("style", "height:40px");
+                    $('#txt_GSTHST').attr("style", "width:538px");
+                    errorfunc('txt_GSTHST', 'You must enter GSTPST Value before saving');
+                    $('#txt_GSTHST').focus();
+                    return;
+                }
+                var PSTTypeValue = $('#txt_PSTValue').val();
+                if (PSTTypeValue == "") {
+                    $('#txt_PSTValue').attr("style", "height:40px");
+                    $('#txt_PSTValue').attr("style", "width:538px");
+                    errorfunc('txt_PSTValue', 'You must enter PSTType Value before saving');
+                    $('#txt_PSTValue').focus();
+                    return;
+                }
+                var GSTPSTValue = $('#txt_GSTHST').val();
+                if (GSTPSTValue == "") {
+                    $('#txt_PSTValue').attr("style", "height:40px");
+                    $('#txt_PSTValue').attr("style", "width:538px");
+                    errorfunc('txt_PSTValue', 'You must enter GSTPST Value Value before saving');
+                    alert('');
+                    $('#txt_PSTValue').focus();
+                    return;
+                }
+                var StateTaxValue = $('#txt_StateTax').val();
+                if (StateTaxValue == "") {
+                    $('#txt_StateTax').attr("style", "height:40px");
+                    $('#txt_StateTax').attr("style", "width:538px");
+                    errorfunc('txt_StateTax', 'You must enter StateTax Value Value Value before saving');
+                    $('#txt_StateTax').focus();
+                    return;
+                }
+                var PONo = $('#Hdn_PurchaseOrderID').val();
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/SaveUpdateCommentTax';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/SaveUpdateCommentTax';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        'CommentID': CommentID, 'Title': Title, 'Comment': Comment, 'GSTPSTType': GSTPSTType,
+                        'GSTPSTValue': GSTPSTValue, 'PSTType': PSTType, 'PSTTypeValue': PSTTypeValue,
+                        'StateTaxType': StateTaxType, 'StateTaxValue': StateTaxValue, 'PONo': PONo
+                    },
+                    success: function (data) {
+                        if (data != '') {
+                            alert('Success');
+                            $('#popupforTaxComment').hide();
+                            $('#BackGroundCng').hide();
+                            $('#Ddl_CmntID').html('');
+                            $('#Ddl_CmntID').html(data);
+                        }
+                        else {
+                            alert('Fail');
+                        }
+                    }
+                });
+            });
+        });
+        function onlyAmount(myfield, e, dec) {
+            var str = myfield.value;
+            var decPos = str.split('.');
+
+            var key;
+            var keychar;
+
+            if (window.event)
+                key = window.event.keyCode;
+            else if (e)
+                key = e.which;
+            else
+                return true;
+
+            keychar = String.fromCharCode(key);
+
+            if ((key == null) || (key == 0) || (key == 8) || (key == 9) || (key == 13) || (key == 27)) // control keys
+                return true;
+            else if (decPos.length > 1) {
+                decPos = decPos[1];
+                if (decPos.length >= 4) return false;
+            }
+            else if ((("0123456789.").indexOf(keychar) > -1)) // numbers
+                return true;
+            else if (dec && (keychar == ".")) // decimal point jump
+            {
+                myfield.form.elements[dec].focus();
+                return false;
+            }
+            else
+                return false;
+        }
+
+    </script>
+     <script type="text/javascript">
+         function RevisePO() {
+             var isnewversion = confirm("Create New Version?");
+             var IsNewVersion;
+             var poid = $("#Hdn_PurchaseOrderID").val();
+             if (isnewversion) {
+                 IsNewVersion = "1";
+             }
+             else {
+                 IsNewVersion = "0";
+             }
+             var url1 = '';
+             if (LOCALORSERVERNEW == 'LOCAL') {
+                 url1 = '/PurchaseOrder/PORevise';
+             }
+             else if (LOCALORSERVERNEW == 'SERVER') {
+                 url1 = 'PurchaseOrder/PORevise';
+             }
+             $.ajax({
+                 type: "POST",
+                 url: url1,
+                 async: false,
+                 data: { 'poid': poid, 'IsNewVersion': IsNewVersion },
+                 success: function (data) {
+                     if (data == "SUCCESS") {
+                         window.location.reload();
+                     }
+                     //alert(ddlfrcllsfictn);
+                 },
+                 error: function () { notify('Something went wrong'); }
+             });
+         }
+         function CommitPO() {
+             var poid = $("#Hdn_PurchaseOrderID").val();
+             var url1 = '';
+             if (LOCALORSERVERNEW == 'LOCAL') {
+                 url1 = '/PurchaseOrder/POCommit';
+             }
+             else if (LOCALORSERVERNEW == 'SERVER') {
+                 url1 = 'PurchaseOrder/POCommit';
+             }
+             $.ajax({
+                 type: "POST",
+                 url: url1,
+                 async: false,
+                 data: { 'poid': poid },
+                 success: function (data) {
+                     if (data == "SUCCESS") {
+                         window.location.reload();
+                     }
+                     //alert(ddlfrcllsfictn);
+                 },
+                 error: function () { notify('Something went wrong'); }
+             });
+         }
+    </script>
+
+
+</head>
+<body>
+
+    <input type="hidden" value="@ViewData["POID"]" id="poid" />
+    <input type="hidden" id="Hdn_PurchaseOrderID" value="@ViewBag.PurchaseOrderID" />
+
+    <div id="popupforvendorlist" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+
+        <span class="button b-close"><span>X</span></span>
+
+
+        <table id="vendorlist" class="display  compact">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+
+
+                </tr>
+            </thead>
+
+
+
+
+
+
+        </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+    <div id="popupforTaxComment" class="displaynone" style="transform: scale(0.70); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+        <span class="button b-close"><span>X</span></span>
+        <div class="main_container" id="angulardiv" ng-app="Project" ng-controller="PO">
+
+            <div class="logo_container_heading">Add Comment and Tax</div>
+
+            <div class="edit_vendor_full">
+                <div class="edit_vendor_half">
+
+                    <div class="user_panel_container policy-items req">
+                        <label>CommentID</label>
+                        <select id="Ddl_CmntID">@*onchange="getCommentById();"*@
+                            @Html.Raw(ViewData["AllPOComment"])
+                        </select>
+                    </div>
+
+                    <div class="user_panel_container req">
+                        <label>Comment Title</label>
+                        <input type="text" id="txt_Title" ng-model="PO.Title" placeholder="Enter Title" style="width: 538px;" />
+                    </div>
+
+                    <div class="user_panel_container req">
+                        <label>Comments</label>
+                        <textarea id="txt_Comment" ng-model="PO.Comment" style="height: 332px; width: 500px;"></textarea>
+                    </div>
+
+
+                    <div class="user_panel_container">
+                        <input type="button" value="Add" id="saveCommentTaxDtl">
+                    </div>
+                </div>
+
+
+
+                <div class="edit_vendor_half">
+
+                    <div class="user_panel_container policy-items req">
+                        <label>Select GST/HST Type</label>
+                        <select id="Ddl_GSTPST">
+                            <option value="%">%</option>
+                            <option value="$">$</option>
+                        </select>
+                    </div>
+
+                    <div class="user_panel_container req">
+                        <label>GST/HST Value</label>
+                        <input type="text" id="txt_GSTHST" style="width: 517px;" ng-model="PO.GST/HST" placeholder="Enter GST/HST value upto two decimal place" onkeypress="return onlyAmount(this, event)" />
+                    </div>
+
+                    <div class="user_panel_container policy-items req">
+                        <label>Select PST Type</label>
+                        <select id="Ddl_PST">
+                            <option value="%">%</option>
+                            <option value="$">$</option>
+                        </select>
+                    </div>
+
+                    <div class="user_panel_container req">
+                        <label>PST Value</label>
+                        <input type="text" style="width: 517px;" id="txt_PSTValue" ng-model="PO.GST/HST" placeholder="Enter PST value upto two decimal place" onkeypress="return onlyAmount(this, event)" />
+                    </div>
+
+                    <div class="user_panel_container policy-items req">
+                        <label>Select State Tax Type</label>
+                        <select id="Ddl_StateTax">
+                            <option value="%">%</option>
+                            <option value="$">$</option>
+                        </select>
+                    </div>
+
+                    <div class="user_panel_container req">
+                        <label>State Tax Value</label>
+                        <input type="text" id="txt_StateTax" style="width: 517px;" ng-model="PO.GST/HST" placeholder="Enter State Tax value upto two decimal place" onkeypress="return onlyAmount(this, event)" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="main_container" id="angulardiv" ng-app="Project" ng-controller="PO">
+
+        <div class="logo_container_heading">Create Purchase Order</div>
+
+        <a href="~/PurchaseOrder"><b><u>Back to Purchase Order Page</u></b></a>
+
+        <div class="edit_vendor_full">
+            <div class="edit_vendor_half">
+
+                <div class="user_panel_container policy-items req">
+                    <label>Select Project</label>
+                    <select id="Ddl_Project" style="background: rgb(235, 235, 228);">
+                        <option value="0">--Select Project--</option>
+                        @Html.Raw(ViewData["getAllProjectName"])
+                    </select>
+                </div>
+
+                <div class="user_panel_container req">
+                    <label><span style="cursor: pointer;" onclick="openvendors('vendor');"><u>Vendor</u></span></label>
+
+                    <span id="txt_VendorName" class="spn" data-id="0"></span>
+                    @*<input type="text" id="txt_VendorName" disabled="disabled" data-id="0" ng-model="PO.VendorName" />*@
+                </div>
+
+                <div class="user_panel_container req">
+                    <label>Conversion Rate</label>
+                    <input type="text" id="txt_ConversionRate" ng-model="PO.ConversionRate" />
+                </div>
+
+                <div class="user_panel_container req">
+                    <label>Currency Code</label>
+                    <span id="txt_CurrencyCode" class="spn" data-id="0"></span>
+                    @*<input type="text" id="txt_CurrencyCode" ng-model="PO.CurrencyCode">*@
+                </div>
+
+                <div class="user_panel_container policy-items req">
+                    <label>Buyer</label>
+                    <select id="Ddl_Buyer">
+                        <option value="0">--Select Buyer--</option>
+                        @Html.Raw(ViewData["GetBuyerDetail"])
+                    </select>
+                </div>
+
+                <div class="user_panel_container policy-items req">
+                    <label>Ship Via</label>
+                    <select id="Ddl_Shipment">
+                        <option value="0">--Select Shipping Method--</option>
+                        @Html.Raw(ViewData["GetShipmentMethod"])
+                    </select>
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Arrival Date</label>
+                    <input type="text" id="txt_ArrivalDate" ng-model="PO.ArrivalDate" onkeypress="return IsNumber(event);" placeholder="Select Arrival Date" />
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Check Back Date</label>
+                    <input type="text" id="txt_CheckDate" ng-model="PO.CheckDate" onkeypress="return IsNumber(event);" placeholder="Select CheckBack Date" />
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Terms</label>
+                    <select id="txt_Terms">
+                        <option value="0">--Select Terms--</option>
+                        @Html.Raw(ViewData["getAllTerms"])
+                    </select>
+                </div>
+
+                <div class="user_panel_container">
+                    <label>FOB</label>
+                    <input type="text" id="txt_FOB" ng-model="PO.FOB" />
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Freight</label>
+                    <input type="text" id="txt_Freight" ng-model="PO.Freight" />
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Remarks</label>
+                    <input type="text" id="txt_Remarks" ng-model="PO.Remarks">
+                </div>
+
+                <div class="user_panel_container">
+                    <input type="button" value="Edit PO" id="btn_CreatePO">
+                    <img id="loader_CreatePO" style="display: none;" src="~/Images/load.gif" />
+                    <input type="button" value="Cancel" id="btn_CancelPO" onclick="GoBack();">
+                    <input type="button" value="Tax and Comment" id="btn_TaxComment" onclick="OpenTaxComment();">
+                    <input type="button" value="Revise PO" id="btn_RevisePO" onclick="RevisePO();">
+                    <input type="button" value="Commit PO" id="btn_CommitPO" onclick="CommitPO();">
+                </div>
+            </div>
+
+
+            <div class="edit_vendor_half">
+
+                <div class="user_panel_container policy-items">
+                    <label>Ship to</label>
+                    <input type="text" id="txt_ShipTo" ng-model="PO.ShipTo" />
+                </div>
+
+                <div class="user_panel_container policy-items">
+                    <label><span style="cursor: pointer;" onclick="openvendors('vendorco');"><u>Vendor(C/O): </u></span></label>
+                    <span id="txt_VendorCO" class="spn" data-id="0"></span>
+                    @*<input type="text" id="txt_VendorCO" data-id="0" disabled="disabled" ng-model="PO.VendorCO" />*@
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Invoice To</label>
+                    <input type="text" id="txt_InvoiceTo" ng-model="PO.InvoiceTo" />
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Address 1</label>
+                    <input type="text" id="txt_addr1" ng-model="PO.Address" />
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Vendor Address</label>
+                    <input type="text" id="txt_ProjectScope" ng-model="PO.VendorAddress" placeholder="Enter Vendor Address">
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Address 3</label>
+                    <input type="text" id="txt_OwnerName" ng-model="PO.Address3" />
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Address 4</label>
+                    <input type="text" id="txt_OwnerAddr" ng-model="PO.OwnerAddr">
+                </div>
+
+                <div class="user_panel_container policy-items">
+                    <fieldset style="height: 70px">
+                        <legend>PO Confirm ? </legend>
+                        <input type="radio" name="POConfirm" style="margin: 17px" />Yes
+             <input type="radio" name="POConfirm" style="margin: 17px" checked />No
+                    </fieldset>
+                </div>
+
+                <div class="user_panel_container policy-items">
+                    <fieldset style="height: 70px">
+                        <legend>Invoice Received Completely ?</legend>
+                        <input type="radio" name="InvRcvdComp" style="margin: 17px" />Yes
+             <input type="radio" name="InvRcvdComp" style="margin: 17px" checked />No
+                    </fieldset>
+                </div>
+
+                <div class="user_panel_container">
+                    <fieldset style="height: 70px">
+                        <legend>Invoice Received Partial ?</legend>
+                        <input type="radio" name="InvRcvdPartial" style="margin: 17px" />Yes
+             <input type="radio" name="InvRcvdPartial" style="margin: 17px" checked />No
+                    </fieldset>
+                </div>
+
+                <div class="user_panel_container">
+                    <label>Notes</label>
+                    <textarea id="txt_Notes" ng-model="PO.Notes"></textarea>
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <div class="logo_container_heading" style="margin-top:30px;">Line Items under Purchase Order </div>
+        <div class="edit_vendor_full">            
+            <div class="user_panel_container" style="margin-top: 2%;">                
+                <input type="button" id="btn_NvgtToAdditmsToPO" value="Add Items to PO" onclick="NvgtToAdditmsToPO();" />
+            </div>
+            <div id="removemultiple" style="display: none;">
+                <div style="cursor: pointer; z-index: 9999; position: absolute; background: rgb(32, 128, 147); width: 175px; color: white; padding: 3px; border-radius: 5px;">
+                    <div onclick="deletemultiplelineitems();">
+                        <span>&nbsp; <i class="fa fa-trash-o"></i>&nbsp;&nbsp;Delete selected Items</span>
+                    </div>
+                </div>
+                <div id="removemultiple2" style="cursor: pointer; z-index: 9999; position: relative; background: rgb(32, 128, 147); width: 175px; color: white; padding: 3px; border-radius: 5px; left: 190px;">
+                    <div onclick="cancelselections();">
+                        <span>&nbsp; <i class="fa fa-times-circle"></i>&nbsp;&nbsp;Cancel all selections</span>
+                    </div>
+                </div>
+            </div>
+            <div class="user_panel_container1" style="margin-top: 2%;">
+                <fieldset>
+                    <legend>Line Items Under Purchase Order</legend>
+                    <div>
+                        <table cellpadding="0" cellspacing="0" border="0" class="display" id="POLineItemsDetail" style="text-align: center;">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+
+</html>

@@ -1,0 +1,10 @@
+BEGIN:VCARD
+FN:newv newlv
+TITLE:Contact
+ORG:newv
+ADR;WORK:;;;;---Select---;;--Select Country--
+TEL;Work;VOICE;:
+TEL;Cell:
+TEL;Work;FAX:
+EMAIL;Internet:
+END:VCARD

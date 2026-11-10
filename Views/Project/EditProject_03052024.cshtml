@@ -1,0 +1,4738 @@
+﻿@{    
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit Project</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+
+
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+
+    <script src="~/Scripts/jquery.autosize.js"></script>
+
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <script src="~/Scripts/AddUser.js"></script>
+    <script src="~/Scripts/Project.js"></script>
+
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/swfupload.js"></script>
+    <script src="~/Scripts/jquery.swfupload.js"></script>
+
+    <script src="~/Scripts/GlobalJS.js"></script>
+
+
+    <link href="~/css/stylesForFileUpload.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.DB_PROC.js"></script>
+
+    <style>
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        #popupforvendorlist .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 6px 0px;
+            width: 96%;
+            height: 20px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+
+        .nav-tabs>li>a {
+                background-color: rgba(238, 238, 238, 0.43);
+    border-color: #eee #eee #ddd;
+    text-transform: uppercase;
+}
+        .nav-tabs > li > a:hover {
+            background-color: #ddd;
+        }
+        #txt_HotelAddr,#txt_OwnerAddr,#txt_InvAddr{
+            height:69px !important;
+        }
+        .srch{
+            
+    border: 1px solid darkgrey;
+        }
+
+        .ui-multiselect-menu{
+            width : 370px !important;
+        }
+
+        table.dataTable.compact thead th, table.dataTable.compact thead td {
+     padding: 4px !important; 
+}
+        .balanceclass {
+            font-size: 1.1em;
+        }
+        #divQBSLoading {
+            margin:3px;
+        }
+    </style>
+
+
+    <script>
+        var vendorco = new Array();
+        var vendorcocount = 0;
+        var ddlVendorClassification;
+    </script>
+
+
+
+    <script type="text/javascript">
+        // var formData = new FormData();
+        var filedata = {};
+        var filedatacount = 0;
+        var filedata2 = {};
+        var filedatacount2 = 0;
+        var filedata3 = {};
+        var filedatacount3 = 0;
+        $(function () {
+            var formData = new FormData();
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = 'https://www.thebridgebytcg.com/UploadFile/UploadWhenEdit';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'UploadFile/UploadWhenEdit';
+            }
+            url1 += "?id=1";
+            url1 = "";
+            $('#fileupload_Edt2').fileupload({
+                url: url1,
+                //redirect: url,
+                //replaceFileInput: false,
+                dataType: 'json',
+                send: function (e, data) {
+                    $('#fileupload_Edt2').parent().find('.filelist').text('Please Wait...');
+                    //$('#files2').text('Please Wait...');
+                },
+                progress: function (e, data) {
+                    //debugger
+                    // Update the progress bar while files are being uploaded
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress2 .bar').css(
+                            'width',
+                            progress + '%'
+                                            );
+                    // //console.log(progress);
+                },
+                done: function (e, data) {
+                    // //console.log(data);
+                    $('#fileupload_Edt2').parent().find('.filelist')
+                    if ($('#fileupload_Edt2').parent().find('.filelist').text() != 'Please Wait...') {
+                        $('#fileupload_Edt2').parent().find('.filelist').text($('#fileupload_Edt2').parent().find('.filelist') + ',' + data.result.name);
+                    }
+                    else {
+                        $('#fileupload_Edt2').parent().find('.filelist').text(data.result.name);
+                    }
+                }
+            });
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/UploadFile/UploadWhenEdit';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'UploadFile/UploadWhenEdit';
+            }
+            url1 += "?id=2";
+            url1 = "";
+            $('#fileupload_Edt').fileupload({
+                _beforeSend: function (e, data) {
+                    console.log("Before sent ********");
+                },
+                //add: function (data) {
+                //    console.log("add          ************");
+                //    $('#fileupload_Edt').fileupload();
+                //},
+                url: url1,
+                //redirect: url,
+                //replaceFileInput: false,
+                dataType: 'json',
+                send: function (e, data) {
+                    console.log("send         ************");
+
+                    $('#files').text('Please Wait...');
+                },
+                progress: function (e, data) {
+                    //debugger
+                    // Update the progress bar while files are being uploaded
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .bar').css(
+                            'width',
+                            progress + '%'
+                                            );
+                    console.log(progress);
+                },
+                done: function (e, data) {
+                    // //console.log(data);
+                    if ($('#files').text() != 'Please Wait...') {
+                        $('#files').text($('#files').text() + ',' + data.result.name);
+                    }
+                    else {
+                        $('#files').text(data.result.name);
+                    }
+                }
+            });
+            //-------------------------------
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/UploadFile/UploadWhenEdit';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'UploadFile/UploadWhenEdit';
+            }
+            url1 += "?id=3";
+            url1 = "";
+            
+            $('#fileupload_Edt3').fileupload({
+                url: url1,
+                //redirect: url,
+                //replaceFileInput: false,
+                dataType: 'json',
+                send: function (e, data) {
+                    // $('#files').text('Please Wait...');
+                   
+                    $('#fileupload_Edt3').parent().find('.filelist').text('Please Wait...');
+                },
+                progress: function (e, data) {
+                    //debugger
+                    // Update the progress bar while files are being uploaded
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .bar').css(
+                            'width',
+                            progress + '%'
+                                            );
+                    // //console.log(progress);
+                },
+                done: function (e, data) {
+                     
+                    $('#fileupload_Edt3').parent().find('.filelist')
+                    if ($('#fileupload_Edt3').parent().find('.filelist').text() != 'Please Wait...') {
+                        $('#fileupload_Edt3').parent().find('.filelist').text($('#fileupload_Edt3').parent().find('.filelist') + ',' + data.result.name);
+                    }
+                    else {
+                        $('#fileupload_Edt3').parent().find('.filelist').text(data.result.name);
+                    }
+                }
+            });
+            //-------------------------------
+        });
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+            PreventTwoDecimalPlace("#txt_convrate", 5);
+
+            getallconvrate();
+
+
+            $('textarea').autosize();
+
+            $('#txt_GST').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_PST').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_StateTax').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_InstallDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_CompletionDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_WareHouseReqDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_OpeningDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            var Pid = $('#ProjectID').val();//1;
+            var url = '';
+            var url1 = '';
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Project/getProjectDetail';
+                url1 = '/Project/ProjectList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Project/getProjectDetail';
+                url1 = 'Project/ProjectList';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'ProjectID': Pid },
+                success: function (data) {
+                    if (data != '') {
+
+                        var val = jQuery.parseJSON(data);
+
+                        var supporter = val.IsSupporter;
+                        if (supporter == '1') {
+                            $('#bridgesupporter').prop('checked','checked');
+
+                        }
+
+                        $('#txt_ProjectName').val(val.ProjectName);
+                        $('#txt_LegalName').val(val.LegalName);
+                        $('#txt_InvAddr').val(val.InvAddress);
+                        $('#Ddl_InvCountry').val(val.InvCountry);
+
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = '/Project/getAllStateByCntryID';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'Project/getAllStateByCntryID';
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'CountryID': val.InvCountry },
+                            success: function (data) {
+                                if (data != null) {
+                                    $('#Ddl_InvState').html(data);
+                                    $('#Ddl_InvState').val(val.InvState);
+                                }
+                            }
+                        });
+
+                        $('#txt_InvCity').val(val.InvCity);
+                        $('#txt_InvZipCode').val(val.InvZipCode);
+                        $('#ddl_NoUserAppvBdgt').val(val.NoUserAppvBdgt);
+                        $('#ddl_NoUserAppvPO').val(val.NoUserAppvPO);
+                        $('#txt_Client').val(val.ClientID);
+                        $('#txt_Manager').val(val.ManagerID);
+                        $('#txt_DevInfo').val(val.DevInfo);
+                        $('#txt_HotelAddr').val(val.HotelAddr);
+                        $('#Ddl_HotelCountry').val(val.HotelCountry);
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'CountryID': val.HotelCountry },
+                            success: function (data) {
+                                if (data != null) {
+                                    $('#Ddl_HotelState').html(data);
+                                    $('#Ddl_HotelState').val(val.HotelState);
+                                }
+                            }
+                        });
+
+                        $('#txt_HotelCity').val(val.HotelCity);
+                        $('#txt_HotelZipCode').val(val.HotelZipCode);
+                        $('#txt_ProjectScope').val(val.ProjectScope);
+                        $('#txt_OwnerName').val(val.OwnerName);
+                        $('#txt_OwnerAddr').val(val.OwnerAddr);
+                        $('#Ddl_OwnerCountry').val(val.OwnerCountry);
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'CountryID': val.OwnerCountry },
+                            success: function (data) {
+                                if (data != null) {
+                                    $('#Ddl_OwnerState').html(data);
+                                    $('#Ddl_OwnerState').val(val.OwnerState);
+                                }
+                            }
+                        });
+
+                        $('#txt_OwnerCity').val(val.OwnerCity);
+                        $('#txt_OwnerZipCode').val(val.OwnerZipCode);
+                        $('#txt_OwnerContact').val(val.OwnerContact);
+                        $('#txt_OwnerNote').val(val.OwnerNote);
+                        $('#txt_OwnerFax').val(val.OwnerFax);
+                        $('#txt_OwnerEmail').val(val.OwnerEmail);
+                        $('#txt_OwnerMobile').val(val.OwnerMobile);
+                        $('#txt_OwnerPhoneExtension').val(val.OwnerPhoneExtension);
+                        
+
+                        $('#txt_AccountingContact').val(val.AccountingContact);
+                        $('#txt_AccountingPhone').val(val.AccountingPhone);
+
+
+                        //checkphone_global($('#txt_AccountingPhone'));
+
+                        $('#txt_AccountingPhoneExtension').val(val.AccountPhoneExtension);
+
+
+                        $('#txt_AccountingFax').val(val.AccountingFax);
+                        $('#txt_AccountingEmail').val(val.AccountingEmail);
+                        $('#txt_FederalID').val(val.FederalID);
+
+                        $('#txt_GST').val(val.GST.split('^')[0]);
+                        $('#txt_GSTLblShw').val(val.GST.split('^')[1]);
+                        $('#txt_PST').val(val.PST.split('^')[0]);
+                        $('#txt_PSTLblShw').val(val.PST.split('^')[1]);
+                        $('#txt_StateTax').val(val.StateTax.split('^')[0]);
+                        $('#txt_StateTxLblShw').val(val.StateTax.split('^')[1]);
+
+                        $('#ddl_CurrencyCode').val(val.CurrencyCode);
+
+
+                        var getDate = val.InstallDate;
+                        var indexCheck = getDate.indexOf('1900');
+
+                        if (indexCheck > 0) {
+                            $('#txt_InstallDate').val('');
+                        }
+                        else {
+                            $('#txt_InstallDate').val(val.InstallDate);
+                        }
+
+                        getDate = val.CompletionDate;
+                        indexCheck = getDate.indexOf('1900');
+
+                        if (indexCheck > 0) {
+                            $('#txt_CompletionDate').val('');
+                        }
+                        else {
+                            $('#txt_CompletionDate').val(val.CompletionDate);
+                        }
+
+                        getDate = val.WareHouseReqDate;
+                        indexCheck = getDate.indexOf('1900');
+                        if (indexCheck > 0) {
+                            $('#txt_WareHouseReqDate').val('');
+                        }
+                        else {
+                            $('#txt_WareHouseReqDate').val(val.WareHouseReqDate);
+                        }
+
+                        getDate = val.OpeningDate;
+                        indexCheck = getDate.indexOf('1900');
+
+                        if (indexCheck > 0) {
+                            $('#txt_OpeningDate').val('');
+                        }
+                        else {
+                            $('#txt_OpeningDate').val(val.OpeningDate);
+                        }
+
+                        $('#txt_ProjectCmt').val(val.ProjectCmt);
+                        $('#txt_OwnerReqmnt').val(val.OwnerReportingRequirement);
+
+                        $('#txt_PrchsOrdrCmmnts').val(val.PurchaseOrderComment);
+
+
+                        //subham
+
+                        loadUploadedPics(val.InstallationFile, val.TermsFile, val.ProjectFile, val.DefaultTermsFile);
+
+                        //Subhabrata Mondal
+
+                        var url1 = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url1 = '/Project/AssignReportPermission';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url1 = '/Project/AssignReportPermission';
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: url1,
+                            data: { 'ProjectID': Pid }
+                        });
+
+                        var url2 = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url2 = '/Project/SelectReportPermission';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url2 = 'Project/SelectReportPermission';
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: url2,
+                            data: { 'ProjectID': Pid },
+                            success: function (data) {
+                                var allpermission = data.split('^');
+                                if (allpermission.length > 0) {
+                                    if (allpermission[0] == "True") {
+                                        $("#chkBudgetReport").prop("checked", true);
+                                    }
+                                    else {
+                                        $("#chkBudgetReport").prop("checked", false);
+                                    }
+
+                                    if (allpermission[1] == "True") {
+                                        $("#chkPurchaseReport").prop("checked", true);
+                                    }
+                                    else {
+                                        $("#chkPurchaseReport").prop("checked", false);
+                                    }
+
+                                    if (allpermission[2] == "True") {
+                                        $("#chkStatusReport").prop("checked", true);
+                                    }
+                                    else {
+                                        $("#chkStatusReport").prop("checked", false);
+                                    }
+
+                                    if (allpermission[3] == "True") {
+                                        $("#chkAccountingReport").prop("checked", true);
+                                    }
+                                    else {
+                                        $("#chkAccountingReport").prop("checked", false);
+                                    }
+
+                                }
+
+                            }
+                        });
+
+
+
+
+                    }
+                    else if (data == '') {
+                        window.location.href = url1;
+                    }
+                }
+            });
+
+        });
+
+
+        function DelImage(obj) {
+            var confirmSt = confirm('Do You want to delete this file??');
+            if (confirmSt) {
+                $(obj).parent().remove();
+            }
+        }
+
+        function AvoidKeyPress(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            if (keyCode == 8) {
+                return true;
+            }
+            else {
+                alert('Use Calender');
+                return false;
+            }
+        }
+
+        function IsNumber(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            if ((keyCode > 47 && keyCode < 58) || (keyCode == 8) || (keyCode == 46)) {
+                return true;
+            }
+            else {
+                alert('Use Only Numeric value');
+                return false;
+            }
+        }
+
+        $(document).ready(function () {
+            var isseletcted = $('#Isselected').val();
+            if (isseletcted == "0") {
+
+                $("input[type='text']").attr("disabled", "disabled");
+                $("textarea").attr("disabled", "disabled");
+                $("select").attr("disabled", "disabled").css('background', 'rgb(235, 235, 228)');
+                $("#btn_UpdateProject").next("input[type='button']").remove();
+                $("#btn_UpdateProject").next("input[type='button']").remove();
+                $("#btn_UpdateProject").remove();
+                //$(".fileinput-button").remove();
+
+                $('#newcomment').removeAttr('disabled');
+                $('#Ddl_Clftion').removeAttr('disabled');
+
+
+
+
+
+            }
+
+        });
+
+    </script>
+
+    <style>
+        .ui-autocomplete {
+            cursor: pointer;
+            height: 120px;
+            overflow-y: scroll;
+        }
+    </style>
+
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+
+    @*Project comments part*@
+    <script type="text/javascript">
+        var allcomments;
+        var projectcomments;
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(function () {
+
+
+            // $("#Ddl_Clftion").multiselect();
+            loadprojectcomments();
+            //loadallcomments();
+
+            loadprojectaccounts();
+
+
+
+        });
+
+        function loadallcomments() {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/getAllcomments';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/getAllcomments';
+            }
+            var pid = $('#ProjectID').val();
+
+            if (pid == '') {
+                return;
+            }
+
+
+
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'projectID' : '" + '' + "'}",
+                success: function (response) {
+                    ////console.log(response);
+                    response = JSON.parse(response);
+                    allcomments = response.data;
+
+                    createallcommentslist();
+
+                },
+                error: function () {
+                    alert('Something went wrong.');
+                }
+            });
+        }
+        function loadprojectcomments() {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/getAllcommentsproject';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/getAllcommentsproject';
+            }
+            var pid = $('#ProjectID').val();
+
+            if (pid == '') {
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'projectID' : '" + pid + "'}",
+                async: false,
+                success: function (response) {
+                    // //console.log(response);
+                    response = JSON.parse(response);
+                    response = projectcomments = response.data;
+
+                    var html = "";
+                    var Commentid = "";
+                    var Comment = "";
+                    var Createddate = "";
+
+                    for (var i = 0; i < response.length; i++) {
+                        Commentid = response[i].Commentid;
+                        Comment = unescape(response[i].Comment);
+                        Createddate = response[i].Createddate;
+                        html += "<span class='remove' data-id='" + Commentid + "' ><a onclick='deleteprojectcomment(this,\"" + Commentid + "\")' title='Remove this comment'>x</a><span>" + Comment + " ( " + Createddate + " )" + "</span></span>";
+                    }
+
+                    $('#ProjectComments').html(html);
+
+                },
+                error: function () {
+                    alert('Something went wrong.');
+                }
+            });
+        }
+
+
+        function loadprojectaccounts() {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/getAllprojectaccounts';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/getAllprojectaccounts';
+            }
+            var pid = $('#ProjectID').val();
+
+            if (pid == '') {
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'projectID' : '" + pid + "'}",
+                async: false,
+                success: function (response) {
+                    // //console.log(response);
+                    response = JSON.parse(response);
+                    response = projectaccounts = response.data;
+
+                    var html = "";
+                    var FldID = "";
+                    var ProjectID = "";
+                    var AccountNumber = "";
+                    var IsActive = "";
+                    var Description = "";
+                    var Description_ORIG = "";
+
+                    for (var i = 0; i < response.length; i++) {
+                        FldID = response[i].FldID;
+                        ProjectID = response[i].ProjectID;
+                        AccountNumber = response[i].AccountNumber;
+                        IsActive = response[i].IsActive
+                        Description = response[i].Description
+                        Description_ORIG = response[i].Description
+
+                        if (Description.trim() != "") {
+                            Description = " ---- " + Description;
+                        }
+
+
+                        html += "<span title='Accnt No.:-" + AccountNumber + "    Desc:-" + Description_ORIG + "' data-desc='" + Description_ORIG + "' data-accountnumber='" + AccountNumber + "' class='remove accountclass' data-id='" + FldID + "' >"
+                            + '<i title="Edit Account" class="mrg5R fa fa-pencil-square-o" style="font-size: 1.3em;cursor:pointer;" onclick="EditPAccount(this);"></i>'
+                            + "<a onclick='deleteprojectaccount(this,\"" + FldID + "\")' title='Remove this account'>x</a><span>" + AccountNumber + Description + "</span></span>";
+                    }
+
+                    $('#ProjectAccounts').html(html);
+
+                },
+                error: function () {
+                    alert('Something went wrong.');
+                }
+            });
+        }
+
+
+        function EditPAccount(o) {
+            var id = $(o).parent().attr('data-id');
+            var accnumber = $(o).parent().attr('data-accountnumber');
+            var accdesc = $(o).parent().attr('data-desc');
+            $('#paccountedit').modal('show');
+
+            $('#paccntno').val(accnumber);
+            $('#paccntdesc').val(accdesc);
+            $('#paccntid').val(id);
+            console.log(id);
+
+
+        }
+        function editpaccountsave() {
+            var id = $('#paccntid').val();
+            var accnumber = $('#paccntno').val();
+            var accdesc = $('#paccntdesc').val();
+            if (accnumber.trim() == "") {
+                notify("Please enter Account number");
+                return;
+            }
+            var obj = new Object();
+            obj.FliID = id;
+            obj.AccntDesc = accdesc;
+            obj.AccntNumber = accnumber;
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_EditProjectAccounts";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            loadprojectaccounts();
+            
+            notify("Account updated successfully!!!", "GREEN");
+            $('#divQBSLoading').append('Syncing Account from QBO ' + '<i class="fa fa-spinner fa-spin mrg10L" aria-hidden="true"></i>');
+            $('#paccountedit').modal('hide');
+            setTimeout(function () {
+                
+                UpdateQBSAccount();
+
+            }, 300);
+
+        }
+
+
+        function createallcommentslist() {
+            var html = "";
+            var Commentid = "";
+            var Comment = "";
+            var Createddate = "";
+            var isactive = 1;
+
+
+            for (var i = 0; i < allcomments.length; i++) {
+                isactive = 1;
+                Commentid = allcomments[i].Commentid;
+                Comment = allcomments[i].Comment;
+                Createddate = allcomments[i].Createddate;
+
+                for (var a = 0; a < projectcomments.length; a++) {
+
+
+                    if (projectcomments[a].Commentid == allcomments[i].Commentid) {
+                        isactive = 0;
+                    }
+
+                }
+
+                if (isactive == 1) {
+                    html += "<option value='" + Commentid + "'>" + Comment + "</option>";
+                }
+                else {
+                    html += "<option disabled value='" + Commentid + "'>" + Comment + "</option>";
+
+                }
+            }
+
+            $("#Ddl_Clftion").html("");
+
+
+            $("#Ddl_Clftion").html(html);
+
+
+
+            //.multiselectfilter({ label: "Search" });
+
+
+            $("#Ddl_Clftion").multiselect("refresh").multiselectfilter();
+
+            $('.ui-multiselect-menu').css('width', '450px');
+            $('.ui-multiselect').css('width', '450px');
+
+
+        }
+
+
+        function deleteprojectcomment(obj, commentid) {
+            // $(obj).parent().remove();
+
+            var isconfirmed = confirm("Do you really want to delete?");
+            if (!isconfirmed) {
+                return;
+            }
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/deleteprojectcomment';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/deleteprojectcomment';
+            }
+            var pid = $('#ProjectID').val();
+
+            if (pid == '') {
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'projectID' : '" + pid + "','commentID':'" + commentid + "'}",
+                async: false,
+                success: function (response) {
+                    $(obj).parent().remove();
+
+                    loadprojectcomments();
+                    loadallcomments();
+                },
+                error: function () {
+                    alert('Something went wrong.');
+                }
+            });
+
+
+
+
+            //alert(commentid);
+        }
+
+
+        function deleteprojectaccount(obj, accountid) {
+            // $(obj).parent().remove();
+
+            var isconfirmed = confirm("Do you really want to delete?");
+            if (!isconfirmed) {
+                return;
+            }
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/deleteprojectaccount';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/deleteprojectaccount';
+            }
+            var pid = $('#ProjectID').val();
+
+            if (pid == '') {
+                return;
+            }
+            $('#divQBSLoading').append('Syncing Account from QBO ' + '<i class="fa fa-spinner fa-spin mrg10L" aria-hidden="true"></i>');
+            window.setTimeout(function () {
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    dataType: "text",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ 'projectID' : '" + pid + "','accountid':'" + accountid + "'}",
+                    async: false,
+                    success: function (response) {
+                        UpdateQBSAccount();
+                        $(obj).parent().remove();
+
+                        loadprojectaccounts();
+                        //loadallcomments();
+                    },
+                    error: function () {
+                        alert('Something went wrong.');
+                    }
+                });
+            }, 300);
+
+
+
+            //alert(accountid);
+        }
+
+        function addcommentnew() {
+            var comment = $('#newcomment').val().trim();
+
+            if (comment == '') {
+                return;
+            }
+
+            var pid = $('#ProjectID').val();
+
+            if (pid == '') {
+                return;
+            }
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/addnewComment';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/addnewComment';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'projectID' : '" + pid + "','comment' : '" + comment + "'}",
+                success: function (data) {
+
+
+
+                    if (data == 'SUCCESS') {
+                        $('#newcomment').val('');
+                        loadprojectcomments();
+                        loadallcomments();
+
+                    }
+
+                    else {
+                        alert("Comment not inserted as duplicate exists...");
+                        $('#newcomment').focus();
+                    }
+
+
+
+
+
+                },
+                error: function () {
+                    alert('Something went wrong.');
+                }
+            });
+
+
+
+
+        }
+
+        function addProjectAccountsnew() {
+            var accounts = $('#newProjectAccounts').val().trim();
+            var accountsdesc = $('#newProjectAccountsdesc').val().trim();
+
+            if (accounts == '') {
+                notify("Please enter Account number!!!");
+                return;
+            }
+            var pid = $('#ProjectID').val();
+            if (pid == '') {
+                return;
+            }
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/addnewAccount';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/addnewAccount';
+            }
+            $('#divQBSLoading').append('Syncing Account from QBO ' + '<i class="fa fa-spinner fa-spin mrg10L" aria-hidden="true"></i>');
+            window.setTimeout(function () {
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    dataType: "text",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ 'projectID' : '" + pid + "','accounts' : '" + accounts + "','Description':'" + accountsdesc + "'}",
+                    success: function (data) {
+
+                        irrrrr = 0;
+
+                        $('#newProjectAccountsdesc').val('');
+                        $('#newProjectAccounts').val('');
+
+
+                        if (data == 'SUCCESS') {
+                            UpdateQBSAccount();
+                            $('#newProjectAccounts').val('');
+                            loadprojectaccounts();
+                            //loadallcomments();
+                        }
+                        else {
+                            alert("Account not inserted as duplicate exists...");
+                            $('#newProjectAccounts').focus();
+                        }
+                    },
+                    error: function () {
+                        alert('Something went wrong.');
+                    }
+                });
+            },300);
+        }
+
+        function UpdateQBSAccount() {
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Project/UpdateQBSAccount';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Project/UpdateQBSAccount';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                success: function (data) {
+
+                    if (data == "success") {
+                        $('#divQBSLoading').text("");
+                    }
+                }
+            });
+        }
+
+
+        function addcomment() {
+
+
+            var commentids = $('#Ddl_Clftion').val();
+
+            if (commentids == null || commentids == "") {
+                alert("Please select comments!!!");
+                return;
+            }
+            // $('#Ddl_Clftion').addAttr('disabled');
+
+
+
+
+            var pid = $('#ProjectID').val();
+
+            if (pid == '') {
+                return;
+            }
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/addcomments';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/addcomments';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'projectID' : '" + pid + "','commentids' : '" + commentids + "'}",
+                success: function (data) {
+                    loadprojectcomments();
+                    loadallcomments();
+                },
+                error: function () {
+                    alert('Something went wrong.');
+                }
+            });
+
+
+        }
+    </script>
+    <style>
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        input[type="file"] {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .totalcurrency {
+            color: #208093;
+        }
+
+        .remove {
+            /*width: 450px;*/
+            border: 1px solid #060506;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            display: block;
+            padding: 1px;
+            text-decoration: none;
+            background: #526779;
+            color: #E2E2E2;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-family: helvetica;
+            font-size: 13px;
+            position: relative;
+        }
+
+            .remove a {
+                /*cursor: pointer;
+                position: absolute;
+                top: -2px;
+                right: -2px;
+                font-size: 1.2em;
+                color:white;
+                background: black;
+                border-radius:100px;
+                padding: 3px;*/
+                cursor: pointer;
+                position: absolute;
+                top: -5px;
+                right: -6px;
+                font-size: 0.9em;
+                color: white;
+                background: black;
+                border-radius: 100px;
+                padding: 7px;
+                line-height: 9px;
+            }
+    </style>
+
+    @*Project comments part end*@
+
+    <style type="text/css">
+        /*.user_panel_container {
+            padding: 0px 0px 0px 0px;
+        }
+            .user_panel_container label {
+                padding: 8px 0px 4px;
+            }
+        .edit_vendor_full {
+            margin-bottom:12px;
+        }*/
+
+        .edit_vendor_full {
+            margin-bottom: 12px;
+        }
+
+        .user_panel_container label, .logo_container_heading {
+            padding: 4px 0px;
+        }
+
+        .ui-multiselect {
+            width: 100% !important;
+            /* color: rgb(195, 16, 1) !important; */
+            height: 25px !important;
+            margin-top: 0px !important;
+        }
+    </style>
+
+
+
+
+    <script type="text/javascript">
+        $(function () {
+            var date = new Date();
+            var currentMonth = date.getMonth();
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+
+            currentMonth = currentMonth + 1;
+
+            currentMonth = currentMonth < 9 ? '0' + currentMonth : currentMonth;
+            currentDate = currentDate < 9 ? '0' + currentDate : currentDate;
+
+            //$('#To_Date').val(date.toDateString());
+           
+            $('#To_Date').val(currentYear + '.' + currentMonth + '.' + currentDate);
+
+
+            //$('#Date_Range').val(new Date(currentYear, 0, 1).toDateString());
+
+            var date = new Date(currentYear, 1, 1);
+            currentMonth = date.getMonth();
+            currentDate = date.getDate();
+            currentYear = date.getFullYear();
+
+            currentMonth = currentMonth < 9 ? '0' + currentMonth : currentMonth;
+            currentDate = currentDate < 9 ? '0' + currentDate : currentDate;
+
+            //$('#Date_Range').val(currentYear + '.' + currentMonth + '.' + currentDate);
+            $('#Date_Range').val($('#ytdpurchasenumber').attr('data-firstdate'));
+
+            $('#Date_Range').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy.mm.dd'
+                , onSelect: function () {
+                    FetchDate();
+                }
+            });
+            $('#To_Date').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy.mm.dd',
+                // minDate: new Date(currentYear, currentMonth, currentDate),
+                onSelect: function () {
+                    FetchDate();
+                }
+            });
+            FetchDate();
+        });
+        function FetchDate() {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Project/GetProject';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Project/GetProject';
+            }
+            var dataTable = "";
+            var dt = "";
+            var us = new Array();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'From': '" + $('#Date_Range').val() + "', 'Todate': '" + $('#To_Date').val() + "','ProjectID':'" + $('#ProjectID').val() + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+
+                    if (data != '') {
+                        dt = data.data;
+                        //if (dt.length == 0) {
+                        //    return;
+                        //}
+                        $('#ProjectList').dataTable().fnDestroy();
+
+                        var tot = 0;
+                        var curr = '';
+
+                        if (dt.length >= 0) {
+                            for (i = 0; i < dt.length ; i++) {
+                                us[i] = new Array();
+
+                                us[i][0] = '<a href="#" onclick=" Click(event,' + dt[i].ParentVendor_ID + ',' + $('#ProjectID').val() + ')" >' + dt[i].ParentVendorName + '</a>';
+
+                                us[i][1] = dt[i].Total;
+
+                               
+                            }
+                            $('#ProjectList').dataTable({
+                                "processing": true,
+                                "data": us,
+                                "drawCallback": function (settings) {
+                                    var tot = 0;
+                                    var curr = '';
+                                    $('#ProjectList tbody tr').each(function () {
+                                        var vl = parseFloat(replaceAll($(this).find('td:eq(1)').find('.totalval').text(),',',''));
+                                        tot += vl;
+                                        curr = $(this).find('td:eq(1)').find('.totalcurrency').text();
+                                      //  $(this).find('td:eq(1)').find('.totalval').text(formatNumber(vl));
+                                    });
+                                    var htm = isNaN(tot) ? '0' : formatNumber(tot) + " " + curr;
+                                    $('#ProjectList thead').find('tr:eq(1)').find('th:eq(1)').html(htm);
+                                    //console.log('DataTables has redrawn the table');
+                                },
+
+
+                                "columns":
+                                  [
+                                    { "title": "Vendor Common Name", "class": "leftposition" },
+
+                                    { "title": "Amount","class" : "rightposition" },
+                                  ],
+                                "initComplete": function () {
+
+                                    $('#ProjectList tbody tr').each(function () {
+                                        var vl = parseFloat($(this).find('td:eq(1)').find('.totalval').text());
+                                        tot += vl;
+                                        curr = $(this).find('td:eq(1)').find('.totalcurrency').text();
+                                        $(this).find('td:eq(1)').find('.totalval').text(formatNumber(vl));
+                                    });
+
+
+                                    $('#ProjectList_filter').remove();
+                                    $('#ProjectList_length').remove();
+                                }
+                            });
+                            var html = "";
+                            html = "<tr>"
+
+                                  + "<th class='leftposition' rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;font-family:Arial, FontAwesome' placeholder='&#xF002;' data-indx='0' type='text' ></th>"
+
+                              + "<th class='rightposition'>" + formatNumber(tot) + " " + curr + "</th>"
+                                  + "</tr>";
+
+                            $('#ProjectList thead').find('tr:eq(1)').remove();
+
+
+                            if (dt.length != 0) {
+                                $('#ProjectList thead').append(html);
+
+                            }
+
+
+
+                            var table = $('#ProjectList').DataTable();
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+                                table
+                                       .column(indx)
+                                       .search(txt)
+                                       .draw();
+
+                            });
+                        }
+                        else {
+                        }
+
+                    }
+                }
+            })
+        }
+        function Click(e, VendorID, ProjectID) {
+
+            e.preventDefault();
+
+            var obj = new Object();
+            obj.ProjectID = ProjectID;
+            obj.VendorID = VendorID;
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_GetPOFromProjectPage";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            //console.log(o);
+
+            var poids = '';
+
+            for (var a = 0; a < o.length; a++) {
+                poids += poids == '' ? o[a].PurchaseOrderID : "," + o[a].PurchaseOrderID;
+            }
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/POList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = urlchanger('PurchaseOrder/POList');
+            }
+
+            url += "?ID=" + poids;
+            window.open(url);
+
+        }
+        function Popup() {
+
+            $('#popupforTaxComment2').modal('show');
+
+            //$('#popupforTaxComment2').bPopup({
+            //    easing: 'easeOutBack', //uses jQuery easing plugin
+            //    speed: 450,
+            //    transition: 'slideDown',
+            //    modalColor: 'rgb(18, 54, 65)'
+            //});
+
+        }
+    </script>
+
+
+
+    <style type="text/css">
+        /** { margin: 0; padding: 0; }
+        body { font: 14px/1.4 Georgia, serif; }
+        #page-wrap { width: 600px; margin: 15px auto; }
+        p { margin: 0 0 15px 0; }
+        p:first-child { background: #fffcde; padding: 10px; }
+        #sidebar ul { background: #eee; padding: 10px; }
+        li { margin: 0 0 0 20px; }
+        #main { width: 390px; float: left; }*/
+        /*#sidebar { width: 190px; float: right; }*/
+        #sidebar {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+            z-index: 9999;
+        }
+        /*#sidebar ul { background: #eee; padding: 10px; }*/
+        /*li { margin: 0 0 0 20px; }*/
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $('.topmenutab').click(function () {
+                $('.topmenutab').removeClass('active');
+                $(this).addClass('active');
+            });
+        });
+    </script>
+
+    <style>
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+
+        label {
+            color: #333333;
+            font-weight: 500;
+            margin-bottom: 1px;
+        }
+
+        .section-header {
+            padding: 2px 4px;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .nav > li > a {
+            position: relative !important;
+            display: block !important;
+            padding: 4px 15px !important;
+           
+        }
+
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+            color: rgb(246, 251, 252) !important;
+            cursor: default;
+            background-color: #7792a8;
+            border: 1px solid #ddd;
+            border-bottom-color: transparent;
+            color: #7792a8;
+            font-size: 16.5px;
+        }
+
+        .fileinput-button {
+   
+    width: 42% !important;
+    height: 101px;
+    float: left;
+    border: #7d97ac 2px dashed;
+        line-height: 35px;
+   cursor : pointer;
+}
+        .previousfilelist{
+            /*float : none !important;    
+                margin-left: 43%;
+    width: 57%;
+    margin-top: 15px !important;*/
+
+             float: none !important;
+    margin-left: 42%;
+    width: 48%;
+    margin-top: 22px !important;
+
+          
+
+
+
+        }
+
+        .filesul{
+            float : left;
+            padding: 0px;
+            width: 134%;
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    @Html.Partial("CheckSession")
+
+    <input type="hidden" id="ProjectID" value ="@ViewBag.ProjectID" />
+    <input type="hidden" id="Isselected" value ="@ViewBag.Isactive" />
+    <input type="hidden" value="@ViewBag.UserType" id="UserType" />
+
+    <div id="paccountedit" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Edit Project Account</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <label>Account No.</label>
+                <input type="text" class="form-control" id="paccntno" />
+            </div>
+            <div class="col-sm-12">
+                <label>Account Desc.</label>
+                <input type="text" class="form-control" id="paccntdesc" />
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+          <input type="hidden" id="paccntid" />
+        <button type="button" class="btn btn-default" onclick="editpaccountsave();">Save</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+    
+
+    <div id="popupforvendorlist" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg" style="width:70%;">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">SHIP TO VENDORS</h4>
+                </div>
+                <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
+                    <table id="vendorlist" class="display  compact">
+                        <thead>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+  
+
+
+
+ 
+
+    <div class="container-fluid" id="angulardiv" ng-app="Project" ng-controller="Project" style="zoom: 0.95;">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header">Edit Project</h3>
+            </div>
+        </div>
+
+
+
+
+
+        <div class="row mrg10B">
+
+
+
+            <div class="col-sm-4">
+                <h3 class="body-header" style="font-weight: 700; font-size: 15px;">Project Number : @ViewBag.getProjectNumber</h3>
+            </div>
+            <div class="col-sm-8 displaynone"  id="tcg_staff">
+                <div class="form-inline text-right">
+                    <div class="form-group" onclick="Popup();">
+                        <label style="cursor:pointer;">
+                            <u>PTD Purchases:
+                            </u>&nbsp;
+                    <span style="border: 1px solid #208093; padding: 5px;" id="ytdpurchasenumber" data-firstdate="@ViewBag.DateAdded">
+
+                        @ViewBag.TotalValues
+                    </span>
+                        </label>
+
+                        <input type="button" id="btn_YtdPchs" value="Click to get YTD Purchase History" onclick="Popup();" style="display: none;" class="form-group" />
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+        <div class="row">
+
+            <div class="col-sm-4">
+                <div class="col-sm-6">
+                    <div class="form-group req">
+                        <label>Project Name</label>
+                        <input type="text" class="form-control text-uppercase" id="txt_ProjectName" ng-model="User.ProjectName" tabindex="1" />
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Legal Name</label>
+                        <input type="text" class="form-control text-uppercase" id="txt_LegalName" ng-model="User.LegalName" tabindex="2" />
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="col-sm-4">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button class="btn btn-block btn-primary" onclick="projectteam();" style="height:25px;padding:2px;"><i class="fa fa-users mrg5R"></i>Project Team</button>
+
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button class="btn btn-block btn-primary" onclick="openvendors(this);" style="height:25px;padding:2px;"><i class="fa fa-bars mrg5R"></i>Ship To Vendors</button>
+
+                    </div>
+                </div>
+
+            </div>
+
+             <div class="col-sm-4" style="margin-top: 22px;padding-left: 20px;">
+                   <input type="checkbox" id="bridgesupporter" />
+                   <label for="bridgesupporter">Bridge Supporter Project</label>
+                   
+               </div>
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+        <div class="row">
+            <div class="col-sm-4">
+
+                <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Hotel</h3>
+                </div>
+
+
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea class="form-control no-resize" rows="4" id="txt_HotelAddr" ng-model="User.HotelAddr"></textarea>
+                    </div>
+
+
+
+
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Country</label>
+                        <select id="Ddl_HotelCountry" name="Ddl_HotelState" onchange="GetCtryIDForProject(this);" class="form-control">
+                            @Html.Raw(ViewData["GetAllCountry"])
+                        </select>
+
+                    </div>
+                    <div class="form-group">
+                        <label>State/Prov</label>
+
+                        <select id="Ddl_HotelState" class="form-control">
+                            <option value="0">--Select State/Prov--</option>
+                        </select>
+
+                    </div>
+                </div>
+
+
+                <div class="col-sm-6">
+                    <label>City</label>
+                    <input type="text" class="form-control" id="txt_HotelCity" ng-model="User.HotelCity">
+                </div>
+
+                <div class="col-sm-6" >
+
+                    <div class="form-group">
+                        <label>Postal/Zip Code</label>
+                        <input type="text" class="form-control postalcode" id="txt_HotelZipCode" ng-model="User.HotelZipCode">
+                    </div>
+
+
+                </div>
+
+
+
+
+
+
+
+
+
+            </div>
+
+            @*<div class="col-sm-4" style="max-height: 214px; overflow-y: auto;">*@
+            <div class="col-sm-4">
+                <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Owner</h3>
+                </div>
+
+
+
+
+                <div class="col-sm-6">
+                  
+                        <label>Address</label>
+                        <textarea class="form-control no-resize" rows="4" id="txt_OwnerAddr" ng-model="User.OwnerAddr"></textarea>
+                   
+
+                   
+                      
+                   
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="col-sm-6">
+
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Country</label>
+
+                            <select id="Ddl_OwnerCountry" name="Ddl_OwnerState" onchange="GetCtryIDForProject(this);" class="form-control">
+                                @Html.Raw(ViewData["GetAllCountry"])
+                            </select>
+
+
+
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>State/Prov</label>
+                            <select id="Ddl_OwnerState" onchange="GetStateID(this);" class="form-control">
+                                <option value="0">--Select State/Prov--</option>
+                            </select>
+
+                        </div>
+                    </div>
+                   
+
+                </div>
+
+                <div class="col-sm-6">
+                    <label>City</label>
+                    <input type="text" class="form-control" id="txt_OwnerCity" ng-model="User.OwnerCity">
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Postal/Zip Code</label>
+                        <input type="text" class="form-control postalcode" id="txt_OwnerZipCode" ng-model="User.OwnerZipCode">
+                    </div>
+                </div>
+
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label>Telephone</label>
+                        <input type="text" class="form-control" id="txt_OwnerMobile" ng-model="User.AccountingPhone" />
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Ext.</label>
+                        <input type="text" class="form-control" id="txt_OwnerPhoneExtension" ng-model="User.AccountingPhoneExtension">
+                    </div>
+                </div>
+                <div class="col-sm-5">
+
+                    <label>Fax</label>
+                    <input type="text" class="form-control" id="txt_OwnerFax" ng-model="User.AccountingFax">
+                </div>
+
+            </div>
+
+            <div class="col-sm-4">
+
+                <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Key Dates</h3>
+                </div>
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Warehouse Required Date</label>
+                        <input type="text" class="form-control" id="txt_WareHouseReqDate" ng-model="User.WareHouseReqDate" placeholder="MM DD YYYY" onkeypress="return AvoidKeyPress(event);">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Install Date</label>
+                        <input type="text" class="form-control" id="txt_InstallDate" ng-model="User.InstallDate" placeholder="MM DD YYYY" onkeypress="return AvoidKeyPress(event);">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Completion Date</label>
+                        <input type="text" class="form-control" id="txt_CompletionDate" ng-model="User.CompletionDate" placeholder="MM DD YYYY" onkeypress="return AvoidKeyPress(event);">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Opening Date</label>
+                        <input type="text" class="form-control" id="txt_OpeningDate" ng-model="User.OpeningDate" placeholder="MM DD YYYY" onkeypress="return AvoidKeyPress(event);">
+                    </div>
+                </div>
+
+
+
+
+                <div class="col-sm-12 mrg10T">
+                    <h3 class="section-header">Client Reports</h3>
+                </div>
+
+
+
+                <div class="col-sm-3">
+                    <label for="chkBudgetReport">Budget</label>
+                    <input type="checkbox" id="chkBudgetReport" />
+                </div>
+                <div class="col-sm-3">
+                    <label for="chkPurchaseReport">Purchase</label>
+                    <input type="checkbox" id="chkPurchaseReport" />
+                </div>
+                <div class="col-sm-3">
+                    <label for="chkStatusReport">Status</label>
+                    <input type="checkbox" id="chkStatusReport" />
+                </div>
+                <div class="col-sm-3">
+                    <label for="chkAccountingReport">Accounting</label>
+                    <input type="checkbox" id="chkAccountingReport" />
+                </div>
+
+
+
+                <div class="col-sm-6">
+                    <label style="float: right;">Reporting Requirements:</label>
+
+                    @*<textarea class="form-control no-resize" rows="1" id="txt_OwnerReqmnt" ng-model="User.ProjectCmt"></textarea>*@
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" id="txt_OwnerReqmnt" ng-model="User.ProjectCmt" />
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4">
+
+                <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Invoice</h3>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea class="form-control no-resize" rows="4" id="txt_InvAddr" ng-model="User.InvAddr"></textarea>
+                    </div>
+                   
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Country</label>
+
+                        <select class="form-control" id="Ddl_InvCountry" name="Ddl_InvState" onchange="GetCtryIDForProject(this);">
+                            @Html.Raw(ViewData["GetAllCountry"])
+                        </select>
+
+
+                    </div>
+                    <div class="form-group">
+                        <label>State/Prov</label>
+
+                        <select id="Ddl_InvState" class="form-control">
+                            <option value="0">--Select State/Prov--</option>
+                        </select>
+                    </div>
+                   
+                </div>
+
+                <div class="col-sm-6">
+                    <label>City</label>
+                    <input type="text" class="form-control" id="txt_InvCity" ng-model="User.InvCity">
+                </div>
+
+                <div class="col-sm-6">
+                    <label>Postal/Zip Code</label>
+                    <input type="text" class="form-control postalcode" id="txt_InvZipCode" ng-model="User.InvZipCode">
+                </div>
+
+            </div>
+            <div class="col-sm-4">
+
+                <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Accounting</h3>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Contact</label>
+                        <input type="text" class="form-control" id="txt_AccountingContact" ng-model="User.AccountingContact" />
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" class="form-control" id="txt_AccountingEmail" ng-model="User.AccountingEmail">
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label>Telephone</label>
+                        <input type="text" class="form-control phonenumber" id="txt_AccountingPhone" ng-model="User.AccountingPhone">
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>Ext.</label>
+                        <input type="text" class="form-control" id="txt_AccountingPhoneExtension" ng-model="User.AccountingPhoneExtension">
+                    </div>
+                </div>
+                <div class="col-sm-5">
+
+                    <label>Fax</label>
+                    <input type="text" class="form-control" id="txt_AccountingFax" ng-model="User.AccountingFax">
+                </div>
+                <div class="col-sm-6">
+
+                    <label>Federal ID</label>
+                    <input type="text" class="form-control" id="txt_FederalID" ng-model="User.FederalID">
+                </div>
+                <div class="col-sm-6">
+
+                    <label>Currency Code</label>
+                    <select id="ddl_CurrencyCode" class="form-control">
+                        @Html.Raw(ViewData["GetAllCurency"])
+                    </select>
+
+
+
+                </div>
+
+
+
+            </div>
+
+            <div class="col-sm-4">
+                <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Taxes</h3>
+                </div>
+
+
+                <div class="col-sm-6">
+                    <label>Name</label>
+                    <input type="text" class="form-control" id="txt_GSTLblShw" maxlength="12">
+                </div>
+                <div class="col-sm-6">
+                    <label>Rate (%)</label>
+                    <input type="text" class="form-control floatonly" id="txt_GST" ng-model="User.GST" onkeypress="return IsNumber(event);">
+                </div>
+                <div class="col-sm-6">
+                    <label>Name</label>
+                    <input type="text" class="form-control" id="txt_PSTLblShw" maxlength="12">
+                </div>
+                <div class="col-sm-6">
+                    <label>Rate (%)</label>
+                    <input type="text" class="form-control floatonly" id="txt_PST" ng-model="User.PST" onkeypress="return IsNumber(event);">
+                </div>
+                <div class="col-sm-6">
+                    <label>Name</label>
+                    <input type="text" class="form-control" id="txt_StateTxLblShw" maxlength="12">
+                </div>
+                <div class="col-sm-6">
+                    <label>Rate (%)</label>
+                    <input type="text" class="form-control floatonly" id="txt_StateTax" ng-model="User.StateTax" onkeypress="return IsNumber(event);">
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+
+        <div class="row">
+
+
+
+
+
+            <div class="col-sm-4">
+
+                <ul class="nav nav-tabs mrg15T">
+                    <li class="active"><a data-toggle="tab" href="#projectaccnttab">Project Accounts</a></li>
+                    <li><a data-toggle="tab" href="#banktaccnttab" onclick="getprojectbankaccounts();">Bank Accounts</a></li>
+                    <li><div id="divQBSLoading"></div></li>
+                </ul>
+
+                @*<div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Project Accounts</h3>
+                </div>*@
+
+
+
+
+                <div class="tab-content">
+                    <div id="projectaccnttab" class="tab-pane fade in active">
+                        <div class="col-sm-12" style="max-height: 230px; overflow-y: auto;">
+                            <div class="col-sm-6">
+
+                                <label>Account Number:</label>
+                                <input type="text" id="newProjectAccounts" class="form-control" />
+
+                                <label class="mrg10T">Account Description:</label>
+                                <input type="text" id="newProjectAccountsdesc" class="form-control" />
+
+
+                                <input type="button" value="Add New" class="btn btn-primary mrg10T mrg10B" onclick="addProjectAccountsnew();" tabindex="43" />
+                                <input type="button" value="Update Account Balance" class="btn btn-primary mrg10T mrg10B" onclick="getProjectAccountBalance();" tabindex="44" />
+
+                            </div>
+
+                            <div class="col-sm-6 mrg5T">
+                                <div id="ProjectAccounts"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="banktaccnttab" class="tab-pane fade">
+
+                        <div class="row">
+
+
+                        <div class="col-sm-8 mrg10T">
+                            <select style="height: 25px;" id="ddl_bank" onchange="changeaccntddl();" multiple="multiple" class="form-control"></select>
+                        </div>
+
+                        <div class="col-sm-4 mrg5T">
+                            <input type="button" id="addaccntbtn" onclick="addnewbankaccount();" class="btn btn-poms displaynone" value="Add New Account" />
+                        </div>
+</div>
+
+                         <div class="row">
+                        <div class="col-sm-4">
+                          <input type="button" value="Update Account Balance" class="btn btn-primary mrg10T mrg10B" onclick="getBankAccountBalance();" tabindex="44" />
+                            </div>
+
+                        <div class="col-sm-12 mrg10T" id="selectedbanks">
+                        </div>
+                             </div>
+
+
+
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+
+            <div class="col-sm-4">
+
+
+                <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Conversion Rates</h3>
+                </div>
+
+                <div class="col-sm-12" style="max-height: 230px; overflow-y: auto;">
+
+                    <div class="col-sm-6">
+                        <label>Currency</label>
+                        <select class="form-control" id="ddl_cnvcurrency">
+                            @Html.Raw(ViewData["GetAllCurency"])
+                        </select>
+
+                        <label>Exchange Rate</label>
+                        <input type="text" class="floatonly form-control" id="txt_convrate" />
+
+
+                        <button class="btn btn-primary mrg10T mrg10B" onclick="addconvrate();">Add New</button>
+
+
+
+                    </div>
+
+                    <div class="col-sm-6 mrg5T" id="ProjectConvRates">
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+
+
+            <div class="col-sm-4">
+
+
+
+                <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Project Files</h3>
+                </div>
+
+                <div class="col-sm-12" style="max-height: 230px; overflow-y: auto; zoom: 0.75;">
+                    <div class="col-sm-12">
+
+
+                        <fieldset>
+                            <legend>Installation Schedule File</legend>
+                            <div class="upload-verify-container">
+                                <div class="button-container">
+                                    <span class="btn fileinput-button">
+                                        <!-- The file input field used as target for the file upload widget -->
+                                       Drop a file or click <br /> here to upload!
+                                    <input id="fileupload_Edt3" type="file" name="files[]" multiple class="upload-button-drag-style" />
+                                    </span>
+                                    <p style="float: left; clear: left; display:none;">
+                                        Files selected&nbsp;:&nbsp;
+                                    </p>
+                                    <ul class="filelist" style="float: left;">
+                                    </ul>
+                                    <p style="float: left;">
+                                        Attached Files&nbsp;:&nbsp;
+                                    </p>
+                                    <ul class="previousfilelist" style="float: left;">
+                                    </ul>
+                                </div>
+                            </div>
+                        </fieldset>
+
+
+                    </div>
+                    <div class="col-sm-12">
+                        <fieldset>
+                            <legend align="left">Terms Files</legend>
+
+                            <div class="upload-verify-container">
+                                <div class="button-container">
+                                    <!-- Button to select & upload files -->
+                                    <span class="btn fileinput-button">
+                                        <!-- The file input field used as target for the file upload widget -->
+                                        Drop a file or click <br /> here to upload!
+                                    <input id="fileupload_Edt2" type="file" name="files[]" multiple class="upload-button-drag-style" />
+                                    </span>
+                                    <!-- The global progress bar -->
+                                    <!-- The list of files uploaded -->
+                                    <p style="float: left; clear: left; display:none;">
+                                        Files selected&nbsp;:&nbsp;
+                                    </p>
+                                    <ul class="filelist" style="float: left;">
+                                    </ul>
+                                    <p style="float: left;">
+                                        Attached Files&nbsp;:&nbsp;
+                                    </p>
+                                    <ul class="previousfilelist" style="float: left;">
+                                    </ul>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                    </div>
+                    
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Project Attachments (Select to make available as PO attachment)</h3>
+                </div>
+            <div class="col-sm-12">
+                        <fieldset style="width:45%;float:left;">
+                            <legend align="left">Project Attachments</legend>
+
+                            <div class="upload-verify-container">
+                                <div class="button-container">
+                                    <!-- Button to select & upload files -->
+                                    <span class="btn fileinput-button" style="width:100% !important;">
+                                        <!-- The file input field used as target for the file upload widget -->
+                                        Drop a file or click<br /> here to upload!
+                                            <input id="fileupload_Edt" type="file" name="files[]" multiple class="upload-button-drag-style" />
+                                    </span>
+                                    <!-- The global progress bar -->
+                                    <!-- The list of files uploaded -->
+                                    
+                                </div>
+                            </div>
+                        </fieldset>
+
+                <div style="float:left;" class="col-sm-6 mrg15T" id="projectfilelistdiv">
+                   @* <p style="float: left; clear: left; display:none;">
+                                        Files selected&nbsp;:&nbsp;
+                                    </p>*@
+                                    @*<ul class="filelist" style="float: left;">
+                                    </ul>*@
+
+                                   
+                                   @* <p style="margin-left:53px;">Select to make available as PO attachment</p>*@
+                                      <input type="text" style="margin-left:53px;width:300px;" placeholder="search attachments" onkeyup="searchprojectatt(this);" />
+                                    <label style="margin-left:5px;"><input type="checkbox" onchange="checkuncheckpfiles(this);" /> Check/Uncheck all</label>
+                                    
+                                    <ul class="previousfilelist" style="float: left;max-height: 120px;float: left;position: relative;overflow-y: auto;overflow-x: hidden;float: none !important;margin-left: 10px;width: 100%;margin-top: 10px !important;">
+                                    </ul>
+
+                </div>
+
+                    </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Purchase Order Comments</h3>
+                </div>
+                <div class="col-sm-12" style="max-height: 230px; overflow-y: auto;">
+
+                    <div class="form-group">
+                        <label>Comment</label>
+                        <label class="pull-right" onclick="loadComments();"><a href="javascript:void(0);">PO Comment List</a></label>
+                        <textarea class="form-control no-resize" onfocus="bigger();" onblur="lesser();" id="txt_PrchsOrdrCmmnts" style="height: auto;" placeholder="Purchase Order Comments" rows="4"></textarea>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-sm-6">
+
+
+
+                <div class="col-sm-12">
+                    <h3 class="section-header mrg15T">Project Comments</h3>
+                </div>
+
+
+
+                <select style="display: none;" id="Ddl_Clftion" multiple="multiple">
+                </select>
+                <input style="display: none;" type="button" value="Add to Project" class="btn btn-primary" onclick="addcomment();" />
+                <div class="col-sm-6">
+                    <label>Enter Comment</label>
+                    <textarea id="newcomment" class="form-control"></textarea>
+                    <input type="button" class="btn btn-primary mrg10T mrg10B" value="Add New" onclick="addcommentnew();" tabindex="41" />
+                </div>
+                <div class="col-sm-6" style="    margin-top: 20px;">
+                    <div id="ProjectComments"></div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+
+
+
+        <div class="row displaynone">
+            <div class="col-sm-12">
+                <h3 class="section-header mrg15T">Project Comment</h3>
+            </div>
+        </div>
+
+        <div class="row displaynone">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label>Project Comment</label>
+                    <label class="pull-right"><a href="#">Po Comment List</a></label>
+                    <textarea class="form-control no-resize" rows="4" id="txt_ProjectCmt" ng-model="User.ProjectCmt"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: none;">
+
+            <div class="user_panel_container">
+                <label>Number of User Approve Budget</label>
+                <select id="ddl_NoUserAppvBdgt">
+                    <option value="1">01</option>
+                    <option value="2">02</option>
+                    <option value="3">03</option>
+                    <option value="4">04</option>
+                    <option value="5">05</option>
+                    <option value="6">06</option>
+                    <option value="7">07</option>
+                    <option value="8">08</option>
+                    <option value="9">09</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+
+            <div class="user_panel_container">
+                <label>Number of User Approve PO</label>
+                <select id="ddl_NoUserAppvPO">
+                    <option value="1">01</option>
+                    <option value="2">02</option>
+                    <option value="3">03</option>
+                    <option value="4">04</option>
+                    <option value="5">05</option>
+                    <option value="6">06</option>
+                    <option value="7">07</option>
+                    <option value="8">08</option>
+                    <option value="9">09</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+
+
+            <div class="user_panel_container">
+                <label>Client</label>
+                <select id="txt_Client">
+
+                    <option value="0" name="txt_Client_0">--Select Client/Operator--</option>
+                    @Html.Raw(ViewData["getClientOpt"])
+                </select>
+            </div>
+
+            <div class="user_panel_container">
+                <label>Manager</label>
+                <select id="txt_Manager">
+
+                    <option value="0" name="txt_Client_0">--Select PC Staff--</option>
+                    @Html.Raw(ViewData["getPCStaff"])
+                </select>
+            </div>
+
+            <div class="user_panel_container">
+                <label>Development Information</label>
+                <input type="text" id="txt_DevInfo" ng-model="User.DevInfo" />
+            </div>
+
+
+
+            <div class="user_panel_container">
+                <label>Project Scope</label>
+                <textarea id="txt_ProjectScope" ng-model="User.ProjectScope"></textarea>
+            </div>
+
+            <div class="user_panel_container">
+                <label>Owner Name</label>
+                <input type="text" id="txt_OwnerName" ng-model="User.OwnerName" />
+            </div>
+
+
+
+            <div class="user_panel_container">
+                <label>Owner Contact</label>
+                <input type="text" id="txt_OwnerContact" ng-model="User.OwnerContact" />
+            </div>
+
+            <div class="user_panel_container">
+                <label>Owner Notes</label>
+                <textarea id="txt_OwnerNote" ng-model="User.OwnerNote"></textarea>
+            </div>
+
+            <div class="user_panel_container">
+                <label>Owner Fax</label>
+                <input type="text" id="txt_OwnerFax1" ng-model="User.OwnerFax" />
+            </div>
+
+            <div class="user_panel_container">
+                <label>Owner Email</label>
+                <input type="text" id="txt_OwnerEmail" ng-model="User.OwnerEmail" />
+            </div>
+
+            <div class="user_panel_container">
+                <label>Owner Mobile</label>
+                <input type="text" id="txt_OwnerMobile1" ng-model="User.OwnerMobile" />
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <hr>
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header mrg15T">Project Contact List</h3>
+                <div style="width: 100%; overflow-x: auto;">
+                    <table id="projectcontacts" style="zoom: 0.95;" class="display  compact table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th style="width: 5%;"></th>
+                                <th style="width: 9%;"></th>
+                                <th style="width: 9%;"></th>
+                                <th style="width: 14%;"></th>
+                                <th style="width: 9%;"></th>
+                                <th style="width: 7%;"></th>
+                                <th style="width: 9%;"></th>
+                                <th style="width: 9%;"></th>
+                                <th style="width: 9%;"></th>
+                                <th style="width: 9%;"></th>
+                                <th style="width: 14%;"></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+
+
+
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+
+    <div id="popupforTaxComment2" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">PTD Breakdown</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>From</label>
+                            <input type="text" id="Date_Range" class="form-control" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label>To</label>
+                            <input type="text" id="To_Date" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table cellpadding="0" cellspacing="0" border="0" class="display" id="ProjectList" style="text-align: center;">
+                                <thead>
+                                    <tr>
+                                        <th  class='leftposition'>Vendor Common Name</th>
+                                        @*  <th>Project Name</th>*@
+                                        <th  class='rightposition'>Amount (Currency)</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+    <div class="float-panel-container">
+        <ul>
+            <li id="btn_UpdateProject" title="Update Project" ><a href="javascript:void(0);"><i class="fa fa-save mrg5R" data-toggle="tooltip"></i><span class="tooltip-toggle">Update Project</span></a></li>
+            <li onclick="addcontact();" title="Add Contact" ><a href="javascript:void(0);"><i class="fa fa-plus-square"data-toggle="tooltip"></i><span class="tooltip-toggle">Add Contact</span></a></li>
+            <li onclick="projectlist();"  title="Cancel"><a href="javascript:void(0);"><i class="fa fa-remove" data-toggle="tooltip"></i><span class="tooltip-toggle">Cancel</span></a></li>
+
+        </ul>
+    </div>
+
+
+
+    @*<div class="sidebar_btn" style="margin-top:13%;">
+                <ul>
+                    <li>
+                        <a href="javascript:void(0);" class="hvr-icon-save" title="Update Project" id="btn_UpdateProject"></a>
+                    </li> 
+                    <li>
+                        <a href="javascript:void(0);" class="hvr-icon-cancel resetbtn" title="Cancel" onclick="projectteam();"></a>
+                    </li>                                                          
+                </ul>
+            </div>*@
+
+
+    <div id="poListPopUp" class="modal fade" role="dialog">
+
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">PO Comment List</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-12" style="max-height: 400px; overflow: scroll;">
+                                <table id="POLists" class="display  compact" style="width: auto;">
+                                    <thead>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </thead>
+                                </table>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @*<button type="button" class="btn btn-default" onclick="sendmailtovendor();" id="mailsendvendorbtn">Send Mail</button>*@
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function checkuncheckpfiles(obj) {
+            var flag = $(obj).is(':checked') ? true : false;
+            obj = $(obj).parent();
+            
+            $('#projectfilelistdiv').find('.previousfilelist').find('ul').each(function () {
+                $('.downloadablefile').prop('checked', flag);
+            });
+        }
+
+
+        function searchprojectatt(obj) {
+            var vl = $(obj).val().toUpperCase();
+            $('#projectfilelistdiv').find('.previousfilelist').find('ul').each(function () {
+                
+                var fname = $(this).find('a').text().toUpperCase();
+                if (fname.indexOf(vl) >= 0) {
+                    $(this).removeClass('displaynone');
+                }
+                else {
+                    $(this).addClass('displaynone');
+
+                }
+                //console.log(fname);
+            });
+            //console.log(vl);
+        }
+        function bigger() { window.setTimeout(function () { auto_grow($('#txt_PrchsOrdrCmmnts')); }, 500); }
+
+        function lesser() { window.setTimeout(function () { $('#txt_PrchsOrdrCmmnts').css('height','auto'); }, 500); }
+    $(document).ready(function () {
+
+
+       
+        
+
+
+        var utype = $('#UserType').val();
+
+        //if (utype != "3") {
+        //    $('#tcg_staff').remove();
+        //}
+        //else {
+
+        //    $('#tcg_staff').show();
+        //}
+
+        $('#tcg_staff').show();
+
+        clicknew();
+        $(document).on('click', '.paginate_button', function () {
+            RowHtmlRender();
+        });
+    });
+
+    function getBankAccountBalance() {
+
+        $('.balanceclass2').remove();
+        $('#selectedbanks').find('span').find('span').append('<i class="fa fa-spinner fa-spin mrg10L" aria-hidden="true"></i>');
+
+        setTimeout(function () {
+            getbalancebank(0);
+        }
+        , 300);
+
+    }
+
+    function getbalancebank(i) {
+
+
+        var obj = $('.bankaccount:eq(' + i + ')');
+        var name = $(obj).attr('data-name');
+
+        var url = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/QuickBook/CheckBankAccount';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'QuickBook/CheckBankAccount';
+        }
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "{ 'name': '" + name + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                $(obj).find('i').remove();
+                $(obj).append('<span class="balanceclass2"> --- ' + data.split('^^^')[0] + "</span>");
+                //console.log(data);
+                setTimeout(function () {
+                    i++;
+                    if (i < $('.bankaccount').length) {
+                        getbalancebank(i);
+                    }
+                }, 300);
+
+
+            }
+        });
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+    function getProjectAccountBalance() {
+
+        $('.balanceclass').remove();
+        $('#ProjectAccounts').find('span').find('span').append('<i class="fa fa-spinner fa-spin mrg10L" aria-hidden="true"></i>');
+
+        setTimeout(function () {
+            getbalance(0);
+            }
+        , 300);
+        
+    }
+
+    function getbalance(i) {
+        
+        
+        var obj = $('.accountclass:eq(' + i + ')');
+        var name = $(obj).attr('data-accountnumber');
+                
+        var url = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/QuickBook/CheckBankAccount';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'QuickBook/CheckBankAccount';
+        }
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "{ 'name': '" + name + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                $(obj).find('span:eq(0)').find('i').remove();
+                $(obj).find('span:eq(0)').append('<span class="balanceclass"> --- ' + data.split('^^^')[0] + "</span>");
+                //console.log(data);
+                setTimeout(function () {
+                    i++;
+                    if (i < $('.accountclass').length) {
+                        getbalance(i);
+                    }
+                }, 300  );
+
+
+            }
+        });
+
+
+
+
+
+        
+
+    }
+
+    function clicknew() {
+        $(document).ready(function () {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/GetProjectContactDetailJSON';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/GetProjectContactDetailJSON';
+            }
+            var pid = $('#ProjectID').val();
+
+            if (pid == '') {
+                return;
+            }
+
+            url1 += "?ProjectContactID=" + pid;
+            var totdata;
+            $.get(url1)
+                .success(function (response) {
+                    var project;
+                    totdata = JSON.parse(response);
+                    // //console.log(totdata);
+                    var project = new Array();
+                    for (i = 0; i < totdata.length ; i++) {
+                        project[i] = new Array();
+                        project[i][0] = totdata[i].ProjectContact_ID;// Convert.ToString(dr["ProjectContact_ID"]);
+                        project[i][1] = "";
+                        project[i][2] = totdata[i].ContactType_ID;
+                        project[i][3] = totdata[i].ContactName;// Convert.ToString(dr["ContactName"]);
+                        project[i][4] = totdata[i].Address;// Convert.ToString(dr["Address"]);
+                        project[i][5] = totdata[i].City;// Convert.ToString(dr["City"]);
+                        project[i][6] = totdata[i].State;// Convert.ToString(dr["State"]);
+                        project[i][7] = totdata[i].Country;// Convert.ToString(dr["Country"]);
+                        project[i][8] = totdata[i].Telephone;// Convert.ToString(dr["Telephone"]);
+                        project[i][9] = totdata[i].MobilePhone;// Convert.ToString(dr["MobilePhone"]);
+                        project[i][10] = totdata[i].Fax;// Convert.ToString(dr["Fax"]);
+                        project[i][11] = totdata[i].Email;// Convert.ToString(dr["Email"]);
+                        project[i][12] = totdata[i].DateCreate;// Convert.ToString(dr["DateCreate"]);
+                        // Convert.ToString(dr["ContactType_ID"]);
+                        project[i][13] = totdata[i].ProjectID;// Convert.ToString(dr["ProjectID"]);
+                        project[i][14] = totdata[i].Status;// Convert.ToString(dr["Status"]);
+                    }
+                    $('#projectcontacts').dataTable({
+                        "processing": true,
+                        "data": project,
+                        "columns": [
+                            { "title": "ProjectContact_ID", "class": "displaynone" },
+                            { "title": "Action" },
+                            { "title": "Contact Type" },
+                            { "title": "Contact Name" },
+                            { "title": "Address" },
+                            { "title": "City" },
+                            { "title": "State/Prov" },
+                            { "title": "Country" },
+                            { "title": "Telephone" },
+                            { "title": "Mobile" },
+                            { "title": "Fax" },
+                            { "title": "Email" },
+                            { "title": "DateCreate", "class": "displaynone" },
+
+                            { "title": "ProjectID", "class": "displaynone" },
+                            { "title": "Status", "class": "displaynone" }
+                        ]
+                        ,
+                        "initComplete": function () {
+                            RowHtmlRender();
+                        },
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0, 1] }
+                        ]
+                    });
+                    var html = "";
+
+                    //$('#projectcontacts tfoot th').each(function () {
+                    //    var title = $('#example thead th').eq($(this).index()).text();
+                    //    $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+                    //});
+
+                    html = "<tr>"
+                    + "<th  rowspan='1' colspan='1'><input type='button' value='Reset' onclick='ResetSearch();' /></th>"
+                    + "<th  rowspan='1' colspan='1'><input class='srch' data-indx='2'    style='width: 100%;font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;'></th>"
+                    + "<th  rowspan='1' colspan='1'><input class='srch' data-indx='3' style='width: 100%;font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;'></th>"
+                    + "<th  rowspan='1' colspan='1'><input class='srch' data-indx='4' style='width: 100%;font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;'></th>"
+                    + "<th rowspan='1' colspan='1'><input class='srch' data-indx='5'  style='width: 100%;font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;'></th>"
+                    + "<th rowspan='1' colspan='1'><input class='srch' data-indx='6'  style='width: 100%;font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;'></th>"
+                    + "<th rowspan='1' colspan='1'><input class='srch' data-indx='7'  style='width: 100%;font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;'></th>"
+                    + "<th rowspan='1' colspan='1'><input class='srch' data-indx='8'  style='width: 100%;font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;'></th>"
+                    + "<th rowspan='1' colspan='1'><input class='srch' data-indx='9'  style='width: 100%;font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;'></th>"
+                    + "<th rowspan='1' colspan='1'><input class='srch' data-indx='10'  style='width: 100%;font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;'></th>"
+                    + "<th rowspan='1' colspan='1'><input class='srch' data-indx='11'  style='width: 100%;font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;'></th>"
+
+                    + "</tr>";
+
+                    // $('#projectcontacts').find("tr:eq(1)").find("th:eq(1)").html("<a><input type='button' value='Reset' onclick='ResetContactSearch();' style='margin-bottom:6px;' /></a>");
+                    //
+
+                    $('#projectcontacts').on('draw.dt', function () {
+
+                        RowHtmlRender();
+                    });
+                    $('#projectcontacts thead').append(html);
+                    var table = $('#projectcontacts').DataTable();
+                    $('.srch').on('keyup change', function () {
+                        var indx = $(this).attr('data-indx');
+                        var txt = this.value;
+                        table
+                               .column(indx)
+                               .search(txt)
+                               .draw();
+                        RowHtmlRender();
+                    });
+                });
+
+
+        });
+    }
+    function RowHtmlRender() {
+        // $('#project thead tr').find("th:eq(1)").html('Action').removeClass('sorting_asc');
+
+
+
+        $('#POLists_filter').css('display', 'none');
+
+        $('#projectcontacts_filter').css('display', 'none');
+        $('#projectcontacts tbody tr').find("td:eq(1)").each(function () {
+            var pid = $(this).prev("td").html();
+            //var zz = $(this).html();
+            var html = '';
+
+            var isseletcted = 1;//$('#Isselected').val();
+            if (isseletcted != "0") {
+
+                html = '<i title="Edit Purchase Order" class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;margin-left:5px;" onclick="EditProjectContact(this,\'' + pid + '\');"></i>';
+                html += '<i title="Delete Purchase Order" class="fa fa-trash-o fa-fw mrg5L" style="font-size: 1.5em;cursor:pointer;margin-left:5px;" onclick="DeleteProjectContact(this,\'' + pid + '\');"></i>';
+
+                //html = '<input type="button" value="" onclick="EditProjectContact(this,\'' + pid + '\');" style="margin-bottom:6px;" data-id="' + pid + '" class="buttonedit" />';
+                //html += '<input type="button" value="" onclick="DeleteProjectContact(this,\'' + pid + '\');" style="margin-bottom:6px;" data-id="' + pid + '" class="buttondelete" />';
+                $(this).html(html);
+            }
+        });
+
+
+
+    }
+    function ResetSearch() {
+
+        var table = $('#projectcontacts').DataTable();
+        $('.srch').each(function () {
+            this.value = '';
+            var indx = $(this).attr('data-indx');
+            var txt = this.value;
+            table
+                   .column(indx)
+                   .search(txt)
+                   .draw();
+        });
+
+        RowHtmlRender();
+
+    }
+    $(function () {
+        $(document).on('change', 'select[name="projectcontacts_length"]', function () {
+            RowHtmlRender();
+        });
+    });
+    function EditProjectContact(obj, pid) {
+        var prid = $('#ProjectID').val();
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/Project/EditProjectContact/' + pid;
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = '/Project/EditProjectContact/' + pid;
+        }
+        window.location.href = url1 + "?Projectid=" + prid;
+    }
+
+
+    function DeleteProjectContact(obj, pid) {
+        var rw = $(obj).parent().parent();
+        // //console.log(rw);
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/Project/DeleteProjectContact';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'Project/DeleteProjectContact';
+        }
+
+
+        $.ajax({
+            type: "POST",
+            url: url1,
+            async: false,
+            dataType: "text",
+            contentType: "application/json; charset=utf-8",
+            data: "{ 'ProjectID' : '" + pid + "'}",
+            success: function (data) {
+                if (data == 'SUCCESS') {
+                    var table = $('#projectcontacts').DataTable();
+                    table
+                    .row(rw)
+                    .remove()
+                    .draw();
+                    RowHtmlRender();
+                }
+            },
+            error: function () {
+                alert('Something went wrong.');
+            }
+        });
+
+
+
+    }
+
+
+
+    </script>
+    <script type="text/javascript">
+
+    function addcontact() {
+
+        var id = $('#ProjectID').val();
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/Project/projectcontacts/' + id;
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = '/Project/projectcontacts/' + id;
+        }
+
+
+        window.location = url1;
+
+
+    }
+
+    function projectteam() {
+
+        var id = $('#ProjectID').val();
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/Project/Projectteam/' + id;
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = '/Project/Projectteam/' + id;
+        }
+        window.location = url1 + "?n=" + encodeURIComponent($('#txt_ProjectName').val());
+
+
+    }
+
+    function projectlist() {
+
+        var id = $('#ProjectID').val();
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/Project/Projectlist'; ///' + id;
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = '/Project/Projectlist';// + id;
+        }
+        window.location = url1;
+
+
+    }
+
+    </script>
+    <script type="text/javascript">
+
+    function delobject1(val, obj) {
+        delete filedata[val];
+        $(obj).parent().remove();
+    }
+    function delobject2(val, obj) {
+        delete filedata2[val];
+        $(obj).parent().remove();
+    }
+    function delobject3(val, obj) {
+        delete filedata3[val];
+        $(obj).parent().remove();
+    }
+
+
+    function prevdelobject1(val, obj) {
+
+        //var filename = $(obj).parent().text();
+        var filename = $(obj).prev('a').attr('href');
+        var a = confirm("You really want to delete the file " + filename + "?");
+
+        if (!a) {
+            return;
+        }
+
+        //alert($(obj).parent().text());
+        //var filename = $(obj).parent().text();
+        var url1 = '';
+        var ProjectID = $('#ProjectID').val();
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/UploadFile/DeleteFile';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'UploadFile/DeleteFile';
+        }
+        mode = "PF";
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            filename = filename;
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            //filename = '../../' + filename;
+            filename = filename;
+        }
+        //url1 += "?FileName=" + projectid + "&ProjectID=";
+        $.ajax({
+            type: "POST",
+            url: url1,
+            data: "{'FileName':'" + filename + "','ProjectID':'" + ProjectID + "','mode':'" + mode + "'}",
+            dataType: 'text',
+            contentType: "application/json; charset=utf-8",
+
+            success: function (data) {
+                // //console.log(data);
+                if (data == "SUCCESS") {
+                    $(obj).parent().remove();
+                    notify("File removed.", "green");
+
+                }
+                else {
+                    alert("Error!!!");
+                }
+            },
+            error: function (error) {
+                //alert("errror");
+            }
+        });
+
+
+
+
+
+
+    }
+    function prevdelobject2(val, obj) {
+
+
+
+        //var filename = $(obj).parent().text();
+        var filename = $(obj).prev('a').attr('href');
+        var a = confirm("You really want to delete the file " + filename + "?");
+
+        if (!a) {
+            return;
+        }
+        var url1 = '';
+        var ProjectID = $('#ProjectID').val();
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/UploadFile/DeleteFile';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'UploadFile/DeleteFile';
+        }
+        mode = "TC";
+        //url1 += "?FileName=" + projectid + "&ProjectID=";
+        $.ajax({
+            type: "POST",
+            url: url1,
+            data: "{'FileName':'" + filename + "','ProjectID':'" + ProjectID + "','mode':'" + mode + "'}",
+            dataType: 'text',
+            contentType: "application/json; charset=utf-8",
+
+            success: function (data) {
+                // //console.log(data);
+                if (data == "SUCCESS") {
+                    $(obj).parent().remove();
+                    notify("File removed", 'green');
+                }
+                else {
+                    alert("Error!!!");
+                }
+            },
+            error: function (error) {
+                //alert("errror");
+            }
+        });
+
+
+    }
+    function prevdelobject3(val, obj) {
+
+        //var filename = $(obj).parent().text();
+        var filename = $(obj).prev('a').attr('href');
+        var a = confirm("You really want to delete the file " + filename + "?");
+
+        if (!a) {
+            return;
+        }
+
+        var url1 = '';
+        var ProjectID = $('#ProjectID').val();
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/UploadFile/DeleteFile';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'UploadFile/DeleteFile';
+        }
+        mode = "ISF";
+        //url1 += "?FileName=" + projectid + "&ProjectID=";
+        $.ajax({
+            type: "POST",
+            url: url1,
+            data: "{'FileName':'" + filename + "','ProjectID':'" + ProjectID + "','mode':'" + mode + "'}",
+            dataType: 'text',
+            contentType: "application/json; charset=utf-8",
+
+            success: function (data) {
+                ////console.log(data);
+                if (data == "SUCCESS") {
+                    $(obj).parent().remove();
+                    notify("File removed", 'green');
+                }
+                else {
+                    alert("Error!!!");
+                }
+            },
+            error: function (error) {
+                //alert("errror");
+            }
+        });
+    }
+
+    function uploadfiles(projectid, mode) {
+        //projectid = 1;
+        //mode = "TC";
+        // alert(projectid);
+        var formData = new FormData();
+        if (mode == "TC") {
+            for (var key in filedata2) {
+                formData.append(key, filedata2[key]);
+            }
+        }
+        else if (mode == "PF") {
+            for (var key in filedata) {
+                formData.append(key, filedata[key]);
+            }
+        }
+        else if (mode == "ISF") {
+            for (var key in filedata3) {
+                formData.append(key, filedata3[key]);
+            }
+        }
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/UploadFile/UploadWhenEdit';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'UploadFile/UploadWhenEdit';
+        }
+        url1 += "?projectid=" + projectid + "&mode=" + mode + "&InstallationScheduleFilecount=" + InstallationScheduleFilecount + "&TermsFilecount=" + TermsFilecount + "&ProjectFilecount=" + ProjectFilecount;
+        $.ajax({
+            type: "POST",
+            url: url1,
+            data: formData,
+            //async:false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                // alert('success!!');
+            },
+            error: function (error) {
+                //alert("errror");
+            }
+        });
+        }
+
+        ///Added by avi from Esolz at 13-04-2020
+        function doesFileExist(urlToFile) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('HEAD', urlToFile, false);
+            xhr.send();
+
+            if (xhr.status == "404") {
+                console.log("File doesn't exist");
+                return false;
+            } else {
+                console.log("File exists");
+                return true;
+            }
+        }
+
+        /// End function
+
+    var InstallationScheduleFilecount = 0, TermsFilecount = 0, ProjectFilecount = 0;
+        var temp = 0;
+        function loadUploadedPics(InstallationScheduleFile, TermsFile, ProjectFile, DefaultTermsFile) {
+
+            ////console.log(InstallationScheduleFile +'--------------'+ TermsFile+'-------'+ ProjectFile);
+            // return;
+            var html = "";
+            var allids = "";
+            //allids = "fileupload2^fileupload^fileupload3";
+            allids = "fileupload_Edt2^fileupload_Edt^fileupload_Edt3";
+            //allids += "^" + allids;
+
+            //for (var i = 0; i <= allids.split('^').length; i++) {
+            //    var id = '';
+            //    id = allids.split('^')[i];
+            //    //console.log("Now " + id);
+            //}
+
+            for (var i = 0; i <= allids.split('^').length; i++) {
+
+                var id = '';
+                id = allids.split('^')[i];
+                //console.log("Now " + id);
+                var baseurl = '';
+
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    baseurl = '../../Assets/';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    baseurl = '../../Assets/';
+                }
+
+                //alert(id);
+                switch (id) {
+
+                    case 'fileupload_Edt2':
+
+                        temp = 0;
+                        //TermsFile
+                        if (TermsFile != '' && TermsFile != null && TermsFile != 'undefined') {
+                            //alert(1);
+                            html = "";
+                            for (var edt = 0; edt < TermsFile.split(',').length; edt++) {
+                                html = "";
+                                //filedata2["fileupload" + filedatacount2] = "aaaaaa.jpg";//data.files[0];
+                                html += "<ul class='filesul'>";
+                                var isvalid = doesFileExist(baseurl + "TermsConditionFiles/" + TermsFile.split(',')[edt]);
+                                if (isvalid) {
+                                    html += "<a target='_blank' href ='" + baseurl + "TermsConditionFiles/" + TermsFile.split(',')[edt] + "'>" + trimText(TermsFile.split(',')[edt]) + "</a>";//data.files[0].name;
+                                    html += "<i class='fa fa-trash-o mrg5L' style='cursor:pointer;' onclick='prevdelobject2(\"" + "fileupload" + filedatacount2 + "\",this)'></i></ul>";
+                                }
+                                else {
+                                    html += "<a target='_blank' href ='" + baseurl + "SystemTermsFiles/" + DefaultTermsFile + "'>" + trimText(DefaultTermsFile) + "</a></ul>";
+                                }
+                                // html += TermsFile.split(',')[edt];//data.files[0].name;
+                                // html += "<input type='button' class='delfile' onclick='prevdelobject2(\"" + "fileupload" + filedatacount2 + "\",this)' /></ul>";
+                                //html += "<i class='fa fa-trash-o mrg5L' style='cursor:pointer;' onclick='prevdelobject2(\"" + "fileupload" + filedatacount2 + "\",this)'></i></ul>";
+
+                                filedatacount2++;
+
+
+                                if (parseInt(TermsFile.split(',')[edt].split('_')[2]) > temp) {
+                                    temp = parseInt(TermsFile.split(',')[edt].split('_')[2]);
+                                }
+
+
+                                $('#' + id).parent().parent().find('.previousfilelist').append(html);
+                                //$('#projectfilelistdiv').find('.previousfilelist').append(html);
+
+
+                            }
+
+
+                        }
+                        else {
+                            html = "";
+                            html += "<ul class='filesul'>";
+                            html += "<a target='_blank' href ='" + baseurl + "SystemTermsFiles/" + DefaultTermsFile + "'>" + trimText(DefaultTermsFile) + "</a></ul>";
+                            //html += "<i class='fa fa-trash-o mrg5L' style='cursor:pointer;' onclick='prevdelobject2(\"" + "fileupload" + filedatacount2 + "\",this)'></i></ul>";
+                            $('#' + id).parent().parent().find('.previousfilelist').append(html);
+                        }
+
+                        TermsFilecount = temp;
+                        break;
+
+                    case 'fileupload_Edt':
+
+
+                        var PID = $('#ProjectID').val();
+
+                        var url11 = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url11 = '/Project/GetProjectFilesToInclude';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url11 = 'Project/GetProjectFilesToInclude';
+                        }
+
+                        var availablefiles = '';
+
+                        $.ajax({
+                            type: "POST",
+                            async: false,
+                            datatype: "json",
+                            contentType: "application/json; charset=utf-8",
+                            url: url11,
+                            data: " { \"PID\" : \"" + PID + "\"}",
+                            success: function (data) {
+                                availablefiles = data;
+                                //console.log(data);
+                            }
+                        });
+
+
+                        temp = 0;
+
+                        //ProjectFile
+                        if (ProjectFile != '' && ProjectFile != null && ProjectFile != 'undefined') {
+                            //alert(2);
+
+
+                            for (var edt = 0; edt < ProjectFile.split(',').length; edt++) {
+
+
+                                var dat = '';
+
+                                for (var i1 = 0; i1 < availablefiles.split('^^^').length; i1++) {
+                                    if (availablefiles.split('^^^')[i1].split('|||')[0] == ProjectFile.split(',')[edt])
+                                        dat = 'checked';
+                                }
+
+
+                                // filedata["fileupload" + filedatacount] = "aaaaaa.jpg";//data.files[0];
+                                html = "";
+                                html += "<ul class='filesul'>";
+                                html += "<input class='downloadablefile' style='margin-left:5px;' type='checkbox' " + dat + " data-id='" + filedatacount + "'/>";
+                                html += "<a target='_blank' href ='" + baseurl + "ProjectFiles/" + ProjectFile.split(',')[edt] + "'>" + trimText2(ProjectFile.split(',')[edt]) + "</a>";//data.files[0].name;
+                                // html += "<input type='button' class='delfile' onclick='prevdelobject1(\"" + "fileupload" + filedatacount + "\",this)' /></ul>";
+                                html += "<i class='fa fa-trash-o mrg5L' style='cursor:pointer;' onclick='prevdelobject1(\"" + "fileupload" + filedatacount + "\",this)'></i></ul>";
+                                filedatacount++;
+
+                                if (parseInt(ProjectFile.split(',')[edt].split('_')[2]) > temp) {
+                                    temp = parseInt(ProjectFile.split(',')[edt].split('_')[2]);
+                                }
+
+                                //console.log("HHHIIII");
+                                //console.log(html);
+                                //$('#' + id).parent().parent().find('.previousfilelist').append(html);
+                                $('#projectfilelistdiv').find('.previousfilelist').append(html);
+                                //$('#' + id).parent().parent().find('.previousfilelist').append(html);
+
+                            }
+
+
+                        }
+                        ProjectFilecount = temp;
+                        break;
+
+                    case 'fileupload_Edt3':
+
+                        //console.log(InstallationScheduleFile + "^^^^");
+                        temp = 0;
+
+                        //InstallationScheduleFile
+                        if (InstallationScheduleFile != '' && InstallationScheduleFile != null && InstallationScheduleFile != 'undefined') {
+                            //alert(3);
+                            html = "";
+                            for (var edt = 0; edt < InstallationScheduleFile.split(',').length; edt++) {
+                                html = "";
+                                //filedata3["fileupload" + filedatacount3] = "aaaaaa.jpg";//data.files[0];
+                                html = "<ul class='filesul'>";
+                                html += "<a target='_blank' href ='" + baseurl + "InstallationScheduleFiles/" + InstallationScheduleFile.split(',')[edt] + "'>" + trimText(InstallationScheduleFile.split(',')[edt]) + "</a>";//data.files[0].name;
+
+                                //html += InstallationScheduleFile.split(',')[edt];//data.files[0].name;
+                                //html += "<input type='button' class='delfile' onclick='prevdelobject3(\"" + "fileupload" + filedatacount3 + "\",this)' /></ul>";
+                                html += "<i class='fa fa-trash-o mrg5L' style='cursor:pointer;'  onclick='prevdelobject3(\"" + "fileupload" + filedatacount3 + "\",this)'></i></ul>";
+
+
+                                filedatacount3++;
+
+
+                                if (parseInt(InstallationScheduleFile.split(',')[edt].split('_')[2]) > temp) {
+                                    temp = parseInt(InstallationScheduleFile.split(',')[edt].split('_')[2]);
+                                }
+                                $('#' + id).parent().parent().find('.previousfilelist').append(html);
+                            }
+
+
+                        }
+                        InstallationScheduleFilecount = temp;
+
+                        break;
+                }
+
+                //alert('#' + id);
+                //$('#' + id).parent().parent().find('.previousfilelist').append(html);
+
+            }
+
+        }
+
+    //function loadUploadedPics(InstallationScheduleFile, TermsFile, ProjectFile) {
+       
+    //    ////console.log(InstallationScheduleFile +'--------------'+ TermsFile+'-------'+ ProjectFile);
+    //    // return;
+    //    var html = "";
+    //    var allids = "";
+    //    //allids = "fileupload2^fileupload^fileupload3";
+    //    allids = "fileupload_Edt2^fileupload_Edt^fileupload_Edt3";
+    //    //allids += "^" + allids;
+
+    //    for (var i = 0; i <= allids.split('^').length; i++) {
+    //        var id = '';
+    //        id = allids.split('^')[i];
+    //        //console.log("Now " + id);
+    //    }
+
+    //    for (var i = 0; i <= allids.split('^').length; i++) {
+
+    //        var id = '';
+    //        id = allids.split('^')[i];
+    //        //console.log("Now " + id);
+    //        var baseurl = '';
+
+    //        if (LOCALORSERVERNEW == 'LOCAL') {
+    //            baseurl = '../../Assets/';
+    //        }
+    //        else if (LOCALORSERVERNEW == 'SERVER') {
+    //            baseurl = '../../Assets/';
+    //        }
+
+    //        //alert(id);
+    //        switch (id) {
+
+    //            case 'fileupload_Edt2':
+
+    //                temp = 0;
+    //                //TermsFile
+    //                if (TermsFile != '' && TermsFile != null && TermsFile != 'undefined') {
+    //                    //alert(1);
+    //                    html = "";
+    //                    for (var edt = 0; edt < TermsFile.split(',').length; edt++) {
+    //                        html = "";
+    //                        //filedata2["fileupload" + filedatacount2] = "aaaaaa.jpg";//data.files[0];
+    //                        html += "<ul class='filesul'>";
+    //                        html += "<a target='_blank' href ='" + baseurl + "TermsConditionFiles/" + TermsFile.split(',')[edt] + "'>" + trimText(TermsFile.split(',')[edt]) + "</a>";//data.files[0].name;
+
+    //                        // html += TermsFile.split(',')[edt];//data.files[0].name;
+    //                       // html += "<input type='button' class='delfile' onclick='prevdelobject2(\"" + "fileupload" + filedatacount2 + "\",this)' /></ul>";
+    //                        html += "<i class='fa fa-trash-o mrg5L' style='cursor:pointer;' onclick='prevdelobject2(\"" + "fileupload" + filedatacount2 + "\",this)'></i></ul>";
+                            
+    //                        filedatacount2++;
+
+
+    //                        if (parseInt(TermsFile.split(',')[edt].split('_')[2]) > temp) {
+    //                            temp = parseInt(TermsFile.split(',')[edt].split('_')[2]);
+    //                        }
+
+                            
+    //                        $('#' + id).parent().parent().find('.previousfilelist').append(html);
+    //                        //$('#projectfilelistdiv').find('.previousfilelist').append(html);
+
+
+    //                    }
+
+
+    //                }
+
+    //                TermsFilecount = temp;
+    //                break;
+
+    //            case 'fileupload_Edt':
+
+
+    //                var PID = $('#ProjectID').val();
+
+    //                var url11 = '';
+    //                if (LOCALORSERVERNEW == 'LOCAL') {
+    //                    url11 = '/Project/GetProjectFilesToInclude';
+    //                }
+    //                else if (LOCALORSERVERNEW == 'SERVER') {
+    //                    url11 = 'Project/GetProjectFilesToInclude';
+    //                }
+
+    //                var availablefiles = '';
+
+    //                $.ajax({
+    //                    type: "POST",
+    //                    async: false,
+    //                    datatype: "json",
+    //                    contentType: "application/json; charset=utf-8",
+    //                    url: url11,
+    //                    data: " { \"PID\" : \"" + PID + "\"}",
+    //                    success: function (data) {
+    //                        availablefiles = data;
+    //                        //console.log(data);
+    //                    }
+    //                });
+
+
+    //                temp = 0;
+
+    //                //ProjectFile
+    //                if (ProjectFile != '' && ProjectFile != null && ProjectFile != 'undefined') {
+    //                    //alert(2);
+
+
+    //                    for (var edt = 0; edt < ProjectFile.split(',').length; edt++) {
+
+
+    //                        var dat = '';
+
+    //                        for (var i1 = 0; i1 < availablefiles.split('^^^').length; i1++) {
+    //                            if (availablefiles.split('^^^')[i1].split('|||')[0] == ProjectFile.split(',')[edt])
+    //                                dat = 'checked';
+    //                        }
+
+
+    //                        // filedata["fileupload" + filedatacount] = "aaaaaa.jpg";//data.files[0];
+    //                        html = "";
+    //                        html += "<ul class='filesul'>";
+    //                        html += "<input class='downloadablefile' style='margin-left:5px;' type='checkbox' " + dat + " data-id='" + filedatacount + "'/>";
+    //                        html += "<a target='_blank' href ='" + baseurl + "ProjectFiles/" + ProjectFile.split(',')[edt] + "'>" + trimText2(ProjectFile.split(',')[edt]) + "</a>";//data.files[0].name;
+    //                       // html += "<input type='button' class='delfile' onclick='prevdelobject1(\"" + "fileupload" + filedatacount + "\",this)' /></ul>";
+    //                        html += "<i class='fa fa-trash-o mrg5L' style='cursor:pointer;' onclick='prevdelobject1(\"" + "fileupload" + filedatacount + "\",this)'></i></ul>";
+    //                        filedatacount++;
+
+    //                        if (parseInt(ProjectFile.split(',')[edt].split('_')[2]) > temp) {
+    //                            temp = parseInt(ProjectFile.split(',')[edt].split('_')[2]);
+    //                        }
+
+    //                        //console.log("HHHIIII");
+    //                        //console.log(html);
+    //                        //$('#' + id).parent().parent().find('.previousfilelist').append(html);
+    //                        $('#projectfilelistdiv').find('.previousfilelist').append(html);
+    //                        //$('#' + id).parent().parent().find('.previousfilelist').append(html);
+
+    //                    }
+
+
+    //                }
+    //                ProjectFilecount = temp;
+    //                break;
+
+    //            case 'fileupload_Edt3':
+
+    //                //console.log(InstallationScheduleFile + "^^^^");
+    //                temp = 0;
+
+    //                //InstallationScheduleFile
+    //                if (InstallationScheduleFile != '' && InstallationScheduleFile != null && InstallationScheduleFile != 'undefined') {
+    //                    //alert(3);
+    //                    html = "";
+    //                    for (var edt = 0; edt < InstallationScheduleFile.split(',').length; edt++) {
+    //                        html = "";
+    //                        //filedata3["fileupload" + filedatacount3] = "aaaaaa.jpg";//data.files[0];
+    //                        html = "<ul class='filesul'>";
+    //                        html += "<a target='_blank' href ='" + baseurl + "InstallationScheduleFiles/" + InstallationScheduleFile.split(',')[edt] + "'>" + trimText(InstallationScheduleFile.split(',')[edt]) + "</a>";//data.files[0].name;
+
+    //                        //html += InstallationScheduleFile.split(',')[edt];//data.files[0].name;
+    //                        //html += "<input type='button' class='delfile' onclick='prevdelobject3(\"" + "fileupload" + filedatacount3 + "\",this)' /></ul>";
+    //                        html += "<i class='fa fa-trash-o mrg5L' style='cursor:pointer;'  onclick='prevdelobject3(\"" + "fileupload" + filedatacount3 + "\",this)'></i></ul>";
+
+                            
+    //                        filedatacount3++;
+
+
+    //                        if (parseInt(InstallationScheduleFile.split(',')[edt].split('_')[2]) > temp) {
+    //                            temp = parseInt(InstallationScheduleFile.split(',')[edt].split('_')[2]);
+    //                        }
+    //                        $('#' + id).parent().parent().find('.previousfilelist').append(html);
+    //                    }
+
+
+    //                }
+    //                InstallationScheduleFilecount = temp;
+
+    //                break;
+    //        }
+
+    //        //alert('#' + id);
+    //        //$('#' + id).parent().parent().find('.previousfilelist').append(html);
+
+    //    }
+
+    //}
+
+    function trimText2(str) {
+
+
+        var result = str;
+
+        if (str.length > 90) {
+            result = str.substring(0, 75) + '...' + str.substring(parseInt(str.length) - 10);
+
+
+
+
+
+            //result += '.' + str.split('.')[1];
+            ////console.log(result);
+        }
+        return result;
+    }
+
+    function trimText(str) {
+
+
+        var result = str;
+
+        if (str.length > 30) {
+            result = str.substring(0, 15) + '...' + str.substring(parseInt(str.length) - 10);
+
+
+
+
+
+            //result += '.' + str.split('.')[1];
+            ////console.log(result);
+        }
+        return result;
+    }
+
+    </script>
+
+
+
+    <script type="text/javascript">
+    var prevselectedvendors = "";
+
+    function getSelectedVendors() {
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Project/getSelectedVendors';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+
+            urltemp = 'Project/getSelectedVendors';
+        }
+
+        $.ajax({
+            type: "POST",
+            url: urltemp,
+            async: false,
+            data: { 'PID': $('#ProjectID').val() },
+            success: function (data) {
+                prevselectedvendors = data;
+
+
+                for (var i = 0; i < prevselectedvendors.split('^').length; i++) {
+
+                    vendorco[vendorcocount] = prevselectedvendors.split('^')[i];
+
+                    vendorcocount++;
+                }
+
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+
+
+
+    }
+
+    function saveVendorCODetails() {
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Project/UpdateVendorCODetails';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+
+            urltemp = 'Project/UpdateVendorCODetails';
+        }
+
+        $.ajax({
+            type: "POST",
+            url: urltemp,
+            async: false,
+            data: { 'vedor_details': JSON.stringify(vendorco), 'project_id': $('#ProjectID').val() },
+            success: function (data) {
+
+
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+
+    }
+    </script>
+
+
+    <script>
+
+
+    $(function () {
+        getSelectedVendors();
+        bindVendorClassification();
+       // getVenderDetails();
+
+
+        $('.b-close').click(function () {
+            $('#popupforvendorlist').hide();
+            $('#BackGroundCng').hide();
+        });
+    });
+
+    function openvendors(obj) {
+        // resetsrch();
+        //selectedpopup = obj;
+        getVenderDetails();
+
+        $('#popupforvendorlist').modal('show');
+
+       
+    }
+
+    function getVenderDetails() {
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Project/getVendorsForEdit';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+
+            urltemp = 'Project/getVendorsForEdit';
+        }
+
+        urltemp += "?pid=" + $('#ProjectID').val();
+        var totdata;
+        var vendors = new Array();
+        $.get(urltemp)
+
+            .success(function (response) {
+                totdata = JSON.parse(response);
+                totdata = totdata.data;
+                console.log(totdata);
+
+                for (i = 0; i < totdata.length ; i++) {
+                    vendors[i] = new Array();
+                    var id = totdata[i].Vendor_ID;
+
+                    if (checkPrevCheckVendor(totdata[i].Vendor_ID)) {
+                        vendors[i][8] = 1;
+                        vendors[i][0] = '<input type="checkbox" name="vendor" value="' + totdata[i].Vendor_ID + '" data-index="' + totdata[i].Vendor_ID + '" class="chkVendor" onclick=addVendor(this); checked="true">';
+                    }
+                    else {
+                        vendors[i][8] = 0;
+                        vendors[i][0] = '<input type="checkbox" name="vendor" value="' + totdata[i].Vendor_ID + '" data-index="' + totdata[i].Vendor_ID + '" class="chkVendor" onclick=addVendor(this);>';
+                    }
+
+                    vendors[i][1] = totdata[i].ParentVendorName;
+                    vendors[i][2] = totdata[i].ContactFirstname + ' ' + totdata[i].ContactLastname;
+                    vendors[i][3] = deletespaces(totdata[i].Classifications);
+                    vendors[i][4] = totdata[i].Currency;
+                    vendors[i][5] = totdata[i].City;
+                    vendors[i][6] = totdata[i].State;
+                    vendors[i][7] = totdata[i].CurrCode;
+                    
+                }
+
+                $('#vendorlist thead').find("tr:eq(1)").remove();
+                $('#vendorlist').dataTable().fnDestroy();
+
+                $('#vendorlist').dataTable({
+                    "data": vendors,
+                    "paging": false,
+                    "columns": [
+                        { "title": "Actions" },
+                        { "title": "Vendor" },
+                        { "title": "Contact Name" },
+                        { "title": "Vendor Category" },
+                        { "title": "Currency" },
+                        { "title": "City" },
+                        { "title": "State/Prov" },
+                        { "title": "Currcode", "class": "displaynone" },
+                    { "title": "Currcode", "class": "displaynone"  }
+
+
+                    ],
+                    //"lengthMenu": [[10, 50, -1], [10, 50, "All"]],
+                    "initComplete": function () {
+
+                        //var ddl = "<select><option>1</option><option>2</option></select>";
+                        var html = "";
+                        html = "<tr>"
+                            + "<th><span onclick='resetsrch();' style='cursor:pointer;'><i class='fa fa-undo'></i></span></th>"
+                            + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='1' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                            + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='2' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                            //+ "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='3' placeholder='Search Vendor Category'></th>"
+                            + "<th rowspan='1' colspan='1'>" + ddlVendorClassification + "</th>"
+                            + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='4' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                            + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='5' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>"
+                            + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='6' style='padding: 2px 2%;    width: 100%;font-family:Arial, FontAwesome' placeholder=' &#xF002;'></th>";
+                        $('#vendorlist thead').append(html);
+
+                        $("#Ddl_Vendor_Clftion").multiselect().multiselectfilter();
+                        $("#Ddl_Vendor_Clftion").multiselect({
+                            close: function () {
+                                var clsearch = $('#Ddl_Vendor_Clftion').val();
+                                if (clsearch == null)
+                                    clsearch = '';
+                                var srchtxt = '';
+                                var tmp = clsearch;
+
+                                for (var i = 0; i < tmp.length; i++) {
+                                    var id = tmp[i];
+                                    for (var a = 0; a < classarray.length ; a++) {
+                                        if (classarray[a].classid == id) {
+                                            if (srchtxt == '') {
+                                                srchtxt += deletespaces(classarray[a].classname);
+                                            }
+                                            else {
+                                                srchtxt += '|' + deletespaces(classarray[a].classname);
+                                            }
+                                        }
+                                    }
+                                }
+                                var table = $('#vendorlist').DataTable();
+                                table.column(3).search(srchtxt, true).draw();
+
+                            }
+                        });
+                        var table = $('#vendorlist').DataTable();
+                        // table.column(2).search("fname|ff", true).draw();
+                        $('.srch').on('keyup change', function () {
+                            var indx = $(this).attr('data-indx');
+                            var txt = this.value;
+                            table
+                                   .column(indx)
+                                   .search(txt)
+                                   .draw();
+                            //RowHtmlRender();
+                        });
+                        $('#vendorlist_filter').remove();
+                        // $('#vendorlist_length').remove();
+                        $('#vendorlist thead').find('tr:eq(0)').find('td:eq(0)').removeClass('sorting_asc');
+                    },
+                    "pagingType": "full_numbers",
+                    "order": [[8, "desc"], [1, "asc"], [2, "asc"]],
+                    "aoColumnDefs": [
+                        { 'bSortable': false, 'aTargets': [0] }
+                    ]
+                });
+
+
+            });
+
+    }
+
+    function checkPrevCheckVendor(Vendor_ID) {
+
+        var bool = false;
+
+        for (var i = 0; i < prevselectedvendors.split('^').length; i++) {
+            if (prevselectedvendors.split('^')[i] == Vendor_ID) {
+                bool = true;
+            }
+        }
+
+        return bool;
+
+    }
+
+
+    function deletespaces(str) {
+        var newstr = '';
+        for (var i = 0; i < str.length; i++) {
+            if (str[i] != ' ') {
+                newstr += str[i];
+            }
+        }
+        return newstr;
+
+    }
+
+    function bindVendorClassification() {
+        var urltemp = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Project/getClassification';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            urltemp = 'Project/getClassification';
+        }
+        $.ajax({
+            type: "POST",
+            url: urltemp,
+            async: false,
+            data: {},
+            success: function (data) {
+
+                ddlVendorClassification = "<select id='Ddl_Vendor_Clftion' multiple='multiple'>"
+                data = JSON.parse(data);
+                ////console.log(data);
+
+                classarray = data.data;
+
+                for (var a = 0; a < classarray.length ; a++) {
+
+                    //ddlfrcllsfictn += "<opiton>" + 'test' + "</option>";
+                    ddlVendorClassification += "<option text='" + classarray[a].classname + "' value='" + classarray[a].classid + "'>" + deletespaces(classarray[a].classname) + "</option>";
+                }
+
+                ddlVendorClassification += "</select>";
+                //alert(ddlfrcllsfictn);
+
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+    }
+
+    function addVendor(obj) {
+
+        
+
+        // Sort by column 1 and then re-draw
+       
+
+       
+
+        vendorco = [];
+
+        vendorcocount = 0;
+
+        $('.chkVendor').each(function () {
+            var rw = $(this).parent().parent();
+            if ($(this).is(":checked")) {
+                vendorco[vendorcocount] = $(this).val();
+
+                vendorcocount++;
+               
+                $(rw).find('td:eq(8)').html('1');
+            }
+            else {
+                $(rw).find('td:eq(8)').html('0');
+
+            }
+
+        });
+        saveVendorCODetails();
+        getSelectedVendors();
+
+        notify("Ship to vendors saved.", "green");
+        getVenderDetails();
+
+        //var table = $('#vendorlist').DataTable();
+        //table
+        //   .order([8, "desc"])
+        //   .draw();
+
+
+    }
+    </script>
+    <script>
+        $(function () {
+
+            if ($('#ytdpurchasenumber').text().trim() != "No Data Found") {
+
+
+                //console.log(parseFloat($('#ytdpurchasenumber').text().trim()));
+                var newnumber = formatNumber(parseFloat($('#ytdpurchasenumber').text().trim()));
+                // newnumber = isNaN(newnumber) ? '0.00' : newnumber;
+
+                $('#ytdpurchasenumber').text(newnumber + ' ' + $('#ytdpurchasenumber').text().trim().split(' ')[1]);
+
+            }
+
+           //     //console.log(parseFloat($('#ytdpurchasenumber').text().trim()));
+           // var newnumber = formatNumber(parseFloat($('#ytdpurchasenumber').text().trim()));
+           //// newnumber = isNaN(newnumber) ? '0.00' : newnumber;
+           // $('#ytdpurchasenumber').text(newnumber + ' ' + $('#ytdpurchasenumber').text().trim().split(' ' )[1]);
+         });
+    function formatNumber(number) {
+        number = parseFloat(number);
+        var number = number.toFixed(2) + '';
+        var x = number.split('.');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+    </script>
+
+
+    <script type="text/javascript">
+
+
+        function loadComments() {
+
+
+            debugger;
+
+
+            var deferred = $.Deferred();
+
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/getAllPurchaseOrderComments';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                //url1 = urlsuffix + "/" + 'Project/getAllProjectList';
+                url1 = 'Project/getAllPurchaseOrderComments';
+            }
+
+            // alert(url1);
+            var totdata;
+            $.get(url1)
+                .success(function (response) {
+
+                    debugger;
+
+
+                    var project = "";
+                    var tdata = JSON.parse(response);
+                    totdata = tdata.data;
+                    //console.log(totdata);
+                    var project = new Array();
+                    for (i = 0; i < totdata.length; i++) {
+                        project[i] = new Array();
+                        // project[i][0] = '<input type="button" class="buttonedit btnhover" onclick="GetThisComment(this);" style="margin-bottom:6px;" />';
+                        project[i][0] = '<i class="fa fa-hand-o-right" style="cursor:pointer;" title="Select this Comment" onclick="GetThisComment(this);" aria-hidden="true"></i>';
+                        project[i][1] = totdata[i].ProjectNumber;
+                        project[i][2] = totdata[i].ProjectName;
+                        project[i][3] = totdata[i].Comment;
+                        //project[i][3] = unescape(totdata[i].Comment);
+                    }
+                    $('#POLists').dataTable({
+                        "processing": true,
+                        "retrieve": true,
+
+                        "data": project,
+                        "columns": [
+                            { "title": "" },
+                            { "title": "Project Number" },
+                            { "title": "Project Name" },
+                            { "title": "Comment" }
+                        ]
+                        ,
+                        "initComplete": function () {
+                            var html = "";
+                            html = "<tr>"
+                                + '<th></th>'
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='1' placeholder='Search Project'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' type='text' data-indx='2' placeholder='Search Project Name'></th>"
+                                + "<th></th>"
+                                + "</tr>";
+                            $('#POLists thead').append(html);
+                            var table = $('#POLists').DataTable();
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+                                table
+                                    .column(indx)
+                                    .search(txt)
+                                    .draw();
+                                RowHtmlRender();
+                            });
+                            RowHtmlRender();
+                        },
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0, 3] },
+                            {
+                                "targets": 3,
+                                "data": null,
+                                "render": function (data, type, row) {
+                                    return "<textarea onfocus='auto_grow(this);' onblur='shrinkarea(this);' style='height:60px;width: 375px;resize: none;'>" + data[3] + "</textarea>";
+                                },
+                            }
+                        ]
+                    });
+
+
+                    console.log('111111');
+                    $("#poListPopUp").modal("show");
+
+
+
+                });
+
+
+            return deferred.promise();
+        }
+
+    $(function () {
+
+
+    });
+
+    function RowHtmlRender1() {
+        $('#POLists_filter').css('display', 'none');
+        //$('#POLists tbody tr').find("td:eq(0)").each(function () {
+        //    $(this).html('<input type="button" class="buttonedit btnhover" onclick="GetThisComment(this);" style="margin-bottom:6px;" />');
+        //});
+    }
+    function GetThisComment(obj) {
+        $('#txt_PrchsOrdrCmmnts').val('');
+
+        var elem = document.createElement('textarea');
+        elem.innerHTML = $(obj).parent("td").parent("tr").find("td:eq(3)").find('textarea').val();
+        var decoded = elem.value;
+        elem.remove();
+
+        //$('#txt_PrchsOrdrCmmnts').val($(obj).parent("td").parent("tr").find("td:eq(3)").html().toString());
+        $('#txt_PrchsOrdrCmmnts').val(decoded);
+
+        auto_grow($('#txt_PrchsOrdrCmmnts'));
+        $('#txt_PrchsOrdrCmmnts').focus();
+        $("#poListPopUp").modal("hide");
+    }
+
+    function shrinkarea(element) {
+        $(element).css("height", "60px");
+    }
+
+    function auto_grow(element) {
+
+        //console.log(element);
+
+        $(element).css("height", "60px");
+        $(element).css("height", $(element).prop("scrollHeight") + "px");
+
+
+        // element.style.height = "5px";
+        // element.style.height = (element.scrollHeight) + "px";
+    }
+
+    function OpenPOLists(obj) {
+        console.log('started');
+        loadComments().then(function () {
+            //loadComments();
+            console.log('Doneee');
+
+            $("#poListPopUp").modal("show");
+        });
+        console.log('22222');
+
+    }
+
+    </script>
+
+    <script>
+    function addconvrate() {
+        var currency = $('#ddl_cnvcurrency').val();
+        var convrate = $('#txt_convrate').val();
+
+
+        if (currency == 0 || currency == "") {
+            notify("Please select Currency");
+            return;
+        }
+        if (convrate == "") {
+            notify("Please select Conversion rate");
+            return;
+        }
+        var CurrencyCode = "";
+        var pid = $("#ProjectID").val();
+
+
+        var urltemp = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Project/addNewConvrate';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            urltemp = 'Project/addNewConvrate';
+        }
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: urltemp,
+            async: false,
+            data: "{'PID' : '" + pid + "','Currency':'" + currency + "','CurrencyCode':'" + CurrencyCode + "','Convrate':'" + convrate + "'}",
+            success: function (data) {
+
+
+                if (data == "SUCCESS") {
+                    $('#ddl_cnvcurrency').val('0');
+                    $('#txt_convrate').val('');
+
+                    getallconvrate();
+                }
+                else {
+                    notify("Currency Already exists");
+                }
+
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+
+
+
+
+    }
+
+
+    function getallconvrate() {
+
+
+        var pid = $("#ProjectID").val();
+
+        var urltemp = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Project/getAllConvRate';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            urltemp = 'Project/getAllConvRate';
+        }
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: urltemp,
+            async: false,
+            data: "{'PID' : '" + pid + "'}",
+            success: function (response) {
+
+                response = JSON.parse(response);
+                response = response.data;
+
+                var html = "";
+                var FldID = "";
+                var ProjectID = "";
+                var CurrencyID = "";
+                var Currcode = "";
+                var ConversionRate = "";
+                var InsertDate = "";
+
+
+                for (var i = 0; i < response.length; i++) {
+
+
+                    FldID = response[i].FldID;
+                    ProjectID = response[i].ProjectID;
+                    CurrencyID = response[i].CurrencyID;
+                    Currcode = response[i].Currcode;
+                    ConversionRate = response[i].ConversionRate;
+                    InsertDate = response[i].InsertDate;
+
+
+
+                    if (ConversionRate.trim() != "") {
+                        ConversionRate = '  ' + '<i class="fa fa-arrow-circle-right"></i>' + '  ' + ConversionRate;
+                    }
+
+
+                    html += "<span class='remove' data-id='" + FldID + "' ><a onclick='deleteprojectcnv(this,\"" + FldID + "\")' title='Remove this Conv Rate'>x</a><span>"
+                        + Currcode + ConversionRate + "</span></span>";
+                }
+
+                $('#ProjectConvRates').html(html);
+
+
+
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+
+
+
+    }
+
+    var selectedlist = new Array();
+
+    function deleteprojectcnv(obj, id) {
+
+        if (!confirm('Are you sure you want to delete this Fx Rate?')) { return; }
+
+        var urltemp = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Project/removeConvrate';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            urltemp = 'Project/removeConvrate';
+        }
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: urltemp,
+            async: false,
+            data: "{'id' : '" + id + "'}",
+            success: function (data) {
+                $(obj).parent().remove();
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+
+
+    }
+
+    $(document).ready(function () {
+
+        //getprojectbankaccounts();
+        a_First();
+
+
+    });
+
+    function addnewbankaccount() {
+
+
+
+
+        var Paccnt = $('#ddl_CurrencyCode option:selected').attr('data-currcode');
+
+        var AccountID = $('#ddl_bank').val();
+        var ProjectID = $('#ProjectID').val();
+
+
+        var count = 0;
+
+        $('#ddl_bank option').each(function () {
+            //console.log($(this).is(':selected'));
+
+            if ($(this).attr('data-currcode') == Paccnt && $(this).is(':selected')) { count++; }
+        });
+
+        for (var a = 0; a < selectedlist.length; a++) {
+            if (selectedlist[a].CurrencyCode == Paccnt) { count++; }
+        }
+
+        //if (count == 0) {
+
+        //    notify("At least one Account must be in Project Currency (" + Paccnt + ")");
+        //    return;
+
+        //}
+
+
+
+        var urltemp = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Project/addnewbankaccount';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            urltemp = 'Project/addnewbankaccount';
+        }
+
+        for (var a = 0; a < AccountID.length; a++) {
+
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: urltemp,
+                async: false,
+                data: "{'ProjectID' : '" + ProjectID + "','AccountID' : '" + AccountID[a] + "'}",
+                success: function (data) {
+
+
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+        }
+
+
+        getprojectbankaccounts();
+        b_Initiated();
+        changeaccntddl();
+
+        notify("Added Account", 'green');
+
+
+    }
+
+
+    function deleteprojectbnk(obj) {
+
+
+        if (!confirm('Are you sure you want to delete this Account?')) { return; }
+
+        var FldID = $(obj).parent().attr('data-id');
+        var ProjectID = $('#ProjectID').val();
+
+
+        var urltemp = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Project/deletenewbankaccount';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            urltemp = 'Project/deletenewbankaccount';
+        }
+
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: urltemp,
+            async: false,
+            data: "{'FldID' : '" + FldID + "','ProjectID' : '" + ProjectID + "'}",
+            success: function (data) {
+
+                if (data == '1') {
+                    notify("Account deleted", "GREEN");
+                    getprojectbankaccounts();
+                    b_Initiated();
+                    changeaccntddl();
+                }
+                else {
+                    notify("Can not delete the last account with same currency");
+                }
+
+
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+
+    }
+
+
+    function getprojectbankaccounts() {
+
+        selectedlist = [];
+        var ProjectID = $('#ProjectID').val();
+        //banktaccnttab
+        var urltemp = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Project/getallbankaccounts';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            urltemp = 'Project/getallbankaccounts';
+        }
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: urltemp,
+            async: false,
+            data: "{'ProjectID' : '" + ProjectID + "'}",
+            success: function (data) {
+                var htmlddl = "";
+                var htmlselected = "";
+
+                data = JSON.parse(data).data;
+                //console.log(data);
+
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].IsSelected == "1") {
+
+                        selectedlist.push(data[i]);
+
+                        htmlselected += '<span class="remove" data-id="' + data[i].Fld_ID
+                             + '"><a onclick="deleteprojectbnk(this);" title="Remove this Bank Account">x</a>'
+                             + '<span class="bankaccount" data-name="' + data[i].Bank_Account + '">' + data[i].Bank_Account + ' -' + data[i].Description
+                             + ' (' + data[i].CurrencyCode + ')'
+                             + '</span></span>';
+                    }
+                    else {
+
+
+
+                        htmlddl += "<option data-currcode='" + data[i].CurrencyCode + "' value='" + data[i].Fld_ID + "'>" + data[i].Bank_Account + ' -' + data[i].Description
+                            + ' (' + data[i].CurrencyCode + ')' + "</option>";
+                    }
+                }
+
+                $('#ddl_bank').html(htmlddl);
+                
+
+                $('#selectedbanks').html(htmlselected);
+                $("#ddl_bank").multiselect('refresh');
+
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+    }
+
+    function a_First() {
+        $("#ddl_bank").multiselect({ maxTextWrapSize: 40 }).multiselectfilter();
+
+        var width = '100%';
+        $('.ui-multiselect').css('width', width);
+        //$('.ui-multiselect-menu').css('width', '39.5%');
+        $('.ui-multiselect-menu').css('width', '39.5%');
+        $('.ui-state-default').css('color', '#C31001');
+        $('.ui-multiselect').css('height', '34px');
+        $('.ui-multiselect').css('margin-top', '5px');
+
+
+    }
+
+    function b_Initiated() {
+        $("#ddl_bank").multiselect("refresh").multiselectfilter();
+    }
+
+    function changeaccntddl() {
+
+        var AccountID = $('#ddl_bank').val();
+        if (AccountID != undefined && AccountID != "") {
+            $('#addaccntbtn').removeClass('displaynone');
+        }
+        else {
+            $('#addaccntbtn').addClass('displaynone');
+
+        }
+    }
+
+  
+
+
+    </script>
+
+</body>
+
+
+
+</html>

@@ -1,0 +1,10 @@
+BEGIN:VCARD
+FN:NewFn NewLn
+TITLE:Contact
+ORG:NewFn
+ADR;WORK:;;address sample line;citysample;Alaska (AK);789653;United States
+TEL;Work;VOICE;:(011)1112345
+TEL;Cell:8890786543
+TEL;Work;FAX:
+EMAIL;Internet:qqq@www.com
+END:VCARD

@@ -1,0 +1,2349 @@
+﻿@{    
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PO History</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+
+    <link rel="stylesheet" href="~/css/milestones.css">
+    <script type="text/javascript" src="~/Scripts/milestones.js"></script>
+
+    <link href="~/css/style.css" rel="stylesheet" />
+
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+
+
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.12/sorting/date-euro.js"></script>
+
+    <script type="text/javascript">
+
+
+
+        //$(document).ready(function () {
+
+
+
+        //    $('#breadcrumb').remove();
+
+
+        //    var url = '';
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url = '/PurchaseOrder/getPOHistory?poid=' + $('#hiddn_poid').val().trim();
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+        //        url = 'PurchaseOrder/getPOHistory?poid=' + $('#hiddn_poid').val().trim();
+        //    }
+
+        //    var dataTable = "";
+        //    var dt = "";
+        //    var po = new Array();
+
+
+        //    $.ajax({
+        //        type: "POST",
+        //        url: url,
+        //        //data: { 'poid': $('#hiddn_poid').val().trim() },
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "JSON",
+        //        success: function (data) {
+
+
+        //            dt = data.data;
+
+        //            //console.log(dt + "lll");
+
+        //            $('#POHistory').dataTable().fnDestroy();
+
+
+
+        //            for (i = 0; i < dt.length; i++) {
+
+        //                var history = '';
+
+        //                po[i] = new Array();
+
+        //                if (dt[i].FldID != 0) {
+        //                    po[i][8] = dt[i].Version;
+        //                    history = '<i style="margin-left:10px;cursor:pointer;" class="fa fa-history" title="View Approval History" onclick="openpohistory(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].Version + '\');"></i>';
+        //                }
+        //                else {
+        //                    po[i][8] = dt[i].Version + ' (Current)';
+        //                    history = '<i style="margin-left:10px;cursor:pointer;" class="fa fa-history" title="View Approval History" onclick="openpohistory2(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].Version + '\');"></i>';
+
+        //                }
+
+        //                po[i][0] = '<i data-poid="' + dt[i].PurchaseOrderID + '" class="fa fa-list" title="View Items" style="cursor:pointer;" onclick="openlineitems(\'' + dt[i].FldID + '\',this);"></i>'
+        //                    + history
+        //                    + '<i style="font-size: 16px;margin-left: 9px;cursor:pointer;" data-poid="' + dt[i].PurchaseOrderID + '" data-version="' + dt[i].Version + '" onclick="getAllHistory(this);" class="fa fa-info-circle" aria-hidden="true"></i>';
+
+
+        //                po[i][1] = dt[i].PurchaseOrderNumber;
+        //                po[i][2] = dt[i].VendorName;
+        //                po[i][3] = dt[i].BuyerName;
+        //                po[i][4] = dt[i].ArrivalDate;
+        //                po[i][5] = dt[i].CheckBackDate;
+        //                po[i][6] = dt[i].VendorCOName;
+        //                po[i][7] = dt[i].InsertDate;
+
+        //                po[i][9] = dt[i].AddedByName;
+        //            }
+
+        //            $('#POHistory').dataTable({
+        //                "processing": true,
+        //                "data": po,
+        //                "columns":
+        //                    [
+        //                        { "title": "Action" },
+        //                        { "title": "PO #" },
+        //                        { "title": "Vendor" },
+        //                        { "title": "Buyer" },
+        //                        { "title": "Ship Date" },
+        //                        { "title": "CheckBack Date" },
+        //                        { "title": "Vendor (C/O)" },
+        //                        { "title": "Created Date" },
+        //                        { "title": "Version" },
+        //                        { "title": "Added By" }
+
+        //                    ],
+        //                "initComplete": function () {
+        //                    //$('#UnCommittedPODetail tr').each(function () {
+        //                    //    var id = $(this).find("td:eq(0)").html();
+        //                    //    if (id != null) {
+        //                    //        var html = $(this).html();
+        //                    //        alert(html);
+        //                    //    }
+        //                    //});
+        //                },
+
+        //                "order": [[1, "asc"]],
+        //                "aoColumnDefs": [
+        //                    { 'bSortable': false, 'aTargets': [0] }
+        //                ]
+
+
+        //            });
+
+
+
+
+        //        }
+
+
+        //    });
+
+
+
+
+
+
+
+
+
+
+        //});
+
+        $(document).ready(function () {
+
+            debugger;
+
+            $('#breadcrumb').remove();
+
+
+            var url = '';
+            var ID = $.trim($('#hiddn_poid').val().split('|')[0]);
+            if (LOCALORSERVERNEW == 'LOCAL') {
+
+
+
+                url = '/PurchaseOrder/getPOHistory?poid=' + ID;
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/getPOHistory?poid=' + ID;
+            }
+
+            var dataTable = "";
+            var dt = "";
+            var po = new Array();
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                //data: { 'poid': $('#hiddn_poid').val().trim() },
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+
+
+                    dt = data.data;
+
+                    //console.log(dt + "lll");
+
+                    $('#POHistory').dataTable().fnDestroy();
+
+                    debugger;
+
+                    for (i = 0; i < dt.length; i++) {
+
+                        var history = '';
+
+                        po[i] = new Array();
+                        var type = $.trim($('#hiddn_poid').val().split('|')[1]);
+
+                        if (type == "POREJECT") {
+
+
+                            if (dt[i].FldID != 0) {
+                                po[i][8] = dt[i].Version;
+                                history = '<i style="margin-left:10px;cursor:pointer;" class="fa fa-history" title="View Reject History" onclick="openRejecthistory1(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].Version + '\');"></i>';
+                            }
+                            else {
+                                po[i][8] = dt[i].Version + ' (Current)';
+                                history = '<i style="margin-left:10px;cursor:pointer;" class="fa fa-history" title="View Reject History" onclick="openRejecthistory2(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].Version + '\');"></i>';
+
+                            }
+
+                        }
+                        else {
+
+                            if (dt[i].FldID != 0) {
+                                po[i][8] = dt[i].Version;
+                                history = '<i style="margin-left:10px;cursor:pointer;" class="fa fa-history" title="View Approval History" onclick="openpohistory(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].Version + '\');"></i>';
+                            }
+                            else {
+                                po[i][8] = dt[i].Version + ' (Current)';
+                                history = '<i style="margin-left:10px;cursor:pointer;" class="fa fa-history" title="View Approval History" onclick="openpohistory2(\'' + dt[i].PurchaseOrderID + '\',\'' + dt[i].Version + '\');"></i>';
+
+                            }
+
+                        }
+
+
+
+                        po[i][0] = '<i data-poid="' + dt[i].PurchaseOrderID + '" class="fa fa-list" title="View Items" style="cursor:pointer;" onclick="openlineitems(\'' + dt[i].FldID + '\',this);"></i>'
+                            + history
+                            + '<i style="font-size: 16px;margin-left: 9px;cursor:pointer;" data-poid="' + dt[i].PurchaseOrderID + '" data-version="' + dt[i].Version + '" onclick="getAllHistory(this);" class="fa fa-info-circle" aria-hidden="true"></i>';
+
+
+                        po[i][1] = dt[i].PurchaseOrderNumber;
+                        po[i][2] = dt[i].VendorName;
+                        po[i][3] = dt[i].BuyerName;
+                        po[i][4] = dt[i].ArrivalDate;
+                        po[i][5] = dt[i].CheckBackDate;
+                        po[i][6] = dt[i].VendorCOName;
+                        po[i][7] = dt[i].InsertDate;
+
+                        po[i][9] = dt[i].AddedByName;
+                    }
+
+                    $('#POHistory').dataTable({
+                        "processing": true,
+                        "data": po,
+                        "columns":
+                            [
+                                { "title": "Action" },
+                                { "title": "PO #" },
+                                { "title": "Vendor" },
+                                { "title": "Buyer" },
+                                { "title": "Ship Date" },
+                                { "title": "CheckBack Date" },
+                                { "title": "Vendor (C/O)" },
+                                { "title": "Created Date" },
+                                { "title": "Version" },
+                                { "title": "Added By" }
+
+                            ],
+                        "initComplete": function () {
+                            //$('#UnCommittedPODetail tr').each(function () {
+                            //    var id = $(this).find("td:eq(0)").html();
+                            //    if (id != null) {
+                            //        var html = $(this).html();
+                            //        alert(html);
+                            //    }
+                            //});
+                        },
+
+                        "order": [[1, "asc"]],
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0] }
+                        ]
+
+
+                    });
+
+
+
+
+                }
+
+
+            });
+
+
+
+
+
+
+
+
+
+
+        });
+
+        function openRejecthistory1(POID, Version) {
+
+            
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/POHistory1';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/POHistory1';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'POID' : '" + POID + "','Version' : '" + Version + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+                    var html = "<div><table border='1' class='display no-footer dataTable'><thead><th>Action</th><th>Comment</th></thead>";
+                    data = data.data;
+
+                    for (var i = 0; i < data.length; i++) {
+                        html += "";
+                        var lvl = data[i].Level;
+                        var LevelStatus = data[i].LevelStatus;
+                        if (data[i].Approved != 0 || data[i].Rejected != 0 || data[i].Comment != '') {
+                            var Approved = data[i].Approved;
+                            var Rejected = data[i].Rejected;
+                            var InsertDate = data[i].InsertDate;
+                            var Comment = data[i].Comment;
+                            var Version = data[i].Version;
+                            var UserName = data[i].UserName;
+                            var ManagerName = data[i].ManagerName;
+                            var fname = data[i].FName;
+                            var fhtml = '';
+
+                            for (var j = 0; j < fname.split('$$$$').length; j++) {
+                                if (fhtml == '') {
+                                    fhtml = '<a target="_blank" href="../../Assets/POApprovals/' + fname.split('$$$$')[j] + '">' + fname.split('$$$$')[j] + '</a>';
+                                }
+                                else {
+                                    fhtml = ', <a target="_blank" href="../../Assets/POApprovals/' + fname.split('$$$$')[i] + '">' + fname.split('$$$$')[j] + '</a>';
+
+                                }
+                            }
+
+                            //html += "<tr><td style='text-align:left;'>";
+                            html += "<tr  style='background: rgb(192, 186, 186);'>";
+
+                            //if (Approved == "1") {
+                            //    html += "Approved ";
+                            //}
+                            //else {
+                            //    html += "Rejected ";
+                            //}
+                            var txt = "";
+                            //if (Approved == "1") {
+                            //    txt = "Approved";
+                            //}
+                            if (Rejected == "1") {
+                                txt = "Rejected";
+                            }
+                            else {
+                                txt = "Commented";
+                            }
+
+                            var tmpstr = "";
+
+                            if (ManagerName == "") {
+                                tmpstr = " By " + UserName;
+                            }
+                            else {
+                                tmpstr = " By " + ManagerName + " on behalf of " + UserName;
+
+                            }
+                            html += "<td> (" + numArray[lvl] + " LEVEL APPROVAL) " + txt + " On " + InsertDate + tmpstr + " </td>";//tmpstr + " on " + InsertDate + "</td>";
+                            html += "<td>" + Comment + "</td>"
+                            html += "<td>" + fhtml + "</td></tr>";
+                        }
+                        else {
+                            html += "<tr  style='background: rgb(192, 186, 186);'>";
+                            html += "<td>" + numArray[lvl] + " Level Sent for approval On " + data[i].InsertDate + " By " + data[i].UserName + " </td>";//tmpstr + " on " + InsertDate + "</td>";
+                            html += "<td></td>"
+                            html += "<td></td></tr>";
+                        }
+                    }
+                    html += "</table></div>";
+                    var totl = 0;
+                    var approved = 0;
+                    // alert(html);
+                    if (data.length == 0) {
+                        html = "<span>No History found<span>";
+                    }
+                    else {
+                        totl = parseInt(LevelStatus.split('^')[0]);
+                        approved = parseInt(LevelStatus.split('^')[1]);
+                    }
+                    var lab = new Array();
+
+                    for (var i = 1; i <= totl; i++) {
+                        lab.push(numArray[i] + ' LEVEL');
+                    }
+
+                    if (lvl != '' || lvl != undefined) {
+                        $('#my1').milestones({
+                            stage: approved,
+                            checks: approved - 1,
+                            checkclass: 'checks',
+                            labels: lab
+                        });
+
+                    }
+
+                    $('#rejecthistorypopup').modal('show');
+
+                    $('#rejecthistorylist tbody').html(html);
+
+
+
+
+
+                }
+
+
+            });
+
+
+        }
+
+        function openRejecthistory2(POID, Version) {
+            
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/POHistory2';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/POHistory2';
+            }
+
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'POID' : '" + POID + "','Version' : '" + Version + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+                    var html = "";//<div><table border='1' class='display no-footer dataTable'><thead><th>Action</th><th>Comment</th><th>Files</th></thead>";
+                    data = data.data;
+
+                    for (var i = 0; i < data.length; i++) {
+                        html += "";
+                        var lvl = data[i].Level;
+                        var LevelStatus = data[i].LevelStatus;
+                        if (data[i].Approved != 0 || data[i].Rejected != 0 || data[i].Comment != '') {
+                            var Approved = data[i].Approved;
+                            var Rejected = data[i].Rejected;
+                            var InsertDate = data[i].InsertDate;
+                            var Comment = data[i].Comment;
+                            var Version = data[i].Version;
+                            var UserName = data[i].UserName;
+                            var ManagerName = data[i].ManagerName;
+                            var fname = data[i].FName;
+                            var fhtml = '';
+
+                            for (var j = 0; j < fname.split('$$$$').length; j++) {
+                                if (fhtml == '') {
+                                    fhtml = '<a target="_blank" href="../../Assets/POApprovals/' + fname.split('$$$$')[j] + '">' + fname.split('$$$$')[j] + '</a>';
+                                }
+                                else {
+                                    fhtml = ', <a target="_blank" href="../../Assets/POApprovals/' + fname.split('$$$$')[i] + '">' + fname.split('$$$$')[j] + '</a>';
+
+                                }
+                            }
+
+                            //html += "<tr><td style='text-align:left;'>";
+                            html += "<tr  style='background: rgb(192, 186, 186);'>";
+
+                            //if (Approved == "1") {
+                            //    html += "Approved ";
+                            //}
+                            //else {
+                            //    html += "Rejected ";
+                            //}
+                            var txt = "";
+                            //if (Approved == "1") {
+                            //    txt = "Approved";
+                            //}
+                            if (Rejected == "1") {
+                                txt = "Rejected";
+                            }
+                            else {
+                                txt = "Commented";
+                            }
+
+                            var tmpstr = "";
+
+                            if (ManagerName == "") {
+                                tmpstr = " By " + UserName;
+                            }
+                            else {
+                                tmpstr = " By " + ManagerName + " on behalf of " + UserName;
+
+                            }
+                            html += "<td> (" + numArray[lvl] + " LEVEL APPROVAL) " + txt + " On " + InsertDate + tmpstr + " </td>";//tmpstr + " on " + InsertDate + "</td>";
+                            html += "<td>" + Comment + "</td>"
+                            html += "<td>" + fhtml + "</td></tr>";
+
+                        }
+                        else {
+                            html += "<tr  style='background: rgb(192, 186, 186);'>";
+                            html += "<td>" + numArray[lvl] + " Level Sent for approval On " + data[i].InsertDate + " By " + data[i].UserName + " </td>";//tmpstr + " on " + InsertDate + "</td>";
+                            html += "<td></td>"
+                            html += "<td></td></tr>";
+                        }
+
+                    }
+                    html += "</table></div>";
+                    var totl = 0;
+                    var approved = 0;
+                    // alert(html);
+                    if (data.length == 0) {
+                        html = "<span>No History found<span>";
+                    }
+                    else {
+                        totl = parseInt(LevelStatus.split('^')[0]);
+                        approved = parseInt(LevelStatus.split('^')[1]);
+                    }
+
+                    var lab = new Array();
+
+                    for (var i = 1; i <= totl; i++) {
+                        lab.push(numArray[i] + ' LEVEL');
+                    }
+
+                    if (lvl != '' || lvl != undefined) {
+                        $('#my1').milestones({
+                            stage: approved,
+                            checks: approved - 1,
+                            checkclass: 'checks',
+                            labels: lab//["jQuery", "Script", "Net", "Timeline", "Milestones", "Demo", "Final"]
+                        });
+
+                    }
+
+                    $('#rejecthistorypopup').modal('show');
+
+                    $('#rejecthistorylist tbody').html(html);
+
+
+
+
+
+                }
+
+
+            });
+
+
+        }
+
+        function openpohistory(POID, Version) {
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/getPOApprovalsBackup';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/getPOApprovalsBackup';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'POID' : '" + POID + "','Version' : '" + Version + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+                    var html = "<div><table border='1' class='display no-footer dataTable'><thead><th>Action</th><th>Comment</th></thead>";
+                    data = data.data;
+
+                    for (var i = 0; i < data.length; i++) {
+                        html += "";
+                        var lvl = data[i].Level;
+                        var LevelStatus = data[i].LevelStatus;
+                        if (data[i].Approved != 0 || data[i].Rejected != 0 || data[i].Comment != '') {
+                            var Approved = data[i].Approved;
+                            var Rejected = data[i].Rejected;
+                            var InsertDate = data[i].InsertDate;
+                            var Comment = data[i].Comment;
+                            var Version = data[i].Version;
+                            var UserName = data[i].UserName;
+                            var ManagerName = data[i].ManagerName;
+                            var fname = data[i].FName;
+                            var fhtml = '';
+
+                            for (var j = 0; j < fname.split('$$$$').length; j++) {
+                                if (fhtml == '') {
+                                    fhtml = '<a target="_blank" href="../../Assets/POApprovals/' + fname.split('$$$$')[j] + '">' + fname.split('$$$$')[j] + '</a>';
+                                }
+                                else {
+                                    fhtml = ', <a target="_blank" href="../../Assets/POApprovals/' + fname.split('$$$$')[i] + '">' + fname.split('$$$$')[j] + '</a>';
+
+                                }
+                            }
+
+                            //html += "<tr><td style='text-align:left;'>";
+                            html += "<tr  style='background: rgb(192, 186, 186);'>";
+
+                            //if (Approved == "1") {
+                            //    html += "Approved ";
+                            //}
+                            //else {
+                            //    html += "Rejected ";
+                            //}
+                            var txt = "";
+                            if (Approved == "1") {
+                                txt = "Approved";
+                            }
+                            else if (Rejected == "1") {
+                                txt = "Rejected";
+                            }
+                            else {
+                                txt = "Commented";
+                            }
+
+                            var tmpstr = "";
+
+                            if (ManagerName == "") {
+                                tmpstr = " By " + UserName;
+                            }
+                            else {
+                                tmpstr = " By " + ManagerName + " on behalf of " + UserName;
+
+                            }
+                            html += "<td> (" + numArray[lvl] + " LEVEL APPROVAL) " + txt + " On " + InsertDate + tmpstr + " </td>";//tmpstr + " on " + InsertDate + "</td>";
+                            html += "<td>" + Comment + "</td>"
+                            html += "<td>" + fhtml + "</td></tr>";
+                        }
+                        else {
+                            html += "<tr  style='background: rgb(192, 186, 186);'>";
+                            html += "<td> Sent for approval On " + data[i].InsertDate + " By " + data[i].UserName + " </td>";//tmpstr + " on " + InsertDate + "</td>";
+                            html += "<td></td>"
+                            html += "<td></td></tr>";
+                        }
+                    }
+                    html += "</table></div>";
+                    var totl = 0;
+                    var approved = 0;
+                    // alert(html);
+                    if (data.length == 0) {
+                        html = "<span>No History found<span>";
+                    }
+                    else {
+                        totl = parseInt(LevelStatus.split('^')[0]);
+                        approved = parseInt(LevelStatus.split('^')[1]);
+                    }
+                    var lab = new Array();
+
+                    for (var i = 1; i <= totl; i++) {
+                        lab.push(numArray[i] + ' LEVEL');
+                    }
+
+                    if (lvl != '' || lvl != undefined) {
+                        $('#my1').milestones({
+                            stage: totl,
+                            checks: approved - 1,
+                            checkclass: 'checks',
+                            labels: lab//["jQuery", "Script", "Net", "Timeline", "Milestones", "Demo", "Final"]
+                        });
+
+                    }
+
+                    $('#pohistorypopup').modal('show');
+
+                    $('#pohistorylist tbody').html(html);
+
+                    //for (var i = 0; i < data.length; i++) {
+                    //    html += "";
+                    //    var Approved = data[i].Approved;
+                    //    var Rejected = data[i].Rejected;
+                    //    var InsertDate = data[i].InsertDate;
+                    //    var Comment = data[i].Comment;
+                    //    var Version = data[i].Version;
+                    //    var UserName = data[i].UserName;
+                    //    var ManagerName = data[i].ManagerName;
+
+                    //    html += "<tr><td style='text-align:left;'>";
+
+                    //    if (Approved == "1") {
+                    //        html += "Approved ";
+                    //    }
+                    //    else {
+                    //        html += "Rejected ";
+                    //    }
+
+                    //    var tmpstr = "";
+
+                    //    if (ManagerName == "") {
+                    //        tmpstr = "By " + UserName;
+                    //    }
+                    //    else {
+                    //        tmpstr = "By " + ManagerName + " on behalf of " + UserName;
+
+                    //    }
+                    //    html += tmpstr + " on " + InsertDate + "</td>";
+                    //    html += "<td>" + Comment + "</td></tr>";
+
+                    //}
+                    //html += "</table></div>";
+
+                    //// alert(html);
+                    //if (data.length == 0) {
+                    //    html = "<span>No History found<span>";
+                    //}
+
+                    //$('#pohistory').html(html);
+
+                    //$('#popuppohistory').modal('show');
+
+
+
+                }
+
+
+            });
+
+
+        }
+
+
+        function openpohistory2(POID, Version) {
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/getPOApprovalsBackup2';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/getPOApprovalsBackup2';
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'POID' : '" + POID + "','Version' : '" + Version + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+                    var html = "";//<div><table border='1' class='display no-footer dataTable'><thead><th>Action</th><th>Comment</th><th>Files</th></thead>";
+                    data = data.data;
+
+                    for (var i = 0; i < data.length; i++) {
+                        html += "";
+                        var lvl = data[i].Level;
+                        var LevelStatus = data[i].LevelStatus;
+                        if (data[i].Approved != 0 || data[i].Rejected != 0 || data[i].Comment != '') {
+                            var Approved = data[i].Approved;
+                            var Rejected = data[i].Rejected;
+                            var InsertDate = data[i].InsertDate;
+                            var Comment = data[i].Comment;
+                            var Version = data[i].Version;
+                            var UserName = data[i].UserName;
+                            var ManagerName = data[i].ManagerName;
+                            var fname = data[i].FName;
+                            var fhtml = '';
+
+                            for (var j = 0; j < fname.split('$$$$').length; j++) {
+                                if (fhtml == '') {
+                                    fhtml = '<a target="_blank" href="../../Assets/POApprovals/' + fname.split('$$$$')[j] + '">' + fname.split('$$$$')[j] + '</a>';
+                                }
+                                else {
+                                    fhtml = ', <a target="_blank" href="../../Assets/POApprovals/' + fname.split('$$$$')[i] + '">' + fname.split('$$$$')[j] + '</a>';
+
+                                }
+                            }
+
+                            //html += "<tr><td style='text-align:left;'>";
+                            html += "<tr  style='background: rgb(192, 186, 186);'>";
+
+                            //if (Approved == "1") {
+                            //    html += "Approved ";
+                            //}
+                            //else {
+                            //    html += "Rejected ";
+                            //}
+                            var txt = "";
+                            if (Approved == "1") {
+                                txt = "Approved";
+                            }
+                            else if (Rejected == "1") {
+                                txt = "Rejected";
+                            }
+                            else {
+                                txt = "Commented";
+                            }
+
+                            var tmpstr = "";
+
+                            if (ManagerName == "") {
+                                tmpstr = " By " + UserName;
+                            }
+                            else {
+                                tmpstr = " By " + ManagerName + " on behalf of " + UserName;
+
+                            }
+                            html += "<td> (" + numArray[lvl] + " LEVEL APPROVAL) " + txt + " On " + InsertDate + tmpstr + " </td>";//tmpstr + " on " + InsertDate + "</td>";
+                            html += "<td>" + Comment + "</td>"
+                            html += "<td>" + fhtml + "</td></tr>";
+
+                        }
+                        else {
+                            html += "<tr  style='background: rgb(192, 186, 186);'>";
+                            html += "<td> Sent for approval On " + data[i].InsertDate + " By " + data[i].UserName + " </td>";//tmpstr + " on " + InsertDate + "</td>";
+                            html += "<td></td>"
+                            html += "<td></td></tr>";
+                        }
+
+                    }
+                    html += "</table></div>";
+                    var totl = 0;
+                    var approved = 0;
+                    // alert(html);
+                    if (data.length == 0) {
+                        html = "<span>No History found<span>";
+                    }
+                    else {
+                        totl = parseInt(LevelStatus.split('^')[0]);
+                        approved = parseInt(LevelStatus.split('^')[1]);
+                    }
+
+                    var lab = new Array();
+
+                    for (var i = 1; i <= totl; i++) {
+                        lab.push(numArray[i] + ' LEVEL');
+                    }
+
+                    if (lvl != '' || lvl != undefined) {
+                        $('#my1').milestones({
+                            stage: totl,
+                            checks: approved - 1,
+                            checkclass: 'checks',
+                            labels: lab//["jQuery", "Script", "Net", "Timeline", "Milestones", "Demo", "Final"]
+                        });
+
+                    }
+
+                    $('#pohistorypopup').modal('show');
+
+                    $('#pohistorylist tbody').html(html);
+
+                    //$('#pohistory').html(html);
+
+                    //$('#popuppohistory').modal('show');
+
+
+
+                }
+
+
+            });
+
+
+        }
+
+
+        //function openpohistory(POID, Version) {
+
+        //    var url = '';
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url = '/PurchaseOrder/getPOApprovalsBackup';
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+        //        url = 'PurchaseOrder/getPOApprovalsBackup';
+        //    }
+
+
+        //    $.ajax({
+        //        type: "POST",
+        //        url: url,
+        //        data: "{ 'POID' : '" + POID + "','Version' : '" + Version + "'}",
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "JSON",
+        //        success: function (data) {
+        //            var html = "<div><table border='1' class='display no-footer dataTable'><thead><th>Action</th><th>Comment</th></thead>";
+        //            data = data.data;
+
+        //            for (var i = 0; i < data.length; i++) {
+        //                html += "";
+        //                var Approved = data[i].Approved;
+        //                var Rejected = data[i].Rejected;
+        //                var InsertDate = data[i].InsertDate;
+        //                var Comment = data[i].Comment;
+        //                var Version = data[i].Version;
+        //                var UserName = data[i].UserName;
+        //                var ManagerName = data[i].ManagerName;
+
+        //                html += "<tr><td style='text-align:left;'>";
+
+        //                if (Approved == "1") {
+        //                    html += "Approved ";
+        //                }
+        //                else {
+        //                    html += "Rejected ";
+        //                }
+
+        //                var tmpstr = "";
+
+        //                if (ManagerName == "") {
+        //                    tmpstr = "By " + UserName;
+        //                }
+        //                else {
+        //                    tmpstr = "By " + ManagerName + " on behalf of " + UserName;
+
+        //                }
+        //                html += tmpstr + " on " + InsertDate + "</td>";
+        //                html += "<td>" + Comment + "</td></tr>";
+
+        //            }
+        //            html += "</table></div>";
+
+        //            // alert(html);
+        //            if(data.length == 0){
+        //                html = "<span>No History found<span>";
+        //            }
+
+        //            $('#pohistory').html(html);
+
+        //            $('#popuppohistory').modal('show');
+
+
+
+        //        }
+
+
+        //    });
+
+
+        //}
+
+
+        //function openpohistory2(POID, Version) {
+
+        //    var url = '';
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url = '/PurchaseOrder/getPOApprovalsBackup2';
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+        //        url = 'PurchaseOrder/getPOApprovalsBackup2';
+        //    }
+
+
+        //    $.ajax({
+        //        type: "POST",
+        //        url: url,
+        //        data: "{ 'POID' : '" + POID + "','Version' : '" + Version + "'}",
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "JSON",
+        //        async:false,
+        //        success: function (data) {
+        //            var html = "<div><table border='1' class='display no-footer dataTable'><thead><th>Action</th><th>Comment</th><th>Files</th></thead>";
+        //            data = data.data;
+
+        //            for (var i = 0; i < data.length; i++) {
+        //                html += "";
+        //                var Approved = data[i].Approved;
+        //                var Rejected = data[i].Rejected;
+        //                var InsertDate = data[i].InsertDate;
+        //                var Comment = data[i].Comment;
+        //                var Version = data[i].Version;
+        //                var UserName = data[i].UserName;
+        //                var ManagerName = data[i].ManagerName;
+        //                var fname = data[i].FName;
+        //                var fhtml = '';
+
+        //                for (var j = 0; j < fname.split('$$$$').length; j++) {
+        //                    if (fhtml == '') {
+        //                        fhtml = '<a target="_blank" href="../../Assets/POApprovals/' + fname.split('$$$$')[j] + '">' + fname.split('$$$$')[j] + '</a>';
+        //                    }
+        //                    else {
+        //                        fhtml = ', <a target="_blank" href="../../Assets/POApprovals/' + fname.split('$$$$')[i] + '">' + fname.split('$$$$')[j] + '</a>';
+
+        //                    }
+        //                }
+
+        //                html += "<tr><td style='text-align:left;'>";
+
+        //                if (Approved == "1") {
+        //                    html += "Approved ";
+        //                }
+        //                else {
+        //                    html += "Rejected ";
+        //                }
+
+        //                var tmpstr = "";
+
+        //                if (ManagerName == "") {
+        //                    tmpstr = "By " + UserName;
+        //                }
+        //                else {
+        //                    tmpstr = "By " + ManagerName + " on behalf of " + UserName;
+
+        //                }
+        //                html += tmpstr + " on " + InsertDate + "</td>";
+        //                html += "<td>" + Comment + "</td>"
+        //                html += "<td>" + fhtml + "</td></tr>";
+
+        //            }
+        //            html += "</table></div>";
+
+        //            // alert(html);
+        //            if (data.length == 0) {
+        //                html = "<span>No History found<span>";
+        //            }
+
+        //            $('#pohistory').html(html);
+
+        //            $('#popuppohistory').modal('show');
+
+
+
+        //        }
+
+
+        //    });
+
+
+        //}
+
+
+        function openlineitems(poid, obj) {
+
+            var url = '';
+
+            if (poid == '0') {
+                var poid = $(obj).attr('data-poid');
+
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/getPOBackupLineItems2?poid=' + poid;
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/getPOBackupLineItems2?poid=' + poid;
+                }
+
+            }
+            else {
+
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/PurchaseOrder/getPOBackupLineItems?poid=' + poid;
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'PurchaseOrder/getPOBackupLineItems?poid=' + poid;
+                }
+
+            }
+
+
+            //console.log(1);
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {},
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                success: function (data) {
+
+                    console.log(data);
+
+                    data = JSON.parse(data);
+
+
+
+                    var dataTable = "";
+                    var dt = "";
+                    var lineitems = new Array();
+
+                    console.log(data.data);
+
+
+                    dt = data.data;
+
+                    $('#polineitems').dataTable().fnDestroy();
+
+
+
+                    for (i = 0; i < dt.length; i++) {
+
+                        lineitems[i] = new Array();
+
+                        lineitems[i][0] = dt[i].ItemDescription;
+                        lineitems[i][1] = dt[i].SpecNum;
+                        lineitems[i][2] = dt[i].Vendor;
+                        lineitems[i][3] = dt[i].ItemOrder;
+                        lineitems[i][4] = numberWithCommas(formatNumber(parseFloat(dt[i].Quantity)));
+                        lineitems[i][5] = dt[i].UOM;
+                        lineitems[i][6] = numberWithCommas(formatNumber(parseFloat(dt[i].Cost)));
+                        lineitems[i][7] = numberWithCommas(formatNumber(parseFloat(dt[i].Cost * dt[i].Quantity)));
+
+                    }
+
+                    $('#polineitems').dataTable({
+                        "processing": true,
+                        "data": lineitems,
+                        "columns":
+                            [
+                                { "title": "Item Description", "class": "leftposition" },
+                                { "title": "SpecNum" },
+                                { "title": "Vendor", "class": "leftposition" },
+                                { "title": "ItemOrder", "class": "displaynone" },
+                                { "title": "Quantity", "class": "rightposition" },
+                                { "title": "UOM  " },
+                                { "title": "Cost", "class": "rightposition" },
+                                { "title": "Total", "class": "rightposition" }
+
+                            ],
+                        "initComplete": function () {
+                            //$('#UnCommittedPODetail tr').each(function () {
+                            //    var id = $(this).find("td:eq(0)").html();
+                            //    if (id != null) {
+                            //        var html = $(this).html();
+                            //        alert(html);
+                            //    }
+                            //});
+                        },
+                        "order": [[3, "asc"]]
+                    });
+
+                    $('#popuplineitems').modal('show');
+
+
+
+
+                }
+
+            });
+
+            //console.log(3);
+
+            //  $('#popuplineitems').modal('show');
+        }
+
+
+        function getAllHistory(obj) {
+
+            var ver = $(obj).attr('data-version');
+            var id = $(obj).attr('data-poid');
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/gethistoryall';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/gethistoryall';
+            }
+
+            var dataTable = "";
+            var dt = "";
+            var po = new Array();
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ \"POID\" : \"" + id + "\",\"Version\" : \"" + ver + "\"}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+
+                    var html = "";
+
+                    var lastdate = "";
+
+                    var lineitems = new Array();
+
+
+                    data = data.data;
+
+                    //$('#poallhistorytable').dataTable().fnDestroy();
+                    var aindx = 0;
+                    //console.log("***************");
+                    console.log(data)
+                    for (var t = 0; t < data.length; t++) {
+                        if (lastdate == "" || lastdate != data[t].OperationON) {
+
+                            lineitems[aindx] = new Array();
+
+                            var mode = '';
+
+                            if (data[t].Mode == "PO_UPDATE") {
+                                mode = 'PO UPDATE <i style="cursor:pointer;" class="fa fa-info-circle" onclick="getUpdatedFieldDetails(this);" aria-hidden="true"></i>';
+                            }
+                            else if (data[t].Mode == "POITEM_UPDATE") {
+                                mode = 'PO ITEM UPDATE <i style="cursor:pointer;" class="fa fa-info-circle" onclick="getUpdatedFieldDetailsItem(this);" aria-hidden="true"></i>';
+                            }
+                            else if (data[t].Mode == "POITEM_CREATE") {
+                                mode = 'PO ITEM CREATED<i style="cursor:pointer;" class="fa fa-info-circle" onclick="getUpdatedFieldDetailsItem(this);" aria-hidden="true"></i>';
+                            }
+                            else if (data[t].Mode == "POITEM_DELETED") {
+                                mode = 'PO ITEM DELETE<i style="cursor:pointer;" class="fa fa-info-circle" onclick="getUpdatedFieldDetailsItem(this);" aria-hidden="true"></i>';
+                            }
+                            else {
+                                mode = data[t].Mode.replace('_', ' ');
+                            }
+
+                            lineitems[aindx][0] = data[t].User;
+                            lineitems[aindx][1] = mode;
+                            lineitems[aindx][2] = data[t].OperationONShow;
+                            lineitems[aindx][3] = data[t].FldID;
+
+                            aindx++;
+
+
+                        }
+                        lastdate = data[t].OperationON;
+                    }
+
+                    //console.log(lineitems);
+                    //console.log($('#poallhistorytable thead').find('tr').length);
+
+                    if ($('#poallhistorytable thead').find('tr').length > 1) {
+                        $('#poallhistorytable thead').find('tr:eq(1)').remove();
+                    }
+
+
+
+                    $('#poallhistorytable').dataTable({
+                        "processing": true,
+                        "data": lineitems,
+                        "destroy": true,
+
+                        "columns":
+                            [
+                                { "title": "User", "class": "leftposition" },
+                                { "title": "Action", "class": "leftposition" },
+                                { "title": "Date", "class": "leftposition" },
+                                { "title": "Date", "class": "displaynone" }
+
+
+                            ],
+                        "order": [[2, "desc"]],
+                        "initComplete": function () {
+
+
+                            var html = "<tr>"
+                                + "<th class='Resetth' rowspan='1' colspan='1'>"
+                                + "<a><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px;' /></a></th>"
+
+
+                                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'></th>"
+
+                                + "</tr>";
+
+                            if ($('#poallhistorytable thead').find('tr').length == 1) {
+                                $('#poallhistorytable thead').append(html);
+                            }
+                            else {
+                                $('#poallhistorytable thead').find('tr:eq(1)').remove();
+                                $('#poallhistorytable thead').append(html);
+
+                            }
+
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+
+                                var table = $('#poallhistorytable').DataTable();
+                                table
+                                    .column(indx)
+                                    .search(txt)
+                                    .draw();
+
+                                if (indx == '13') {
+
+                                    if (txt != '') {
+                                        $('#poallhistorytable tbody tr').each(function (index, item) {
+
+                                            if ($(this).find("td:eq(1)").html() == '') {
+                                                $(this).hide();
+                                            }
+
+                                        });
+                                    }
+                                    else {
+                                        $('#poallhistorytable tbody tr').each(function (index, item) {
+                                            $(this).show();
+
+                                        });
+                                    }
+                                }
+
+
+                            });
+
+
+
+
+                        }
+                    });
+
+
+                    $('#poallhistorypopup').modal('show');
+
+
+                    return;
+
+
+
+                }
+
+
+            });
+
+
+
+            //console.log(id + ">>>" + ver);
+        }
+
+        function getUpdatedFieldDetailsItem(obj) {
+
+            var rw = $(obj).parent().parent();
+            var fldid = $(rw).find('td:eq(3)').html();
+            var Username = $(rw).find('td:eq(0)').html();
+            var date = $(rw).find('td:eq(2)').html();
+            $('#historydetailsheader').text(Username + ' - ' + 'Update - ' + date);
+            //console.log(fldid);
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/getFieldchangeDetailsItem';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/getFieldchangeDetailsItem';
+            }
+
+            var dataTable = "";
+            var dt = "";
+            var po = new Array();
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ \"FLDId\" : \"" + fldid + "\"}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+
+
+
+                    var lineitems = new Array();
+
+
+                    data = data.data;
+
+                    console.log(data);
+                    console.log("ddddd");
+                    //return;
+
+
+                    $('#historydetails').dataTable().fnDestroy();
+                    var aindx = 0;
+
+
+                    var itemnum = data[0].TotalID;
+
+                    $('#historydetailsheader').text(Username + ' - ' + 'Update - ' + date + ' (' + itemnum + ')');
+
+
+                    if (data[0].ItemDescription != data[1].ItemDescription) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Item Description";
+                        lineitems[aindx][1] = data[0].ItemDescription;
+                        lineitems[aindx][2] = data[1].ItemDescription;
+
+
+                        aindx++;
+                    }
+
+                    if (data[0].SpecNum != data[1].SpecNum) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Spec Num";
+                        lineitems[aindx][1] = data[0].SpecNum;
+                        lineitems[aindx][2] = data[1].SpecNum;
+
+
+                        aindx++;
+                    }
+                    if (data[0].Vendor != data[1].Vendor) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Vendor";
+                        lineitems[aindx][1] = data[0].Vendor;
+                        lineitems[aindx][2] = data[1].Vendor;
+
+
+                        aindx++;
+                    }
+                    if (data[0].Quantity != data[1].Quantity) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Quantity";
+                        lineitems[aindx][1] = data[0].Quantity;
+                        lineitems[aindx][2] = data[1].Quantity;
+
+
+                        aindx++;
+                    }
+                    if (data[0].Cost != data[1].Cost) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Cost";
+                        lineitems[aindx][1] = data[0].Cost;
+                        lineitems[aindx][2] = data[1].Cost;
+
+
+                        aindx++;
+                    }
+                    if (data[0].Note != data[1].Note) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Note";
+                        lineitems[aindx][1] = data[0].Note;
+                        lineitems[aindx][2] = data[1].Note;
+
+
+                        aindx++;
+                    }
+                    if (data[0].Tagging != data[1].Tagging) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Tagging";
+                        lineitems[aindx][1] = data[0].Tagging;
+                        lineitems[aindx][2] = data[1].Tagging;
+
+
+                        aindx++;
+                    }
+
+
+                    if (data[0].ItemDtldDesc != data[1].ItemDtldDesc) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Item Detailed Description";
+                        lineitems[aindx][1] = decodeURI(data[0].ItemDtldDesc);
+                        lineitems[aindx][2] = decodeURI(data[1].ItemDtldDesc);
+
+
+                        aindx++;
+                    }
+
+                    if (data[0].UOM != data[1].UOM) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "UOM";
+                        lineitems[aindx][1] = data[0].UOM;
+                        lineitems[aindx][2] = data[1].UOM;
+
+
+                        aindx++;
+                    }
+
+
+
+
+
+
+
+                    //console.log(lineitems);
+
+
+                    $('#historydetails').dataTable({
+                        "processing": true,
+                        "data": lineitems,
+                        "columns":
+                            [
+                                { "title": "Field", "class": "leftposition" },
+                                { "title": "Old Value", "class": "leftposition" },
+                                { "title": "New Value", "class": "leftposition" }
+
+                            ],
+                        "order": [[2, "asc"]],
+                        "initComplete": function () {
+
+
+                            var html = "<tr>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='0' type='text'></th>"
+
+                                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'></th>"
+
+                                + "</tr>";
+
+
+                            if ($('#historydetails thead').find('tr').length == 1) {
+                                $('#historydetails thead').append(html);
+                            }
+                            else {
+                                $('#historydetails thead').find('tr:eq(1)').remove();
+                                $('#historydetails thead').append(html);
+
+                            }
+
+
+
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+
+                                var table = $('#historydetails').DataTable();
+                                table
+                                    .column(indx)
+                                    .search(txt)
+                                    .draw();
+
+                                if (indx == '13') {
+
+                                    if (txt != '') {
+                                        $('#historydetails tbody tr').each(function (index, item) {
+
+                                            if ($(this).find("td:eq(1)").html() == '') {
+                                                $(this).hide();
+                                            }
+
+                                        });
+                                    }
+                                    else {
+                                        $('#historydetails tbody tr').each(function (index, item) {
+                                            $(this).show();
+
+                                        });
+                                    }
+                                }
+
+
+                            });
+
+
+
+
+                        }
+                    });
+
+
+
+                    $('#historydetailsmodal').modal('show');
+                    $('#poallhistorypopup').modal('hide');
+
+                }
+                , failed: function () {
+                    //alert("HIII");
+                }
+
+            });
+
+
+
+        }
+
+
+
+        function getUpdatedFieldDetails(obj) {
+
+            var rw = $(obj).parent().parent();
+            var fldid = $(rw).find('td:eq(3)').html();
+            var Username = $(rw).find('td:eq(0)').html();
+            var date = $(rw).find('td:eq(2)').html();
+            $('#historydetailsheader').text(Username + ' - ' + 'Update - ' + date);
+            //console.log(fldid);
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrder/getFieldchangeDetails';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrder/getFieldchangeDetails';
+            }
+
+            var dataTable = "";
+            var dt = "";
+            var po = new Array();
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ \"FLDId\" : \"" + fldid + "\"}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+
+
+                    var lineitems = new Array();
+
+
+                    data = data.data;
+
+                    $('#historydetails').dataTable().fnDestroy();
+                    var aindx = 0;
+
+
+
+
+
+
+
+                    if (data[0].Vendor != data[1].Vendor) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Vendor";
+                        lineitems[aindx][1] = data[0].Vendor;
+                        lineitems[aindx][2] = data[1].Vendor;
+
+
+                        aindx++;
+                    }
+
+                    if (data[0].VendorCO != data[1].VendorCO) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Vendor CO";
+                        lineitems[aindx][1] = data[0].VendorCO;
+                        lineitems[aindx][2] = data[1].VendorCO;
+
+
+                        aindx++;
+                    }
+                    if (data[0].ShipMethod != data[1].ShipMethod) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Ship Method";
+                        lineitems[aindx][1] = data[0].ShipMethod;
+                        lineitems[aindx][2] = data[1].ShipMethod;
+
+
+                        aindx++;
+                    }
+                    if (data[0].ConversionRate != data[1].ConversionRate) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Conversion Rate";
+                        lineitems[aindx][1] = data[0].ConversionRate;
+                        lineitems[aindx][2] = data[1].ConversionRate;
+
+
+                        aindx++;
+                    }
+                    if (data[0].ArrivalDate != data[1].ArrivalDate) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Arrival Date";
+                        lineitems[aindx][1] = data[0].ArrivalDate;
+                        lineitems[aindx][2] = data[1].ArrivalDate;
+
+
+                        aindx++;
+                    }
+                    if (data[0].CheckBackDate != data[1].CheckBackDate) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "CheckBack Date";
+                        lineitems[aindx][1] = data[0].CheckBackDate;
+                        lineitems[aindx][2] = data[1].CheckBackDate;
+
+
+                        aindx++;
+                    }
+                    if (data[0].FOB != data[1].FOB) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "FOB";
+                        lineitems[aindx][1] = data[0].FOB;
+                        lineitems[aindx][2] = data[1].FOB;
+
+
+                        aindx++;
+                    }
+
+
+                    if (data[0].Freight != data[1].Freight) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Freight";
+                        lineitems[aindx][1] = data[0].Freight;
+                        lineitems[aindx][2] = data[1].Freight;
+
+
+                        aindx++;
+                    }
+
+                    if (data[0].ShipTo != data[1].ShipTo) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Ship To";
+                        lineitems[aindx][1] = data[0].ShipTo;
+                        lineitems[aindx][2] = data[1].ShipTo;
+
+
+                        aindx++;
+                    }
+
+
+                    if (data[0].InvoiceTo != data[1].InvoiceTo) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Invoice To";
+                        lineitems[aindx][1] = data[0].InvoiceTo;
+                        lineitems[aindx][2] = data[1].InvoiceTo;
+
+
+                        aindx++;
+                    }
+
+                    if (data[0].Address != data[1].Address) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "Address";
+                        lineitems[aindx][1] = data[0].Address;
+                        lineitems[aindx][2] = data[1].Address;
+
+
+                        aindx++;
+                    }
+
+                    if (data[0].GSTHST != data[1].GSTHST) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "GSTHST";
+                        lineitems[aindx][1] = data[0].GSTHST;
+                        lineitems[aindx][2] = data[1].GSTHST;
+
+
+                        aindx++;
+                    }
+                    if (data[0].GSTHSTName != data[1].GSTHSTName) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "GSTHST Name";
+                        lineitems[aindx][1] = data[0].GSTHSTName;
+                        lineitems[aindx][2] = data[1].GSTHSTName;
+
+
+                        aindx++;
+                    }
+                    if (data[0].GSTHSTType != data[1].GSTHSTType) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "GSTHST Type";
+                        lineitems[aindx][1] = data[0].GSTHSTType;
+                        lineitems[aindx][2] = data[1].GSTHSTType;
+
+
+                        aindx++;
+                    }
+                    if (data[0].PST != data[1].PST) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "PST";
+                        lineitems[aindx][1] = data[0].PST;
+                        lineitems[aindx][2] = data[1].PST;
+
+
+                        aindx++;
+                    }
+                    if (data[0].PSTName != data[1].PSTName) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "PST Name";
+                        lineitems[aindx][1] = data[0].PSTName;
+                        lineitems[aindx][2] = data[1].PSTName;
+
+
+                        aindx++;
+                    }
+                    if (data[0].PSTType != data[1].PSTType) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "PST Type";
+                        lineitems[aindx][1] = data[0].PSTType;
+                        lineitems[aindx][2] = data[1].PSTType;
+
+
+                        aindx++;
+                    }
+                    if (data[0].StateTax != data[1].StateTax) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "State Tax";
+                        lineitems[aindx][1] = data[0].StateTax;
+                        lineitems[aindx][2] = data[1].StateTax;
+
+
+                        aindx++;
+                    }
+                    if (data[0].StateTaxName != data[1].StateTaxName) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "State Tax Name";
+                        lineitems[aindx][1] = data[0].StateTaxName;
+                        lineitems[aindx][2] = data[1].StateTaxName;
+
+
+                        aindx++;
+                    }
+                    if (data[0].StateTaxType != data[1].StateTaxType) {
+
+                        lineitems[aindx] = new Array();
+
+
+                        lineitems[aindx][0] = "State Tax Type";
+                        lineitems[aindx][1] = data[0].StateTaxType;
+                        lineitems[aindx][2] = data[1].StateTaxType;
+
+
+                        aindx++;
+                    }
+
+
+
+
+
+
+                    //console.log(lineitems);
+
+
+                    $('#historydetails').dataTable({
+                        "processing": true,
+                        "data": lineitems,
+                        "columns":
+                            [
+                                { "title": "Field", "class": "leftposition" },
+                                { "title": "New Value", "class": "leftposition" },
+                                { "title": "Old Value", "class": "leftposition" }
+
+                            ],
+                        "order": [[2, "asc"]],
+                        "initComplete": function () {
+
+
+                            var html = "<tr>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='0' type='text'></th>"
+
+                                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'></th>"
+
+                                + "</tr>";
+
+
+                            if ($('#historydetails thead').find('tr').length == 1) {
+                                $('#historydetails thead').append(html);
+                            }
+                            else {
+                                $('#historydetails thead').find('tr:eq(1)').remove();
+                                $('#historydetails thead').append(html);
+
+                            }
+
+
+
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+
+                                var table = $('#historydetails').DataTable();
+                                table
+                                    .column(indx)
+                                    .search(txt)
+                                    .draw();
+
+                                if (indx == '13') {
+
+                                    if (txt != '') {
+                                        $('#historydetails tbody tr').each(function (index, item) {
+
+                                            if ($(this).find("td:eq(1)").html() == '') {
+                                                $(this).hide();
+                                            }
+
+                                        });
+                                    }
+                                    else {
+                                        $('#historydetails tbody tr').each(function (index, item) {
+                                            $(this).show();
+
+                                        });
+                                    }
+                                }
+
+
+                            });
+
+
+
+
+                        }
+                    });
+
+
+
+                    $('#historydetailsmodal').modal('show');
+                    $('#poallhistorypopup').modal('hide');
+
+                }
+
+
+            });
+
+
+
+        }
+
+        function formatNumber(number) {
+            number = parseFloat(number);
+            //            var number = number.toFixed(2) + '';
+            number = (Math.round(number * 100) / 100).toFixed(2) + '';
+
+            var x = number.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+
+
+        function numberWithCommas(x) {
+            var parts = x.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
+        function ResetSearch() {
+            var table = $('#poallhistorytable').DataTable();
+
+            $('.srch').each(function () {
+
+                this.value = '';
+                var indx = $(this).attr('data-indx');
+                var txt = this.value;
+
+                table
+                    .column(indx)
+                    .search(txt)
+                    .draw();
+
+
+            });
+
+        }
+        $(document).ready(function () {
+
+            $("#historydetailsmodal").on("hidden.bs.modal", function () {
+                $('#historydetailsmodal').modal('hide');
+                $('#poallhistorypopup').modal('show');
+            });
+
+        });
+    </script>
+    <style>
+        table,
+        tr,
+        th,
+        td {
+            border: 1px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 6px 0px;
+            width: 96%;
+            height: 20px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+    </style>
+
+</head>
+<body>
+    <div id="popuplineitems" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Line Items</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table cellpadding="0" cellspacing="0" border="0" class="display" id="polineitems" style="text-align: center;">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <input type="hidden" id="hiddn_poid" value="@ViewBag.POID" />
+
+    <div id="historydetailsmodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="historydetailsheader"></h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-sm-12" style="max-height:500px;overflow-x:auto;">
+                            <table cellpadding="0" cellspacing="0" border="0" class="display" id="historydetails" style="text-align: center;">
+                                <thead>
+                                    <tr>
+                                        <th class='leftposition'>Field</th>
+                                        <th class='centerposition'>Value Before</th>
+                                        <th class='centerposition'>Value After</th>
+
+
+
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div id="poallhistorypopup" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">History</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12" style="overflow-x:auto;max-height:500px;">
+                            <table cellpadding="0" cellspacing="0" border="0" class="display" id="poallhistorytable" style="text-align: center;">
+                                <thead>
+                                    <tr>
+                                        <th class='leftposition'>Date</th>
+                                        <th class='leftposition'>Name</th>
+                                        <th class='leftposition'>Mode</th>
+                                        <th class='leftposition displaynone'>Mode</th>
+
+
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+  
+    <div id="pohistorypopup" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Approval History</h4>
+                </div>
+                <div class="modal-body" style="max-height:350px;overflow:auto;">
+                    <div class="milestones" id="my1"></div>
+
+                    <table class="table" id="pohistorylist" style="margin-top: 50px;">
+                        <thead style="background: #7d97ac;color: white;">
+                            <tr>
+                                <th>History</th>
+                                <th>Comment</th>
+                                <th>Files</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div id="rejecthistorypopup" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Reject History</h4>
+                </div>
+                <div class="modal-body" style="max-height:350px;overflow:auto;">
+                    <div class="milestones" id="my1"></div>
+
+                    <table class="table" id="rejecthistorylist" style="margin-top: 50px;">
+                        <thead style="background: #7d97ac;color: white;">
+                            <tr>
+                                <th>History</th>
+                                <th>Comment</th>
+                                <th>Files</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+    <div id="popuppohistory" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Approval History</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div id="pohistory">
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <div class="container-fluid" id="angulardiv" ng-app="Project" ng-controller="PO">
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header">Purchase Order History</h3>
+            </div>
+        </div>
+
+
+
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="POHistory" style="text-align: left;">
+            <thead>
+                <tr>
+                    <th style="width:30px;"></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+
+
+
+
+
+
+
+
+    </div>
+
+
+</body>     
+    
+
+</html>

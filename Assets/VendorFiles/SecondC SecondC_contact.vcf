@@ -1,0 +1,10 @@
+BEGIN:VCARD
+FN:SecondC SecondC
+TITLE:Contact
+ORG:
+ADR;WORK:;;;;;;
+TEL;Work;VOICE;:
+TEL;Cell:
+TEL;Work;FAX:
+EMAIL;Internet:rrr@yyy.yyy
+END:VCARD

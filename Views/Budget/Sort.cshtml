@@ -1,0 +1,203 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Sort</title>
+      <meta name="viewport" content="width=device-width" />
+    <title>Edit Project</title>
+
+@*    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />*@
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+
+
+    <script src="~/Scripts/GlobalJS.js"></script>
+
+    @*<script type="text/javascript" language="javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js"></script>*@
+
+     <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+    
+
+    <link href="~/css/Misc.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+
+
+
+
+
+        $.get("returntable")
+                .success(function (response) {
+                    var project;
+                   // //console.log(response);
+                    totdata = JSON.parse(response + "]");
+                   // //console.log(totdata);
+                    var project = new Array();
+
+                    for (i = 0; i < totdata.length ; i++) {
+
+                        project[i] = new Array();
+                        project[i][0] = totdata[i].classification;
+                        project[i][1] = totdata[i].id;
+
+                        project[i][2] = totdata[i].order;
+
+                        project[i][3] = totdata[i].order;
+
+                    }
+
+
+                    $('#projectcontacts').dataTable({
+                        "processing": true,
+                        "data": project,
+                        "columns": [
+                            { "title": "classification" },
+                            { "title": "id" },
+                            { "title": "order","class" : "displaynone"},
+                            { "title": "order","class" : "displaynone" }
+                        ],
+                        paging: false,
+                        "initComplete": function () {
+                            abc();
+                        },
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0, 1] }
+                        ],
+                        "order": [[2, "asc"]]
+
+                    });
+
+
+
+
+
+                });
+        function reset() {
+            var rwcnt = 1;
+            $('#projectcontacts tbody tr').each(function () {
+                $(this).find("td:eq(2)").html(rwcnt);
+                $(this).attr('data-id',rwcnt++);
+
+            });
+
+            }
+        function abc() {
+
+
+
+            $('#projectcontacts tbody tr').each(function () {
+                
+                var pid = $(this).find("td:eq(3)").html();
+                $(this).attr('data-id', pid);
+
+            });
+           
+
+
+            $("#projectcontacts tbody").sortable(
+
+
+                      {
+                          cursor: "move",
+                          start: function (event, ui) {
+                              // 0 based array, add one
+                              var obj = ui.item;
+                              $(obj).css('background', 'rgb(237, 153, 188)');
+                              //console.log('start');
+                          },
+
+                          update: function (event, ui) {
+                              // 0 based array, add one
+                              var obj = ui.item;
+                              var obj2 = ui.item.prev('tr');
+                             
+                              var st = $(obj).attr('data-id');
+                              var lt = $(obj2).attr('data-id');
+                              
+                           
+                              if (lt < st) {
+                                  obj2 = ui.item.next('tr');
+                                  lt = $(obj2).attr('data-id');
+                              }
+                              
+                              
+                             
+                              //alert('Prev: ' + st + ' Final: ' + lt);
+                              
+
+                              $.ajax({
+                                  type: "POST",
+                                  url: "sortcolumns",
+                                  async: false,
+                                  dataType: "text",
+                                  contentType: "application/json; charset=utf-8",
+                                  data: "{ 'prev': '" + st + "','current' : '" + lt +"'}",
+                                  success: function (data) {
+                                      reset();
+                                  },
+                                  error: function () {
+                                      alert('Something went wrong.');
+                                  }
+                              });
+
+
+                          },
+
+                          stop: function (event, ui) {
+                              var obj = ui.item;
+                              $(obj).css('background', '');
+            }
+                          // end of drag
+                      });
+
+        }
+
+
+
+    </script>
+
+
+</head>
+<body>
+    <div>
+
+
+              <table id="projectcontacts" class="display  compact" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        
+                    </tr>
+                </thead>
+
+
+
+
+            </table>
+
+
+    </div>
+</body>
+</html>

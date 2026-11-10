@@ -1,0 +1,4952 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Search Payment</title>
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />  
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery.custom-scrollbar.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <script src="~/Scripts/Project.js"></script>
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/swfupload.js"></script>
+    <script src="~/Scripts/jquery.swfupload.js"></script>
+    <link href="~/css/stylesForFileUpload.css" rel="stylesheet" />
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.js"></script>
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/MakePayment.js"></script>
+   
+    <style>
+        #popup2, #popup3, .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+            }
+
+        table.dataTable thead th, table.dataTable thead td {
+            padding: 5px !important;
+        }
+
+        table.dataTable tbody th, table.dataTable tbody td {
+            padding: 5px !important;
+        }
+
+           .checked {
+            cursor: pointer;
+            font-size: 0.9em !important;
+            border: 5px solid #0a4e02;
+            border-radius: 16px;
+            height: 22px;
+            width: 22px;
+            text-align: center;
+            background: #0a4e02;
+            color: white;
+            padding: 1px;
+        }
+
+ .remove {
+            /*width: 450px;*/
+            border: 1px solid #060506;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            display: block;
+            padding: 1px;
+            text-decoration: none;
+            background: #526779;
+            color: #E2E2E2;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-family: helvetica;
+            font-size: 13px;
+            position: relative;
+        }
+
+            .remove a {
+                /*cursor: pointer;
+                position: absolute;
+                top: -2px;
+                right: -2px;
+                font-size: 1.2em;
+                color:white;
+                background: black;
+                border-radius:100px;
+                padding: 3px;*/
+                cursor: pointer;
+                position: absolute;
+                top: -5px;
+                right: -6px;
+                font-size: 0.9em;
+                color: white;
+                background: black;
+                border-radius: 100px;
+                padding: 7px;
+                line-height: 9px;
+            }
+    </style>
+
+
+    <style>
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        .ui-multiselect {
+            width: 100% !important;
+            /*color: rgb(195, 16, 1) !important;*/
+            height: 25px !important;
+            margin-top: 0px !important;
+        }
+
+        label {
+            color: #333333;
+            font-weight: 500;
+        }
+
+        .existingnumber {
+            border-color: rgba(255, 0, 0, 0.47) !important;
+        }
+    </style>
+
+
+
+</head>
+<body>
+   @* <input type="button" value="send multi" onclick="SendMultiplePayments();" />*@
+     <input type="hidden" id="hdn_userid" value="@ViewBag.UserID" />
+    <div id="historydetailsmodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="historydetailsheader"></h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-sm-12" style="max-height:500px;overflow-x:auto;">
+                            <table cellpadding="0" cellspacing="0" border="0" class="display" id="historydetails" style="text-align: center;">
+                                <thead>
+                                    <tr>
+                                        <th class='leftposition'>Field</th>
+                                        <th class='centerposition'>Value Before</th>
+                                        <th class='centerposition'>Value After</th>
+
+
+
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div id="paymentallhistorypopup" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Payment History</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12" style="overflow-x:auto;max-height:500px;">
+                            <table cellpadding="0" cellspacing="0" border="0" class="display" id="paymenthistory" style="text-align: center;">
+                                <thead>
+                                    <tr>
+                                        <th class='leftposition'>Date</th>
+                                        <th class='leftposition'>Name</th>
+                                        <th class='leftposition'>Mode</th>
+                                        <th class='leftposition displaynone'>Mode</th>
+
+
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <input type="hidden" id="prevpaymentids" value="@ViewData["prevdata"]" />
+
+    <div id="popup2" style="height: auto;">
+        <span class="button b-close"><span>X</span></span>
+
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblPayments" style="text-align: center;">
+            <thead>
+                <tr class="theader">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                   
+
+                </tr>
+            </thead>
+        </table>
+
+
+    </div>
+
+
+
+    <div class="container-fluid" id="angulardiv">
+
+        <div class="row">
+            <div class="col-sm-12">
+                    <h3 class="section-header">PAYMENT SEARCH</h3>
+                </div>
+
+            <div class="col-sm-3">
+                
+               
+                    <label for="Ddl_Vendors">Vendor</label>
+                    <select id="Ddl_Vendors" name="Vendors" multiple="multiple" class="form-control">
+                        @Html.Raw(ViewData["AllParentVendor"])
+                    </select>           
+              
+            </div>
+                
+                <div class="col-sm-1">
+                    <label for="Ddl_PaymentType">Payment Type</label>
+                    <select id="Ddl_PaymentType" class="form-control"></select>
+                </div>
+
+                <div class="col-sm-2">
+                    <label>Bank Account</label>
+                <select id="DDl_Bank" class="form-control"></select>
+                </div>
+
+
+               
+
+                <div class="col-sm-1">
+                    <label>Payment #</label>
+                    <input type="text" id="txtPaymentNumber" placeholder="Enter Payment Number" class="form-control" />
+                </div>
+
+                <div class="col-sm-1">
+                    <label>Date</label>
+                    
+                    <select class="form-control datecontrol" data-from="fromsearch" data-to="tosearch">
+                        <option value="13" data-val="All">ALL</option>
+                    <option value="1" data-val="custom">Custom</option>
+                    <option value="2" data-val="last365">Last 365 Days</option>
+                    <option value="3" data-val="today">Today</option>
+                    <option value="4" data-val="yesterday">Yesterday</option>
+                    <option value="5" data-val="thisweek">This Week</option>
+                    <option value="6" data-val="thismonth">This Month</option>
+                    <option value="7" data-val="thisquarter">This Quarter</option>
+                    <option value="8" data-val="thisyear">This Year</option>
+
+                    <option value="9" data-val="lastweek">Last Week</option>
+                    <option value="10" data-val="lastmonth">Last Month</option>
+                    <option value="11" data-val="lastquarter">Last Quarter</option>
+                    <option value="12" data-val="lastyear">Last Year</option>
+
+                    </select>
+                </div>
+
+                <div class="col-sm-1">
+                    <label>From</label>
+                    <input type="text" id="fromsearch" placeholder="YYYY.MM.DD" class="form-control" />
+                </div>
+
+
+                <div class="col-sm-1">
+                    <label>To</label>
+                    <input type="text" id="tosearch" placeholder="YYYY.MM.DD" class="form-control" />
+                </div>
+
+
+                <div class="col-sm-2">
+                    <label></label>
+                    <button class="btn btn-block btn-primary" style="height:27px;padding:2px;" onclick="getPaymentDetailsInAdvance();"><i class="fa fa-search mrg5R"></i>Search</button>
+                </div>
+
+
+          
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 mrg15T">
+                <div class="form-group">
+                    <h3 class="section-header">PAYMENT LIST</h3>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <button onclick="call_SendMultiplePayments();" id="btnUpdateCheckedQBO" class="btn btn-block btn-primary mrg20T hidden" style="height:27px;padding:2px;"><span id="spanNoOfQBO"></span>&nbsp;</button>
+                
+            </div>
+             <div class="col-sm-2">
+                
+                <button onclick="call_uncheckmultiple();"  id="btnuncheck"  class="btn btn-block btn-primary mrg20T hidden" style="height:27px;padding:2px;">Uncheck selected</button>
+            </div>
+            <div class="col-sm-3 col-sm-offset-5">
+                <button class="btn btn-block btn-primary mrg20T" style="height:27px;padding:2px;" onclick="syncallpaymentnumber();"><i class="fa fa-refresh mrg5R"></i>Sync Payment Number(s) From QBO</button>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+
+            <div class="col-sm-12">
+                <label></label>
+                
+                <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblPayment" style="text-align: center;width:100%;">
+                    <thead>
+                        <tr class="theader">
+                            <th style="width:30px !important;" class="center-position"></th>
+                            <th style="width:75px !important;">Date</th>
+                            <th style="width:350px;" class="leftposition">Vendor</th>
+                            <th style="width:350px;" class="leftposition">Account</th>
+                            <th style="width:100px;">Type</th>
+                            <th style="width:130px;" class="leftposition">Number</th>
+                            <th style="width:100px;" class="leftposition">Currency</th>
+                            <th class="rightposition">Fx Rate</th>
+                            <th class="displaynone">FX Rate</th>
+                            <th class="rightposition">Amount</th>
+                            <th>Status</th>
+                            <th class="">QBO</th>
+                            <th class="displaynone">QBO</th>
+                            <th class="displaynone">QBO</th>
+
+                        </tr>
+                    </thead>
+                   
+                    <tbody></tbody>
+                   
+                </table>
+              
+            </div>
+        </div>
+
+
+    </div>
+
+    <div id="editPayment" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="width:95%;">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit Payment</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <input type="hidden" id="hdnEditPayment" />
+                        <input type="hidden" id="hdnEditPaymentType" />
+                        <input type="hidden" id="hdnEditBankAccount" />
+                        <input type="hidden" id="hdnEditPaymentNumber" />
+
+                        <div class="row">
+                            @*<div class="col-sm-2">
+                                <label>Project</label>
+                                <input type="text" id="txt_project" disabled placeholder="Select To Date" class="form-control" />
+                            </div>
+
+                            <div class="col-sm-1">
+                                <label>Currency</label>
+                                <input type="text" id="txt_currency" disabled placeholder="Select To Date" class="form-control" />
+                            </div>*@
+
+
+                            <div class="col-sm-1">
+                                <label>Payment Date</label>
+                                <input type="text" id="txt_EditPaymentDate" onkeypress="return IsNumber(event);" placeholder="Select To Date" class="form-control" />
+                            </div>
+                            <div class="col-sm-1">
+                                <label>Payment Type</label>
+                                <select id="Ddl_EditPaymentType" name="PaymentType" class=" form-control"></select>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Bank Account</label>
+                                <select id="DDl_EditBank" name="Bank" class="form-control"></select>
+                            </div>
+
+                            <div class="col-sm-1">
+                                <label>Payment #</label>
+                                <input type="text" id="txtEditPaymentNumber" onkeypress="return IsNumber(event);" placeholder="Enter Payment Number" class="form-control" />
+                            </div>
+                            <div class="col-sm-1">
+                                <label>I-B Fx Rate</label>
+                                <input type="text" style="text-align:right;" onkeyup="javascript: document.getElementById('txtconvrate').setAttribute('data-edited', true);" id="txtEditExrate" onkeypress="return IsNumber(event);" placeholder="Enter Exchange Rate" class="form-control" />
+                            </div>
+
+                             <div class="col-sm-1">
+                                <label>P-A Fx Rate</label>
+                                <input type="text" style="text-align:right;" onkeyup="javascript: document.getElementById('txtconvrate').setAttribute('data-edited', true);" id="txtEditExrate1" onkeypress="return IsNumber(event);" placeholder="Enter Exchange Rate" class="form-control" />
+                            </div>
+
+                            <div class="col-sm-3">
+                                <label>Memo</label>
+                                <input type="text" id="txtEditMemo" class="form-control" />
+                            </div>
+
+
+                            <div class="col-sm-2">
+                                <label>Total Payment Amount</label>
+                                <input type="text" id="txtEditTotalAmount" onkeypress="return IsNumber(event);" class="form-control makedisable" />
+                            </div>
+
+                        </div>
+                     
+                          
+                           
+                       
+                        <div class="row mrg10T">
+                            <div class="col-sm-12" style="max-height: 450px;overflow: auto;">
+                                
+                                <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblInvoiceDetails" style="text-align: center;" width="100%">
+                                    <thead>
+                                        <tr class="theader">
+                                            <th class="leftposition">Vendor</th>
+                                            <th class="leftposition">Invoice #</th>
+                                            <th class="leftposition">Date</th>
+                                            <th class="leftposition">Terms</th>
+                                            <th class="leftposition">Currency</th>
+                                            <th class="rightposition">Amount Owing</th>
+                                            <th class="rightposition">Payment Amount</th>
+                                            <th class="displaynone">RowIndex</th>
+                                            <th class="displaynone">InvoiceID</th>
+                                            <th class="displaynone">ManualpaymentID</th>
+                                            <th class="displaynone">ManualpaymentItemID</th>
+                                            <th class="displaynone">PaidAmount</th>
+                                            <th class="displaynone">fxrate</th>
+                                            <th class="displaynone">parentid</th>
+                                            <th class="displaynone">legalname</th>
+
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div id="Editable_Div">
+                        <a href="javascript:void(0);" style="float: left;color: red;" class="displaynone">This cheque has been reversed</a>
+                    <button type="button" class="btn btn-default" id="btnhistory" onclick="viewhistory();">View History</button>
+                    <button type="button" class="btn btn-default" id="btndeletepayment">Delete Payment</button>
+
+                    <button type="button" class="btn btn-default" id="btnvoidpayment">Void Payment</button>
+                    <button type="button" class="btn btn-default" id="btnsendpayment">Send Payment To QBO</button>
+
+                    <button type="button" class="btn btn-default" id="btnUpdatePayment">Update Payment</button>
+                    <button type="button" class="btn btn-default" id="btnStopPayment">Reverse Payment</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="qbmodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" style="margin-top:175px;">
+                <div class="modal-header">
+                   
+                    <h4 class="modal-title">QBO Validating</h4>
+                </div>
+                <div class="modal-body">
+                   <div id="qbchecker"></div>
+                </div>
+              
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div id="qbdetailsmodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" style="margin-top:175px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">QBO Payment Lookup</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="qbstatus"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+    <div id="qbgeratemodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content" style="margin-top:175px;">
+                <div class="modal-header">
+
+                    <h4 class="modal-title">QBO Sending Data</h4>
+                </div>
+                <div class="modal-body">
+                   <div id="qbsendinfo"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div class="float-panel-container">
+        <ul>
+
+            <li id="btn_voidpayment" class="displaynone" onclick="openpopupforvoid();">
+                <span class="badge" style="position: relative;top: -15px;left: 18px;font-size: 15px; background: #096000;">0</span>
+                <a title="Void Payments" data-toggle="tooltip" data-placement="left" href="javascript:void(0);"><i class="fa fa-times-circle mrg5R"></i><span class="tooltip-toggle">Void Payments</span></a>
+            </li>
+
+
+            <li id="btn_qbopayment" class="displaynone" onclick="openpopupforqbo();">
+                <span class="badge" style="position: relative;top: -15px;left: 18px;font-size: 15px; background: #096000;">4</span>
+                <a title="Send To QBO" data-toggle="tooltip" data-placement="left" href="javascript:void(0);"><i class="fa fa-share-square-o mrg5R"></i><span class="tooltip-toggle">Send To QBO</span></a>
+            </li>
+
+
+             <li id="btn_sendbatchatt" class="displaynone" onclick="opendownloadpospopup();">
+                <span class="badge" style="position: relative;top: -15px;left: 18px;font-size: 15px; background: #096000;">4</span>
+                <a title="Download PO/Attachment" data-toggle="tooltip" data-placement="left" href="javascript:void(0);"><i class="fa fa-download mrg5R"></i><span class="tooltip-toggle">Download PO/Attachment</span></a>
+            </li>
+
+
+
+
+
+        </ul>
+    </div>
+
+
+
+
+
+    <div id="batchvoid" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">VOID PAYMENTS</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="batchvoidpayment"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="batchvoidfinal();">Void Selected Payment(s)</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div id="batchqbo" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">SEND TO QBO</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="batchqbopayment"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="batchqbofinal();">Send Selected Payment(s) to QBO</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+</body>
+<script>
+
+    function viewhistory() {
+        var paymentid = $("#hdnEditPayment").val();
+
+        var url = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/Invoice/getHistory';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'Invoice/getHistory';
+        }
+
+        var status = "DELETE";
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "{ \"paymentid\": \"" + paymentid + "\"}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "JSON",
+            async: false,
+            success: function (data) {
+               
+                    var html = "";
+
+                    var lastdate = "";
+
+                    var lineitems = new Array();
+
+
+                    data = data.data;
+
+                    //$('#poallhistorytable').dataTable().fnDestroy();
+                    var aindx = 0;
+                    for (var t = 0; t < data.length; t++) {
+                        if (lastdate == "" || lastdate != data[t].OperationOn) {
+
+                            lineitems[aindx] = new Array();
+
+                            var mode = '';
+
+                            if (data[t].OPERATION == "UPDATE") {
+                                if (data[t].area == 'PAYMENT') {
+                                    mode = data[t].area + ' UPDATE <i style="cursor:pointer;" class="fa fa-info-circle" onclick="getPaymentUpdateDetails(this);" aria-hidden="true"></i>';
+
+                                }
+                               
+
+                            }
+                            else {
+                              
+                                if (data[t].area == 'ITEM' && data[t].OPERATION != "INSERT") {
+                                mode = data[t].area + ' ' + data[t].OPERATION + ' <i style="cursor:pointer;" class="fa fa-info-circle" onclick="getItemUpdateDetails(this);" aria-hidden="true"></i>';
+
+                                }
+                                else {
+                                    mode = data[t].area + ' ' + data[t].OPERATION;
+                                }
+                            }
+
+                            lineitems[aindx][0] = data[t].Username;
+                            lineitems[aindx][1] = mode;
+                            lineitems[aindx][2] = data[t].OperationOn;
+                            lineitems[aindx][3] = data[t].FLDID;
+
+                            aindx++;
+
+
+                        }
+                        lastdate = data[t].OperationOn;
+                    }
+
+                    
+                    if ($('#paymenthistory thead').find('tr').length > 1) {
+                        $('#paymenthistory thead').find('tr:eq(1)').remove();
+                    }
+
+                    
+
+
+
+                    $('#paymenthistory').dataTable({
+                        "processing": true,
+                        "data": lineitems,
+                        "destroy": true,
+
+                        "columns":
+                          [
+                            { "title": "User", "class": "leftposition" },
+                            { "title": "Action", "class": "leftposition" },
+                            { "title": "Date", "class": "leftposition" },
+                          { "title": "Date", "class": "displaynone" }
+
+
+                          ],
+                        "order": [[2, "desc"]],
+                        "initComplete": function () {
+                          
+                           
+
+
+                            var html = "<tr>"
+                    + "<th class='Resetth' rowspan='1' colspan='1'>"
+                    + "<a><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px;' /></a></th>"
+
+
+                    + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+                    + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'></th>"
+
+                    + "</tr>";
+
+                            if ($('#paymenthistory thead').find('tr').length == 1) {
+                                $('#paymenthistory thead').append(html);
+                            }
+                            else {
+                                $('#paymenthistory thead').find('tr:eq(1)').remove();
+                                $('#paymenthistory thead').append(html);
+
+                            }
+
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+
+                                var table = $('#paymenthistory').DataTable();
+                                table
+                                       .column(indx)
+                                       .search(txt)
+                                       .draw();
+
+                                if (indx == '13') {
+
+                                    if (txt != '') {
+                                        $('#paymenthistory tbody tr').each(function (index, item) {
+
+                                            if ($(this).find("td:eq(1)").html() == '') {
+                                                $(this).hide();
+                                            }
+
+                                        });
+                                    }
+                                    else {
+                                        $('#paymenthistory tbody tr').each(function (index, item) {
+                                            $(this).show();
+
+                                        });
+                                    }
+                                }
+
+
+                            });
+
+
+
+
+                        }
+                    });
+
+
+                    $('#paymentallhistorypopup').modal('show');
+
+                    $('#editPayment').modal('hide');
+
+
+
+
+
+
+            },
+            error: function () {
+                notify("Some thing went wrong!!!");
+            }
+        });
+
+
+
+    }
+
+    
+    function getItemUpdateDetails(obj) {
+
+        var rw = $(obj).parent().parent();
+        var fldid = $(rw).find('td:eq(3)').html();
+        var Username = $(rw).find('td:eq(0)').html();
+        var date = $(rw).find('td:eq(2)').html();
+        $('#historydetailsheader').text(Username + ' - ' + 'Update - ' + date);
+        //console.log(fldid);
+
+        var url = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/Invoice/getitemchangedetails';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'Invoice/getitemchangedetails';
+        }
+
+        var dataTable = "";
+        var dt = "";
+        var po = new Array();
+
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "{ \"FLDID\" : \"" + fldid + "\"}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "JSON",
+            success: function (data) {
+
+
+                var lineitems = new Array();
+
+
+                data = data.data;
+
+                $('#historydetails').dataTable().fnDestroy();
+                var aindx = 0;
+
+
+
+
+
+
+
+                if (data[0].InvoiceAmount != data[1].InvoiceAmount) {
+
+                    lineitems[aindx] = new Array();
+
+
+                    lineitems[aindx][0] = "Amount";
+                    lineitems[aindx][1] = data[0].InvoiceAmount;
+                    lineitems[aindx][2] = data[1].InvoiceAmount;
+
+
+                    aindx++;
+                }
+
+
+                $('#historydetails').dataTable({
+                    "processing": true,
+                    "data": lineitems,
+                    "columns":
+                      [
+                        { "title": "Field", "class": "leftposition" },
+                        { "title": "Old Value", "class": "leftposition" },
+                        { "title": "New Value", "class": "leftposition" }
+
+                      ],
+                    "order": [[2, "asc"]],
+                    "initComplete": function () {
+
+
+                        var html = "<tr>"
+                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='0' type='text'></th>"
+
+                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'></th>"
+
+                + "</tr>";
+
+
+                        if ($('#historydetails thead').find('tr').length == 1) {
+                            $('#historydetails thead').append(html);
+                        }
+                        else {
+                            $('#historydetails thead').find('tr:eq(1)').remove();
+                            $('#historydetails thead').append(html);
+
+                        }
+
+
+
+                        $('.srch').on('keyup change', function () {
+                            var indx = $(this).attr('data-indx');
+                            var txt = this.value;
+
+                            var table = $('#historydetails').DataTable();
+                            table
+                                   .column(indx)
+                                   .search(txt)
+                                   .draw();
+
+                            if (indx == '13') {
+
+                                if (txt != '') {
+                                    $('#historydetails tbody tr').each(function (index, item) {
+
+                                        if ($(this).find("td:eq(1)").html() == '') {
+                                            $(this).hide();
+                                        }
+
+                                    });
+                                }
+                                else {
+                                    $('#historydetails tbody tr').each(function (index, item) {
+                                        $(this).show();
+
+                                    });
+                                }
+                            }
+
+
+                        });
+
+
+
+
+                    }
+                });
+
+
+
+                $('#historydetailsmodal').modal('show');
+                $('#paymentallhistorypopup').modal('hide');
+                //setTimeout(function () { $('#editPayment').modal('hide'); }, 5000);
+
+            }
+
+
+        });
+
+
+
+    }
+    function getPaymentUpdateDetails(obj) {
+
+        var rw = $(obj).parent().parent();
+        var fldid = $(rw).find('td:eq(3)').html();
+        var Username = $(rw).find('td:eq(0)').html();
+        var date = $(rw).find('td:eq(2)').html();
+        $('#historydetailsheader').text(Username + ' - ' + 'Update - ' + date);
+        //console.log(fldid);
+        
+        var url = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/Invoice/getpaymentchangedetails';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'Invoice/getpaymentchangedetails';
+        }
+
+        var dataTable = "";
+        var dt = "";
+        var po = new Array();
+
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "{ \"FLDID\" : \"" + fldid + "\"}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "JSON",
+            success: function (data) {
+
+
+                var lineitems = new Array();
+
+
+                data = data.data;
+
+                $('#historydetails').dataTable().fnDestroy();
+                var aindx = 0;
+
+
+
+
+
+
+
+                if (data[0].PaymentDate != data[1].PaymentDate) {
+
+                    lineitems[aindx] = new Array();
+
+
+                    lineitems[aindx][0] = "Payment Date";
+                    lineitems[aindx][1] = data[0].PaymentDate;
+                    lineitems[aindx][2] = data[1].PaymentDate;
+
+
+                    aindx++;
+                }
+
+                if (data[0].PaymentTypeName != data[1].PaymentTypeName) {
+
+                    lineitems[aindx] = new Array();
+
+
+                    lineitems[aindx][0] = "Type";
+                    lineitems[aindx][1] = data[0].PaymentTypeName;
+                    lineitems[aindx][2] = data[1].PaymentTypeName;
+
+
+                    aindx++;
+                }
+                if (data[0].PaymentNumber != data[1].PaymentNumber) {
+
+                    lineitems[aindx] = new Array();
+
+
+                    lineitems[aindx][0] = "Number";
+                    lineitems[aindx][1] = data[0].PaymentNumber;
+                    lineitems[aindx][2] = data[1].PaymentNumber;
+
+
+                    aindx++;
+                }
+                if (data[0].ConversionRate != data[1].ConversionRate) {
+
+                    lineitems[aindx] = new Array();
+
+
+                    lineitems[aindx][0] = "Conversion Rate";
+                    lineitems[aindx][1] = data[0].ConversionRate;
+                    lineitems[aindx][2] = data[1].ConversionRate;
+
+
+                    aindx++;
+                }
+                if (data[0].TotalPayment != data[1].TotalPayment) {
+
+                    lineitems[aindx] = new Array();
+
+
+                    lineitems[aindx][0] = "Total";
+                    lineitems[aindx][1] = data[0].TotalPayment;
+                    lineitems[aindx][2] = data[1].TotalPayment;
+
+
+                    aindx++;
+                }
+                if (data[0].Memo != data[1].Memo) {
+
+                    lineitems[aindx] = new Array();
+
+
+                    lineitems[aindx][0] = "Memo";
+                    lineitems[aindx][1] = data[0].Memo;
+                    lineitems[aindx][2] = data[1].Memo;
+
+
+                    aindx++;
+                }
+                if (data[0].Bank_Account != data[1].Bank_Account) {
+
+                    lineitems[aindx] = new Array();
+
+
+                    lineitems[aindx][0] = "Bank Account";
+                    lineitems[aindx][1] = data[0].Bank_Account;
+                    lineitems[aindx][2] = data[1].Bank_Account;
+
+
+                    aindx++;
+                }
+
+
+                if (data[0].ConvRate != data[1].ConvRate) {
+
+                    lineitems[aindx] = new Array();
+
+
+                    lineitems[aindx][0] = "Fx Rate";
+                    lineitems[aindx][1] = data[0].ConvRate;
+                    lineitems[aindx][2] = data[1].ConvRate;
+
+
+                    aindx++;
+                }
+
+              
+
+
+                //console.log(lineitems);
+
+
+                $('#historydetails').dataTable({
+                    "processing": true,
+                    "data": lineitems,
+                    "columns":
+                      [
+                        { "title": "Field", "class": "leftposition" },
+                        { "title": "Old Value", "class": "leftposition" },
+                        { "title": "New Value", "class": "leftposition" }
+
+                      ],
+                    "order": [[2, "asc"]],
+                    "initComplete": function () {
+
+
+                        var html = "<tr>"
+                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='0' type='text'></th>"
+
+                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'></th>"
+
+                + "</tr>";
+
+
+                        if ($('#historydetails thead').find('tr').length == 1) {
+                            $('#historydetails thead').append(html);
+                        }
+                        else {
+                            $('#historydetails thead').find('tr:eq(1)').remove();
+                            $('#historydetails thead').append(html);
+
+                        }
+
+
+
+                        $('.srch').on('keyup change', function () {
+                            var indx = $(this).attr('data-indx');
+                            var txt = this.value;
+
+                            var table = $('#historydetails').DataTable();
+                            table
+                                   .column(indx)
+                                   .search(txt)
+                                   .draw();
+
+                            if (indx == '13') {
+
+                                if (txt != '') {
+                                    $('#historydetails tbody tr').each(function (index, item) {
+
+                                        if ($(this).find("td:eq(1)").html() == '') {
+                                            $(this).hide();
+                                        }
+
+                                    });
+                                }
+                                else {
+                                    $('#historydetails tbody tr').each(function (index, item) {
+                                        $(this).show();
+
+                                    });
+                                }
+                            }
+
+
+                        });
+
+
+
+
+                    }
+                });
+
+
+
+                $('#historydetailsmodal').modal('show');
+                $('#paymentallhistorypopup').modal('hide');
+                //setTimeout(function () { $('#editPayment').modal('hide'); }, 5000);
+               
+            }
+
+
+        });
+
+
+
+    }
+    $(document).ready(function () {
+
+        var obj = new Object();
+        //obj.curr = curr;
+        obj.SecurityID = '23';
+        obj.UserID = $('#hdn_userid').val();
+
+
+        var DBSP = new DB_SP_CONNECT();
+        DBSP.ProcedureName = "CheckAuthority";
+        DBSP.obj = obj;
+        DBSP.isasync = false;
+        var o = DBSP.call_DB_Procedure();
+        o = o.data;
+        console.log(o);
+        if (o[0].Isselected == '0') {
+            $('#Editable_Div').remove();
+        }
+
+
+        $('#tblPayment').on('draw.dt', function () {
+            $('#tblPayment tbody tr').each(function () {
+                var id = $(this).find('td:eq(12)').html();
+                $(this).find('td:not(:first)').each(function () {
+                    $(this).attr('onclick', 'EditPayment("' + id + '","0");');
+                    $(this).css('cursor', 'pointer');
+                });
+                $(this).find('td:eq(11)').removeAttr('onclick');
+                $(this).find('td:eq(11)').css('cursor', 'default');
+
+            });
+
+        });
+
+        var url11 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url11 = '/Invoice/getPaymentForManualPayment';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url11 = 'Invoice/getPaymentForManualPayment';
+        }
+
+
+
+
+        $.get(url11)
+         .success(function (response) {
+
+
+             $('#Ddl_PaymentType').html('<option value="0">Select Payment Type</option>' + response);
+            
+
+         });
+
+
+        var ProjectID = '';
+        //banktaccnttab
+        var urltemp = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Project/getallbankaccounts';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            urltemp = 'Project/getallbankaccounts';
+        }
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: urltemp,
+            async: false,
+            data: "{'ProjectID' : '" + ProjectID + "'}",
+            success: function (data) {
+                var htmlddl = "<option value='0'>---Select Account---</option>";
+                var htmlselected = "";
+
+                data = JSON.parse(data).data;
+                
+
+                for (var i = 0; i < data.length; i++) {
+                    
+
+
+
+                        htmlddl += "<option data-currcode='" + data[i].CurrencyCode + "' value='" + data[i].Fld_ID + "'>" + data[i].Bank_Account + ' -' + data[i].Description
+                            + ' (' + data[i].CurrencyCode + ')' + "</option>";
+                    
+                }
+
+                //console.log(htmlddl);
+              
+                
+                $('#DDl_Bank').html(htmlddl);
+                   
+
+            },
+            error: function () { notify('Something went wrong'); }
+        });
+
+
+
+
+
+
+
+        $(document).ready(function () {
+            $("#historydetailsmodal").on("hidden.bs.modal", function () {
+               
+                $("#paymentallhistorypopup").modal('show');
+            });
+
+
+            $("#paymentallhistorypopup").on("hidden.bs.modal", function () {
+                $('#paymentallhistorypopup').modal('hide');
+               
+                if ($('#historydetailsmodal').css('display') == 'none') {
+                    $('#editPayment').modal('show');
+                }
+            });
+
+        });
+
+        $('#fromsearch').datepickercustom({
+            changeMonth: true,
+            changeYear: true,
+            //dateFormat: 'MM dd yy'
+            dateFormat: 'yy/mm/dd'
+            //,minDate: new Date(currentYear, currentMonth, currentDate)
+        });
+
+        $('#tosearch').datepickercustom({
+            changeMonth: true,
+            changeYear: true,
+            //dateFormat: 'MM dd yy'
+            dateFormat: 'yy/mm/dd'
+            //,minDate: new Date(currentYear, currentMonth, currentDate)
+        });
+
+        setTimeout(function () {
+
+            $('.datecontrol').val('13');
+            var from = $('.datecontrol').attr('data-from');
+            var to = $('.datecontrol').attr('data-to');
+            from = $('#' + from);
+            to = $('#' + to);
+            
+            startdate = moment().subtract(365, "days").format("YYYY.MM.DD");
+            enddate = moment().format("YYYY.MM.DD");
+
+            startdate = '';
+            enddate = '';
+
+
+            $(from).datepicker("option", "disabled", true);
+            $(to).datepicker("option", "disabled", true);
+
+            $(from).datepicker('setDate', startdate);
+            $(to).datepicker('setDate', enddate);
+
+        }, 2000);
+
+
+        var previd = $('#prevpaymentids').val();
+        //console.log(previd + "GGGG");
+
+        if (previd != "" && previd != null) {
+            getPaymentDetailsInAdvanceload(previd);
+        }
+
+
+
+
+        $("#Ddl_Vendors").multiselect(
+           {
+              // header: "Select only One Vendor!"
+               maxTextWrapSize: 40
+              // ,multiple: false
+           }
+           ).multiselectfilter();
+
+        //$("#Ddl_PaymentType")
+
+        $('#Ddl_PaymentType option:selected').before($('<option>', {
+            value: -1,
+            text: 'Select Payment Type'
+        }));
+
+        $('#Ddl_PaymentType option:selected').removeProp("selected");
+
+
+        var width = '100%';
+        $('.ui-multiselect').css('width', width);
+        $('.ui-multiselect-menu').css('width', '84%');
+        $('.ui-state-default').css('color', '#C31001');
+        $('.ui-multiselect').css('height', '34px');
+        $('.ui-multiselect').css('margin-top', '5px');
+        
+        var tmp = true;
+        if ($('#tblPayment').attr('aria-describedby') == 'tblPayment_info') {
+            tmp = false;
+        }
+      
+        if (tmp) {
+            $("#tblPayment").dataTable({
+                "columns":
+                                  [
+                                { "title": "", "class": "leftposition tdMultipleQBO" },
+                                { "title": "Date", "class": "leftposition" },
+                                { "title": "Vendor", "class": "leftposition" },
+                                { "title": "Account", "class": "leftposition" },
+                                { "title": "Type", "class": "leftposition" },
+                                { "title": "Number", "class": "leftposition" },
+                                { "title": "Currency", "class": "leftposition" },
+                                { "title": "Fx Rate", "class": "leftposition" },
+                                { "title": "QBO", "class": "displaynone" },
+                                { "title": "Amount", "class": "leftposition" },
+                                { "title": "Status", "class": "leftposition" },
+                                { "title": "QBO #", "class": "" },
+
+
+                                { "title": "QBO", "class": "displaynone" }
+                                    //{ "title": "IsCommitted", "class": "displaynone" },
+                                    //{ "title": "IsDeleted" }
+                                  ],
+                "initComplete": function () {
+                    $("#tblPayment_filter").hide();
+                    $('.theader').find('th:eq(0)').css('width', '50px !important');
+                   
+
+
+                }
+            });
+
+            
+
+           
+
+
+
+
+        }
+
+        $(".makedisable").each(function (index, item) {
+
+            $(this).attr("disabled", true);
+        });
+
+        $("#tblInvoiceDetails").dataTable({
+            "paging" : false,
+            "initComplete": function () {
+                $("#tblInvoiceDetails_filter").hide();
+
+
+            }
+        });
+
+
+    });
+
+    function getPaymentDetailsInAdvanceload(id) {
+
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/Invoice/getPaymentDetailsforload';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'Invoice/getPaymentDetailsforload';
+        }
+        var dataTable = "";
+        var dt = "";
+        var payment = new Array();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "{ 'id': '" + id + "' }",
+            contentType: "application/json; charset=utf-8",
+            dataType: "JSON",
+            async: false,
+            success: function (data) {
+
+                if (data != '') {
+                    dt = data.data;
+                    if (dt.length == 0) {
+                        $('#tblPayment').dataTable().fnDestroy();
+                        if ($('#tblPayment thead tr').length > 1) {
+                            $('#tblPayment thead tr:eq(1)').remove();
+                        }
+                        $('#tblPayment').dataTable({
+                            "processing": true,
+                            "data": payment,
+                            "columns":
+                              [
+                                { "title": "", "class": "leftposition tdMultipleQBO" },
+                                { "title": "Date", "class": "leftposition" },
+                                { "title": "Vendor", "class": "leftposition" },
+                                { "title": "Account", "class": "leftposition" },
+                                { "title": "Type", "class": "leftposition" },
+                                { "title": "Number", "class": "leftposition" },
+                                { "title": "Currency", "class": "leftposition" },
+                                { "title": "Fx Rate", "class": "rightposition" },
+                                { "title": "QBO", "class": "displaynone" },
+                                { "title": "Amount", "class": "rightposition" },
+                                { "title": "Status", "class": "leftposition" },
+                                { "title": "QBO #", "class": "leftposition" },
+                                { "title": "QBO", "class": "displaynone" }
+
+                                //{ "title": "IsCommitted", "class": "displaynone" },
+                                //{ "title": "IsDeleted" }
+                              ]
+                        });
+                        return;
+                    }
+                    $('#tblPayment').dataTable().fnDestroy();
+                    if ($('#tblPayment thead tr').length > 1) {
+                        $('#tblPayment thead tr:eq(1)').remove();
+                    }
+
+                    if (dt.length > 0) {
+                        for (i = 0; i < dt.length ; i++) {
+
+                            var status = '';
+                            if (parseFloat(dt[i].TotalPayment) != 0 && dt[i].QBO == '') {
+                                status = 'Pending';
+                            }
+                            else if (parseFloat(dt[i].TotalPayment) != 0 && dt[i].QBO != '') {
+                                if (dt[i].QBOStatus == 'PrintComplete') {
+                                    status = 'Printed';
+                                }
+                                else {
+                                    status = 'Posted';
+                                }
+                            }
+                            else if (parseFloat(dt[i].TotalPayment) == 0) {
+                                status = 'Void';
+                            }
+
+
+
+                            var voidpayment = '';
+                            //if (parseFloat(dt[i].TotalPayment) > 0) {
+                            //    voidpayment = '<i class="fa fa-times-circle mrg10R" style="cursor:pointer;" id="batchvoid_' + dt[i].ManualPaymentID + '" data-paymentid="' + dt[i].ManualPaymentID + '" title="Void Payment" onclick="voidpaymentselect(this);"></i>';
+                            //}
+
+                            var sendtoqbo = '';
+                            if (parseFloat(dt[i].TotalPayment) > 0) {
+                                sendtoqbo = '<i class="fa fa-share-square-o mrg10R" style="cursor:pointer;" id="batchqbosend_' + dt[i].ManualPaymentID + '" data-paymentid="' + dt[i].ManualPaymentID + '"  title="Send to QBO" onclick="SendToQBOselect(this);"></i>'
+                                if (parseFloat(dt[i].TotalPayment) > 0) {
+                                    voidpayment = '<i class="fa fa-times-circle mrg10R" style="cursor:pointer;" id="batchvoid_' + dt[i].ManualPaymentID + '" data-paymentid="' + dt[i].ManualPaymentID + '" title="Void Payment" onclick="voidpaymentselect(this);"></i>';
+                                }
+                            }
+                            else {
+                                if (parseFloat(dt[i].TotalPayment) > 0) {
+                                    voidpayment = '<i class="fa fa-times-circle mrg20L mrg10R" style="cursor:pointer;" id="batchvoid_' + dt[i].ManualPaymentID + '" data-paymentid="' + dt[i].ManualPaymentID + '" title="Void Payment" onclick="voidpaymentselect(this);"></i>';
+                                }
+                            }
+
+                            var QBOHtml = '';
+
+                            var action = "";
+
+                            //if (dt[i].PaymentType == '2' && status == 'Posted') {
+                            if (status == 'Posted' || status == 'Printed') {
+
+                                if (dt[i].QBO == '-') {
+                                    QBOHtml = "<span>"
+                                        + "Not Printed"
+                                        + "</span>"
+                                        + '<i title="Check from QBO" data-qboid="' + dt[i].ManualPaymentID + '" onclick="getpaymentfromQBO(this);" style="cursor:pointer;color: blue;" class="mrg5L fa fa-refresh" aria-hidden="true"></i>';
+
+
+                                }
+                                else {
+                                    QBOHtml = "<span>"
+
+                                        + dt[i].QBO
+                                         + "</span>"
+                                         + '<i title="Check from QBO" data-qboid="' + dt[i].ManualPaymentID + '" onclick="getpaymentfromQBO(this);" style="cursor:pointer;color: blue;" class="mrg5L fa fa-refresh" aria-hidden="true"></i>';
+
+
+
+                                }
+
+
+                            }
+                            else {
+                                QBOHtml = "-";
+                            }
+
+                            var num = dt[i].PaymentNumber;
+                            //if (dt[i].CancelID != '0') {
+                            //    num = '<p style="color:red;" title="This Cheque has been cancelled" data-stopval="' + dt[i].CancelID + '">' + dt[i].PaymentNumber + '</p>';
+
+                            //}
+
+                            payment[i] = new Array();
+
+
+                            payment[i][0] = '<input class="chkMultipleQBO" type="checkbox"/>';
+                            payment[i][1] = dt[i].PaymentDate;
+                            payment[i][2] = dt[i].ParentVendorName;
+                            payment[i][3] = dt[i].Bank_Account;
+                            payment[i][4] = dt[i].PaymentTypeName;
+                            payment[i][5] = num;
+                            payment[i][6] = dt[i].CurrencyCode;
+                            payment[i][7] = formatNumber4(dt[i].ConvRate);
+                            payment[i][8] = dt[i].PaymentNumber;
+                            console.log("33333333333333333333333333333333333333333");
+                            var tp = Math.round(dt[i].TotalPayment * 100) / 100;
+                            var cr = Math.round(dt[i].ConvRate * 10000) / 10000;
+                            payment[i][9] = formatNumber(cr * tp);//formatNumber(dt[i].TotalPayment);
+                            payment[i][10] = status;
+                            payment[i][11] = QBOHtml;
+                            payment[i][12] = dt[i].ManualPaymentID;
+                            payment[i][13] = dt[i].CancelID;
+
+                        }
+                        $('#tblPayment').dataTable({
+                            "processing": true,
+                            "data": payment,
+                            "columns":
+                              [
+                                { "title": "", "class": "leftposition tdMultipleQBO" },
+                                { "title": "Date", "class": "leftposition" },
+                                { "title": "Vendor", "class": "leftposition" },
+                                { "title": "Account", "class": "leftposition" },
+                                { "title": "Type", "class": "leftposition" },
+                                { "title": "Number", "class": "leftposition" },
+                                { "title": "Currency", "class": "leftposition" },
+                                { "title": "Fx Rate", "class": "rightposition" },
+                                { "title": "QBO", "class": "displaynone" },
+                                { "title": "Amount", "class": "rightposition" },
+                                { "title": "Status", "class": "leftposition" },
+                                { "title": "QBO #", "class": "leftposition" },
+                                { "title": "QBO", "class": "displaynone" },
+                              { "title": "QBO", "class": "displaynone" }
+
+                                //{ "title": "IsCommitted", "class": "displaynone" },
+                                //{ "title": "IsDeleted" }
+                              ],
+                            "initComplete": function () {
+                                $("#tblPayment_filter").hide();
+
+
+                                $('#tblPayment tbody tr').each(function () {
+                                    if ($(this).find('td:eq(5)').find('span').length > 0) {
+
+                                        console.log("REDDDDDD!!!!!!!!!!!");
+
+                                        //  $(this).css('background-color','red');
+                                        $(this).attr('title', 'This payment has been stopped');
+
+
+                                    }
+
+
+                                    var id = $(this).find('td:eq(12)').html();
+                                    $(this).find('td:not(:first)').each(function () {
+                                        $(this).attr('onclick', 'EditPayment("' + id + '","0");');
+                                        $(this).css('cursor', 'pointer');
+                                    });
+                                    $(this).find('td:eq(11)').removeAttr('onclick');
+                                    $(this).find('td:eq(11)').css('cursor', 'default');
+
+                                });
+
+
+
+
+                            },
+                            "aoColumnDefs": [
+                        { 'bSortable': false, 'aTargets': [0] }
+                            ]
+                    , "order": [[1, "desc"]]
+
+
+                        });
+
+
+                        var html = "";
+                        html = "<tr>"
+                                + "<th class='' rowspan='1' colspan='1'>"
+                              + "</th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' id='searchdate' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='3' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='4' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='5' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='6' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='7' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='9' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'>"
+                              //+ "<input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='10' type='text'>"
+                              + "<select data-indx='10' class='srch' style='Height:25px;width:100%;padding: 2px 2%;'><option value=''>All</option><option value='Void'>Void</option><option value='Pending'>Pending</option><option value='Posted'>Posted</option></select>"
+                              + "</th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='11' type='text'></th>"
+                              + "</tr>";
+
+                        if ($('#tblPayment thead tr').length == 1) {
+                            $('#tblPayment thead').append(html);
+                        }
+
+                        var table = $('#tblPayment').DataTable();
+                        $('.srch').on('keyup change', function () {
+                            var indx = $(this).attr('data-indx');
+                            var txt = this.value;
+                            table
+                                   .column(indx)
+                                   .search(txt)
+                                   .draw();
+                            //RowHtmlRendernew();
+                        });
+
+
+                        //RowHtmlRendernew();
+                    }
+                    else {
+                        $('#tblPayment').dataTable().fnDestroy();
+                        $('#tblPayment').dataTable({
+                            "processing": true,
+                            "data": payment,
+                            "columns":
+                              [
+                                { "title": "Action" },
+                                { "title": "Payment Date" },
+                                { "title": "Payment Type", "class": "displaynone" },
+                                { "title": "Payment Type Name" },
+                                { "title": "Bank Account ID", "class": "displaynone" },
+                                { "title": "Bank Account" },
+                                { "title": "Payment Number" },
+                                { "title": "Total Payment" },
+                                { "title": "Row Index", "class": "displaynone" },
+
+                                //{ "title": "IsCommitted", "class": "displaynone" },
+                                //{ "title": "IsDeleted" }
+                              ],
+                            "initComplete": function () {
+                                $("#tblPayment_filter").hide();
+                            }
+                        });
+                    }
+                }
+                else {
+                    notify("Some thing went wrong!!!");
+                }
+
+            },
+
+            error: function () {
+                notify("Some thing went wrong!!!");
+            }
+        });
+
+
+
+    }
+
+    $(document).on('click', '.chkMultipleQBO', function () {
+        $('#btnUpdateCheckedQBO').addClass('hidden');
+        $('#btnuncheck').addClass('hidden');
+
+        
+        var count = $('#tblPayment').find('.chkMultipleQBO:checked').length;
+        if(count>0)
+        {
+            $('#spanNoOfQBO').text("Send " + count + " payment(s) to QBO");
+            $('#btnUpdateCheckedQBO').removeClass('hidden').show();
+            $('#btnuncheck').removeClass('hidden').show();
+        }
+        event.stopPropogation();
+    });
+
+    $(document).on('click', '.tdMultipleQBO', function () {
+        var elem = $(this).find('.chkMultipleQBO').trigger('click');
+    });
+
+    function getPaymentDetailsInAdvance() {
+
+        var fromdate = $('#fromsearch').val();
+        var todate = $('#tosearch').val();
+
+        var VendorIDs = $("#Ddl_Vendors").val();
+        VendorIDs = VendorIDs == null ? '' : VendorIDs;
+
+        //console.log("***" + VendorIDs );
+        var PaymentTypeID = $("#Ddl_PaymentType").val();
+        var BankAccountId = $("#DDl_Bank").val();
+        var PaymentNumber = $("#txtPaymentNumber").val();
+        var url = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/Invoice/getPaymentDetailsInAdvance';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'Invoice/getPaymentDetailsInAdvance';
+        }
+        var dataTable = "";
+        var dt = "";
+        var payment = new Array();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "{ 'PaymentTypeID': '" + PaymentTypeID + "', 'BankAccountID': '" + BankAccountId + "','PaymentNumber':'" + PaymentNumber
+                + "','fromdate' : '" + fromdate + "','todate':'" + todate + "','VendorIDs':'" + VendorIDs + "' }",
+            contentType: "application/json; charset=utf-8",
+            dataType: "JSON",
+            async: false,
+            success: function (data) {
+
+                if (data != '') {
+                    dt = data.data;
+                    if (dt.length == 0) {
+                        $('#tblPayment').dataTable().fnDestroy();
+                        if ($('#tblPayment thead tr').length > 1) {
+                            $('#tblPayment thead tr:eq(1)').remove();
+                        }
+                        $('#tblPayment').dataTable({
+                            "processing": true,
+                            "data": payment,
+                            "columns":
+                              [
+                                { "title": "", "class": "leftposition tdMultipleQBO" },
+                                { "title": "Date", "class": "leftposition" },
+                                { "title": "Vendor", "class": "leftposition" },
+                                { "title": "Account", "class": "leftposition" },
+                                { "title": "Type", "class": "leftposition" },
+                                { "title": "Number", "class": "leftposition" },
+                                { "title": "Currency", "class": "leftposition" },
+                                { "title": "Fx Rate", "class": "rightposition" },
+                                { "title": "QBO", "class": "displaynone" },
+                                { "title": "Amount", "class": "rightposition" },
+                                { "title": "Status", "class": "leftposition" },
+                                { "title": "QBO #", "class": "leftposition" },
+                                { "title": "QBO", "class": "displaynone" }
+
+                                //{ "title": "IsCommitted", "class": "displaynone" },
+                                //{ "title": "IsDeleted" }
+                              ]
+                        });
+                        return;
+                    }
+                    $('#tblPayment').dataTable().fnDestroy();
+                    if ($('#tblPayment thead tr').length > 1) {
+                        $('#tblPayment thead tr:eq(1)').remove();
+                    }
+
+                    if (dt.length > 0) {
+                        for (i = 0; i < dt.length ; i++) {
+
+                            var status = '';
+                            if (parseFloat(dt[i].TotalPayment) != 0 && dt[i].QBO == '') {
+                                status = 'Pending';
+                            }
+                            else if (parseFloat(dt[i].TotalPayment) != 0 && dt[i].QBO != '') {
+                                if (dt[i].QBOStatus == 'PrintComplete') {
+                                    status = 'Printed';
+                                }
+                                else {
+                                    status = 'Posted';
+                                }
+                            }
+                            else if (parseFloat(dt[i].TotalPayment) == 0) {
+                                status = 'Void';
+                            }
+
+
+
+                            var voidpayment = '';
+                            //if (parseFloat(dt[i].TotalPayment) > 0) {
+                            //    voidpayment = '<i class="fa fa-times-circle mrg10R" style="cursor:pointer;" id="batchvoid_' + dt[i].ManualPaymentID + '" data-paymentid="' + dt[i].ManualPaymentID + '" title="Void Payment" onclick="voidpaymentselect(this);"></i>';
+                            //}
+
+                            var sendtoqbo = '';
+                            if (parseFloat(dt[i].TotalPayment) > 0) {
+                                sendtoqbo = '<i class="fa fa-share-square-o mrg10R" style="cursor:pointer;" id="batchqbosend_' + dt[i].ManualPaymentID + '" data-paymentid="' + dt[i].ManualPaymentID + '"  title="Send to QBO" onclick="SendToQBOselect(this);"></i>'
+                                if (parseFloat(dt[i].TotalPayment) > 0) {
+                                    voidpayment = '<i class="fa fa-times-circle mrg10R" style="cursor:pointer;" id="batchvoid_' + dt[i].ManualPaymentID + '" data-paymentid="' + dt[i].ManualPaymentID + '" title="Void Payment" onclick="voidpaymentselect(this);"></i>';
+                                }
+                            }
+                            else {
+                                if (parseFloat(dt[i].TotalPayment) > 0) {
+                                    voidpayment = '<i class="fa fa-times-circle mrg20L mrg10R" style="cursor:pointer;" id="batchvoid_' + dt[i].ManualPaymentID + '" data-paymentid="' + dt[i].ManualPaymentID + '" title="Void Payment" onclick="voidpaymentselect(this);"></i>';
+                                }
+                            }
+
+                            var QBOHtml = '';
+
+                            var action = "";
+
+                            //if (dt[i].PaymentType == '2' && status == 'Posted') {
+                            if (status == 'Posted' || status == 'Printed') {
+
+                                if (dt[i].QBO == '-') {
+                                    QBOHtml = "<span>"
+                                        + "Not Printed"
+                                        + "</span>"
+                                        + '<i title="Check from QBO" data-qboid="' + dt[i].ManualPaymentID + '" onclick="getpaymentfromQBO(this);" style="cursor:pointer;color: blue;" class="mrg5L fa fa-refresh" aria-hidden="true"></i>';
+                                        
+
+                                }
+                                else {
+                                    QBOHtml = "<span>"
+                                        
+                                        + dt[i].QBO
+                                         + "</span>"
+                                         + '<i title="Check from QBO" data-qboid="' + dt[i].ManualPaymentID + '" onclick="getpaymentfromQBO(this);" style="cursor:pointer;color: blue;" class="mrg5L fa fa-refresh" aria-hidden="true"></i>';
+
+                                       
+
+                                }
+
+
+                            }
+                            else {
+                                QBOHtml = "-";
+                            }
+
+                            var num = dt[i].PaymentNumber;
+                            //if (dt[i].CancelID != '0') {
+                            //    num = '<p style="color:red;" title="This Cheque has been cancelled" data-stopval="' + dt[i].CancelID + '">' + dt[i].PaymentNumber + '</p>';
+                                
+                            //}
+
+                            payment[i] = new Array();
+                          
+
+                            payment[i][0] = '<input class="chkMultipleQBO" type="checkbox"/>';
+                            payment[i][1] = dt[i].PaymentDate;
+                            payment[i][2] = dt[i].ParentVendorName;
+                            payment[i][3] = dt[i].Bank_Account;
+                            payment[i][4] = dt[i].PaymentTypeName;
+                            payment[i][5] = num;
+                            payment[i][6] = dt[i].CurrencyCode;
+                            payment[i][7] = formatNumber4(dt[i].ConvRate);
+                            payment[i][8] = dt[i].PaymentNumber;
+                            console.log("33333333333333333333333333333333333333333");
+                            var tp = Math.round(dt[i].TotalPayment * 100) / 100;
+                            var cr = Math.round(dt[i].ConvRate * 10000) / 10000;
+                            payment[i][9] = formatNumber(cr*tp);//formatNumber(dt[i].TotalPayment);
+                            payment[i][10] = status;
+                            payment[i][11] = QBOHtml;
+                            payment[i][12] = dt[i].ManualPaymentID;
+                            payment[i][13] = dt[i].CancelID;
+
+                        }
+                        $('#tblPayment').dataTable({
+                            "processing": true,
+                            "data": payment,
+                            "columns":
+                              [
+                                { "title": "", "class": "leftposition tdMultipleQBO" },
+                                { "title": "Date", "class": "leftposition" },
+                                { "title": "Vendor", "class": "leftposition" },
+                                { "title": "Account", "class": "leftposition" },
+                                { "title": "Type", "class": "leftposition" },
+                                { "title": "Number", "class": "leftposition" },
+                                { "title": "Currency", "class": "leftposition" },
+                                { "title": "Fx Rate", "class": "rightposition" },
+                                { "title": "QBO", "class": "displaynone" },
+                                { "title": "Amount", "class": "rightposition" },
+                                { "title": "Status", "class": "leftposition" },
+                                { "title": "QBO #", "class": "leftposition" },
+                                { "title": "QBO", "class": "displaynone" },
+                              { "title": "QBO", "class": "displaynone" }
+
+                                //{ "title": "IsCommitted", "class": "displaynone" },
+                                //{ "title": "IsDeleted" }
+                              ],
+                            "initComplete": function () {
+                                $("#tblPayment_filter").hide();
+                               
+
+                                $('#tblPayment tbody tr').each(function () {
+                                    if ($(this).find('td:eq(5)').find('span').length>0) {
+
+                                        console.log("REDDDDDD!!!!!!!!!!!");
+
+                                      //  $(this).css('background-color','red');
+                                        $(this).attr('title', 'This payment has been stopped');
+                                        
+
+                                    }
+
+
+                                    var id = $(this).find('td:eq(12)').html();
+                                    $(this).find('td:not(:first)').each(function () {
+                                        $(this).attr('onclick', 'EditPayment("' + id + '","0");');
+                                        $(this).css('cursor', 'pointer');
+                                    });
+                                    $(this).find('td:eq(11)').removeAttr('onclick');
+                                    $(this).find('td:eq(11)').css('cursor', 'default');
+
+                                });
+
+
+                                    
+
+                            },
+                            "aoColumnDefs": [
+                        { 'bSortable': false, 'aTargets': [0] }
+                            ]
+                    , "order": [[1, "desc"]]
+
+
+                        });
+
+
+                        var html = "";
+                        html = "<tr>"
+                                + "<th class='' rowspan='1' colspan='1'>"
+                              + "</th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' id='searchdate' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='3' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='4' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='5' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='6' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='7' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='9' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'>"
+                              //+ "<input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='10' type='text'>"
+                              + "<select data-indx='10' class='srch' style='Height:25px;width:100%;padding: 2px 2%;'><option value=''>All</option><option value='Void'>Void</option><option value='Pending'>Pending</option><option value='Posted'>Posted</option></select>"
+                              + "</th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='11' type='text'></th>"
+                              + "</tr>";
+
+                        if ($('#tblPayment thead tr').length == 1) {
+                            $('#tblPayment thead').append(html);
+                        }
+                       
+                        var table = $('#tblPayment').DataTable();
+                        $('.srch').on('keyup change', function () {
+                            var indx = $(this).attr('data-indx');
+                            var txt = this.value;
+                            table
+                                   .column(indx)
+                                   .search(txt)
+                                   .draw();
+                            //RowHtmlRendernew();
+                        });
+
+
+                        //RowHtmlRendernew();
+                    }
+                    else {
+                        $('#tblPayment').dataTable().fnDestroy();
+                        $('#tblPayment').dataTable({
+                            "processing": true,
+                            "data": payment,
+                            "columns":
+                              [
+                                { "title": "Action" },
+                                { "title": "Payment Date" },
+                                { "title": "Payment Type", "class": "displaynone" },
+                                { "title": "Payment Type Name" },
+                                { "title": "Bank Account ID", "class": "displaynone" },
+                                { "title": "Bank Account" },
+                                { "title": "Payment Number" },
+                                { "title": "Total Payment" },
+                                { "title": "Row Index", "class": "displaynone" },
+
+                                //{ "title": "IsCommitted", "class": "displaynone" },
+                                //{ "title": "IsDeleted" }
+                              ],
+                            "initComplete": function () {
+                                $("#tblPayment_filter").hide();
+                            }
+                        });
+                    }
+                }
+                else {
+                    notify("Some thing went wrong!!!");
+                }
+
+            },
+            error: function () {
+                notify("Some thing went wrong!!!");
+            }
+        });
+
+
+
+    }
+
+
+    function getPaymentDetailsInvendor() {
+        var VendorID = $("#Ddl_Vendors").val();
+        if ($("#Ddl_Vendors").val() == null) {
+            VendorID = '0';
+        }
+
+        if (VendorID == '0') {
+            notify("Please Select Vendor!!!", "red");
+            return;
+        }
+
+
+        var PaymentTypeID = '';
+        var BankAccountId = '';
+        var PaymentNumber = '';
+        var url = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/Invoice/getPaymentDetailsInAdvancevendor';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'Invoice/getPaymentDetailsInAdvancevendor';
+        }
+        var dataTable = "";
+        var dt = "";
+        var payment = new Array();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "{ 'PaymentTypeID': '" + PaymentTypeID + "', 'BankAccountID': '" + BankAccountId + "','PaymentNumber':'" + VendorID + "' }",
+            contentType: "application/json; charset=utf-8",
+            dataType: "JSON",
+            async: false,
+            success: function (data) {
+
+                if (data != '') {
+                    dt = data.data;
+                    if (dt.length == 0) {
+                        return;
+                    }
+                    $('#tblPayment').dataTable().fnDestroy();
+                    if ($('#tblPayment thead tr').length > 1) {
+                        $('#tblPayment thead tr:eq(1)').remove();
+                    }
+
+                    if (dt.length > 0) {
+                        for (i = 0; i < dt.length ; i++) {
+                            console.log("************");
+
+                            var status = '';
+                            if (parseFloat(dt[i].TotalPayment) != 0 && dt[i].QBO == '') {
+                                status = 'Pending';
+                            }
+                            else if (parseFloat(dt[i].TotalPayment) != 0 && dt[i].QBO != '') {
+                                status = 'Posted';
+                            }
+                            else if (parseFloat(dt[i].TotalPayment) == 0) {
+                                status = 'Void';
+                            }
+
+
+
+                            var voidpayment = '';
+                            //if (parseFloat(dt[i].TotalPayment) > 0) {
+                            //    voidpayment = '<i class="fa fa-times-circle mrg10R" style="cursor:pointer;" id="batchvoid_' + dt[i].ManualPaymentID + '" data-paymentid="' + dt[i].ManualPaymentID + '" title="Void Payment" onclick="voidpaymentselect(this);"></i>';
+                            //}
+
+                            var sendtoqbo = '';
+                            if (parseFloat(dt[i].TotalPayment) > 0) {
+                                sendtoqbo = '<i class="fa fa-share-square-o mrg10R" style="cursor:pointer;" id="batchqbosend_' + dt[i].ManualPaymentID + '" data-paymentid="' + dt[i].ManualPaymentID + '"  title="Send to QBO" onclick="SendToQBOselect(this);"></i>'
+                                if (parseFloat(dt[i].TotalPayment) > 0) {
+                                    voidpayment = '<i class="fa fa-times-circle mrg10R" style="cursor:pointer;" id="batchvoid_' + dt[i].ManualPaymentID + '" data-paymentid="' + dt[i].ManualPaymentID + '" title="Void Payment" onclick="voidpaymentselect(this);"></i>';
+                                }
+                            }
+                            else {
+                                if (parseFloat(dt[i].TotalPayment) > 0) {
+                                    voidpayment = '<i class="fa fa-times-circle mrg20L mrg10R" style="cursor:pointer;" id="batchvoid_' + dt[i].ManualPaymentID + '" data-paymentid="' + dt[i].ManualPaymentID + '" title="Void Payment" onclick="voidpaymentselect(this);"></i>';
+                                }
+                            }
+
+                            var QBOHtml = '';
+
+                            var action = "";
+
+                            if (dt[i].PaymentType == '2' && status == 'Posted') {
+
+                                if (dt[i].QBO == '-') {
+                                    QBOHtml = "<span>"
+                                        + "Not Printed"
+                                        + "</span>"
+                                        + '<i title="Check from QBO" data-qboid="' + dt[i].ManualPaymentID + '" onclick="getpaymentfromQBO(this);" style="cursor:pointer;color: blue;" class="mrg5L fa fa-refresh" aria-hidden="true"></i>';
+
+
+                                }
+                                else {
+                                    QBOHtml = "<span>"
+
+                                        + dt[i].QBO
+                                         + "</span>"
+                                         + '<i title="Check from QBO" data-qboid="' + dt[i].ManualPaymentID + '" onclick="getpaymentfromQBO(this);" style="cursor:pointer;color: blue;" class="mrg5L fa fa-refresh" aria-hidden="true"></i>';
+
+
+
+                                }
+
+
+                            }
+                            else {
+                                QBOHtml = "-";
+                            }
+
+
+
+
+                            payment[i] = new Array();
+
+
+                            payment[i][0] = '<input class="chkMultipleQBO" type="checkbox"/>';
+                            payment[i][1] = dt[i].PaymentDate;
+
+
+                            payment[i][2] = dt[i].ParentVendorName;
+
+
+                            payment[i][3] = dt[i].Bank_Account;
+
+
+                            payment[i][4] = dt[i].PaymentTypeName;
+
+                            payment[i][5] = dt[i].PaymentNumber;
+                            payment[i][6] = dt[i].CurrencyCode;
+                            payment[i][7] = formatNumber4(dt[i].ConvRate);
+                            payment[i][8] = dt[i].PaymentNumber;
+                            var tp = Math.round(dt[i].TotalPayment * 100) / 100;
+                            var cr = Math.round(dt[i].ConvRate * 10000) / 10000;
+                            payment[i][9] = formatNumber(cr * tp);//formatNumber(dt[i].TotalPayment);
+                            payment[i][10] = status;
+                            payment[i][11] = QBOHtml;
+                            payment[i][12] = dt[i].ManualPaymentID;
+
+
+                        }
+                        $('#tblPayment').dataTable({
+                            "processing": true,
+                            "data": payment,
+                            "columns":
+                              [
+                                { "title": "", "class": "leftposition tdMultipleQBO" },
+                                { "title": "Date", "class": "leftposition" },
+                                { "title": "Vendor", "class": "leftposition" },
+                                { "title": "Account", "class": "leftposition" },
+                                { "title": "Type", "class": "leftposition" },
+                                { "title": "Number", "class": "leftposition" },
+                                { "title": "Currency", "class": "leftposition" },
+                                { "title": "Fx Rate", "class": "rightposition" },
+                                { "title": "QBO", "class": "displaynone" },
+                                { "title": "Amount", "class": "rightposition" },
+                                { "title": "Status", "class": "leftposition" },
+                                { "title": "QBO #", "class": "leftposition" },
+
+                                { "title": "QBO", "class": "displaynone" }
+
+                                //{ "title": "IsCommitted", "class": "displaynone" },
+                                //{ "title": "IsDeleted" }
+                              ],
+                            "initComplete": function () {
+                                $("#tblPayment_filter").hide();
+                             
+
+                                $('#tblPayment tbody tr').each(function () {
+                                    var id = $(this).find('td:eq(12)').html();
+                                    $(this).find('td:not(:first)').each(function () {
+                                        $(this).attr('onclick', 'EditPayment("' + id + '","0");');
+                                        $(this).css('cursor', 'pointer');
+                                    });
+                                    $(this).find('td:eq(11)').removeAttr('onclick');
+                                    $(this).find('td:eq(11)').css('cursor', 'default');
+
+                                });
+
+
+
+
+                            },
+                            "aoColumnDefs": [
+                        { 'bSortable': false, 'aTargets': [0] }
+                            ]
+                    , "order": [[1, "desc"]]
+
+
+                        });
+
+
+                        var html = "";
+                        html = "<tr>"
+                              //+ "<th class='Resetth' rowspan='1' colspan='1'>"
+                              //+ "<a><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px;width:110px;' /></a>"
+                              //+ "</th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' id='searchdate' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='3' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='4' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='5' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='6' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='7' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='9' type='text'></th>"
+                              + "<th rowspan='1' colspan='1'>"
+                              //+ "<input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='10' type='text'>"
+                              + "<select data-indx='10' class='srch' style='Height:25px;width:100%;padding: 2px 2%;'><option value=''>All</option><option value='Void'>Void</option><option value='Pending'>Pending</option><option value='Posted'>Posted</option></select>"
+                              + "</th>"
+                              + "<th rowspan='1' colspan='1'><input class='srch rightposition' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='11' type='text'></th>"
+
+                              + "</tr>";
+
+                        if ($('#tblPayment thead tr').length == 1) {
+                            $('#tblPayment thead').append(html);
+                        }
+
+                        var table = $('#tblPayment').DataTable();
+                        $('.srch').on('keyup change', function () {
+                            var indx = $(this).attr('data-indx');
+                            var txt = this.value;
+                            table
+                                   .column(indx)
+                                   .search(txt)
+                                   .draw();
+                            //RowHtmlRendernew();
+                        });
+
+
+                        //RowHtmlRendernew();
+                    }
+                    else {
+                        $('#tblPayment').dataTable().fnDestroy();
+                        $('#tblPayment').dataTable({
+                            "processing": true,
+                            "data": payment,
+                            "columns":
+                              [
+                                { "title": "Action" },
+                                { "title": "Payment Date" },
+                                { "title": "Payment Type", "class": "displaynone" },
+                                { "title": "Payment Type Name" },
+                                { "title": "Bank Account ID", "class": "displaynone" },
+                                { "title": "Bank Account" },
+                                { "title": "Payment Number" },
+                                { "title": "Total Payment" },
+                                { "title": "Row Index", "class": "displaynone" },
+
+                                //{ "title": "IsCommitted", "class": "displaynone" },
+                                //{ "title": "IsDeleted" }
+                              ],
+                            "initComplete": function () {
+                                $("#tblPayment_filter").hide();
+                            }
+                        });
+                    }
+                }
+                else {
+                    notify("Some thing went wrong!!!");
+                }
+
+            },
+            error: function () {
+                notify("Some thing went wrong!!!");
+            }
+        });
+
+
+
+    }
+
+    function syncallpaymentnumber() {
+        
+        var t = 0;
+        $('#tblPayment tbody tr').each(function () {
+            if ($(this).find('td:eq(11)').find('i').length > 0) {
+                //console.log($(this).find('td:eq(11)').find('i').html());
+                //getpaymentfromQBOall($(this).find('td:eq(11)').find('i'));
+                t++;
+            }
+        });
+        if (t == 0) {
+            notify("No payment to sync.");
+            return;
+        }
+
+        t = 0;
+
+        var c = confirm("Are you sure, you want to Sync all payments? This may take some time depending on the number of payments.");
+        if (!c) {
+            return;
+        }
+
+        $('#qbdetailsmodal').modal('show');
+        $('#qbstatus').html('Syncing data from QBO. Please wait ' + '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+        
+
+        setTimeout(function () {
+
+            $('#tblPayment tbody tr').each(function () {
+                if ($(this).find('td:eq(11)').find('i').length > 0) {
+                    //console.log($(this).find('td:eq(11)').find('i').html());
+                    getpaymentfromQBOall($(this).find('td:eq(11)').find('i'));
+                    t++;
+                }
+            });
+
+            notify("Synced " + t + " payment(s).", "green");
+            $('#qbdetailsmodal').modal('hide');
+            setTimeout(function () {
+                irrrrr = 0;
+                window.location.reload();
+            }, 3000);
+            //getPaymentDetailsInAdvance();
+
+        }, 1000);
+
+
+
+        
+
+    }
+
+    function getpaymentfromQBOall(obj) {
+        var paymentid = $(obj).attr('data-qboid');
+        var pnumber = $(obj).parent().parent().find('td:eq(5)').html();
+        var amt = parseFloat($(obj).parent().parent().find('td:eq(9)').html());
+
+     
+        var tableheader = "";
+        var html = '';
+
+        var url = '';
+        if (amt > 0) {
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Quickbook/getCheckDetails';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Quickbook/getCheckDetails';
+            }
+        }
+        else {
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Quickbook/getCheckDetailsJ';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Quickbook/getCheckDetailsJ';
+            }
+        }
+        
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ \"paymentid\": \"" + paymentid + "\"}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                async: false,
+                success: function (data) {
+                    data = data.data;
+                    var total = 0;
+                    if (data[0].Checknumber == '' || data[0].Checknumber == '-') {
+                       
+                        $(obj).prev('span').html('Not Printed');
+                    }
+                    else {
+                       
+                        $(obj).prev('span').html(data[0].Checknumber);
+
+                    }
+
+
+
+                },
+                error: function () {
+                    notify("Some thing went wrong!!!");
+                }
+            });
+
+
+
+        
+
+
+
+
+    }
+
+    function getpaymentfromQBO(obj) {
+        var paymentid = $(obj).attr('data-qboid');
+        var pnumber = $(obj).parent().parent().find('td:eq(5)').html();
+        var amt = parseFloat($(obj).parent().parent().find('td:eq(9)').html());
+
+        //console.log(paymentid);
+
+        $('#qbdetailsmodal').modal('show');
+        $('#qbstatus').html('Fetching information from QBO for ' + pnumber + '. Please wait ' + '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+
+        var tableheader = "<table class='table'><thead><tr>"
+        + "<th style='display:none;'>Action</th>"
+        + "<th>Check #</th>"
+        + "<th style='display:none;'>Status</th>"
+        + "<th>Vendor</th>"
+        + "<th  class='rightposition'>Total</th>"
+      
+        + "</tr></thead><tbody>";
+        var html = '';
+
+        var url = '';
+        if (amt > 0) {
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Quickbook/getCheckDetails';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Quickbook/getCheckDetails';
+            }
+        }
+        else {
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Quickbook/getCheckDetailsJ';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Quickbook/getCheckDetailsJ';
+            }
+        }
+        setTimeout(function () {
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ \"paymentid\": \"" + paymentid + "\"}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                async: false,
+                success: function (data) {
+                    console.log(data);
+
+                    console.log("***************!!!!!!!!!!!!!!!");
+                    if (data.data.length == 0) {
+                        notify("Could not update payment!!!");
+                        $('#qbdetailsmodal').modal('hide');
+                        return;
+                    }
+
+                    if (data.data[0].QBOID == "") {
+                        obj = $(obj).parent();
+                        $(obj).html('-');
+                        $(obj).prev('td').html('Pending');
+                        $('#qbdetailsmodal').modal('hide');
+                        return;
+                    }
+
+
+                    data = data.data;
+                    var total = 0;
+
+                    for (var a = 0; a < data.length; a++) {
+                        total += parseFloat(data[a].Total);
+                        var action = '';
+                        if (data[a].Status == 'Voided') {
+                            action = '';
+                            html += "<tr style='background:#facbcb;'>"
+                       + "<td style='display:none;'>" + "" + "</td>"
+                       + "<td>" + data[a].Checknumber + "</td>"
+
+                       + "<td style='display:none;'>" + data[a].Status + "</td>"
+                       + "<td>" + data[a].Vendor + "</td>"
+                       + "<td class='rightposition'>" + formatNumber(data[a].Total) + "</td></tr>";
+                        }
+                        else {
+                            html += "<tr data-SystemToken='" + data[a].SystemToken + "' data-SyncToken='" + data[a].SyncToken + "' data-QBOID='" + data[a].QBOID + "' >"
+                       + "<td style='display:none;'>" + '<i onclick="voidpayment(this);" title="Delete This Payment" style="cursor:pointer;color: #e24848;font-size: 1.4em;" class="fa fa-stop-circle" aria-hidden="true"></i>' + "</td>"
+                       + "<td>" + data[a].Checknumber + "</td>"
+
+                       + "<td  style='display:none;'>" + data[a].Status + "</td>"
+                       + "<td>" + data[a].Vendor + "</td>"
+                       + "<td class='rightposition'>" + formatNumber(data[a].Total) + "</td></tr>";
+
+                        }
+                       
+                    }
+
+
+                    $('#qbstatus').html(tableheader + html + "<tr><td colspan='2' style='text-align:right;'>Total:</td><td style='text-align:right;'>" + formatNumber(total) + "</td>" + "</tbody></table>");
+                    if (data[0].Checknumber == '' || data[0].Checknumber == '-') {
+                        $('#qbstatus').html('Not yet printed');
+                        $(obj).prev('span').html('Not Printed');
+                    }
+                    else {
+                        $('#qbstatus').html('Payment number is: ' + data[0].Checknumber);
+                        $(obj).prev('span').html(data[0].Checknumber);
+
+                    }
+
+                   
+                   
+                        $('#qbdetailsmodal').modal('hide');
+                   
+                },
+                error: function () {
+                    notify("Some thing went wrong!!!");
+                }
+            });
+
+
+
+        }, 300);
+
+        
+
+
+    }
+
+
+
+    function voidpayment(obj) {
+        var rw = $(obj).parent().parent();
+        var qboid = $(rw).attr('data-QBOID');
+        var systemtoken = $(rw).attr('data-systemtoken');
+        var synctoken = $(rw).attr('data-synctoken');
+        var c = true;
+        //if (systemtoken != synctoken) {
+        //    c = confirm("This cheque may have been updated from QBO. Do you still want to delete this cheque?");
+        //}
+        if (c) {
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Quickbook/changepayment';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Quickbook/changepayment';
+            }
+
+            var status = "DELETE";
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ \"paymentid\": \"" + qboid + "\",\"status\" : \"" + status + "\"}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                async: false,
+                success: function (data) { },
+                error: function () {
+                    notify("Some thing went wrong!!!");
+                }
+            });
+
+        }
+    }
+    function getPaymentDetailsByVendor() {
+        var VendorID = $("#Ddl_Vendors").val();
+        if ($("#Ddl_Vendors").val() == null) {
+            VendorID = '0';
+        }
+
+        if (VendorID == '0') {
+            notify("Please Select Vendor!!!", "red");
+            return;
+        }
+
+        var url = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/Invoice/getPaymentDetailsByVendor';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'Invoice/getPaymentDetailsByVendor';
+        }
+        var dataTable = "";
+        var dt = "";
+        var payment = new Array();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "{ 'VendorID': '" + VendorID + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "JSON",
+            async: false,
+            success: function (data) {
+
+                if (data != '') {
+                    dt = data.data;
+                    if (dt.length == 0) {
+                        return;
+                    }
+                    $('#tblPayment').dataTable().fnDestroy();
+                    if (dt.length > 0) {
+                        for (i = 0; i < dt.length ; i++) {
+                            payment[i] = new Array();
+                            payment[i][0] = '<i class="fa fa-hand-o-right mrg10R" style="cursor:pointer;" title="Edit Payment" onclick="EditPayment(' + dt[i].ManualPaymentID + ');"></i>';
+                            payment[i][1] = dt[i].PaymentDate;
+                            payment[i][2] = dt[i].PaymentType;
+                            payment[i][3] = dt[i].PaymentTypeName;
+                            payment[i][4] = dt[i].BankAccountID;
+                            payment[i][5] = dt[i].Bank_Account;
+                            payment[i][6] = dt[i].PaymentNumber;
+                            payment[i][7] = dt[i].TotalPayment;
+                            payment[i][8] = i;
+                            payment[i][8] = QBO;
+
+                        }
+                        $('#tblPayment').dataTable({
+                            "processing": true,
+                            "data": payment,
+                            "columns":
+                              [
+                                { "title": "Action" },
+                                { "title": "Payment Date" },
+                                { "title": "Payment Type", "class": "displaynone" },
+                                { "title": "Payment Type Name" },
+                                { "title": "Bank Account ID", "class": "displaynone" },
+                                { "title": "Bank Account" },
+                                { "title": "Payment Number" },
+                                { "title": "Total Payment" },
+                                { "title": "Row Index", "class": "displaynone" },
+                                { "title": "Sent to QBO" },
+
+                                //{ "title": "IsCommitted", "class": "displaynone" },
+                                //{ "title": "IsDeleted" }
+                              ],
+                            "initComplete": function () {
+                                $("#tblPayment_filter").hide();
+                            }
+                        });
+
+                        //RowHtmlRendernew();
+                    }
+                    else {
+                        $('#tblPayment').dataTable().fnDestroy();
+                        $('#tblPayment').dataTable({
+                            "processing": true,
+                            "data": payment,
+                            "columns":
+                              [
+                                { "title": "Action" },
+                                { "title": "Payment Date" },
+                                { "title": "Payment Type", "class": "displaynone" },
+                                { "title": "Payment Type Name" },
+                                { "title": "Bank Account ID", "class": "displaynone" },
+                                { "title": "Bank Account" },
+                                { "title": "Payment Number" },
+                                { "title": "Total Payment" },
+                                { "title": "Row Index", "class": "displaynone" },
+
+                                //{ "title": "IsCommitted", "class": "displaynone" },
+                                //{ "title": "IsDeleted" }
+                              ],
+                            "initComplete": function () {
+                                $("#tblPayment_filter").hide();
+                            }
+                        });
+                    }
+                }
+                else {
+                    notify("Some thing went wrong!!!");
+                }
+
+            },
+            error: function () {
+                notify("Some thing went wrong!!!");
+            }
+        });
+
+
+
+    }
+
+    function IsNumber(e) {
+        if ($('#Ddl_EditPaymentType').val() == '2') {
+            return true;
+        }
+        var keyCode = e.which ? e.which : e.keyCode
+        if ((keyCode > 47 && keyCode < 58) || (keyCode == 8) || (keyCode == 46)) {
+            return true;
+        }
+        else {
+            alert('Use Only Numeric value');
+            return false;
+        }
+    }
+
+    function populateBankAccount(PaymentID) {
+
+        var url = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/Invoice/populateBankAccount';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'Invoice/populateBankAccount';
+        }
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "{ 'PaymentID': '" + PaymentID + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                
+                    $('#DDl_EditBank').html(data);
+               
+            }
+        });
+
+    }
+
+    function SendToQBO(id) {
+        EditPayment(id, 1);
+        
+    }
+
+    var selectedpaymentidsforvoid = new Array();
+    var selectedpaymentidsforqbo = new Array();
+
+
+    function SendToQBOselect(obj) {
+        $(obj).toggleClass('checked');
+
+        var paymentid = $(obj).attr('data-paymentid');
+
+        var ischecked = $(obj).hasClass('checked');
+
+
+        if (ischecked) {
+
+            selectedpaymentidsforqbo.push(paymentid);
+
+        }
+        else {
+            var index = selectedpaymentidsforqbo.indexOf(paymentid);
+
+            if (index > -1) {
+                selectedpaymentidsforqbo.splice(index, 1);
+            }
+
+
+        }
+
+
+        if (selectedpaymentidsforqbo.length > 0) {
+            $('#btn_qbopayment').show();
+            $('#btn_qbopayment').find('.badge').html(selectedpaymentidsforqbo.length);
+        }
+        else {
+            $('#btn_qbopayment').hide();
+
+        }
+
+
+    }
+    function voidpaymentselect(obj) {
+
+        $(obj).toggleClass('checked');
+
+        var paymentid = $(obj).attr('data-paymentid');
+       
+        var ischecked = $(obj).hasClass('checked');
+
+      
+        if (ischecked) {
+
+            selectedpaymentidsforvoid.push(paymentid);
+           
+        }
+        else {
+            var index = selectedpaymentidsforvoid.indexOf(paymentid);
+
+            if (index > -1) {
+                selectedpaymentidsforvoid.splice(index, 1);
+            }
+
+           
+        }
+
+
+        if (selectedpaymentidsforvoid.length > 0) {
+            $('#btn_voidpayment').show();
+            $('#btn_voidpayment').find('.badge').html(selectedpaymentidsforvoid.length);
+        }
+        else {
+            $('#btn_voidpayment').hide();
+
+        }
+
+
+
+
+
+    }
+
+    function deletepaymentforqbo(obj) {
+        var paymentid = $(obj).parent().attr('data-id');
+
+        var index = selectedpaymentidsforqbo.indexOf(paymentid);
+
+        if (index > -1) {
+            selectedpaymentidsforqbo.splice(index, 1);
+           
+        }
+
+        if (selectedpaymentidsforqbo.length > 0) {
+            $('#btn_qbopayment').show();
+            $('#btn_qbopayment').find('.badge').html(selectedpaymentidsforqbo.length);
+        }
+        else {
+            $('#btn_qbopayment').hide();
+            $('#batchqbo').modal('hide');
+
+        }
+
+
+
+        $('#batchqbosend_' + paymentid).removeClass('checked');
+        $(obj).parent().remove();
+
+
+    }
+
+
+
+
+    function deletepaymentforvoid(obj) {
+        var paymentid = $(obj).parent().attr('data-id');
+
+        var index = selectedpaymentidsforvoid.indexOf(paymentid);
+        //console.log("Before");
+        //console.log(selectedpaymentidsforvoid);
+        if (index > -1) {
+            selectedpaymentidsforvoid.splice(index, 1);
+           
+        }
+
+        //console.log("After");
+        //console.log(selectedpaymentidsforvoid);
+
+        if (selectedpaymentidsforvoid.length > 0) {
+            $('#btn_voidpayment').show();
+            $('#btn_voidpayment').find('.badge').html(selectedpaymentidsforvoid.length);
+        }
+        else {
+            $('#btn_voidpayment').hide();
+            $('#batchvoid').modal('hide');
+
+        }
+
+
+
+        $('#batchvoid_' + paymentid).removeClass('checked');
+        $(obj).parent().remove();
+
+
+    }
+
+
+    function openpopupforvoid() {
+        var html = '';
+        for (var a = 0 ; a < selectedpaymentidsforvoid.length; a++) {
+            var paymentid = selectedpaymentidsforvoid[a];
+            
+            $('#tblPayment tbody tr').each(function () {
+
+                if ($(this).find('td:eq(12)').html() == paymentid) {
+                    html += '<span class="remove" data-id="' + paymentid + '">'
+                         + '<a onclick="deletepaymentforvoid(this)" title="Remove this PO">x</a>'
+                         + '<span>' + $(this).find('td:eq(2)').html() + '-' + $(this).find('td:eq(8)').html() + '</span>'
+                         + '</span>';
+
+                   // html += $(this).find('td:eq(1)').html() + '-' + $(this).find('td:eq(7)').html();
+                }
+
+            });
+
+
+        }
+
+        $('#batchvoidpayment').html(html);
+        $('#batchvoid').modal('show');
+
+
+
+
+    }
+
+
+    function openpopupforqbo() {
+        var html = '';
+        for (var a = 0 ; a < selectedpaymentidsforqbo.length; a++) {
+            var paymentid = selectedpaymentidsforqbo[a];
+
+            $('#tblPayment tbody tr').each(function () {
+
+                if ($(this).find('td:eq(12)').html() == paymentid) {
+                    html += '<span class="remove" data-id="' + paymentid + '">'
+                         + '<a onclick="deletepaymentforqbo(this)" title="Remove this PO">x</a>'
+                         + '<span>' + $(this).find('td:eq(2)').html() + '-' + $(this).find('td:eq(8)').html() + '</span>'
+                         + '</span>';
+
+                    // html += $(this).find('td:eq(1)').html() + '-' + $(this).find('td:eq(7)').html();
+                }
+
+            });
+
+
+        }
+
+        $('#batchqbopayment').html(html);
+        $('#batchqbo').modal('show');
+
+
+
+
+    }
+
+
+    function batchvoidfinal() {
+
+        notify("Voiding Payments. Please wait.", "YELLOW-LOAD");
+
+        setTimeout(function () {
+            $('#batchvoidpayment .remove').each(function () {
+
+                VoidPaymentdb($(this).attr('data-id'));
+
+
+            });
+
+
+            notify("Payment(s) voided successfully", 'green');
+            setTimeout(function () {
+                irrrrr = 0;
+                window.location.reload();
+            }, 3000);
+
+        }, 500);
+
+
+
+
+
+    }
+
+    function returncurrentoperationidforqbosendbatch() {
+        var tmp = getCookie("checker");
+
+        var tmp2 = '';
+        var rtn = '0';
+
+        for (var a = 0; a < tmp.split(',').length; a++) {
+            if (a == 0) {
+                rtn = tmp.split(',')[a];
+            }
+            else {
+                tmp2 += tmp2 == "" ? tmp.split(',')[a] : ',' + tmp.split(',')[a];
+            }
+        }
+        delete_cookie("checker");
+        if (tmp != '') {
+            setCookie("checker", tmp2, 3);
+        }
+        else {
+            rtn = '0';
+        }
+        return rtn;
+
+
+    }
+
+    function generateInvoicesinBatch(id) {
+
+        //console.log("Printing" + id);
+
+       
+
+        var obj = $('#batchqbopayment .remove:eq(' + id + ')');
+
+        var arr = '';
+        $('#batchqbopayment .remove').each(function () {
+            arr += arr == '' ? $(this).attr('data-id') : ',' + $(this).attr('data-id');
+        });
+
+        delete_cookie("checker");
+        setCookie("checker", arr, 3);
+        var currid = returncurrentoperationidforqbosendbatch();
+       
+        notify("Sending to QBO", 'green');
+        setTimeout(function () {
+            EditPayment(currid, 1);
+        }, 300);
+
+        return;
+        if (-1 < $('#batchqbopayment .remove').length) {
+           
+            notify('Sending ' + $(obj).find('span').html() + ' to QBO', 'green');
+           
+            var checker = getCookie("checker-" + (id - 1));
+            //console.log("hellllooooo!!!" + checker);
+
+            if (checker == "true" || id == 0) {
+              
+                EditPayment($(obj).attr('data-id'), 1);
+            }
+            id++;
+            var paymentid = $(obj).attr('data-id');
+
+            var index = selectedpaymentidsforqbo.indexOf(paymentid);
+           
+            if (index > -1) {
+                selectedpaymentidsforqbo.splice(index, 1);
+
+            }
+           
+            if (selectedpaymentidsforqbo.length > 0) {
+                $('#btn_qbopayment').show();
+                $('#btn_qbopayment').find('.badge').html(selectedpaymentidsforqbo.length);
+            }
+            else {
+                $('#btn_qbopayment').hide();
+             
+            }
+
+
+
+            $('#batchqbosend_' + paymentid).removeClass('checked');
+           // $(obj).parent().remove();
+
+
+            setTimeout(function () {
+
+                var checker = getCookie("checker-" + (id - 1));
+                if (checker != "true") {
+                    id--;
+                }
+                
+                  
+
+               
+                generateInvoicesinBatch(id);
+            }, 5000);
+           
+        }
+
+    }
+
+ 
+
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + "; " + expires;
+        }
+
+    function delete_cookie(name) {
+        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1);
+            if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+
+   
+
+
+
+    function batchqbofinal() {
+
+        $('#batchqbo').modal('hide');
+        generateInvoicesinBatch(0);
+
+        //$('#batchqbopayment .remove').each(function () {
+           
+
+        //    EditPayment($(this).attr('data-id'));
+
+            
+           
+
+        //});
+
+       
+        //    notify("Payment(s) sent successfully", 'green');
+        //    setTimeout(function () {
+        //        window.location.reload();
+        //    }, 3000);
+       
+
+
+
+
+    }
+
+    function DeletePaymentDB(id) {
+
+        var c = confirm("Are you sure you want to delete this payment?");
+        if (!c) {
+            return;
+        }
+        notify("Deleting Payment. Please wait.", "YELLOW-LOAD");
+
+        setTimeout(function () {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/deletepayment';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/deletepayment';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'ManualPaymentID': '" + id + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                async: false,
+                success: function (data) {
+                    if (data == "Success" || data == "") {
+                        notify("Payment successfully deleted.", 'green');
+                        irrrrr = 0;
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 3000);
+                    }
+                    else if (data == "Failed") {
+                        notify("Payment can not be deleted. This payment has a printed cheque assosiated with it.", 'red');
+                    }
+                }
+            });
+        }, 300);
+
+    }
+
+
+    function VoidPaymentdb(id) {
+       
+
+        notify("Voiding Payments. Please wait.", "YELLOW-LOAD");
+
+        setTimeout(function () { 
+        var url = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/Invoice/voidpayment';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'Invoice/voidpayment';
+        }
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "{ 'ManualPaymentID': '" + id + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                notify("Payment successfully voided.", 'green');
+                irrrrr = 0;
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000);
+            }
+        });
+        }, 300);
+
+    }
+
+    var ismultiplepayment = false;
+    var ptosendarr = new Array();
+    var currsendingindx = 0;
+
+   // ptosendarr = [382, 364, 374, 347];
+    function call_uncheckmultiple() {
+        $('.chkMultipleQBO').attr('checked', false);
+        $('#btnuncheck').addClass('hidden');
+        $('#btnUpdateCheckedQBO').addClass('hidden');
+        $('#btnuncheck').hide();
+
+
+    }
+    function call_SendMultiplePayments() {
+        $('.chkMultipleQBO').each(function () {
+            if ($(this).is(':checked')) {
+                id = $(this).parent().parent().find('td:eq(12)').html();
+                ptosendarr.push(id);
+            }
+        });
+        SendMultiplePayments();
+    }
+
+    function SendMultiplePayments() {
+        if (currsendingindx < ptosendarr.length) {
+            notify("Sending Payment " + (currsendingindx + 1) + "/" + ptosendarr.length,"green");
+            setTimeout(function () {
+                ismultiplepayment = true;
+                EditPayment(ptosendarr[currsendingindx++], "1");
+            }, 100);
+
+        }
+        else {
+            notify("Sent all " + ptosendarr.length + " Payments to QBO" ,"green");
+            setTimeout(function () {
+                irrrrr = 0;
+                window.location.reload();
+            }, 2000);
+
+
+            currsendingindx = 0;
+            ptosendarr = [];
+            ismultiplepayment = false;
+    }
+
+    }
+
+    function EditPayment(PaymentID, mode, amt, status) {
+        $('#Editable_Div').find('a').addClass('displaynone');
+        var cid = 0;
+        var pnumbaer = '';
+        var ptype = '';
+
+        $('#tblPayment tbody tr').each(function () {
+          
+
+            
+            var id = $(this).find('td:eq(12)').html();
+            if (id == PaymentID) {
+                cid = $(this).find('td:eq(13)').html();
+                if (cid != 0) {
+                    $('#Editable_Div').find('a').removeClass('displaynone');
+                    $('#Editable_Div').attr('onclick', 'EditPayment("' + cid + '","0");')
+                }
+                ptype = $(this).find('td:eq(4)').html();
+                status = $(this).find('td:eq(10)').html();
+                amt = parseFloat($(this).find('td:eq(9)').html());
+                pnumbaer = $(this).find('td:eq(5)').html();
+            }
+
+        });
+
+        console.log(cid + "   cid");
+        console.log(pnumbaer + "   >>>>>>>>>>>>>   ");
+        $('#btnStopPayment').hide();
+        switch (status) {
+            case 'Void':
+                $('#btnsendpayment').hide();
+                $('#btnsendpayment').removeAttr('onclick');
+                $('#btnvoidpayment').hide();
+                $('#btnvoidpayment').removeAttr('onclick');
+                //$('#btnUpdatePayment').hide();
+
+                $('#btndeletepayment').show();
+                $('#btndeletepayment').removeAttr('onclick');
+                $('#btndeletepayment').attr('onclick', 'DeletePaymentDB("' + PaymentID + '");');
+
+                break;
+            case 'Pending':
+                if (cid == '0' && pnumbaer != "" && ptype == 'Cheque') {
+                    $('#btnStopPayment').show();
+                }
+
+
+                
+                $('#btnUpdatePayment').show();
+               
+                
+                $('#btnsendpayment').show();
+                $('#btnsendpayment').removeAttr('onclick');
+                $('#btnsendpayment').attr('onclick', 'EditPayment("' + PaymentID + '", "1");');
+
+
+                $('#btnvoidpayment').show();
+                $('#btnvoidpayment').removeAttr('onclick');
+                $('#btnvoidpayment').attr('onclick', 'VoidPaymentdb("' + PaymentID + '");');
+
+                $('#btndeletepayment').show();
+                $('#btndeletepayment').removeAttr('onclick');
+                $('#btndeletepayment').attr('onclick', 'DeletePaymentDB("' + PaymentID + '");');
+                
+               
+
+                break;
+            case 'Posted':
+                if (amt < 0) {
+                    $('#btnUpdatePayment').show();
+                    //$('#btnStopPayment').show();//
+                    
+                    $('#btnsendpayment').hide();
+                    $('#btnsendpayment').removeAttr('onclick');
+
+                    $('#btnvoidpayment').show();
+                    $('#btnvoidpayment').removeAttr('onclick');
+                    $('#btnvoidpayment').attr('onclick', 'VoidPaymentdb("' + PaymentID + '");');
+
+                    $('#btndeletepayment').show();
+                    $('#btndeletepayment').removeAttr('onclick');
+                    $('#btndeletepayment').attr('onclick', 'DeletePaymentDB("' + PaymentID + '");');
+                }
+                else {
+                    $('#btnUpdatePayment').show();
+
+                    //if (cid == '0' && pnumbaer != "" && ptype == 'Cheque') {
+                    //    $('#btnStopPayment').show();
+                    //}
+
+                   
+                    
+                    $('#btnsendpayment').hide();
+                    $('#btnsendpayment').removeAttr('onclick');
+
+                    $('#btnvoidpayment').show();
+                    $('#btnvoidpayment').removeAttr('onclick');
+                    $('#btnvoidpayment').attr('onclick', 'VoidPaymentdb("' + PaymentID + '");');
+
+                    $('#btndeletepayment').show();
+                    $('#btndeletepayment').removeAttr('onclick');
+                    $('#btndeletepayment').attr('onclick', 'DeletePaymentDB("' + PaymentID + '");');
+
+                }
+                break;
+
+            case 'Printed':
+                $('#btnUpdatePayment').show();
+               
+                if (amt > 0) {
+                    if (cid == '0' && pnumbaer != "" && ptype == 'Cheque') {
+                        $('#btnStopPayment').show();
+                    }
+                }
+
+                $('#btnsendpayment').hide();
+                $('#btnsendpayment').removeAttr('onclick');
+
+                $('#btnvoidpayment').show();
+                $('#btnvoidpayment').removeAttr('onclick');
+                $('#btnvoidpayment').attr('onclick', 'VoidPaymentdb("' + PaymentID + '");');
+
+                $('#btndeletepayment').hide();
+                $('#btndeletepayment').removeAttr('onclick');
+
+                
+                break;
+
+
+        }
+
+        if (parseFloat(amt) < 0) {
+            $('#btnStopPayment').hide();
+            $('#btnStopPayment').removeAttr('onclick');
+
+            
+        }
+
+        var checker = getCookie("checker");
+        setCookie("checker-" + checker, "false", 7);
+
+        console.log('1');
+        populateBankAccount(PaymentID);
+         $("#hdnEditPayment").val(PaymentID);
+
+        var url = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/Invoice/getPaymentDetailsByPaymentID';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'Invoice/getPaymentDetailsByPaymentID';
+        }
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "{ 'ManualPaymentID': '" + PaymentID + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "JSON",
+            async: false,
+            success: function (data) {
+
+                //console.log(data);
+
+                if (data != '') {
+                    dt = data.data;
+                    if (dt.length == 0) {
+                        return;
+                    }
+                    //console.log(dt);
+
+                    if (dt.length > 0) {
+                        for (i = 0; i < dt.length ; i++) {
+                            //$("#txt_EditPaymentDate").val(dt[i].PaymentDate);
+                            $("#Ddl_EditPaymentType").val(dt[i].PaymentType);
+                            $("#DDl_EditBank").val(dt[i].BankAccountID);
+                            $("#txtEditPaymentNumber").val(dt[i].PaymentNumber);
+                            $("#txtEditTotalAmount").val(dt[i].TotalPayment);
+                            $("#txtEditMemo").val(dt[i].Memo);
+                            $("#hdnEditPaymentType").val(dt[i].PaymentType);
+                            $("#hdnEditBankAccount").val(dt[i].BankAccountID);
+                            $("#hdnEditPaymentNumber").val(dt[i].PaymentNumber);
+                            $("#txtEditExrate").val(formatNumber4(dt[i].ConvRate));
+                            $("#txtEditExrate1").val(formatNumber4(dt[i].ConvRate2));
+                            
+
+                            $('#txt_EditPaymentDate').datepickercustom({
+                                changeMonth: true,
+                                changeYear: true,
+                                dateFormat: 'MM dd yy',
+
+                            }).datepicker("setDate", new Date(dt[i].PaymentDate));
+
+                            url = '';
+                            if (LOCALORSERVERNEW == 'LOCAL') {
+                                url = '/Invoice/getPaymentItemDetailsByPaymentID';
+                            }
+                            else if (LOCALORSERVERNEW == 'SERVER') {
+                                url = 'Invoice/getPaymentItemDetailsByPaymentID';
+                            }
+
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                data: "{ 'ManualPaymentID': '" + PaymentID + "'}",
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "JSON",
+                                async: false,
+                                success: function (data) {
+                                    $('#tblInvoiceDetails').dataTable().fnDestroy();
+                                    if (data != '') {
+                                        dt = data.data;
+                                        if (dt.length == 0) {
+                                            return;
+                                        }
+                                        var payment = new Array();
+                                        if (dt.length > 0) {
+                                            for (i = 0; i < dt.length ; i++) {
+                                                payment[i] = new Array();
+                                                payment[i][0] = dt[i].LegalName;
+                                                var invlink = "<a href='/Invoice/InvoiceEdit/" + dt[i].InvoiceNumber + "' target='_blank'>"
+                                                    + dt[i].InvoiceNumberVendor + "</a>";
+                                                payment[i][1] = invlink;//dt[i].InvoiceNumberVendor;
+                                                payment[i][2] = dt[i].InvoiceDate;
+                                                payment[i][3] = dt[i].Terms;
+                                                payment[i][4] = dt[i].CurrencyCode;
+
+                                                payment[i][5] = dt[i].AmountOwing;
+                                                payment[i][6] = "<input style='text-align:right;' type='text' value='" + dt[i].InvoiceAmountPaid.replace(',', '') + "' class='floatonly' onkeyup='AddTotalUpdate(this,event);' />";
+                                                payment[i][7] = i;
+                                                payment[i][8] = dt[i].InvoiceNumber;
+                                                payment[i][9] = PaymentID;
+                                                payment[i][10] = dt[i].FldID;
+                                                payment[i][11] = dt[i].InvoiceAmountPaid;
+                                                payment[i][12] = dt[i].Exrate;
+                                                payment[i][13] = dt[i].ParentVendor_ID;
+                                                payment[i][14] = dt[i].LegalName;
+                                                
+                                            }
+
+                                            $('#tblInvoiceDetails').dataTable({
+                                                "paging": false,
+                                                "processing": true,
+                                                "data": payment,
+                                                "columns":
+                                                  [
+                                                    { "title": "Vendor", "class": "leftposition" },
+
+                                                    { "title": "Invoice #", "class": "leftposition" },
+                                                    { "title": "Date", "class": "leftposition" },
+                                                    { "title": "Terms", "class": "leftposition" },
+                                                    { "title": "Currency", "class": "leftposition" },
+                                                    { "title": "Amount Owing", "class": "rightposition" },
+                                                    { "title": "Payment Amount", "class": "rightposition" },
+                                                    { "title": "RowIndex", "class": "displaynone" },
+                                                    { "title": "InvoiceID", "class": "displaynone" },
+                                                    { "title": "ManualpaymentID", "class": "displaynone" },
+                                                    { "title": "ManualpaymentItemID", "class": "displaynone" },
+                                                    { "title": "PaidAmount", "class": "displaynone" },
+                                                  { "title": "exrate", "class": "displaynone" },
+                                                  { "title": "parentid", "class": "displaynone" },
+                                                  { "title": "legalname", "class": "displaynone" }
+
+                                                    //{ "title": "IsCommitted", "class": "displaynone" },
+                                                    //{ "title": "IsDeleted" }
+                                                  ],
+                                                "initComplete": function () {
+                                                    $("#tblInvoiceDetails_filter").hide();
+                                                    $("#editPayment").modal('show');
+                                                    if (mode == "1") {
+
+                                                        setTimeout(function () {
+                                                            $('#qbmodal').modal({ backdrop: 'static', keyboard: false });
+                                                            $('#qbmodal').modal('show');
+
+
+                                                            QBCheck();
+                                                        }, 300);
+                                                        
+                                                       
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function QBCheck() {
+        var name = $('#DDl_EditBank option:selected').attr('data-bankname');
+        $('#qbchecker').html("<span id='bnkchk'>Checking Bank Account- " + name + '<i class="fa fa-spinner fa-spin mrg5L" aria-hidden="true"></i><span>');
+        var tttt = 0;
+        setTimeout(function () {
+            qbcheckbankaccount(name);
+        }, 300);
+        //window.setTimeout(function () { qbcheckbankaccount(name); }, 300);
+
+       
+     
+
+
+       
+
+    }
+
+    var tmpindex = 0;
+    var tmpindex1 = 0;
+
+
+    function formatNumber(number) {
+        number = parseFloat(number);
+        var number = number.toFixed(2) + '';
+        var x = number.split('.');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return numberWithCommas(x1 + x2);
+    }
+
+    function numberWithCommas(x) {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join(".");
+    }
+
+
+    function qbcheckbankaccount(name) {
+
+        var url = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/QuickBook/CheckBankAccount';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'QuickBook/CheckBankAccount';
+        }
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "{ 'name': '" + name + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            async: false,
+            success: function (data) {
+
+                if (data == 'Unauthorized-401') {
+                    notify("Unauthorized access to QBO. System not yet authorized to use any QB account");
+                    var htm = '<i style="color:red;" class="fa fa-exclamation-triangle" aria-hidden="true"></i>';
+                    $('#bnkchk').html(htm + " Unauthorized access to QBO.");
+
+                    setTimeout(function () {
+                      
+                        $('#qbmodal').modal('hide');
+                    }, 5000);
+
+
+
+
+                }
+                else if (data != "INVALID") {
+                    var htm = '<i style="color:green;" class="fa fa-check-circle mrg5R" aria-hidden="true"></i>';
+                    $('#bnkchk').html(htm + name + " Balance:" + data.split('^^^')[0]);
+                    $('#DDl_EditBank').attr('data-qboid', data.split('^^^')[1]);
+                  
+
+                    var invoices = new Array();
+                    var invids = '';
+
+                    $('#tblInvoiceDetails tbody tr').each(function () {
+                        var invoiceid = $(this).find('td:eq(8)').html();
+                        var obj = $(this);
+
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = '/QuickBook/getAllInvoiceAccounts';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'QuickBook/getAllInvoiceAccounts';
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: "{ 'invoices': '" + invoiceid + "'}",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "text",
+                            async: false,
+                            success: function (data) {
+                               
+
+                                for (var a = 0; a < data.split("^^^").length; a++) {
+
+                                    var accountname = data.split("^^^")[a].split('|||')[0];
+                                    var accountdesc = data.split("^^^")[a].split('|||')[1];//+ " " + $('#txtEditPaymentNumber').val();
+
+                                    $(obj).attr('data-accountname', accountname);
+                                    $(obj).attr('data-accountdesc', accountdesc);
+
+                                  
+
+                                }
+
+
+
+                            }
+                        });
+
+
+
+
+
+                    });
+
+
+                    $('#tblInvoiceDetails tbody tr').each(function () {
+                        var obj = $(this);
+                        var accountname = $(obj).attr('data-accountname');
+                        var accountdesc = $(obj).attr('data-accountdesc');
+                        var tmp = 0;
+                        for (var a = 0; a < invoices.length; a++) {
+                            if (invoices[a].accountname == accountname) {
+                                tmp = 1;
+
+                            }
+                        }
+
+                        if (tmp == 0) {
+                            invoices.push({ 'accountname': accountname, 'accountdesc': accountdesc });
+                        }
+                    });
+                   
+                 
+                  invoiceaccountcheck(invoices);
+                    return 1;
+                }
+                else {
+                    var htm = '<i style="color:red;" class="fa fa-times-circle mrg5R" aria-hidden="true"></i>';
+                    $('#bnkchk').html(htm + name + " does not exist.");
+                    setTimeout(function () {
+                        notify('QBO Validation error');
+                        $('#qbmodal').modal('hide');
+                    }, 3000);
+                   
+                    if (ismultiplepayment) {
+                        SendMultiplePayments();
+                    }
+                    
+                    return 0;
+                }
+            }
+        });
+
+
+
+    }
+
+    function qbcheckvendor(vnames) {
+       
+        var url2 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url2 = '/QuickBook/CheckVendor';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url2 = 'QuickBook/CheckVendor';
+        }
+        var cr = $('#DDl_EditBank option:selected').attr('data-currid');
+        var name = vnames[tmpindex].vname + '(' + $('#DDl_EditBank option:selected').attr('data-currid') + ')';
+        var bridge_name = vnames[tmpindex].vname;
+        var name2 = vnames[tmpindex].VLegalName + ' ' + $('#DDl_EditBank option:selected').attr('data-currid') + '';
+       
+        $('#qbchecker').append("<br /><span id='vndchk_" + tmpindex + "'>Checking Vendor- " + vnames[tmpindex].vname + '<i class="fa fa-spinner fa-spin mrg5L" aria-hidden="true"></i><span>');
+
+        setTimeout(function () {
+          
+            $.ajax({
+                type: "POST",
+                url: url2,
+                data: "{ \"name\": \"" + bridge_name + "\",\"vname\" : \"" + name2 + "\",\"Curr\":\"" + cr + "\"}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                async: false,
+                success: function (data) {
+                    if (data != "INVALID" && data != "0") {
+                        var htm = '<i style="color:green;" class="fa fa-check-circle mrg5R" aria-hidden="true" data-qboid="' + data + '"></i>';
+                        $('#vndchk_' + tmpindex).html(htm + name + "");
+                        var vendorid = data;
+
+                        $('#tblInvoiceDetails tbody tr').each(function () {
+                            var obj = $(this);
+                            var vendorname = $(obj).find('td:eq(0)').html();
+
+                          
+
+                            if (vendorname == vnames[tmpindex].vname) {
+                                $(obj).attr('data-vendorid', vendorid);
+                                var currncy = $('#DDl_EditBank option:selected').attr('data-currid');//vnames[tmpindex].vcurr
+                                $(obj).attr('data-vendorcurr', currncy);
+                            }
+
+
+
+                        });
+
+
+
+
+                        setTimeout(function () {
+                            tmpindex++;
+                            if (vnames.length > tmpindex) {
+                              
+                                qbcheckvendor(vnames);
+                            }
+                            else {
+                                tmpindex = 0;
+                                qbgeneratecheck();
+                            }
+
+                        }, 300);
+                        return;
+                    }
+                    else if(data != "0") {
+                       
+                        setTimeout(function () {
+                            //var c = confirm("Vendor '" + name2 + "' does not exist in QBO, Do you want to create the vendor?");
+                            //if (!c) {
+                            //    notify('QBO Validation error');
+                            //    $('#qbmodal').modal('hide');
+                            //    if (ismultiplepayment) {
+                            //        SendMultiplePayments();
+                            //    }
+
+
+                            //}
+                            //else {
+                                if (true) {
+                                $('#vndchk_' + tmpindex).html('Creating Vendor- ' + name2 + '<i class="fa fa-spinner fa-spin mrg5L" aria-hidden="true"></i>');
+
+                                setTimeout(function () {
+
+                                var urlvcreate = '';
+                                if (LOCALORSERVERNEW == 'LOCAL') {
+                                    urlvcreate = '/QuickBook/saveVendor';
+                                }
+                                else if (LOCALORSERVERNEW == 'SERVER') {
+                                    urlvcreate = 'QuickBook/saveVendor';
+                                }
+                                var currncy = $('#DDl_EditBank option:selected').attr('data-currid');//vnames[tmpindex].vcurr
+                                
+                                $.ajax({
+                                    type: "POST",
+                                    url: urlvcreate,
+                                    data: "{ \"name\": \"" + bridge_name + "\",\"curr\" : \"" + currncy + "\",\"vname\" : \"" + name2 + "\"}",
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "text",
+                                    async: false,
+                                    success: function (data) {
+
+                                        var htm = '<i style="color:green;" class="fa fa-check-circle mrg5R" aria-hidden="true" data-qboid="' + data + '"></i>';
+                                        $('#vndchk_' + tmpindex).html(htm + "New vendor created - " + name + "");
+
+                                        var vendorid = data;
+
+                                        $('#tblInvoiceDetails tbody tr').each(function () {
+                                            var obj = $(this);
+                                            var vendorname = $(obj).find('td:eq(0)').html();
+
+
+
+                                            if (vendorname == vnames[tmpindex].vname) {
+                                                $(obj).attr('data-vendorid', vendorid);
+                                                $(obj).attr('data-vendorcurr', currncy);
+                                            }
+
+
+
+                                        });
+
+                                       
+
+                                        setTimeout(function () {
+                                            tmpindex++;
+                                            if (vnames.length > tmpindex) {
+
+                                                qbcheckvendor(vnames);
+                                            }
+
+                                            
+                                            else {
+                                                tmpindex = 0;
+                                                qbgeneratecheck();
+                                            }
+
+
+                                        }, 300);
+
+
+                                    }
+                                     , error: function () {
+                                         notify('QBO is not accessible/Some error occuurred!');
+                                         setTimeout(function () {
+                                             window.location.reload();
+                                         }, 4000);
+                                     }
+                                });
+
+
+                                }, 300);
+
+
+                            }
+
+
+                        }, 3000);
+                    }
+                    else if (data == "0") {
+
+                        //var c = confirm("Vendor '" + name2 + "' exist in QBO with different currency, Do you want to update the vendor?");
+                        //if (!c) {
+                        //    notify('QBO Validation error');
+                        //    $('#qbmodal').modal('hide');
+                        //    if (ismultiplepayment) {
+                        //        SendMultiplePayments();
+                        //    }
+
+
+                        //}
+
+                        //else {
+                            if (true) {
+                            var url22 = '';
+                            if (LOCALORSERVERNEW == 'LOCAL') {
+                                url22 = '/QuickBook/checkandsavevendor';
+                            }
+                            else if (LOCALORSERVERNEW == 'SERVER') {
+                                url22 = 'QuickBook/checkandsavevendor';
+                            }
+                            var currncy = $('#DDl_EditBank option:selected').attr('data-currid');//vnames[tmpindex].vcurr
+
+                            $.ajax({
+                                type: "POST",
+                                url: url22,
+                                data: "{\"curr\":\"" + currncy + "\"}",
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "text",
+                                async: false,
+                                success: function (data) {
+
+                                    if (data == "0") {
+                                        notify("Payment exists for this vendor");
+                                        $('#qbmodal').modal('hide');
+                                        if (ismultiplepayment) {
+                                            SendMultiplePayments();
+                                        }
+
+
+
+                                        return;
+                                    }
+
+                                    var htm = '<i style="color:green;" class="fa fa-check-circle mrg5R" aria-hidden="true" data-qboid="' + data + '"></i>';
+                                    $('#vndchk_' + tmpindex).html(htm + name + "");
+                                    var vendorid = data;
+
+                                    $('#tblInvoiceDetails tbody tr').each(function () {
+                                        var obj = $(this);
+                                        var vendorname = $(obj).find('td:eq(0)').html();
+
+
+
+                                        if (vendorname == vnames[tmpindex].vname) {
+                                            $(obj).attr('data-vendorid', vendorid);
+                                            var currncy = $('#DDl_EditBank option:selected').attr('data-currid');//vnames[tmpindex].vcurr
+                                            $(obj).attr('data-vendorcurr', currncy);
+                                        }
+
+
+
+                                    });
+
+
+
+
+                                    setTimeout(function () {
+                                        tmpindex++;
+                                        if (vnames.length > tmpindex) {
+
+                                            qbcheckvendor(vnames);
+                                        }
+                                        else {
+                                            tmpindex = 0;
+                                            qbgeneratecheck();
+                                        }
+
+                                    }, 300);
+                                    return;
+
+
+                                }
+                                 , error: function () {
+                                     notify('QBO is not accessible/Some error occuurred!');
+                                     setTimeout(function () {
+                                         window.location.reload();
+                                     }, 4000);
+                                 }
+                            });
+
+                        }
+
+
+
+
+
+
+
+
+
+                    }
+
+
+                }
+                , error: function () {
+                    notify('QBO is not accessible/Some error occuurred!');
+                    setTimeout(function () {
+                        window.location.reload();
+                    },4000);
+                }
+            });
+
+
+
+
+        }, 300);
+
+       
+
+
+
+    }
+
+    var tmpindex3 = 0;
+
+
+    function qbgeneratecheck() {        
+        notify('QBO Validation completed successfully', 'green');
+            $('#qbmodal').modal('hide');
+
+
+            $('#qbgeratemodal').modal('show');
+
+            var vnames = new Array();
+
+            $('#tblInvoiceDetails tbody tr').each(function () {
+
+                var vname = $(this).find('td:eq(0)').html();
+                var vcurr = $(this).find('td:eq(4)').html();
+                var BridgeVendorID = $(this).find('td:eq(13)').html();
+                var VLegalName = $(this).find('td:eq(14)').html();
+
+
+                var tmp = 0;
+                for (var i = 0; i < vnames.length; i++) {
+                    if (vnames[i].vname == vname) {
+                        tmp++;
+                    }
+                }
+                if (tmp == 0) {
+                    vnames.push({ 'vname': vname, 'vcurr': vcurr, 'BridgeVendorID': BridgeVendorID, 'VLegalName': VLegalName });
+                }
+
+            });
+
+
+            generatefinalinvoice(vnames);
+
+
+
+
+
+            
+    }
+
+    function generatefinalinvoice(vnames) {
+
+        var vname = vnames[tmpindex3].vname;
+        var vcurr = vnames[tmpindex3].vcurr;
+        var BridgeVendorID = vnames[tmpindex3].BridgeVendorID;
+
+        if ($('#qbsendinfo').html() != '') {
+            $('#qbsendinfo').append("<br /><span id='finalsendinvoice_" + tmpindex3 + "'>Generating Payment for -" + vnames[tmpindex3].vname + '<i class="fa fa-spinner fa-spin mrg5L" aria-hidden="true"></i><span>');
+
+        }
+        else {
+            $('#qbsendinfo').append("<span id='finalsendinvoice_" + tmpindex3 + "'>Generating Payment for -" + vnames[tmpindex3].vname + '<i class="fa fa-spinner fa-spin mrg5L" aria-hidden="true"></i><span>');
+
+        }
+        
+        var items = new Array();
+
+        setTimeout(function () {
+            var total = 0;
+
+            var vendorid = '';
+            var vendornewcurr = '';
+
+            $('#tblInvoiceDetails tbody tr').each(function () {
+                var obj = $(this);
+                var vnamenow = $(this).find('td:eq(0)').html();
+                if (vname == vnamenow) {
+                    vendorid = $(obj).attr('data-vendorid');
+                    vendornewcurr = $(obj).attr('data-vendorcurr');
+                    var vl = parseFloat($(obj).find('td:eq(6)').find('input').val());
+
+                    if (vcurr != vendornewcurr || 1>0) { //If vendor is forced to bank accnt currency
+                        var tmpcrate = $('#txtEditExrate').val();
+                        total += parseFloat(tmpcrate) * vl;
+                        items.push({
+                            'accountid': $(obj).attr('data-accountid'),
+                            'total': parseFloat(tmpcrate) * vl,
+                            'description': $(obj).attr('data-accountdesc')
+                        });
+                    }
+                    else {
+                        vendorid = $(obj).attr('data-vendorid');
+                        var tmpcrate = $('#txtEditExrate').val();
+                        total += parseFloat(tmpcrate) * vl;
+                        items.push({
+                            'accountid': $(obj).attr('data-accountid'),
+                            'total': parseFloat(tmpcrate) * vl,
+                            'description': $(obj).attr('data-accountdesc')
+                        });
+                    }
+                }
+            });
+
+            var invobject;
+            invobject = {};
+            invobject.Paymentdate = $('#txt_EditPaymentDate').val();
+            invobject.Bank = $('#DDl_EditBank').attr('data-qboid');
+
+            var checknumber = $('#txtEditPaymentNumber').val();
+
+            if (vnames.length > 1) {
+                checknumber += "/" + (tmpindex3 + 1);
+            }
+
+
+            invobject.Checknumber = checknumber;
+            invobject.Memo = $('#txtEditMemo').val();
+            invobject.Total = total;
+            invobject.items = new Array();
+            invobject.items = items;
+            invobject.VendorID = vendorid;
+            invobject.VendorCurrency = vendornewcurr; //vcurr;
+            invobject.BankCurr = $('#DDl_EditBank option:selected').attr('data-currid');
+            invobject.ExchangeRate = $('#txtEditExrate').val();
+            invobject.ExchangeRate2 = $('#txtEditExrate1').val();
+
+
+            invobject.BridgeVendorID = BridgeVendorID;
+            invobject.BridgePaymentID = $("#hdnEditPayment").val();
+            invobject.MailingAddress = "hi";
+            
+            invobject.Type = $('#Ddl_EditPaymentType option:selected').text();
+
+
+            var url2 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url3 = '/QuickBook/setupdateid';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url3 = 'QuickBook/setupdateid';
+            }
+
+            var updateid = getCookie("UPDATEQBO");
+            delete_cookie("UPDATEQBO");
+            if (updateid != "" && updateid != null) {
+
+            
+
+          
+                $.ajax({
+                    type: "POST",
+                    url: url3,
+                    data: "{ \"id\" : \"" + updateid + "\"}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "text",
+                    async: false,
+                    success: function (data) {
+
+
+                    }
+                      , error: function () {
+                          notify('QBO is not accessible/Some error occuurred!');
+                          setTimeout(function () {
+                              window.location.reload();
+                          }, 4000);
+                      }
+                });
+
+            }
+            //console.log(invobject);
+
+            //return;
+
+            var url2 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url2 = '/QuickBook/senddatatoqbo';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url2 = 'QuickBook/senddatatoqbo';
+            }
+
+
+            setTimeout(function () {
+                var obj2 = JSON.stringify(invobject);
+
+                console.log(obj2);
+
+                //return;
+
+                $.ajax({
+                    type: "POST",
+                    url: url2,
+                    data: obj2,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "text",
+                    async: false,
+                    success: function (data) {
+
+                        if (data.split('^^^')[0] != 'INVALID') {
+                            var htm = '<i style="color:green;" class="fa fa-check-circle mrg5R" aria-hidden="true"></i>';
+                            $('#finalsendinvoice_' + tmpindex3).html(htm + "Payment (" + checknumber + ") generated for -" + vnames[tmpindex3].vname + "");
+                        }
+                        else {
+                            var htm = '<i style="color:red;" class="fa fa-times-circle mrg5R" aria-hidden="true"></i>';
+                            $('#finalsendinvoice_' + tmpindex3).html(htm + "Unable to send Payment (" + checknumber + ") to QBO");
+                            $('#finalsendinvoice_' + tmpindex3).append("<br/>" + data.split('^^^')[1]);
+                        }
+
+                        setTimeout(function () {
+
+                            if (data.split('^^^')[0] != 'INVALID') {
+                                tmpindex3++;
+                                if (vnames.length > tmpindex3) {
+                                    generatefinalinvoice(vnames);
+                                }
+                                else {
+                                    tmpindex3 = 0;
+                                    $('#qbsendinfo').html('');
+
+                                    setTimeout(function () {
+                                        $('#qbgeratemodal').modal('hide');
+                                        $('#editPayment').modal('hide');
+                                    }, 1000);
+                                    
+
+                                    var currid = returncurrentoperationidforqbosendbatch();
+
+                                    if (currid != '0') {
+                                        notify("Please Wait, Generating next Payment.", 'green');
+                                    }
+                                   
+                                    if (currid != '0') {
+
+                                        setTimeout(function () {
+                                            EditPayment(currid, 1);
+                                        }, 2000);
+
+
+                                       
+                                    }
+                                    else {
+                                        notify("Successfully sent data to QBO", 'green');
+                                        setTimeout(function () {
+                                            if (ismultiplepayment) {
+                                                SendMultiplePayments();
+                                            }
+                                            else {
+                                            irrrrr = 0;
+                                            window.location.reload();
+                                            }
+
+                                        }, 3000);
+
+                                    }
+                                }
+                            }
+                            else {
+                                notify(data.split('^^^')[1]);
+                                if (ismultiplepayment) {
+                                    SendMultiplePayments();
+                                }
+
+                            }
+                        }, 300);
+                        
+
+
+                    }
+                      , error: function () {
+                          notify('QBO is not accessible/Some error occuurred!');
+                          setTimeout(function () {
+                              window.location.reload();
+                          }, 4000);
+                      }
+
+                });
+
+
+            }, 300);
+
+
+        }, 300);
+    }
+
+
+        
+
+
+
+
+    function invoiceaccountcheck(invoices) {
+
+
+        var accountname = invoices[tmpindex1].accountname;
+
+        var url2 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url2 = '/QuickBook/CheckInvoiceAccount';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url2 = 'QuickBook/CheckInvoiceAccount';
+        }
+        var name = invoices[tmpindex1].accountname + "-" + invoices[tmpindex1].accountdesc;;
+
+        $('#qbchecker').append("<br /><span id='invchk_" + tmpindex1 + "'>Checking Invoice Account - " + name + '<i class="fa fa-spinner fa-spin mrg5L" aria-hidden="true"></i><span>');
+
+
+        setTimeout(function () {
+
+            $.ajax({
+                type: "POST",
+                url: url2,
+                data: "{ 'name': '" + accountname + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                async: false,
+                success: function (data) {
+                    if (data != "INVALID") {
+                        var htm = '<i style="color:green;" class="fa fa-check-circle mrg5R" aria-hidden="true" data-qboid="' + "" + '"></i>';
+                      
+                        $('#invchk_' + tmpindex1).html(htm + name + " Balance:" + data.split('^^^')[0]);
+                        ////console.log(htm + name + '   #vndchk_' + i);
+
+                        var accountid = data.split("^^^")[1];
+                        $('#tblInvoiceDetails tbody tr').each(function () {
+                            var obj = $(this);
+                            var accountnamenow = $(obj).attr('data-accountname');
+                            var accountdescnow = $(obj).attr('data-accountdesc');
+
+                            if (accountnamenow == accountname) {
+                                $(obj).attr('data-accountid', accountid);
+
+                            }
+
+
+
+                        });
+
+
+                        setTimeout(function () {
+                            tmpindex1++;
+                            if (invoices.length > tmpindex1) {
+
+                                invoiceaccountcheck(invoices);
+                            }
+                            else {
+                                tmpindex1 = 0;
+                                vendorloadnow();
+                            }
+
+                        }, 300);
+                        return;
+                    }
+                    else {
+                        var htm = '<i style="color:red;" class="fa fa-times-circle mrg5R" aria-hidden="true"></i>';
+                        $('#invchk_' + tmpindex1).html(htm + name + " does not exist.");
+                        setTimeout(function () {
+                            notify('QBO Validation error');
+                            $('#qbmodal').modal('hide');
+
+                            if (ismultiplepayment) {
+                                SendMultiplePayments();
+                            }
+
+
+                        }, 3000);
+                        
+                    }
+                }
+                  , error: function () {
+                      notify('QBO is not accessible/Some error occuurred!');
+                      setTimeout(function () {
+                          window.location.reload();
+                      }, 4000);
+                  }
+            });
+
+
+
+
+        }, 300);
+
+
+
+
+    }
+
+
+
+    function vendorloadnow() {
+
+        var vnames = new Array();
+
+        $('#tblInvoiceDetails tbody tr').each(function () {
+
+            var vname = $(this).find('td:eq(0)').html();
+            var vcurr = $(this).find('td:eq(4)').html();
+            var VLegalName = $(this).find('td:eq(14)').html();
+            
+            var tmp = 0;
+            for (var i = 0; i < vnames.length; i++) {
+                if (vnames[i].vname == vname) {
+                    tmp++;
+                }
+            }
+            if (tmp == 0) {
+                vnames.push({ 'vname': vname, 'vcurr': vcurr, 'VLegalName': VLegalName });
+            }
+
+        });
+
+        
+       qbcheckvendor(vnames);
+
+    }
+
+
+
+
+
+   
+
+
+    function AddTotalUpdate(obj, e) {
+        
+        var previousPaidAmount = $(obj).parent("td").parent("tr").find("td:eq(11)").html();
+        var dueAmount = $(obj).parent("td").parent("tr").find("td:eq(5)").html();
+        var currentPaidAmount = $(obj).val();
+        //alert(previousPaidAmount);
+
+        //if (currentPaidAmount == '') {
+        //    currentPaidAmount = '0';
+        //}
+
+        //if (currentPaidAmount == '0') {
+        //    $("#txtEditTotalAmount").val(formatNumber(parseFloat(currentPaidAmount)).replace(",", ""));
+        //    return true;
+        //}
+        if (Math.abs(parseFloat(previousPaidAmount) + (parseFloat(dueAmount))) < parseFloat(currentPaidAmount) &&
+            currentPaidAmount != '0') {
+
+
+
+            setTimeout(function () {
+                var tabl = $('#tblInvoiceDetails').find("tbody");
+                var totamt = 0;
+                $(tabl).find("tr").each(function () {
+                    var previousPaidAmount1 = $(this).find("td:eq(6)").find('input').val();
+                    console.log(previousPaidAmount1);
+                    totamt += parseFloat(previousPaidAmount1);
+                });
+                console.log(totamt);
+
+                $("#txtEditTotalAmount").val(formatNumber(parseFloat(totamt)).replace(",", ""));
+            }, 5);
+
+
+            //$("#txtEditTotalAmount").val(formatNumber(parseFloat(Math.abs(parseFloat(previousPaidAmount) + (parseFloat(dueAmount))))).replace(",", ""));
+            $(obj).val(formatNumber(parseFloat(Math.abs(parseFloat(previousPaidAmount) + (parseFloat(dueAmount))))).replace(",", ""));
+            return false;
+        }
+        else {
+            // $("#txtEditTotalAmount").val(formatNumber(parseFloat(currentPaidAmount)).replace(",", ""));
+            var tabl = $(obj).parent("td").parent("tr").parent("tbody");
+            var totamt = 0;
+            $(tabl).find("tr").each(function () {
+                var previousPaidAmount1 = $(this).find("td:eq(6)").find('input').val();
+                console.log(previousPaidAmount1);
+                totamt += parseFloat(previousPaidAmount1);
+            });
+            console.log(totamt);
+
+            $("#txtEditTotalAmount").val(formatNumber(parseFloat(totamt)).replace(",", ""));
+
+            return true;
+        }
+
+    }
+
+    
+
+
+    $(document).ready(function () {
+
+    
+        var url11 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url11 = '/Invoice/getPaymentForManualPayment';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url11 = 'Invoice/getPaymentForManualPayment';
+        }
+
+
+
+        $.get(url11)
+         .success(function (response) {
+             $('#Ddl_EditPaymentType').html(response);
+         });
+
+        function getallpaymentnumber() {
+            var pnumber = $("#hdnEditPayment").val();
+            var ptype = $('#Ddl_EditPaymentType').val();
+            var bankaccnt = $('#DDl_EditBank').val();
+
+            if (ptype == '2') {
+
+                $('#txtEditPaymentNumber').val('To be printed');
+                return;
+            }
+
+            var url11 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url11 = '/Invoice/getpaymentnumberforedit';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url11 = 'Invoice/getpaymentnumberforedit';
+            }
+
+
+            url11 += "?paymenttype=" + ptype + "&accntnumber=" + bankaccnt + "&Pnumber=" + pnumber;
+
+            $.get(url11)
+             .success(function (response) {
+
+                 $('#txtEditPaymentNumber').val($("#Ddl_EditPaymentType option:selected").attr('data-code') + '-' + response);
+
+
+             });
+        }
+
+        function formatNumber4(number) {
+            number = parseFloat(number);
+            var number = number.toFixed(4) + '';
+            var x = number.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+
+        function calculateexrate() {
+
+            var invcurr = $('#tblInvoiceDetails tbody').find('tr:eq(0)').find('td:eq(4)').html();
+
+            if ($('#DDl_EditBank option:selected').attr('data-currid') == invcurr) {
+                $('#txtEditExrate').val("1.00");
+                $('#txtEditExrate').attr("disabled", "disabled");
+                return;
+            }
+            $('#txtEditExrate').removeAttr("disabled");
+
+            if ($('#txtEditExrate').attr('data-edited') == "true") {
+                return;
+            }
+
+            var tot = 0;
+            var totconverted = 0;
+
+            $('#tblInvoiceDetails tbody tr').each(function () {
+               
+                var totowed = $(this).find('td:eq(5)').html();
+               
+                    var conv = $(this).find('td:eq(12)').html();
+                    tot += parseFloat(totowed);
+                    totconverted += parseFloat(totowed) * parseFloat(conv);
+
+               
+
+            });
+
+            var convrate = isNaN(totconverted / tot) ? 1.00 : totconverted / tot;
+            $('#txtEditExrate').val(formatNumber4(convrate));
+
+        }
+
+
+
+
+        $("#Ddl_EditPaymentType").on("change", function () {
+
+            getallpaymentnumber();
+
+            if ($("#Ddl_EditPaymentType").val() != "1") {
+                // $("#DDl_Bank").prop('selectedIndex', 0);
+                //$("#txtPaymentNumber").val("");
+                // $("#DDl_Bank").attr("disabled", true);
+            }
+            else {
+                //$("#DDl_Bank").prop('selectedIndex', 0);
+                //$("#DDl_Bank").attr("disabled", false);
+            }
+
+        });
+
+        $("#DDl_EditBank").on("change", function () {
+
+            if ($("#DDl_EditBank").val() == 0 && $("#DDl_EditBank").val() === "1") {
+                notify("Please Select Bank Account");
+                $("#txtEditPaymentNumber").val("");
+                return;
+            }
+
+            getallpaymentnumber();
+            calculateexrate();
+
+            return;
+
+            if ($("#DDl_EditBank").val() == 0 && $("#Ddl_EditPaymentType").val() === "1") {
+                notify("Please Select Bank Account", "red");
+                $("#txtPaymentNumber").val("");
+                return;
+            }
+
+            if ($("#Ddl_EditPaymentType").val() === "1") {
+                var url = '';
+                var BankAccount_ID = $("#DDl_EditBank").val();
+
+               
+               
+                if ($("#hdnEditBankAccount").val() == BankAccount_ID) {
+                    $("#txtEditPaymentNumber").val($("#hdnEditPaymentNumber").val());
+                    return;
+                }
+                if (BankAccount_ID != 0) {
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url = '/Invoice/GetPaymentNumber/';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url = 'Invoice/GetPaymentNumber/';
+                    }
+
+
+                    url += '?BankAccount_ID=' + (BankAccount_ID);
+
+                    $.get(url)
+                     .success(function (response) {
+                         var totdata;
+                         totdata = JSON.parse(response);
+                         totdata = totdata.data;
+                         var InvoiceItemSelector = new Array();
+                         for (i = 0; i < totdata.length ; i++) {
+                             //console.log(totdata[i].PaymentNumber);
+                             $("#txtEditPaymentNumber").val(totdata[i].PaymentNumber);
+                         }
+
+                     });
+                }
+                else {
+                    notify("Please Select Bank Account", "red");
+                    $("#Ddl_EditPaymentType").prop('selectedIndex', 0);
+                }
+            }
+
+
+
+
+        });
+    });
+
+    function formatNumber4(number) {
+        number = parseFloat(number);
+        var number = number.toFixed(5) + '';
+        var x = number.split('.');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+    function formatNumber(number) {
+        number = parseFloat(number);
+        var number = number.toFixed(2) + '';
+        var x = number.split('.');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+
+    $('#btnStopPayment').on("click", function () {
+        var c = confirm("Do you want to reverse the payment for this cheque?");
+        if (c) {
+
+            var Paymentid = $('#hdnEditPayment').val();
+            var obj = new Object();
+            //obj.curr = curr;
+            obj.Paymentid = Paymentid;
+            obj.UserID = $('#hdn_userid').val();
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_CreateStopPayment";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            console.log(o);
+            var newPayid = o[0].paymentid;
+            var mode = o[0].mode;
+            var Status = o[0].Status;
+            var amt = o[0].amt;
+
+            
+            setTimeout(function () {
+                notify("Saving and sending data to reverse payment.", "green");
+                EditPayment(newPayid, "0", amt, Status);
+                var c2 = confirm("The data has been saved.Do you want to send the data to QBO right now?");
+
+                if (c2) {
+                    EditPayment(newPayid, "1");
+                }
+                //EditPayment(PaymentID, mode, amt, Status)
+            },500);
+
+
+            
+
+        }
+    });
+
+
+
+    $("#btnUpdatePayment").on("click", function () {
+
+        if ($("#txt_EditPaymentDate").val() == '') {
+            notify("Please Select Payment Date!!!", "red");
+            return false;
+        }
+
+        if ($("#Ddl_EditPaymentType").val() == '-1') {
+            notify("Please Select Payment Type!!!", "red");
+            return false;
+        }
+
+        if ($("#DDl_EditBank").val() == '0') {
+            notify("Please Select Bank Account!!!", "red");
+            return false;
+        }
+
+        if ($("#Ddl_EditPaymentType").val() == '1' && $("#txtEditPaymentNumber").val() == '') {
+            notify("Please Enter Payment Number!!!", "red");
+            return false;
+        }
+
+        var url = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/Invoice/UpdatePaymentMainDetails';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'Invoice/UpdatePaymentMainDetails';
+        }
+        var convrate = $("#txtEditExrate").val();
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "{ 'ManualPaymentID': '" + $("#hdnEditPayment").val() + "', 'PaymentDate': '" + $("#txt_EditPaymentDate").val()
+                + "','PaymentType':'" + $("#Ddl_EditPaymentType").val() + "','PaymentMemo':'" + $("#txtEditMemo").val()
+                + "','PaymentNumber':'" + $("#txtEditPaymentNumber").val() + "','TotalPaymentAmount':'" + $("#txtEditTotalAmount").val()
+                + "','BankAccountID':'" + $("#DDl_EditBank").val() + "','convrate' : '" + convrate + "','convrate2' : '" + $('#txtEditExrate1').val() + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                if (data != 'Error') {
+                    //console.log("Hi");
+                   
+                    $("#tblInvoiceDetails tbody tr").each(function () {
+                        var InvoiceAmount = $(this).find("td:eq(6)").find("input[type=text]").val();
+                        var PaymentItemID = $(this).find("td:eq(10)").html();
+                        url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = '/Invoice/UpdatePaymentItemDetails';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'Invoice/UpdatePaymentItemDetails';
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: "{ 'ManualPaymentItemID': '" + PaymentItemID + "', 'InvoiceAmount': '" + InvoiceAmount + "'}",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "text",
+                            async: false,
+                            success: function (data) {
+                                if (data == "Error") {
+                                    notify("Some thing went wrong!!!", "red");
+                                    return;
+                                }
+                               
+                                
+                            }
+                        });
+                    });
+
+                    if (data != '') {
+                        var cnf = confirm("This payment is associated with a QBO Payment, Do you want to update to QBO?");
+                        if (cnf) {
+                            //console.log("MMMM>>>" + data);
+                            delete_cookie("UPDATEQBO");
+                            setCookie("UPDATEQBO", data);
+                           
+                            EditPayment($("#hdnEditPayment").val(), '1');
+                        }
+                        else {
+                            notify("Payment successfully updated", "green");
+                            irrrrr = 0;
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 4000);
+                        }
+
+                    }
+                    else {
+                        notify("Payment successfully updated", "green");
+                        irrrrr = 0;
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 4000);
+                    }
+
+                }
+                else {
+                    notify('Payment can not be updated, duplicate number exists', 'red');
+                }
+            }
+             , error: function () {
+                 notify('QBO is not accessible/Some error occuurred!');
+                 setTimeout(function () {
+                     window.location.reload();
+                 }, 4000);
+             }
+
+        });
+
+
+    });
+
+</script>
+
+</html>
+

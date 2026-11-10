@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ApprovalStatus" targetNamespace="http://tempuri.org/ApprovalStatus.xsd" xmlns:mstns="http://tempuri.org/ApprovalStatus.xsd" xmlns="http://tempuri.org/ApprovalStatus.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ApprovalStatus" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ApprovalStatus" msprop:Generator_UserDSName="ApprovalStatus">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="ApprovalStatus" msprop:Generator_TableClassName="ApprovalStatusDataTable" msprop:Generator_TableVarName="tableApprovalStatus" msprop:Generator_TablePropName="_ApprovalStatus" msprop:Generator_RowDeletingName="ApprovalStatusRowDeleting" msprop:Generator_RowChangingName="ApprovalStatusRowChanging" msprop:Generator_RowEvHandlerName="ApprovalStatusRowChangeEventHandler" msprop:Generator_RowDeletedName="ApprovalStatusRowDeleted" msprop:Generator_UserTableName="ApprovalStatus" msprop:Generator_RowChangedName="ApprovalStatusRowChanged" msprop:Generator_RowEvArgName="ApprovalStatusRowChangeEvent" msprop:Generator_RowClassName="ApprovalStatusRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ProjectNumber" msprop:Generator_ColumnVarNameInTable="columnProjectNumber" msprop:Generator_ColumnPropNameInRow="ProjectNumber" msprop:Generator_ColumnPropNameInTable="ProjectNumberColumn" msprop:Generator_UserColumnName="ProjectNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="ProjectName" msprop:Generator_ColumnVarNameInTable="columnProjectName" msprop:Generator_ColumnPropNameInRow="ProjectName" msprop:Generator_ColumnPropNameInTable="ProjectNameColumn" msprop:Generator_UserColumnName="ProjectName" type="xs:string" minOccurs="0" />
+              <xs:element name="Sectionnumber" msprop:Generator_ColumnVarNameInTable="columnSectionnumber" msprop:Generator_ColumnPropNameInRow="Sectionnumber" msprop:Generator_ColumnPropNameInTable="SectionnumberColumn" msprop:Generator_UserColumnName="Sectionnumber" type="xs:string" minOccurs="0" />
+              <xs:element name="DataColumn1" msprop:Generator_ColumnVarNameInTable="columnDataColumn1" msprop:Generator_ColumnPropNameInRow="DataColumn1" msprop:Generator_ColumnPropNameInTable="DataColumn1Column" msprop:Generator_UserColumnName="DataColumn1" type="xs:string" minOccurs="0" />
+              <xs:element name="SectionName" msprop:Generator_ColumnVarNameInTable="columnSectionName" msprop:Generator_ColumnPropNameInRow="SectionName" msprop:Generator_ColumnPropNameInTable="SectionNameColumn" msprop:Generator_UserColumnName="SectionName" type="xs:string" minOccurs="0" />
+              <xs:element name="ParentVendor" msprop:Generator_ColumnVarNameInTable="columnParentVendor" msprop:Generator_ColumnPropNameInRow="ParentVendor" msprop:Generator_ColumnPropNameInTable="ParentVendorColumn" msprop:Generator_UserColumnName="ParentVendor" type="xs:string" minOccurs="0" />
+              <xs:element name="PurchaseOrderNumber" msprop:Generator_ColumnVarNameInTable="columnPurchaseOrderNumber" msprop:Generator_ColumnPropNameInRow="PurchaseOrderNumber" msprop:Generator_ColumnPropNameInTable="PurchaseOrderNumberColumn" msprop:Generator_UserColumnName="PurchaseOrderNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="TotalID" msprop:Generator_ColumnVarNameInTable="columnTotalID" msprop:Generator_ColumnPropNameInRow="TotalID" msprop:Generator_ColumnPropNameInTable="TotalIDColumn" msprop:Generator_UserColumnName="TotalID" type="xs:string" minOccurs="0" />
+              <xs:element name="ItemDescription" msprop:Generator_ColumnVarNameInTable="columnItemDescription" msprop:Generator_ColumnPropNameInRow="ItemDescription" msprop:Generator_ColumnPropNameInTable="ItemDescriptionColumn" msprop:Generator_UserColumnName="ItemDescription" type="xs:string" minOccurs="0" />
+              <xs:element name="SpecNum" msprop:Generator_ColumnVarNameInTable="columnSpecNum" msprop:Generator_ColumnPropNameInRow="SpecNum" msprop:Generator_ColumnPropNameInTable="SpecNumColumn" msprop:Generator_UserColumnName="SpecNum" type="xs:string" minOccurs="0" />
+              <xs:element name="Model" msprop:Generator_ColumnVarNameInTable="columnModel" msprop:Generator_ColumnPropNameInRow="Model" msprop:Generator_ColumnPropNameInTable="ModelColumn" msprop:Generator_UserColumnName="Model" type="xs:string" minOccurs="0" />
+              <xs:element name="ArrivalDate" msprop:Generator_ColumnVarNameInTable="columnArrivalDate" msprop:Generator_ColumnPropNameInRow="ArrivalDate" msprop:Generator_ColumnPropNameInTable="ArrivalDateColumn" msprop:Generator_UserColumnName="ArrivalDate" type="xs:string" minOccurs="0" />
+              <xs:element name="ItemApprovalName" msprop:Generator_ColumnVarNameInTable="columnItemApprovalName" msprop:Generator_ColumnPropNameInRow="ItemApprovalName" msprop:Generator_ColumnPropNameInTable="ItemApprovalNameColumn" msprop:Generator_UserColumnName="ItemApprovalName" type="xs:string" minOccurs="0" />
+              <xs:element name="ItemApprivalDescription" msprop:Generator_ColumnVarNameInTable="columnItemApprivalDescription" msprop:Generator_ColumnPropNameInRow="ItemApprivalDescription" msprop:Generator_ColumnPropNameInTable="ItemApprivalDescriptionColumn" msprop:Generator_UserColumnName="ItemApprivalDescription" type="xs:string" minOccurs="0" />
+              <xs:element name="ItemApprovalStatus" msprop:Generator_ColumnVarNameInTable="columnItemApprovalStatus" msprop:Generator_ColumnPropNameInRow="ItemApprovalStatus" msprop:Generator_ColumnPropNameInTable="ItemApprovalStatusColumn" msprop:Generator_UserColumnName="ItemApprovalStatus" type="xs:string" minOccurs="0" />
+              <xs:element name="ItemApprovalDate" msprop:Generator_ColumnVarNameInTable="columnItemApprovalDate" msprop:Generator_ColumnPropNameInRow="ItemApprovalDate" msprop:Generator_ColumnPropNameInTable="ItemApprovalDateColumn" msprop:Generator_UserColumnName="ItemApprovalDate" type="xs:string" minOccurs="0" />
+              <xs:element name="ApprovarName" msprop:Generator_ColumnVarNameInTable="columnApprovarName" msprop:Generator_ColumnPropNameInRow="ApprovarName" msprop:Generator_ColumnPropNameInTable="ApprovarNameColumn" msprop:Generator_UserColumnName="ApprovarName" type="xs:string" minOccurs="0" />
+              <xs:element name="ArrovalComment" msprop:Generator_ColumnVarNameInTable="columnArrovalComment" msprop:Generator_ColumnPropNameInRow="ArrovalComment" msprop:Generator_ColumnPropNameInTable="ArrovalCommentColumn" msprop:Generator_UserColumnName="ArrovalComment" type="xs:string" minOccurs="0" />
+              <xs:element name="SpecNumModel" msprop:Generator_ColumnVarNameInTable="columnSpecNumModel" msprop:Generator_ColumnPropNameInRow="SpecNumModel" msprop:Generator_ColumnPropNameInTable="SpecNumModelColumn" msprop:Generator_UserColumnName="SpecNumModel" type="xs:string" minOccurs="0" />
+              <xs:element name="CheckID" msprop:Generator_ColumnVarNameInTable="columnCheckID" msprop:Generator_ColumnPropNameInRow="CheckID" msprop:Generator_ColumnPropNameInTable="CheckIDColumn" msprop:Generator_UserColumnName="CheckID" type="xs:string" minOccurs="0" />
+              <xs:element name="Position" msprop:Generator_ColumnVarNameInTable="columnPosition" msprop:Generator_ColumnPropNameInRow="Position" msprop:Generator_ColumnPropNameInTable="PositionColumn" msprop:Generator_UserColumnName="Position" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

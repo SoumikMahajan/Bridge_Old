@@ -1,0 +1,1065 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Bridge Supporter</title>
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+    @*<script src="~/Scripts/editor_plugin.js"></script>*@
+    <script src="~/Scripts/tinymce/js/tinymce/plugins/textcolor/plugin.min.js"></script>
+
+    <script src="~/Scripts/jquery.DB_PROC.js"></script>
+
+
+    <script src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.js"></script>
+    <style>
+        table.fixedHeader-floating {
+            top: 43px !important;
+            position: fixed !important;
+            background-color: white;
+        }
+
+            table.fixedHeader-floating.no-footer {
+                border-bottom-width: 0;
+            }
+
+        table.fixedHeader-locked {
+            position: absolute !important;
+            background-color: white;
+        }
+
+
+        .leftaligned {
+            text-align: left;
+        }
+
+        .widercolumn {
+            width: 110px !important;
+        }
+
+        table.dataTable thead th, table.dataTable thead td {
+            padding: 2px !important;
+        }
+
+        .checked {
+            cursor: pointer;
+            font-size: 0.9em !important;
+            border: 5px solid #0a4e02;
+            border-radius: 16px;
+            height: 22px;
+            width: 22px;
+            text-align: center;
+            background: #0a4e02;
+            color: white;
+            padding: 1px;
+        }
+    </style>
+
+
+    <script>
+        function getHistory(id) {
+
+            var obj = new Object();
+            //obj.curr = curr;
+            obj.Mode = 'GETHISTORY';
+            obj.FldID = id;
+
+            obj.SESSIONUSERBACKEND = 'UserID';
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_BridgeSupporterAll";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            console.log(o);
+
+            $('#historymodal').modal('show');
+            $('#tblhistory').dataTable().fnDestroy();
+
+            var ob = new Array();
+
+            for (var a = 0; a < o.length; a++) {
+
+                ob[a] = new Array();
+                ob[a][0] = o[a].Username;
+                ob[a][1] = o[a].Event;
+                ob[a][2] = o[a].Date + ' at ' + o[a].Time;
+
+            }
+            console.log(ob);
+
+            //$('#tblhistory')
+            $('#tblhistory').dataTable({
+                "processing": true,
+                fixedHeader: true,
+                "data": ob,
+                //"autoWidth": false,
+                "columns":
+                    [
+                        { "title": "User" },
+                        { "title": "Event", },
+                        { "title": "Time" }
+
+                    ],
+
+                "initComplete": function () {
+
+                },
+                "aoColumnDefs": [
+                    { 'bSortable': false, 'aTargets': [0] }
+                ]
+            });
+
+
+
+        }
+
+        function issent(status, id, objs) {
+            var obj = new Object();
+            //obj.curr = curr;
+            obj.Mode = 'ISSENT';
+            obj.Status = status;
+            obj.FldID = id;
+            obj.SESSIONUSERBACKEND = 'UserID';
+
+            if (status == '0') {
+                $(objs).removeClass('fa-check');
+                $(objs).addClass('fa-times');
+                $(objs).removeAttr('onclick');
+
+                $(objs).attr('onclick', "issent('1'," + id + ",this);");
+                $(objs).css('color', '#fb3939');
+
+            }
+            else {
+                $(objs).removeClass('fa-times');
+                $(objs).addClass('fa-check');
+                $(objs).removeAttr('onclick');
+
+                $(objs).attr('onclick', "issent('0'," + id + ",this);");
+                $(objs).css('color', '#5abf26');
+
+            }
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_BridgeSupporterAll";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            notify("Updated.", "GREEN");
+
+            //getInvoices();
+        }
+
+        function ispaid(status, id, objs) {
+            var obj = new Object();
+            //obj.curr = curr;
+            obj.Mode = 'ISPAID';
+            obj.Status = status;
+            obj.FldID = id;
+            obj.SESSIONUSERBACKEND = 'UserID';
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_BridgeSupporterAll";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            notify("Updated.", "GREEN");
+
+            if (status == '0') {
+                $(objs).removeClass('fa-check');
+                $(objs).addClass('fa-times');
+                $(objs).removeAttr('onclick');
+
+                $(objs).attr('onclick', "ispaid('1'," + id + ",this);");
+                $(objs).css('color', '#fb3939');
+
+            }
+            else {
+                $(objs).removeClass('fa-times');
+                $(objs).addClass('fa-check');
+                $(objs).removeAttr('onclick');
+
+                $(objs).attr('onclick', "ispaid('0'," + id + ",this);");
+                $(objs).css('color', '#5abf26');
+
+            }
+            //getInvoices();
+        }
+
+
+
+        function cansend(status, id, objs) {
+            var obj = new Object();
+            //obj.curr = curr;
+
+            obj.Mode = 'CANSEND';
+            obj.Status = status;
+            obj.FldID = id;
+            obj.SESSIONUSERBACKEND = 'UserID';
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_BridgeSupporterAll";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            notify("Updated.", "GREEN");
+            if (status == '0') {
+                $(objs).removeClass('fa-check');
+                $(objs).addClass('fa-times');
+                $(objs).removeAttr('onclick');
+
+                $(objs).attr('onclick', "cansend('1'," + id + ",this);");
+                $(objs).css('color', '#fb3939');
+                var h = '<i style="cursor:not-allowed;color:#d2c8c8;font-size: 1.3em;" class="fa fa-times" aria-hidden="true"></i>';
+                $(objs).parent().next('td').html(h);
+            }
+            else {
+                $(objs).removeClass('fa-times');
+                $(objs).addClass('fa-check');
+                $(objs).removeAttr('onclick');
+
+                $(objs).attr('onclick', "cansend('0'," + id + ",this);");
+                $(objs).css('color', '#5abf26');
+                var h = '<i style="cursor:pointer;color:#fb3939;font-size: 1.3em;" onclick="issent(\'1\',' + id + ',this);" class="fa fa-times" aria-hidden="true"></i>';
+                $(objs).parent().next('td').html(h);
+            }
+            //getInvoices();
+        }
+
+        function getInvoices() {
+            text = "Loading Invoices. Please wait...";
+            mode = "alert-warning";
+            sign = "<i class='fa fa-spinner fa-spin mrg5R'></i>";
+            var html = "<div class='container alert " + mode + "  notification col-sm-12' role='alert' style='z-index:99999; cursor: pointer;' onclick='removenotification();'>"
+                + "<span style='width:90%;float:left;'>"
+                + sign
+                + text
+                + "</span>"
+                + "</div>";
+
+            $('body').append(html);
+
+            var vendorID = $('#txt_Project3').val() + '';
+            var projectID = $('#txt_Project').val() + '';
+            var FromDate = $('.txt_FromDate').val();
+            var ToDate = $('.txt_ToDate').val();
+
+            var obj = new Object();
+            //obj.curr = curr;
+            obj.Mode = 'GETINVOICES';
+            obj.VendorID = vendorID == 'null' ? '' : vendorID;
+            obj.ProjectID = projectID == 'null' ? '' : projectID;
+            obj.FromDate = FromDate == 'null' ? '' : FromDate;
+            obj.ToDate = ToDate == 'null' ? '' : ToDate;
+
+            var url = "";
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Home/BridgeSupporterSearch';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url = 'Home/BridgeSupporterSearch';
+            }
+            //var obj = $(obj).parent().find('i');
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: JSON.stringify(obj),
+                contentType: "application/json; charset=utf-8",
+                success: function (o) {
+                    o = JSON.parse(o);
+                    var ob = new Array();
+                    for (var a = 0; a < o.length; a++) {
+
+                        var htm = '';
+                        //var id = o[a].fldid;
+                        var id = o[a].FldID;
+
+                        ob[a] = new Array();
+                        ob[a][0] = htm = '<i style="cursor:pointer;font-size: 1.3em;" onclick="getHistory(' + id + ');" class="fa fa-eye" aria-hidden="true"></i>';
+
+                        ob[a][1] = o[a].GeneratedPONumber;
+
+                        ob[a][2] = o[a].LegalName;
+
+                        ob[a][3] = o[a].InvoiceNumberVendor;
+
+                        ob[a][4] = o[a].FullyInvoicedDate;
+                        ob[a][5] = formatNumber(o[a].TotalInvoice);
+
+                        if (o[a].Cansend == "1") {
+                            htm = '<p class="displaynone">1</p><i style="cursor:pointer;color:#5abf26;font-size: 1.3em;" onclick="cansend(\'0\',' + id + ',this);" class="fa fa-check" aria-hidden="true"></i>'
+                            ob[a][6] = htm;
+
+                            if (o[a].IsSent == "1") {
+                                htm = '<p class="displaynone">1</p><i style="cursor:pointer;color:#5abf26;font-size: 1.3em;" onclick="issent(\'0\',' + id + ',this);" class="fa fa-check" aria-hidden="true"></i>'
+                            }
+                            else {
+                                htm = '<i style="cursor:pointer;color:#fb3939;font-size: 1.3em;" onclick="issent(\'1\',' + id + ',this);" class="fa fa-times" aria-hidden="true"></i>'
+
+                            }
+                            ob[a][7] = htm;
+
+                        }
+                        else {
+                            htm = '<i style="cursor:pointer;color:#fb3939;font-size: 1.3em;" onclick="cansend(\'1\',' + id + ',this);" class="fa fa-times" aria-hidden="true"></i>'
+                            ob[a][6] = htm;
+
+
+                            htm = '<p class="displaynone">-1</p><i style="cursor:not-allowed;color:#d2c8c8;font-size: 1.3em;" class="fa fa-times" aria-hidden="true"></i>'
+
+
+                            ob[a][7] = htm;
+
+
+                        }
+
+
+
+                        if (o[a].IsPaid == "1") {
+                            htm = '<p class="displaynone">1</p><i style="cursor:pointer;color:#5abf26;font-size: 1.3em;" onclick="ispaid(\'0\',' + id + ',this);" class="fa fa-check" aria-hidden="true"></i>'
+                        }
+                        else {
+                            htm = '<i style="cursor:pointer;color:#fb3939;font-size: 1.3em;" onclick="ispaid(\'1\',' + id + ',this);" class="fa fa-times" aria-hidden="true"></i>'
+
+                        }
+                        ob[a][8] = htm;
+
+                        ob[a][9] = o[a].Cansend;
+                        ob[a][10] = o[a].IsSent;
+                        ob[a][11] = o[a].IsPaid;
+
+                        ob[a][12] = o[a].InvRef;
+                        if (o[a].InvRef == '') {
+                            ob[a][13] = '<i style="color:green;cursor:pointer;" onclick="openref(this);" class="fa fa-plus"></i>';
+                        }
+                        else {
+                            ob[a][13] = o[a].InvRef + ' <i style="color:green;cursor:pointer;"  onclick="openref(this);" class="fa fa-pencil-square-o mrg5L"></i>';
+
+                        }
+
+                        ob[a][14] = id;
+
+                    }
+
+                    $('#invtable').dataTable().fnDestroy();
+
+                    if ($('#invtable thead').find('tr').length > 1) {
+
+
+                        $('#invtable thead').find('tr:eq(1)').remove();
+
+                    }
+
+
+                    $('#invtable').dataTable({
+                        "processing": true,
+                        fixedHeader: true,
+                        "data": ob,
+                        //  "bAutoWidth": false,
+                        "columns":
+                            [
+                                { "title": "History" },
+                                { "title": "PO Number" },
+                                { "title": "Vendor" },
+                                { "title": "Inv Number", "class": "leftposition" },
+                                { "title": "Fully Inv Date", "class": "leftposition" },
+                                { "title": "Total", "class": "rightposition" },
+                                { "title": "Can send", "class": "leftposition" },
+                                { "title": "Sent", "class": "leftposition" },
+                                { "title": "Paid", "class": "leftposition" },
+                                { "title": "Paid", "class": "displaynone" },
+                                { "title": "Paid", "class": "displaynone" },
+                                { "title": "Paid", "class": "displaynone" },
+
+                                { "title": "Ref#", "class": "displaynone" },
+                                { "title": "Ref#", "class": "leftposition" },
+                                { "title": "Ref#", "class": "displaynone" },
+
+
+                            ],
+                        "order": [1, "asc"],
+                        "initComplete": function () {
+
+                            var htm1 = "<select class='srch' data-indx='9'><option value=''>All</option><option value='true'>Yes</option><option value='false'>No</option>";
+                            var htm2 = "<select class='srch' data-indx='10'><option value=''>All</option><option value='true'>Yes</option><option value='false'>No</option>";
+                            var htm3 = "<select class='srch' data-indx='11'><option value=''>All</option><option value='true'>Yes</option><option value='false'>No</option>";
+                            html = "<tr>"
+                                + "<th class='Resetth' rowspan='1' colspan='1'>"
+                                + "<a><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px;width:110px;' /></a>"
+                                + "</th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='3' type='text'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='4' type='text'></th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='5' type='text'></th>"
+                                + "<th rowspan='1' colspan='1'>" + htm1 + "</th>"
+                                + "<th rowspan='1' colspan='1'>" + htm2 + "</th>"
+                                + "<th rowspan='1' colspan='1'>" + htm3 + "</th>"
+                                + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='12' type='text'></th>"
+                                + "</tr>"
+
+
+                            //if ($('#invtable thead').find('tr').length == 1) {
+                            //    $('#invtable thead').append(html);
+                            //}
+                            //else {
+                            //    $('#invtable thead').find('tr:eq(1)').remove();
+                            //    $('#invtable thead').append(html);
+                            //}
+
+                            $('#invtable thead').append(html);
+                            var table = $('#invtable').DataTable();
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+                                table
+                                    .column(indx)
+                                    .search(txt)
+                                    .draw();
+                                //RowHtmlRendernew();
+                            });
+
+                        },
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0] }
+                        ]
+                    });
+
+                    $('.notification').fadeOut(3000);
+
+
+
+                    console.log(o);
+
+                },
+                failed: function () { notify("Some error occured"); }
+            });
+
+            //var DBSP = new DB_SP_CONNECT();
+            //DBSP.ProcedureName = "POMS_BridgeSupporterAll";
+            //DBSP.obj = obj;
+            //DBSP.isasync = false;
+            //var o = DBSP.call_DB_Procedure();
+            //o = o.data;
+            //var ob = new Array();
+
+
+
+
+
+        }
+
+
+        //function getInvoices() {
+        //    text = "Loading Invoices. Please wait...";
+        //    mode = "alert-warning";
+        //    sign = "<i class='fa fa-spinner fa-spin mrg5R'></i>";
+        //    var html = "<div class='container alert " + mode + "  notification col-sm-12' role='alert' style='z-index:99999; cursor: pointer;' onclick='removenotification();'>"
+        //        + "<span style='width:90%;float:left;'>"
+        //        + sign
+        //        + text
+        //        + "</span>"
+        //        + "</div>";
+
+        //    $('body').append(html);
+
+        //    var vendorID = $('#txt_Project3').val() + '';
+        //    var projectID = $('#txt_Project').val() + '';
+
+        //    var obj = new Object();
+        //    //obj.curr = curr;
+        //    obj.Mode = 'GETINVOICES';
+        //    obj.VendorID = vendorID == 'null' ? '' : vendorID;
+        //    obj.ProjectID = projectID == 'null' ? '' : projectID;
+
+
+        //    var DBSP = new DB_SP_CONNECT();
+        //    DBSP.ProcedureName = "POMS_BridgeSupporterAll";
+        //    DBSP.obj = obj;
+        //    DBSP.isasync = false;
+        //    var o = DBSP.call_DB_Procedure();
+        //    o = o.data;
+        //    var ob = new Array();
+
+        //    for (var a = 0; a < o.length; a++) {
+
+        //        var htm = '';
+        //        var id = o[a].fldid;
+
+        //        ob[a] = new Array();
+        //        ob[a][0] = htm = '<i style="cursor:pointer;font-size: 1.3em;" onclick="getHistory(' + id + ');" class="fa fa-eye" aria-hidden="true"></i>';
+
+        //        ob[a][1] = o[a].GeneratedPONumber;
+
+        //        ob[a][2] = o[a].LegalName;
+
+        //        ob[a][3] = o[a].InvoiceNumberVendor;
+
+        //        ob[a][4] = o[a].FullyInvoicedDate;
+        //        ob[a][5] = formatNumber(o[a].TotalInvoice);
+
+        //        if (o[a].Cansend == "True") {
+        //            htm = '<p class="displaynone">1</p><i style="cursor:pointer;color:#5abf26;font-size: 1.3em;" onclick="cansend(\'0\',' + id + ',this);" class="fa fa-check" aria-hidden="true"></i>'
+        //            ob[a][6] = htm;
+
+        //            if (o[a].IsSent == "True") {
+        //                htm = '<p class="displaynone">1</p><i style="cursor:pointer;color:#5abf26;font-size: 1.3em;" onclick="issent(\'0\',' + id + ',this);" class="fa fa-check" aria-hidden="true"></i>'
+        //            }
+        //            else {
+        //                htm = '<i style="cursor:pointer;color:#fb3939;font-size: 1.3em;" onclick="issent(\'1\',' + id + ',this);" class="fa fa-times" aria-hidden="true"></i>'
+
+        //            }
+        //            ob[a][7] = htm;
+
+        //        }
+        //        else {
+        //            htm = '<i style="cursor:pointer;color:#fb3939;font-size: 1.3em;" onclick="cansend(\'1\',' + id + ',this);" class="fa fa-times" aria-hidden="true"></i>'
+        //            ob[a][6] = htm;
+
+
+        //            htm = '<p class="displaynone">-1</p><i style="cursor:not-allowed;color:#d2c8c8;font-size: 1.3em;" class="fa fa-times" aria-hidden="true"></i>'
+
+
+        //            ob[a][7] = htm;
+
+
+        //        }
+
+
+
+
+
+
+
+
+        //        if (o[a].IsPaid == "True") {
+        //            htm = '<p class="displaynone">1</p><i style="cursor:pointer;color:#5abf26;font-size: 1.3em;" onclick="ispaid(\'0\',' + id + ',this);" class="fa fa-check" aria-hidden="true"></i>'
+        //        }
+        //        else {
+        //            htm = '<i style="cursor:pointer;color:#fb3939;font-size: 1.3em;" onclick="ispaid(\'1\',' + id + ',this);" class="fa fa-times" aria-hidden="true"></i>'
+
+        //        }
+        //        ob[a][8] = htm;
+
+        //        ob[a][9] = o[a].Cansend;
+        //        ob[a][10] = o[a].IsSent;
+        //        ob[a][11] = o[a].IsPaid;
+
+        //        ob[a][12] = o[a].InvRef;
+        //        if (o[a].InvRef == '') {
+        //            ob[a][13] = '<i style="color:green;cursor:pointer;" onclick="openref(this);" class="fa fa-plus"></i>';
+        //        }
+        //        else {
+        //            ob[a][13] = o[a].InvRef + ' <i style="color:green;cursor:pointer;"  onclick="openref(this);" class="fa fa-pencil-square-o mrg5L"></i>';
+
+        //        }
+
+        //        ob[a][14] = id;
+
+        //    }
+
+        //    $('#invtable').dataTable().fnDestroy();
+
+        //    if ($('#invtable thead').find('tr').length > 1) {
+
+
+        //        $('#invtable thead').find('tr:eq(1)').remove();
+
+        //    }
+
+
+        //    $('#invtable').dataTable({
+        //        "processing": true,
+        //        fixedHeader: true,
+        //        "data": ob,
+        //        //"autoWidth": false,
+        //        "columns":
+        //          [
+        //            { "title": "History" },
+        //            { "title": "PO Number" },
+        //            { "title": "Vendor" },
+        //            { "title": "Inv Number", "class": "leftposition" },
+        //             { "title": "Fully Inv Date", "class": "leftposition" },
+        //            { "title": "Total", "class": "rightposition" },
+        //            { "title": "Can send", "class": "leftposition" },
+        //            { "title": "Sent", "class": "leftposition" },
+        //            { "title": "Paid", "class": "leftposition" },
+        //            { "title": "Paid", "class": "displaynone" },
+        //            { "title": "Paid", "class": "displaynone" },
+        //            { "title": "Paid", "class": "displaynone" },
+
+        //            { "title": "Ref#", "class": "displaynone" },
+        //            { "title": "Ref#", "class": "leftposition" },
+        //            { "title": "Ref#", "class": "displaynone" },
+
+
+        //          ],
+        //        "order": [1, "asc"],
+        //        "initComplete": function () {
+
+        //            var htm1 = "<select class='srch' data-indx='9'><option value=''>All</option><option value='true'>Yes</option><option value='false'>No</option>";
+        //            var htm2 = "<select class='srch' data-indx='10'><option value=''>All</option><option value='true'>Yes</option><option value='false'>No</option>";
+        //            var htm3 = "<select class='srch' data-indx='11'><option value=''>All</option><option value='true'>Yes</option><option value='false'>No</option>";
+        //            html = "<tr>"
+        //                             + "<th class='Resetth' rowspan='1' colspan='1'>"
+        //                             + "<a><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px;width:110px;' /></a>"
+        //                             + "</th>"
+        //                             + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+        //                             + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='2' type='text'></th>"
+        //                             + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='3' type='text'></th>"
+        //                             + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='4' type='text'></th>"
+        //                             + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='5' type='text'></th>"
+        //                             + "<th rowspan='1' colspan='1'>" + htm1 + "</th>"
+        //                             + "<th rowspan='1' colspan='1'>" + htm2 + "</th>"
+        //                             + "<th rowspan='1' colspan='1'>" + htm3 + "</th>"
+        //                             + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%;padding: 2px 2%; font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='12' type='text'></th>"
+        //                               + "</tr>"
+
+
+        //            //if ($('#invtable thead').find('tr').length == 1) {
+        //            //    $('#invtable thead').append(html);
+        //            //}
+        //            //else {
+        //            //    $('#invtable thead').find('tr:eq(1)').remove();
+        //            //    $('#invtable thead').append(html);
+        //            //}
+
+        //            $('#invtable thead').append(html);
+        //            var table = $('#invtable').DataTable();
+        //            $('.srch').on('keyup change', function () {
+        //                var indx = $(this).attr('data-indx');
+        //                var txt = this.value;
+        //                table
+        //                       .column(indx)
+        //                       .search(txt)
+        //                       .draw();
+        //                //RowHtmlRendernew();
+        //            });
+
+        //        },
+        //        "aoColumnDefs": [
+        //            { 'bSortable': false, 'aTargets': [0] }
+        //        ]
+        //    });
+
+
+
+        //    $('.notification').fadeOut(3000);
+        //    console.log(o);
+
+
+        //}
+
+        function openref(obj) {
+            var id = $(obj).parent().parent().find('td:eq(14)').html();
+            var val = $(obj).parent().parent().find('td:eq(12)').html();
+            $('#refidval').val(id);
+            $('#reftext').val(val);
+
+            $('#refmodal').modal('show');
+
+        }
+        function saveref() {
+            var id = $('#refidval').val();
+            var reftext = $('#reftext').val();
+
+            console.log(id + ",,," + reftext);
+            var obj = new Object();
+            //obj.curr = curr;
+            obj.Mode = 'EDITREF';
+            obj.FldID = id;
+            obj.InvRef = reftext;
+
+            obj.SESSIONUSERBACKEND = 'UserID';
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_BridgeSupporterAll";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            console.log(o);
+
+            notify("Updated Inv. Ref", "GREEN");
+
+            $('#refmodal').modal('hide');
+
+            $('#invtable tbody tr').each(function () {
+                var idt = $(this).find('td:eq(14)').html();
+                if (idt == id) {
+                    $(this).find('td:eq(12)').html(reftext);
+
+
+                    if (reftext != "") {
+                        $(this).find('td:eq(13)').html(reftext + ' <i style="color:green;cursor:pointer;"  onclick="openref(this);" class="fa fa-pencil-square-o mrg5L"></i>');
+                    }
+                    else {
+                        $(this).find('td:eq(13)').html('<i style="color:green;cursor:pointer;" onclick="openref(this);" class="fa fa-plus"></i>');
+                    }
+
+                }
+
+            });
+
+
+        }
+
+        function ResetSearch() {
+            var table = $('#invtable').DataTable();
+            $('.srch').each(function () {
+                this.value = '';
+                var indx = $(this).attr('data-indx');
+                var txt = this.value;
+                table
+                    .column(indx)
+                    .search(txt)
+                    .draw();
+            });
+        }
+
+
+
+        function projectddlchange() {
+            setProjectPreference($("#txt_Project"));
+            var project_id = $("#txt_Project").val();
+            console.log("working");
+            if (project_id == null) {
+                project_id = '';
+            }
+            if (project_id == '')
+                return;
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Home/getAllParentVendorsByProject';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Home/getAllParentVendorsByProject';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: true,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'ProjectID': '" + project_id + "'}",
+                success: function (data) {
+                    //return;
+                    var html = data;
+
+                    $("#txt_Project3").html(html);
+                    $("#txt_Project3").multiselect('refresh');//.multiselectfilter();
+                    var width = '100%';
+                    $('.ui-multiselect').css('width', width);
+                    //$('.ui-multiselect-menu').css('width', '39.5%');
+                    $('.ui-multiselect-menu').css('width', '39.5%');
+                    $('.ui-state-default').css('color', '#C31001');
+                    $('.ui-multiselect').css('height', '34px');
+                    $('.ui-multiselect').css('margin-top', '5px');
+                },
+                error: function () {
+                    notify('Something went wrong.');
+                }
+            });
+
+
+        }
+
+        $(document).ready(function () {
+
+            $('#invtable').dataTable();
+
+            $('#tblhistory').dataTable();
+            var ProjectDdlForPage = $('#txt_Project'); //The project dropdown ID
+
+            $("#txt_Project3").multiselect({ header: true }).multiselectfilter();
+            $("#txt_Project").multiselect(
+                {
+
+                    maxTextWrapSize: 50
+                    //,close: projectddlchange()
+                }).multiselectfilter();
+
+            var selectedpreferredpid = getProjectPreferencemulti();
+            if (selectedpreferredpid.split(',').length == 0) {
+                $(ProjectDdlForPage).find('option[value="' + selectedpreferredpid[i] + '"]').attr("selected", "true");
+            }
+            else {
+                for (var i = 0; i <= selectedpreferredpid.split(',').length + 1; i++) {
+                    $(ProjectDdlForPage).find('option[value="' + selectedpreferredpid.split(',')[i] + '"]').attr("selected", "true");
+                }
+            }
+            $(ProjectDdlForPage).multiselect('refresh');
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+
+        });
+
+
+        function formatNumber(number) {
+            number = parseFloat(number);
+            var number = number.toFixed(2) + '';
+            var x = number.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+
+    <div id="refmodal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add/Edit Ref</h4>
+      </div>
+      <div class="modal-body">
+          <input type="hidden" id="refidval" />
+       <input type="text" id="reftext" class="col-sm-12" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" onclick="saveref();">Save</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+    <!-- Modal -->
+<div id="historymodal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">History</h4>
+      </div>
+      <div class="modal-body" style="overflow:auto;max-height:450px;">
+        <table id="tblhistory">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Event</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-poms" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="container-fluid" id="angulardiv" ng-app="Project" ng-controller="PO">
+
+    <div class="row">
+        <div class="form-group">
+            <h3 class="section-header">
+                Bridge supporter control
+            </h3>
+        </div>
+
+        <div class="form-group col-md-4 col-xs-12">
+            <label>Project Number</label>
+            <select id="txt_Project" multiple="multiple" class="form-control" onchange="projectddlchange();">
+                @*<option value="0">--Select Project--</option>*@
+                @Html.Raw(ViewData["getAllProjectNameNumber"])
+            </select>
+        </div>
+
+
+        <div class="form-group col-md-2 col-xs-12">
+            <label>Vendor</label>
+            <select id="txt_Project3" multiple="multiple" class="form-control">
+                @*<option value="0">--Select Project--</option>*@
+                @Html.Raw(ViewData["parentVendor"])
+            </select>
+        </div>
+        <div class="form-group col-md-2 xs-12">
+            <label>Date Range</label>
+            <div class="form-group" style="width: 100%;position: relative;">
+
+                <select class="datecontrol classselector form-control" style=" width:100%;height: 26px;" data-from="txt_FromDate" data-to="txt_ToDate">
+                    <option value="13" data-val="All">ALL</option>
+                    <option value="1" data-val="custom">Custom</option>
+                    <option value="2" data-val="last365">Last 365 Days</option>
+                    <option value="3" data-val="today">Today</option>
+                    <option value="4" data-val="yesterday">Yesterday</option>
+                    <option value="5" data-val="thisweek">This Week</option>
+                    <option value="6" data-val="thismonth">This Month</option>
+                    <option value="7" data-val="thisquarter">This Quarter</option>
+                    <option value="8" data-val="thisyear">This Year</option>
+                    <option value="9" data-val="lastweek">Last Week</option>
+                    <option value="10" data-val="lastmonth">Last Month</option>
+                    <option value="11" data-val="lastquarter">Last Quarter</option>
+                    <option value="12" data-val="lastyear">Last Year</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-md-2 xs-12">
+            <label>From Date</label>
+            <div style="width: 100%;position: relative;margin-left: 1%;">
+                <input type="text" onkeypress="return IsNumber(event);" placeholder="From Date" class="makedisable  txt_FromDate" style="width: 100%; margin-top: -2px;" />
+            </div>
+        </div>
+        <div class="form-group col-md-2 xs-12">
+            <label>To Date</label>
+            <div style="width: 100%;position: relative;margin-left: 1%;">
+                <input type="text" onkeypress="return IsNumber(event);" placeholder="To Date" class="makedisable txt_ToDate" style="width: 100%; margin-top: -2px;" />
+            </div>
+        </div>
+
+
+    </div>
+    <div class="row">
+    <div class="col-sm-12">
+         <input type="button" class="btn btn-poms mrg10T" onclick="getInvoices();" value="Search" />
+         <a href="/Reports/BridgeSupporter_Report"> <input type="button" class="btn btn-poms mrg10T"  value="Report" /></a>
+    </div>
+        </div>
+
+    <div class="row mrg5T">
+
+         <div class="form-group">
+                    <h3 class="section-header">
+                       Invoices
+                    </h3>
+                </div>
+
+        <div class="col-sm-12">
+            <table id="invtable">
+                <thead>
+                    <tr>
+                    <th  style="width:5%;"></th>
+                    <th style="width:160px;">PO Number</th>
+                    <th style="width:360px;">Vendor</th>
+                    <th style="width:360px;">Inv#</th>
+                    <th  style="width:60px;">Fully Inv Date</th>
+                    <th style="width:60px;">Total</th>
+                    <th style="width:5%;">Can send</th>
+                    <th style="width:5%;"Sent</th>
+                    <th style="width:5%;">Paid</th>
+                    <th class="displaynone">Paid</th>
+                    <th class="displaynone">Paid</th>
+                    <th class="displaynone">Paid</th>
+                    <th class="displaynone">Paid</th>
+                    <th style="width:170px;">Ref</th>
+                    <th class="displaynone">Paid</th>
+                   </tr>
+                </thead>
+
+            </table>
+        </div>
+    </div>
+
+    <div>
+
+       
+
+    </div>
+
+
+
+
+
+
+
+    </div>
+
+    </body>
+
+    </html>
+
+<script>
+    $(document).ready(function () {
+
+        setTimeout(function () {
+
+            $('.datecontrol').val('13');
+            var from = $('.datecontrol').attr('data-from');
+            var to = $('.datecontrol').attr('data-to');
+            from = $('.' + from);
+            to = $('.' + to);
+            //startdate = moment().startOf('month').format("YYYY.MM.DD");
+            //enddate = moment().format("YYYY.MM.DD");
+
+
+            startdate = moment().subtract(365, "days").format("YYYY.MM.DD");
+            enddate = moment().format("YYYY.MM.DD");
+            startdate = '';
+            enddate = '';
+
+
+            $(from).datepicker("option", "disabled", true);
+            $(to).datepicker("option", "disabled", true);
+
+            $(from).datepicker('setDate', startdate);
+            $(to).datepicker('setDate', enddate);
+
+        }, 0);
+    });
+
+
+    $('.txt_FromDate').datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'yy.mm.dd',
+    });
+    $('.txt_ToDate').datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'yy.mm.dd',
+    });
+</script>

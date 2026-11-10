@@ -1,0 +1,784 @@
+﻿@{
+    ViewBag.Title = "POReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PO Report</title>
+    @*<script src="~/Scripts/jquery.multiselect.js"></script>
+        <script src="~/Scripts/jquery.multiselect.filter.js"></script>*@
+    @*<link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">*@
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+
+
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    @*<script src="~/Scripts/jquery-1.7.1.js"></script>*@
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+</head>
+<body>
+
+    <div class="container-fluid" id="angulardiv" ng-app="Reports" ng-controller="Reports">
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header">PO Report</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group req">
+                    <label>Select Project</label>
+                    <select id="txt_Project" multiple="multiple" onchange="ShowProjectsAtLabel(this);">
+                        @*<option value="0">--Select Project--</option>*@
+                        @Html.Raw(ViewData["getAllProjectNameNumber"])
+                    </select>
+
+                </div>
+
+                <div>
+                    <label id="LabelForProject"></label>
+                </div>
+
+            </div>
+
+            <div class="col-sm-4 req">
+                <div class="form-group">
+                    <label>Report Type</label>
+                    <select id="txtReportType" multiple="multiple">
+                        @*<option value="0">---Select Category---</option>*@
+                        <option value="1">Detail</option>
+                        <option value="2">Summary</option>
+
+                    </select>
+
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label>Group Type</label>
+                    @*<select id="txtPOReportCategory" multiple="multiple">
+
+                            <option value="1">Vendor</option>
+
+                        </select>*@
+                    <br />
+                    <div class="col-sm-6">
+                        <input type="radio" name="POReportGroupBY" value="0"  class="mrg10T">Vendor
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="radio" name="POReportGroupBY" value="1" class="mrg10T" checked>None<br>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <div id="section_panel">
+
+            <div id="details">
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Select Vendor (Leave Blank For All)</label>
+                            <select id="txt_Vendor" multiple="multiple" onchange="ShowVendorsAtLabel(this);"></select>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label id="LabelForVendor"></label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label>From Date (Leave Blank For All)</label>
+                        <input type="text" id="txt_FromDate" onkeypress="return IsNumber(event);" placeholder="Select From Date" class="makedisable form-control fromDate" />
+                    </div>
+
+                    <div class="col-sm-4">
+
+
+                        <label>To Date (Leave Blank For All)</label>
+                        <input type="text" id="txt_ToDate" onkeypress="return IsNumber(event);" placeholder="Select To Date" class="makedisable form-control toDate" />
+
+
+                    </div>
+                    
+
+                </div>
+
+
+
+                <div class="row">
+
+                    <div class="col-sm-3">
+                        <label>Invoice Status (Blank For All)</label>
+                        <select id="DDl_InvoiceStatus" multiple="multiple">
+                            <option value="1" data-id="1">Open</option>
+                            <option value="2" data-id="2">Close</option>
+
+                        </select>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="form-group req">
+                            <label>Sorting</label>
+                            <select id="DDl_Sort1" multiple="multiple">
+                                <option value="1" data-id="1">PO</option>
+                                <option value="2" data-id="2" selected>Date</option>
+                                <option value="3" data-id="3">Vendor</option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3 mrg20T">
+                        <div class="form-group">
+                            <button type="submit" id="Btn_Report" onclick="PODetailReportGenerationGroupByNoneFilter(this);" class="btn btn-block btn-primary mrg10T"><i class="fa fa-file-pdf-o"></i> Export to PDF</button>
+                            @*<input type="button" id="Btn_Report" value="Export to PDF" onclick="BudgetReportByItemReportGenerationFilter();" />*@
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3 mrg20T">
+                        <div class="form-group">
+                            <button type="submit" id="Btn_Excel1" class="btn btn-block btn-primary mrg10T"><i class="fa fa-file-excel-o"></i> Export to Excel</button>
+                            @*<input type="button" id="Btn_Report" value="Export to PDF" onclick="BudgetReportByItemReportGenerationFilter();" />*@
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="summery">
+
+                <div class="row">
+                    <div class="col-sm-3">
+                        <label>From Date (Leave Blank For All)</label>
+                        <input type="text" id="txt_FromDate1" onkeypress="return IsNumber(event);" placeholder="Select From Date" class="makedisable form-control fromDate" />
+                    </div>
+
+                    <div class="col-sm-3">
+
+
+                        <label>To Date (Leave Blank For All)</label>
+                        <input type="text" id="txt_ToDate1" onkeypress="return IsNumber(event);" placeholder="Select To Date" class="makedisable form-control toDate" />
+
+
+                    </div>
+                    <div class="col-sm-3">
+                        <label>Invoice Status (Leave Blank For All)</label>
+                        <select id="DDl_InvoiceStatus1" multiple="multiple">
+                            <option value="1" data-id="1">Open</option>
+                            <option value="2" data-id="2">Close</option>
+
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group req">
+                            <label>Sorting</label>
+                            <select id="DDl_Sort2" multiple="multiple">
+                                <option value="1" data-id="1">PO</option>
+                                <option value="2" data-id="2" selected>Date</option>
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <button type="submit" id="Btn_Report" onclick="PODetailReportGenerationGroupByVendorFilter(this);" class="btn btn-block btn-primary mrg10T btnReport"><i class="fa fa-file-pdf-o"></i> Export to PDF</button>
+                            @*<input type="button" id="Btn_Report" value="Export to PDF" onclick="BudgetReportByItemReportGenerationFilter();" />*@
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <button type="submit" id="Btn_Excel2" class="btn btn-block btn-primary mrg10T"><i class="fa fa-file-excel-o"></i> Export to Excel</button>
+                            @*<input type="button" id="Btn_Report" value="Export to PDF" onclick="BudgetReportByItemReportGenerationFilter();" />*@
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <script>
+        //For Common
+        var count = 0;
+
+        var ProjectDdlForPage = $('#txt_Project'); //The project dropdown ID
+
+
+        $(document).ready(function () {
+
+            var selectedpreferredpid = getProjectPreferencemulti();
+
+            if (selectedpreferredpid.split(',').length == 0) {
+                $(ProjectDdlForPage).find('option[value="' + selectedpreferredpid[i] + '"]').attr("selected", "true");
+            }
+
+            else {
+                for (var i = 0; i < 3; i++) {
+
+                    $(ProjectDdlForPage).find('option[value="' + selectedpreferredpid.split(',')[i] + '"]').attr("selected", "true");
+
+                }
+            }
+
+
+
+
+            $(ProjectDdlForPage).multiselect('refresh');
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            $('.ui-multiselect-menu').css('width', '29.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+
+
+            //To call page specific dropdown change event
+            ShowProjectsAtLabel(ProjectDdlForPage);
+            close_project_dropdown(selectedpreferredpid);
+
+            $("#section_panel").hide();
+
+            $('#txt_FromDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_ToDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_FromDate1').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_ToDate1').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            AllDatePicker();
+
+
+        });
+
+
+
+        $(document).on('change', ProjectDdlForPage, function () {
+
+            setProjectPreference(ProjectDdlForPage);
+
+        });
+
+
+    </script>
+    <script type="text/javascript">
+        $("#txt_Project").multiselect(
+        {
+            header: "Select Project(s)!",
+            close: function () {
+                if ($("#txt_Project").val() != null && $("#txtReportType").val() != null) {
+                    if ($("#txtReportType").val() != null)
+                    close_project_dropdown($("#txt_Project").val());
+                }
+
+            },
+            click: function (e) {
+                if ($(this).multiselect("widget").find("input:checked").length > 3) {
+                    e.preventDefault();
+                    notify("Select maximum three projects!")
+                    return false;
+                }
+                else if ($(this).multiselect("widget").find("input:checked").length == 0) {
+                    $('#section_panel').hide();
+                    notify("Please select project!")
+                    //return false;
+                }
+            },
+            maxTextWrapSize: 30
+
+        }).multiselectfilter();
+
+
+        $("#txtReportType").multiselect(
+    {
+        header: "Select Report Type!",
+        close: function () {
+
+        },
+        click: function (e) {
+            if ($("#txt_Project").val() === null) {
+                $("#section_panel").hide();
+                $("#txtReportType option:selected").removeAttr("selected");
+                notify("Please select project!", "RED");
+                e.preventDefault();
+                return false;
+            }
+            else {
+
+            }
+        },
+        multiple: false
+
+    });
+
+        $("#DDl_InvoiceStatus1,#DDl_InvoiceStatus").multiselect(
+    {
+        header: "Select Invoice Status!",
+        close: function () {
+
+        },
+        multiple: false
+
+    });
+
+
+        $("#DDl_Sort2").multiselect({
+            close: function () {
+
+            },
+            header: 'Select Sorting',
+            multiple: false,
+            click: function (e) {
+
+            }
+        });
+        $("#DDl_Sort1").multiselect({
+            close: function () {
+
+            },
+            header: 'Select Sorting',
+            multiple: false,
+            click: function (e) {
+
+            }
+        });
+
+        //$("#txtPOReportCategory option:selected").removeAttr("selected");
+        $(document).ready(function () {
+
+            $("#txtReportType").on('change', function () {
+                
+
+                if ($("#txtReportType").val() != null) {
+                    
+                    if ($('input:radio[name=POReportGroupBY]:checked').val() == '1') {
+                        close_project_dropdown($("#txt_Project").val());
+                        $("#section_panel").show();
+                        $("#summery").hide();
+                        $("#details").show();
+                        
+                    }
+                    else if ($('input:radio[name=POReportGroupBY]:checked').val() == '0') {
+                        $("#section_panel").show();
+                        $("#details").hide();
+                        $("#summery").show();
+                       
+                    }
+                }
+            });
+
+            $('input:radio[name=POReportGroupBY]').on('change', function () {
+                if ($("#txtReportType").val() != null) {
+                    if ($('input:radio[name=POReportGroupBY]:checked').val() == '1') {
+                        $("#section_panel").show();
+                        $("#summery").hide();
+                        $("#details").show();
+                    }
+                    else if ($('input:radio[name=POReportGroupBY]:checked').val() == '0') {
+                        $("#section_panel").show();
+                        $("#details").hide();
+                        $("#summery").show();
+                    }
+                }
+            });
+        });
+
+        function ShowProjectsAtLabel(obj) {
+
+            var Projects = $(obj).val();
+            var totalProjects = '';
+
+            $('#LabelForSection').text('');
+            $('#LabelForVendor').text('');
+            if ($(obj).find(":selected").text() == '') {
+                $('#LabelForProject').text('');
+            }
+            else {
+
+                for (var i = 0; i < Projects.length; i++) {
+                    if (totalProjects == '') {
+                        totalProjects = $(obj).find("option[value='" + Projects[i] + "']").text();
+                    }
+                    else {
+                        totalProjects += ' , ' + $(obj).find("option[value='" + Projects[i] + "']").text();
+                    }
+                }
+
+                $('#LabelForProject').text('Selected Project(s) : ' + totalProjects + "");
+
+
+            }
+        }
+
+        function close_project_dropdown(project_id) {
+
+            if (project_id != null) {
+
+                bindVendor(project_id);
+
+
+            }
+            else {
+                count = 0;
+            }
+        }
+
+        function bindVendor(project_id) {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Reports/getAllVendorByProjectID';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                url1 = 'Reports/getAllVendorByProjectID';
+            }
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'projectid': '" + project_id + "'}",
+                success: function (data) {
+                    var vendors = JSON.parse(data);
+                    var total_vendor = vendors.data.length;
+                    if (count > 1) {
+                        //$("#txt_Vendor").multiselect('destroy')
+
+                    }
+                    else if (count == 1) {
+                        count++;
+                    }
+
+                    var html = '';
+                    for (i = 0; i < total_vendor; i++) {
+                        var option = '<option value="' + vendors.data[i].id + '" data-id="' + vendors.data[i].id + '">' + vendors.data[i].vendorname + '( ' + vendors.data[i].parentvendor + ' )' + '</option>';
+                        html += option;
+
+                    }
+                    $("#txt_Vendor").html(html);
+                    $("#txt_Vendor").multiselect(
+                        {
+                            //header: "Select Vendors!",
+                            click: function (e) {
+                                //if ($(this).multiselect("widget").find("input:checked").length > 3) {
+                                //    e.preventDefault();
+                                //    notify("Select maximum three vendors!")
+                                //    return false;
+                                //}
+                            }
+                        }).multiselectfilter();
+
+                    $("#txt_Vendor").multiselect("refresh");
+                    var width = '100%';
+                    $('.ui-multiselect').css('width', width);
+                    //$('.ui-multiselect-menu').css('width', '39.5%');
+                    $('.ui-multiselect-menu').css('width', '29.5%');
+                    $('.ui-state-default').css('color', '#C31001');
+                    $('.ui-multiselect').css('height', '34px');
+                    $('.ui-multiselect').css('margin-top', '5px');
+                },
+                error: function () {
+                    notify('Something went wrong.');
+                }
+            });
+
+        }
+
+        function IsNumber(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            if ((keyCode > 47 && keyCode < 58) || (keyCode == 8) || (keyCode == 46)) {
+                return true;
+            }
+            else {
+                alert('Use Only Numeric value');
+                return false;
+            }
+        }
+
+        function AllDatePicker() {
+            $('#txt_FromDate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'MM dd yy',
+
+            });
+
+            $('#txt_ToDate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'MM dd yy',
+
+            });
+
+            $('#txt_FromDate1').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'MM dd yy',
+
+            });
+
+            $('#txt_ToDate1').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'MM dd yy',
+
+            });
+
+        }
+
+        function ShowVendorsAtLabel(obj) {
+            var Vendors = $(obj).val();
+
+            var totalVendors = '';
+            if (Vendors == '' || Vendors == null || Vendors == undefined) {
+
+                $('#LabelForVendor').text('');
+            }
+            else {
+
+                for (var i = 0; i < Vendors.length; i++) {
+                    if (totalVendors == '') {
+                        totalVendors = $(obj).find("option[value='" + Vendors[i] + "']").text();
+                    }
+                    else {
+                        totalVendors += ' , ' + $(obj).find("option[value='" + Vendors[i] + "']").text();
+                    }
+                }
+                $('#LabelForVendor').text('Selected Vendor(s) : ' + totalVendors);
+
+            }
+        }
+
+        function PODetailReportGenerationGroupByNoneFilter(obj) {
+
+            var AllProjectID = $('#txt_Project').val();
+            var AllVendorID = $('#txt_Vendor').val();
+            var ReportType = $('#txtReportType').val();
+            var GroupTye = $('input:radio[name=POReportGroupBY]:checked').val();
+            var OrderPattern = $("#DDl_Sort1").val();
+            var InvoiceStatus = $("#DDl_InvoiceStatus").val();
+            var From_Date;
+            var To_date;
+            var url1;
+            
+            if (AllProjectID == null) {
+                notify("Please Select Project!!!", "Red");
+                return;
+            }
+
+            if (ReportType == null) {
+                notify("Please Select Report Type!!!", "Red");
+                return;
+            }
+            
+
+            if ($("#txt_FromDate").val() != '')
+                From_Date = ($("#txt_FromDate").val());
+            else
+                From_Date = null;
+
+            if ($("#txt_ToDate").val() != '')
+                To_date = ($("#txt_ToDate").val());
+            else
+                To_date = null;
+
+
+            if (ReportType == '1') {
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/Reports/POReportGenerationDetailsFIlter';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'Reports/POReportGenerationDetailsFIlter';
+                }
+                url1 += "?AllProjectID=" + AllProjectID;
+                url1 += "&ReportType=" + ReportType;
+                url1 += "&GroupTye=" + GroupTye;
+                url1 += "&AllVendorID=" + AllVendorID;
+                url1 += "&From_Date=" + From_Date;
+                url1 += "&To_date=" + To_date;
+                url1 += "&InvoiceStatus=" + InvoiceStatus;
+                url1 += "&OrderPattern=" + OrderPattern;
+            }
+            else {
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/Reports/POReportGenerationSummeryFIlter';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'Reports/POReportGenerationSummeryFIlter';
+                }
+                url1 += "?AllProjectID=" + AllProjectID;
+                url1 += "&ReportType=" + ReportType;
+                url1 += "&GroupTye=" + GroupTye;
+                url1 += "&AllVendorID=" + AllVendorID;
+                url1 += "&From_Date=" + From_Date;
+                url1 += "&To_date=" + To_date;
+                url1 += "&InvoiceStatus=" + InvoiceStatus;
+                url1 += "&OrderPattern=" + OrderPattern;
+            }
+            $(obj).html('<i class="fa fa-spinner"></i>');
+            var totdata = '';
+            $.get(url1)
+               .success(function (response) {
+                   //var html = "";
+                   //var url2 = '';
+                   if (response == '0') {
+                       notify('No records found!!!');
+                       return;
+                   }
+
+                   if (LOCALORSERVERNEW == 'LOCAL') {
+                       totdata = response;
+                   }
+                   else if (LOCALORSERVERNEW == 'SERVER') {
+                       totdata = "POMS/" + response;
+                   }
+                   setTimeout(function () {
+                       window.open(totdata, '_blank');
+                       $(obj).html('<i class="fa fa-file-pdf-o"></i> Export to PDF');
+                   }, 1000);
+               });
+        }
+
+        function PODetailReportGenerationGroupByVendorFilter(obj) {
+            var AllProjectID = $('#txt_Project').val();
+            var AllVendorID = 'null';
+            var ReportType = $('#txtReportType').val();
+            var GroupTye = $('input:radio[name=POReportGroupBY]:checked').val();
+            var OrderPattern = $("#DDl_Sort2").val();
+            var InvoiceStatus = $("#DDl_InvoiceStatus1").val();
+            var From_Date;
+            var To_date;
+            var url1;
+
+            if (AllProjectID == null) {
+                notify("Please Select Project!!!", "Red");
+                return;
+            }
+
+            if (ReportType == null) {
+                notify("Please Select Report Type!!!", "Red");
+                return;
+            }
+
+
+            if ($("#txt_FromDate1").val() != '')
+                From_Date = ($("#txt_FromDate1").val());
+            else
+                From_Date = null;
+
+            if ($("#txt_ToDate1").val() != '')
+                To_date = ($("#txt_ToDate1").val());
+            else
+                To_date = null;
+
+
+            if (ReportType == '1') {
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/Reports/POReportGenerationDetailsFIlter';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'Reports/POReportGenerationDetailsFIlter';
+                }
+
+                url1 += "?AllProjectID=" + AllProjectID;
+                url1 += "&ReportType=" + ReportType;
+                url1 += "&GroupTye=" + GroupTye;
+                url1 += "&AllVendorID=" + AllVendorID;
+                url1 += "&From_Date=" + From_Date;
+                url1 += "&To_date=" + To_date;
+                url1 += "&InvoiceStatus=" + InvoiceStatus;
+                url1 += "&OrderPattern=" + OrderPattern;
+            }
+            else {
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/Reports/POReportGenerationSummeryFIlter';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'Reports/POReportGenerationSummeryFIlter';
+                }
+                url1 += "?AllProjectID=" + AllProjectID;
+                url1 += "&ReportType=" + ReportType;
+                url1 += "&GroupTye=" + GroupTye;
+                url1 += "&AllVendorID=" + AllVendorID;
+                url1 += "&From_Date=" + From_Date;
+                url1 += "&To_date=" + To_date;
+                url1 += "&InvoiceStatus=" + InvoiceStatus;
+                url1 += "&OrderPattern=" + OrderPattern;
+            }
+            $(obj).html('<i class="fa fa-spinner"></i>');
+            var totdata = '';
+            $.get(url1)
+               .success(function (response) {
+                   //var html = "";
+                   //var url2 = '';
+                   if (response == '0') {
+                       notify('No records found!!!');
+                       return;
+                   }
+
+                   if (LOCALORSERVERNEW == 'LOCAL') {
+                       totdata = response;
+                   }
+                   else if (LOCALORSERVERNEW == 'SERVER') {
+                       totdata = "POMS/" + response;
+                   }
+                   setTimeout(function () {
+                       window.open(totdata, '_blank');
+                       $(obj).html('<i class="fa fa-file-pdf-o"></i> Export to PDF');
+                   }, 1000);
+               });
+        }
+
+    </script>
+
+
+
+</body>
+
+</html>

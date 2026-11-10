@@ -1,0 +1,573 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Contact List</title>
+
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <script src="~/Scripts/Vendorpage.js"></script>
+
+    <script src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
+
+       <script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+    @*<script src="~/Scripts/editor_plugin.js"></script>*@
+    <script src="~/Scripts/tinymce/js/tinymce/plugins/textcolor/plugin.min.js"></script>
+
+    <style>
+        table.fixedHeader-floating {
+            top: 53px !important;
+            position: fixed !important;
+            background-color: white;
+            zoom:0.95;
+        }
+
+            table.fixedHeader-floating.no-footer {
+                border-bottom-width: 0;
+            }
+
+        table.fixedHeader-locked {
+            position: absolute !important;
+            background-color: white;
+        }
+
+
+        .leftaligned {
+            text-align: left;
+        }
+
+        .widercolumn {
+            width: 110px !important;
+        }
+    </style>
+
+    <style>
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        .ui-multiselect {
+            width: 100% !important;
+            /*color: rgb(195, 16, 1) !important;*/
+            height: 25px !important;
+            margin-top: 0px !important;
+        }
+
+        label {
+            color: #333333;
+            font-weight: 500;
+        }
+
+        #txt_VendorName, #txt_CurrencyCode, #txt_VendorCO {
+            height: 25px;
+            padding: 2px;
+        }
+    </style>
+
+    <style type="text/css">
+
+        
+
+
+        .display_none {
+            display: none;
+        }
+
+        #example .re_activate_new {
+            width: auto;
+            height: auto;
+            float: left;
+            color: #FFF;
+            background: #000000;
+            padding: 8px 18px;
+            margin-top: 6px;
+            border: 0;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 12px;
+            margin-bottom: 44px;
+        }
+    </style>
+
+    
+</head>
+<body>
+
+    <div id="sendmailvendor" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Choose Contacts</h4>
+                </div>
+                <div class="modal-body">
+                    <table id="example2" class="display  compact" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                              
+
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                   
+                    <button type="button" onclick="mailcheck();" >Select and Proceed</button>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+    <div id="sendmailvendortemplate" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Send Mail</h4>
+                </div>
+                <div class="modal-body">
+
+                       <div class="row mrg15T">
+
+                            <div class="col-sm-3">
+                                Add Dynamic field :
+                            </div>
+                            <div class="col-sm-6">
+                                <select class="form-control" onchange="setdynamicfieldformailnewuser(this);">
+                                    <option value="0">---Select---</option>
+                                    <option value="1">Log In Link</option>
+                                    <option value="USERNAME">User Name</option>
+                                    <option value="USEREMAIL">User Email</option>
+                                    <option value="USERPASSWORD">Password</option>                                    
+                                                                        
+                                </select>
+                            </div>
+
+                        </div>
+
+                    <div class="row mrg15T">
+
+                        <div class="col-sm-3">
+                            To :
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="pomailtos" disabled="disabled" />
+                        </div>
+                         <div class="col-sm-3">
+                             <p id="mailcount__tot" class="mrg5T"></p>
+                             </div>
+
+                    </div>
+
+
+                        <div class="row mrg15T">
+
+                            <div class="col-sm-3">
+                               Subject :
+                            </div>
+                            <div class="col-sm-6">
+                               <input type="text" class="form-control" id="newusersubject" />
+                            </div>
+
+                        </div>
+
+
+                        <div class="row mrg15T">
+                            <div class="col-sm-12">
+                                <textarea rows="6" class="form-control no-resize" id="newusermail"></textarea>
+
+                            </div>
+                        </div>
+
+
+  
+                    
+
+                </div>
+                <div class="modal-footer">
+                    <span id="mailsenderloader"></span>
+                    <button type="button" onclick="sendfinalmail();">Send Mail</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" id="angulardiv" style="zoom:0.95;">
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header">Vendor Contacts</h3>
+            </div>
+        </div>
+
+        <div class="row displaynone">
+
+            <div class="col-sm-6">
+                <button class="btn btn-block btn-primary" onclick="sendmailall();"><i class="fa fa-users mrg5R"></i>Send Mail To Active Users</button>
+            </div>
+
+        </div>
+
+        <div class="row mrg15T">
+            <div class="col-sm-12">
+                <table id="example" class="display  compact" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th style="width:5%;" class="leftposition"></th>
+                            <th  style="width:5%;"></th>
+                            <th  style="width:5%;"></th>
+                            <th style="width:310px;"></th>
+                            <th style="width:210px;"></th>
+                            <th style="width:16%;"></th>
+                            <th style="width:12%;"></th>
+                            <th style="width:12%;"></th>
+                            <th style="width:12%;"></th>
+                            <th></th>
+                            <th style="width:8%;"></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+</body>
+<script>
+
+    function sendmailall() {
+
+        $('#sendmailvendor').modal('show');
+
+
+    }
+
+
+    function createVcard(obj) {
+        var cid = $(obj).attr('data-cid');
+
+
+
+        var urltemp = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            urltemp = '/Vendor/generateVcardDynamically';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            urltemp = 'Vendor/generateVcardDynamically';
+        }
+
+
+        $.ajax({
+            type: "POST",
+            datatype: "text",
+            contentType: "application/json; charset=utf-8",
+            url: urltemp,
+            async: false,
+            data: "{ \"contactid\" : \"" + cid + "\"}",
+            success: function (data) {
+
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    urltemp = '/Assets/VendorFiles/';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    urltemp = 'Assets/VendorFiles/';
+                }
+
+                urltemp += data;
+
+                var htm = "<a class='downloadvcardlink' target='_blank' href='" + urltemp + "'>"
+                        + "<i title='Download VCard' class='fa fa-download mrg5L' style='cursor:pointer;font-size: 14px;color: #7792AE;'></i>"
+                        + "</a>";
+
+                var tdcurr = $(obj).parent();
+
+                $(tdcurr).find('.downloadvcardlink').remove();
+
+
+                //$(obj).remove();
+                $(tdcurr).append(htm);
+
+                notify("VCard Created click to download on the link button " + htm, "green");
+
+            }
+        });
+
+
+
+
+
+
+    }
+
+
+    function mailcheck() {
+
+
+        var mailid = "";
+
+
+        $('.mailcheck').each(function () {
+
+
+
+            if ($(this).is(':checked')) {
+                if ($(this).attr('data-email').trim() != "") {
+                    mailid += mailid == "" ? $(this).attr('data-email') : ',' + $(this).attr('data-email');
+                }
+            }
+
+        });
+
+        if (mailid == "") {
+            notify("Select User first");
+            return;
+        }
+
+
+        $('#sendmailvendortemplate').modal('show');
+        $('#pomailtos').val(mailid);
+
+        $('#mailcount__tot').text('(' + mailid.split(',').length + ' Selected)');
+
+        $('#sendmailvendor').modal('hide');
+    }
+
+
+    function checkuncheckallmail(obj) {
+
+        if ($(obj).is(':checked')) {
+           
+            $('.mailcheck').prop('checked', true);
+        }
+        else {
+
+            $('.mailcheck').prop('checked', false);
+        }
+
+    }
+
+    $(document).ready(function () {
+
+        getmailbody('NEWUSERMAIL');
+
+    });
+
+
+    function getmailbody(mode) {
+
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/SystemAdmin/getMailContent';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'SystemAdmin/getMailContent';
+        }
+
+        $.ajax({
+            type: "POST",
+            url: url1,
+            data: "{ \"mode\" : \"" + mode + "\"}",
+            async: false,
+            dataType: 'text',
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+
+                var subject = response.split('!##!')[1];
+
+                response = unescape(response.split('!##!')[0]);
+
+
+                //console.log(response);
+
+                if (mode == 'NEWUSERMAIL') {
+
+                    $('#newusersubject').val(subject);
+                    $('#newusermail').text(response);
+
+                    tinymce.init({
+                        selector: "#newusermail",
+                        plugins: "textcolor,fullscreen,image",
+                        toolbar: "image | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent| forecolor backcolor"
+                        , menubar: false
+                        , height: "250px"
+                        , image_list: [
+    { title: 'Logo 1', value: '/images/BridgeLogo6-darker2.png' },
+
+                        ]
+                    });
+
+
+                }
+
+            },
+            error: function (error) {
+
+            }
+        });
+
+
+    }
+
+    function setdynamicfieldformailnewuser(obj) {
+        var vl = $(obj).val();
+
+        if (vl == '1') {
+           
+            var url = "THESERVERLINKBASEURLLOGIN";
+            tinymce.activeEditor.execCommand('mceInsertContent', true, "<a data-mce-href=\"" + url + "\" href=\"" + url + "\"><input type='button' style='border-radius: 4px;color: white;background: grey;cursor: pointer;' value='Log In' /></a>");
+        }
+        else if (vl != '0') {
+            insertTextAtCursor(vl);
+        }
+
+    }
+
+    function insertTextAtCursor(text) {
+        tinymce.activeEditor.execCommand('mceInsertContent', true, "<a><<\(" + text + "\)>></a>");
+    }
+
+    function sendfinalmail() {
+
+        var pomailtos = $('#pomailtos').val();
+     
+        for (var i = 0; i < pomailtos.split(',').length; i++) {
+            $('#mailsenderloader').html('Sending to ' + pomailtos.split(',')[i]);
+           
+               
+          
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/Vendor/VendorMailSend';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'Vendor/VendorMailSend';
+                }
+
+
+                BODY = tinyMCE.activeEditor.getContent();//$('#vendormail').val();
+
+                var subject = $('#newusersubject').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    data: "{ \"mailid\" : \"" + pomailtos.split(',')[i] + "\",\"body\" : \"" + escape(BODY) + "\",\"Subject\" : \"" + subject + "\"}",
+                    async: false,
+                    dataType: 'text',
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        $('#mailsenderloader').html("Sending mail");
+                       
+                    },
+                    error: function (error) {
+                        //alert("errror");
+                    }
+                });
+
+
+
+        }
+
+       // $('#mailsenderloader').html("Sent to " + i);
+        window.setTimeout(function () {
+            $('#mailsenderloader').html("");
+        }, 2000);
+
+        window.setTimeout(function () {
+            $('#sendmailvendortemplate').modal('hide');
+        }, 1500);
+
+        
+
+    }
+
+    function openmailpopup(obj) {
+
+        var mailid = $(obj).attr('data-email');
+
+        $('#sendmailvendortemplate').modal('show');
+        $('#pomailtos').val(mailid);
+
+       // $('#mailcount__tot').text('(' + mailid.split(',').length + ' Selected)');
+
+       // $('#sendmailvendor').modal('hide');
+
+
+    }
+
+</script>
+
+
+</html>

@@ -1,0 +1,1511 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    <title>EditVendor</title>
+
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+
+    @*<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />*@
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+
+
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <script src="~/Scripts/Vendorpage.js"></script>
+
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+    
+
+
+    <style type="text/css">
+
+       
+
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        .display_none {
+            display: none;
+        }
+
+        .user_panel_container select {
+            padding: 7px 1%;
+        }
+    </style>
+
+    <style type="text/css">
+        .display_none {
+            display: none;
+        }
+
+        .user_panel_container {
+            padding: 0px 0px 0px 0px;
+        }
+
+            .user_panel_container label {
+                padding: 8px 0px 4px;
+            }
+
+        .edit_vendor_full {
+            margin-bottom: 12px;
+        }
+    </style>
+
+
+    <style type="text/css">
+        #sidebar {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+        }
+        /*#sidebar ul { background: #eee; padding: 10px; }*/
+        /*li { margin: 0 0 0 20px; }*/
+    </style>
+
+
+
+    <script type="text/javascript">
+        $(function () {
+
+
+            var bs = $('#bridgesupporter').val();
+            if (bs == '1') {
+                $('#chk_bridgesupporter').prop('checked', true);
+            }
+            var utype = $('#UserType').val();
+            if (utype != "3" && utype != "2" && utype != "1") {
+                $('#tcg_staff').remove();
+            }
+            else {
+
+                $('#tcg_staff').show();
+            }
+
+
+
+            var date = new Date();
+            var currentMonth = date.getMonth() + 1;
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+
+            currentMonth = currentMonth < 9 ? '0' + currentMonth : currentMonth;
+            currentDate = currentDate < 9 ? '0' + currentDate : currentDate;
+
+
+            //$('#To_Date').val(date.toDateString());
+            $('#To_Date').val(currentYear + '.' + currentMonth + '.' + currentDate);
+            //$('#Date_Range').val(new Date(currentYear, 0, 1).toDateString());
+
+            var date = new Date(currentYear, 1, 1);
+            currentMonth = date.getMonth();
+            currentDate = date.getDate();
+            currentYear = date.getFullYear();
+
+            currentMonth = currentMonth < 9 ? '0' + currentMonth : currentMonth;
+            currentDate = currentDate < 9 ? '0' + currentDate : currentDate;
+
+            $('#Date_Range').val(currentYear + '.' + currentMonth + '.' + currentDate);
+
+
+            $('#Date_Range').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy.mm.dd'
+                , onSelect: function () {
+                    FetchDate();
+                }
+            });
+            $('#To_Date').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy.mm.dd',
+                onSelect: function () {
+                    FetchDate();
+                }
+            });
+            FetchDate();
+        });
+        function ResetSearch() {
+            var table = $('#ProjectList').DataTable();
+            $('.srch').each(function () {
+                this.value = '';
+                var indx = $(this).attr('data-indx');
+                var txt = this.value;
+                table
+                       .column(indx)
+                       .search(txt)
+                       .draw();
+            });
+        }
+        function FetchDate() {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Vendor/GetProject';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Vendor/GetProject';
+            }
+            var dataTable = "";
+            var dt = "";
+            var us = new Array();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'From': '" + $('#Date_Range').val() + "', 'Todate': '" + $('#To_Date').val() + "','VenderID':'" + $('#Vendorid').val() + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+                    if (data != '') {
+                        dt = data.data;
+                        //if (dt.length == 0) {
+                        //    return;
+                        //}
+
+                        var tot = 0;
+                        var curr;
+
+                        $('#ProjectList').dataTable().fnDestroy();
+                        if (dt.length >= 0) {
+                            for (i = 0; i < dt.length; i++) {
+
+                                var amnt = parseFloat(dt[i].Total).toFixed(2);
+                                var amnt2 = numberWithCommas(amnt) + ' ' + ($('#Ddl_Currency :selected').attr('data-currencycode') == undefined ? "" : $('#Ddl_Currency :selected').attr('data-currencycode'));
+
+                                us[i] = new Array();
+                                us[i][0] = '<a href="javascript:void(0);" onclick="Click(' + dt[i].ProjectID + ',' + $('#Vendorid').val() + ')" >' + dt[i].ProjectNumber + '</a>';
+                                us[i][1] = dt[i].ProjectName;
+                                us[i][2] = amnt2;
+
+                                tot += parseFloat(dt[i].Total).toFixed(2);
+
+                                curr = $('#Ddl_Currency :selected').attr('data-currencycode') == undefined ? "" : $('#Ddl_Currency :selected').attr('data-currencycode');
+                                $("#TotalValues").val(dt[i].TotalProjectValues)
+                            }
+                            $('#ProjectList').dataTable({
+                                "processing": true,
+                                "data": us,
+                                "drawCallback": function (settings) {
+                                    var ttot = 0;
+                                    var currcode = '';
+                                    $('#ProjectList tbody tr').each(function () {
+                                        var vl = 0;
+
+                                        if ($(this).find('td:eq(2)').html() != undefined) {
+
+                                            vl = replaceAll($(this).find('td:eq(2)').html().split(' ')[0], ',', '');
+                                            currcode = $(this).find('td:eq(2)').html().split(' ')[1];
+                                        }
+
+                                        ttot += parseFloat(vl);
+
+                                    });
+
+                                    $('#ProjectList thead').find('tr:eq(1)').find('th:eq(2)').html(numberWithCommas(ttot) + ' ' + currcode)
+                                    
+                                },
+                                "columns":
+                                  [
+                                    { "title": "Project","class" : "leftposition" },
+                                    { "title": "Name", "class": "leftposition" },
+                                    { "title": "Amount", "class": "rightposition" },
+                                  ],
+                                "initComplete": function () {
+
+                                    
+
+
+
+                                    $('#ProjectList thead').find('tr:eq(1)').remove();
+                                    $('#ProjectList thead').find('tr:eq(0)').find('th:eq(0)').removeClass('sorting_asc');
+                                    $('#ProjectList_filter').remove();
+                                    $('#ProjectList_length').remove();
+
+                                }
+                            });
+                            var html = "";
+
+                            curr = curr == undefined ? '' : curr;
+                            html = "<tr>"
+                                  + "<th class='leftposition' rowspan='1' colspan='1'><input class='srch' style='width:100%; padding: 2px 2%;font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='0' type='text'></th>"
+                                  + "<th class='leftposition' rowspan='1' colspan='1'><input class='srch' style='width:100%; padding: 2px 2%;font-family:Arial, FontAwesome' placeholder=' &#xF002;' data-indx='1' type='text'></th>"
+                                  + "<th class='rightposition'>" + numberWithCommas(tot) + ' ' + curr + "</th>"
+                                  + "</tr>";
+                            // $('#ProjectList thead').find('tr:eq(0)').append(html);
+                            $('#ProjectList thead').append(html);
+                            var table = $('#ProjectList').DataTable();
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+                                table
+                                       .column(indx)
+                                       .search(txt)
+                                       .draw();
+                            });
+                        }
+                        else {
+                        }
+                    }
+                }
+            })
+        }
+        function Click(ProjectID, VendorID) {
+            //window.location.href = "/Vendor/SearchPoList?ProjectID=" + ProjectID + "&VendorID=" + VendorID + "&Status=Singal";
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Purchaseorder/POList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Purchaseorder/POList';
+            }
+
+            url += "?id=" + ProjectID + "&VendorID=" + VendorID + "&Status=Signal";
+            //window.location.href = url;
+            window.open(url);
+
+
+        }
+        function Popup() {
+            $('#popupforTaxComment2').modal('show');
+        }
+
+        function MergeVendor() {
+
+            var vendorID = $('#Vendorid').val();
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Vendor/MergeVendor';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Vendor/MergeVendor';
+            }
+            url += "/" + vendorID;
+            window.location.href = url;
+        }
+
+    </script>
+    <style>
+        .form-control {
+            height: 25px;
+        }
+        select {
+            padding: 0px !important;
+        }
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        .ui-multiselect {
+            width: 100% !important;
+            /*color: rgb(195, 16, 1) !important;*/
+            height: 25px !important;
+            margin-top: 0px !important;
+        }
+
+        label {
+            color: #333333;
+            font-weight: 500;
+        }
+    </style>
+
+    <style>
+
+       .col-sm-6 .col-sm-12{
+    padding : 0px !important;
+}
+
+
+         .col-sm-6 .col-sm-4{
+    padding : 0px !important;
+}
+         
+       .col-sm-2 .col-sm-12{
+    padding : 0px !important;
+}
+
+    </style>
+</head>
+<body>
+    <input type="hidden" value="@ViewBag.Vendorid" id="Vendorid111" />
+
+
+    <input type="hidden" value="@ViewBag.VendorEditPermission" id="editpermission" />
+
+    <input type="hidden" value="@ViewBag.Vendorid" id="Vendorid" />
+    <input type="hidden" value="@ViewBag.UserType" id="UserType" />
+    <input type="hidden" value="@ViewBag.IsBridgeSupporter" id="bridgesupporter" />
+
+
+
+    <div class="container-fluid" id="angulardiv" style="zoom: 0.95;" ng-app="vendor" ng-controller="vendor">
+        <div class="row displaynone">
+            <div class="col-sm-4">
+                <button class="btn btn-block btn-primary" onclick="MergeVendor();"><i class="fa fa-bars mrg5R"></i>Merge other vendor into this vendor</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header" style="margin-top:-20px;">
+                    Edit Vendor Information
+                    <label style="float: right; color: white; font-size: 20px;" class="mrg5L displaynone" for="txt_Actv">Active</label>
+                    <input type="checkbox" class="displaynone" id="txt_Actv" style="float: right;" ng-model="User.IsActive" />
+
+                </h3>
+            </div>
+        </div>
+
+        <div class="row" id="tcg_staff" style="display: none;">
+
+            <div class="col-sm-2">
+                <label id="TotalValues" style="width: auto; cursor: pointer;" onclick="Popup();"><u>YTD Purchases:</u> <span style="border: 1px solid #208093; padding: 1px;"><span id="Totvals">@ViewBag.TotalValues </span><span class="currshow"></span></span></label>
+                <input type="button" id="btn_YtdPchs" value="Click to get YTD Purchase History" style="display: none;" />
+            </div>
+
+            <div class="col-sm-5">
+                Invoice Terms: <select id="txt_Terms" ng-model="User.Terms_ID" style="width: 300px;">
+                    <option value="0">--Select Terms--</option>
+                    @Html.Raw(ViewData["getAllTerms"])
+                </select>
+            </div>
+            <div class="col-sm-2">
+
+                <span ng-hide="User.CreatedBy == ''">Created By:- {{User.CreatedBy}}</span>
+
+            </div>
+            <div class="col-sm-3" style="text-align: right;">
+
+                <label>
+                    <input id="chk_bridgesupporter" type="checkbox" />
+                    Bridge Supporter
+                </label>
+
+            </div>
+
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-sm-4">
+
+                <div class="col-sm-6 req">
+                    <label>Legal Name</label>
+                    <input type="text" id="txt_LegalName" onkeyup="buildcommonname();" ng-model="User.LglName" class="form-control text-uppercase" />
+                </div>
+
+                <div class="col-sm-6 req" style="padding-left:2px;padding-right:2px;">
+                    <label>Common Name</label>
+                    <input type="text" id="txt_Name" ng-model="User.Name" class="form-control text-uppercase" />
+                </div>
+
+                <div class="col-sm-6">
+                    <label>Address</label>
+                    <textarea id="txt_Addr" ng-model="User.Address1" style="height:70px;" class="form-control no-resize"></textarea>
+
+                    <label>City</label>
+                    <input type="text" id="txt_City" ng-model="User.City" class="form-control" />
+
+
+
+
+
+
+                </div>
+
+
+                <div class="col-sm-6">
+
+
+                    <div class="col-sm-12" style="padding-left:2px;padding-right:0px;">
+                        <label>Country</label>
+                        <select id="Ddl_Country" onchange="GetCtryID(this);" class="form-control">
+                            @Html.Raw(ViewData["GetAllCountry"])
+                        </select>
+                    </div>
+                    <div class="col-sm-12" style="padding-left:2px;padding-right:0px;">
+                        <label>State/Prov</label>
+                        <select id="Ddl_State" onchange="GetStateID(this);" class="form-control">
+                            <option value="0" name="ddlState_0">--Select State/Prov--</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12" style="padding-left:2px;padding-right:0px;">
+                        <label>Postal/Zip Code</label>
+                        <input type="text" class="postalcode form-control " id="txt_ZipCode" ng-model="User.ZipCode" />
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-sm-2" style="padding-left: 0px;padding-right: 1px;">
+                <div class="col-sm-12 req">
+                    <label>Currency</label>
+                    <select id="Ddl_Currency" class="form-control">
+                        @Html.Raw(ViewData["GetAllCurency"])
+                    </select>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="col-sm-12" style="padding-right:0px;    padding-left: 7px;width:200%;">
+                        <label>Internal Notes</label>
+                        <textarea rows="4" id="txt_VndrNotes" ng-model="User.Note" class="form-control no-resize" style="height: 115px;"></textarea>
+                    </div>
+
+                </div>
+
+
+                <div class="col-sm-12 displaynone">
+                    <label>Email address</label>
+                    <input type="text" id="txt_Email" ng-model="User.Email" class="form-control" />
+                </div>
+
+
+
+                <div class="col-sm-12 displaynone">
+                    <label>Phone</label>
+                    <input type="text" id="txt_Phone" ng-model="User.Contact" class="form-control" />
+                </div>
+
+
+
+                <div class="col-sm-12 displaynone">
+                    <label>Phone 2</label>
+                    <input type="text" id="txt_Phone2" ng-model="User.Contact2" class="form-control" />
+                </div>
+
+
+
+
+            </div>
+
+
+
+
+            <div class="col-sm-6" style="    padding-left: 5px;">
+
+                <div class="col-sm-12">
+                    <label>Classification</label>
+                    <select id="Ddl_Clftion" multiple="multiple" class="form-control" onchange="getselectedlistfirst(this);">
+                        @Html.Raw(ViewData["GetClassification"])
+                    </select>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group displaynone">
+                        <label>Website</label>
+                        <input type="text" id="txt_WebSiteUrl" ng-model="User.WebsiteURL" class="form-control" />
+                    </div>
+                    <div class="form-group displaynone">
+                        <label>Ext</label>
+                        <input type="text" id="txt_Extension" ng-model="User.Extension" class="form-control" />
+                    </div>
+                    <div class="form-group displaynone">
+                        <label>Fax</label>
+                        <input type="text" id="txt_Fax" ng-model="User.Fax" class="form-control" />
+                    </div>
+                </div>
+
+
+
+
+
+
+            </div>
+
+
+
+
+
+        </div>
+
+
+
+
+
+        <div class="user_panel_container" style="display: none;">
+            <label>Short Name</label>
+            <input type="text" id="txt_ShrtName" ng-model="User.ShrtName" />
+        </div>
+
+        <div class="row mrg5T">
+            <div class="col-sm-12">
+                <label>
+                    Minority Owned Business
+                    <input class="mrg5L" type="checkbox" id="Minority_checkEdit" />
+                </label>
+            </div>
+
+        </div>
+
+        <div class="row mrg5T">
+            <div class="col-sm-12">
+                <label>
+                    Women Owned Business
+                    <input class="mrg5L" type="checkbox" id="Woman_checkEdit" />
+                </label>
+            </div>
+
+        </div>
+
+        <div class="row mrg5T">
+            <div class="col-sm-12">
+                <label>
+                    Remit To address different than Main address
+                    <input class="mrg5L" onclick="r_chk(this);" type="checkbox" id="Remit_chk" />
+                </label>
+            </div>
+
+        </div>
+
+        <div class="row" id="r_div">
+
+            <div class="col-sm-4">
+
+
+
+                <div class="col-sm-6">
+                    <label>Address</label>
+                    <textarea id="Rtxt_Addr" ng-model="User.RAddress1" style="height:70px;" class="form-control no-resize"></textarea>
+
+                    <label>City</label>
+                    <input type="text" id="Rtxt_City" ng-model="User.RCity" class="form-control" />
+
+
+
+                </div>
+
+
+                <div class="col-sm-6">
+
+
+                    <div class="col-sm-12" style="padding-left:2px;padding-right:0px;">
+                        <label>Country</label>
+                        <select id="RDdl_Country" onchange="GetCtryID2(this);" class="form-control">
+                            @Html.Raw(ViewData["GetAllCountry"])
+                        </select>
+                    </div>
+                    <div class="col-sm-12" style="padding-left:2px;padding-right:0px;">
+                        <label>State/Prov</label>
+                        <select id="RDdl_State" onchange="GetStateID(this);" class="form-control">
+                            <option value="0" name="RddlState_0">--Select State/Prov--</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12" style="padding-left:2px;padding-right:0px;">
+                        <label>Postal/Zip Code</label>
+                        <input type="text" class="postalcode form-control " id="Rtxt_ZipCode" ng-model="User.RZipCode" />
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+
+
+
+        </div>
+
+
+
+        <div class="row mrg15T">
+            <div class="col-sm-9">
+                <h3 class="section-header" style="margin-bottom:0px;">{{User.Name}} Contacts</h3>
+            </div>
+        </div>
+
+        <div class="row mrg15T" id="angularContactsdiv">
+
+            <div class="col-sm-9">
+
+                <table id="ContactsUnderParentVndr" class="display  compact" cellspacing="0" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th style="width:5%"></th>
+                            <th style="width:5%"></th>
+                            <th style="width:5%"></th>
+
+                            <th></th>
+                            <th style="width:14%"></th>
+                            <th style="width:14%"></th>
+                            <th style="width:14%"></th>
+                            <th style="width:9%"></th>
+                            <th style="width:9%"></th>
+                            <th></th>
+                            <th style="width:5%"></th>
+                            <th style="width:10%"></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+        </div>
+
+        <div class="main_container">
+        </div>
+
+
+
+        <div id="popupforTaxComment2" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title centerposition">YTD Breakdown for {{User.Name}}</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+
+
+                            <div class="col-sm-6"> Date Range <input type="text" id="Date_Range" style="width: 157px" /></div>
+                            <div class="col-sm-6">To  <input type="text" id="To_Date" style="width: 150px;" /></div>
+
+
+
+                            <div class="col-sm-12">
+
+                                <table cellpadding="0" cellspacing="0" border="0" class="display" id="ProjectList" style="text-align: center;">
+                                    <thead>
+                                        <tr>
+                                            <th>Project Number</th>
+                                            <th>Project Name</th>
+                                            <th>Amount (Currency)</th>
+                                        </tr>
+                                    </thead>
+
+
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+        <div id="popupforTaxComment2" class="displaynone" style="width: 593px; transform: scale(0.70); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+            <span style="position: absolute; margin-left: 30%; font-size: 1.5em; color: #62A6B3; top: 5px;" id="ytdbrkdwn">YTD Breakdown for {{User.Name}}</span>
+            <span class="button b-close"><span>X</span></span>
+            <div class="main_container" style="margin-top: 35px;">
+                <div class="logo_container_heading"></div>
+
+                <div class="edit_vendor_full">
+                    <div class="edit_vendor_half">
+                        <div class="user_panel_container  req">
+                            <div style="float: left">
+                                <label>Date Range</label>
+                            </div>
+                            <div style="float: left; width: 187px">
+
+                            </div>
+                            <div style="float: left; width: 17px">
+                                <label>To</label>
+                            </div>
+                            <div style="float: left">
+
+                            </div>
+                        </div>
+                        <div class="user_panel_container">
+
+                            <div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+
+
+    <div class="float-panel-container foreditonly" >
+        <ul>
+            <li id="btn_EdtPrntVndr"><a href="javascript:void(0)"><i class="fa fa-save mrg5R" title="Save Vendor" data-toggle="tooltip"></i><span class="tooltip-toggle">Save Vendor</span></a></li>
+            <li data-id="@ViewBag.Vendorid" onclick="gotoaddcontact(this);"><a href="javascript:void(0)"><i title="New Contact" data-toggle="tooltip" class="fa fa-plus-square"></i><span class="tooltip-toggle">New Contact</span></a></li>
+            <li data-id="@ViewBag.Vendorid" onclick="MergeVendor();"><a href="javascript:void(0)"><i title="Merge Vendors" data-toggle="tooltip" class="fa fa-bars "></i><span class="tooltip-toggle">Merge Vendors</span></a></li>
+
+        </ul>
+    </div>
+
+
+
+    <script>
+        function gotoaddcontact(obj) {
+            var o = $(obj).attr("data-id");
+            var vname = $('#txt_Name').val();
+
+            var url1 = "";
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = "/adduser/vendorcontacts/";
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'adduser/vendorcontacts/';
+            }
+            url1 += o + "?" + vname;
+
+            window.location.href = url1;
+
+        }
+    </script>
+
+
+
+    <script type="text/javascript">
+
+        angular.module("vendor", [])
+            .controller("vendor", function ($http, $scope) {//,$rootscope
+
+
+
+                var url1 = "";
+
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = "/Vendor/GetParentVendorData";
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = '/Vendor/GetParentVendorData';
+                }
+                $scope.getData = function () {
+                }
+                var vendorID = $('#Vendorid').val();
+                if (vendorID == '' || vendorID == null || vendorID == 0) {
+
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        window.location.href = "/vendor/Allcontacts";
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        window.location.href = urlsuffix + '/vendor/Allcontacts';
+                    }
+                }
+                $http.get(url1 + "?id=" + vendorID)
+                    .success(function (response) {
+
+                        $scope.User = response;
+
+                       
+
+
+                        //$rootscope.User.Name = $scope.User.Name;
+                        //alert($scope.User);
+                        //console.log($scope.User);
+                        //alert($scope.User.Name);// = 'sss';
+                        //$scope.apply();
+                        $('#Ddl_Country').val($scope.User.Country);
+                        $('#RDdl_Country').val($scope.User.RCountry);
+                        //$('#Ddl_Country').change();
+
+
+                        var url5 = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url5 = '/adduser/getAllStateByCntryID';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url5 = 'adduser/getAllStateByCntryID';
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: url5,
+                            async: false,
+                            data: { 'CountryID': $scope.User.Country },
+                            success: function (data) {
+                                $('#Ddl_State').html(data);
+                                if (LOCALORSERVERNEW == 'LOCAL') {
+                                    url5 = '/adduser/GetAllCityByStateID';
+                                }
+                                else if (LOCALORSERVERNEW == 'SERVER') {
+                                    url5 = 'adduser/GetAllCityByStateID';
+                                }
+                                //$.ajax({
+                                //    type: "POST",
+                                //    url: url5,
+                                //    async: false,
+                                //    data: { 'StateID': $scope.User.State },
+                                //    success: function (data) {
+                                //        $('#txt_City').html(data);
+                                //        //$('#txt_City').html(data);
+                                //    },
+                                //    error: function () {
+                                //        alert('Failed!!!');
+                                //    }
+                                //});
+                            },
+                            error: function () {
+                                alert('Failed');
+                            }
+                        });
+
+                        $('#Ddl_State').val($scope.User.State);
+
+
+                        var url6 = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url6 = '/adduser/getAllStateByCntryID';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url6 = 'adduser/getAllStateByCntryID';
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: url6,
+                            async: false,
+                            data: { 'CountryID': $scope.User.RCountry },
+                            success: function (data) {
+                                $('#RDdl_State').html(data);
+                                if (LOCALORSERVERNEW == 'LOCAL') {
+                                    url5 = '/adduser/GetAllCityByStateID';
+                                }
+                                else if (LOCALORSERVERNEW == 'SERVER') {
+                                    url5 = 'adduser/GetAllCityByStateID';
+                                }
+                                //$.ajax({
+                                //    type: "POST",
+                                //    url: url5,
+                                //    async: false,
+                                //    data: { 'StateID': $scope.User.State },
+                                //    success: function (data) {
+                                //        $('#txt_City').html(data);
+                                //        //$('#txt_City').html(data);
+                                //    },
+                                //    error: function () {
+                                //        alert('Failed!!!');
+                                //    }
+                                //});
+                            },
+                            error: function () {
+                                alert('Failed');
+                            }
+                        });
+
+                        $('#RDdl_State').val($scope.User.RState);
+                        $('#txt_City').val($scope.User.City);
+                        $('#Rtxt_City').val($scope.User.RCity);
+
+                        if ($scope.User.R_Flag == '1') {
+                            $('#r_div').show();
+                            $('#Remit_chk').prop('checked', 'checked');
+
+                        }
+                        else {
+                            $('#r_div').hide();
+
+                        }
+
+
+                        if ($scope.User.Minority == '1') {
+                            $('#Minority_checkEdit').prop('checked', true);
+                        }
+                        else {
+                            $('#Minority_checkEdit').prop('checked', false);
+                        }
+
+                        if ($scope.User.Woman == '1') {
+                            $('#Woman_checkEdit').prop('checked', true);
+                        }
+                        else {
+                            $('#Woman_checkEdit').prop('checked', false);
+                        }
+
+                        //setTimeout(function () {
+                        //    //alert($scope.User.State);
+                        //    $('#Ddl_State').val($scope.User.State);
+                        //    $('#Ddl_State').change();
+                        //}, 200);
+
+                        //setTimeout(function () {
+
+                        //    $('#txt_City').val($scope.User.City);
+                        //    $('#txt_City').change();
+                        //}, 500);
+
+                        //$('#Ddl_Clftion').val($scope.User.Country);
+                        $('#Ddl_Currency').val($scope.User.Currency);
+                        $('.currshow').text($('#Ddl_Currency :selected').attr('data-currencycode'));
+                        // alert($scope.User.IsActive);
+                        if ($scope.User.IsActive == '1') {
+                            $('#txt_Actv').prop('checked', true);
+                        }
+                        else {
+                            $('#txt_Actv').prop('checked', false);
+                        }
+
+                       
+
+
+                    });
+
+
+
+            });
+
+        
+
+    </script>
+    <script type="text/javascript">
+        angular.module("vendornotes", [])
+           .controller("vendornotes", function ($http, $scope) {
+
+           });
+    </script>
+    <script type="text/javascript">
+        angular.module("vendorContacts", [])
+           .controller("vendorContacts", function ($http, $scope) {
+
+           });
+
+    </script>
+
+    <script type="text/javascript">
+
+        function numberWithCommas(x) {
+            var parts = x.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
+
+        function clickContactsUnderParentVndr() {
+
+            $(document).ready(function () {
+
+               
+
+                var canedit = $('#editpermission').val();
+
+                if (canedit != "1")
+                {
+                    $('input').each(
+                        function () {
+
+                            $(this).attr('disabled', 'disabled');
+                            $(this).removeAttr('onclick');
+                           
+                        }
+                        );
+                    $('textarea').attr('disabled', 'disabled');
+                    $('select').attr('disabled', 'disabled');
+                    $('.foreditonly').remove();
+
+                }
+
+                var url2 = '';
+                var ParentvendorID = $('#Vendorid').val();
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url2 = '/Vendor/getContactsByVndrID';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url2 = '/Vendor/getContactsByVndrID';
+                }
+                var fulldata;
+               
+                $.get(url2 + "?id=" + ParentvendorID)
+                   .success(function (response) {
+                       fulldata = JSON.parse(response);
+
+                       uscontactdata = fulldata.data;
+
+                       for (i = 0; i < uscontactdata.length ; i++) {
+                           uscontact[i] = new Array();
+                           //uscontact[i][0] = uscontactdata[i].Vendor_ID;
+                           //uscontact[i][1] = uscontactdata[i].VendorName;
+                           //uscontact[i][2] = uscontactdata[i].ContactTitle;
+                           ////uscontact[i][3] = uscontactdata[i].IsActive;
+                           //uscontact[i][3] = uscontactdata[i].Country;
+                           //uscontact[i][4] = uscontactdata[i].State;
+                           //uscontact[i][5] = uscontactdata[i].Address1;
+                           //uscontact[i][6] = uscontactdata[i].City;
+                           //uscontact[i][7] = uscontactdata[i].ZipCode;
+                           //uscontact[i][8] = uscontactdata[i].Phone;
+                           //uscontact[i][9] = uscontactdata[i].Fax;
+                           //uscontact[i][10] = uscontactdata[i].Email;
+                           ////uscontact[i][12] = uscontactdata[i].Website;
+                           //uscontact[i][11] = uscontactdata[i].IsHidden;
+                           ////uscontact[i][14] = uscontactdata[i].UserId;
+                           //uscontact[i][12] = uscontactdata[i].IsSystemUser;
+                           //uscontact[i][13] = uscontactdata[i].IsVendorLoginSent;
+                           //uscontact[i][14] = uscontactdata[i].Username;
+
+
+                           uscontact[i][0] = uscontactdata[i].Vendor_ID;
+
+
+                           if (uscontactdata[i].IsSystemUser == "YES") {
+                              
+
+                               if (uscontactdata[i].IsActive == "1") {
+                                   uscontact[i][1] = '<p class="fa fa-check-circle re_activate1"  btn_activate' + uscontactdata[i].Vendor_ID + ' id="IF' + uscontactdata[i].Vendor_ID + '" style="display:block;cursor:pointer;" onclick="ActivateDeactivateContact(this,\'' + uscontactdata[i].Vendor_ID + '\',\'0\');" data-id="' + uscontactdata[i].Vendor_ID + '" ></p>';
+                               }
+                               else {
+                                   uscontact[i][1] = '<p class="fa fa-times-circle de_activate1 btn_activate 1"   id="IIF' + uscontactdata[i].Vendor_ID + '" style="cursor:pointer;" onclick="ActivateDeactivateContact(this,\'' + uscontactdata[i].Vendor_ID + '\',\'1\');" data-id="' + uscontactdata[i].Vendor_ID + '"></p> ';
+                               }
+
+
+
+                           }
+                           else {
+                               uscontact[i][1] = "";
+                           }
+
+                           if (uscontactdata[i].IsHidden == 'NO') {
+                               uscontact[i][2] = 'N'
+                           }
+                           else {
+                               uscontact[i][2] = 'Y'
+                           }
+
+                           uscontact[i][3] = uscontactdata[i].ParentVendorName;
+                           uscontact[i][4] = uscontactdata[i].VendorName;
+                           uscontact[i][5] = uscontactdata[i].ContactTitle;
+                           uscontact[i][6] = "<a href='mailto:" + uscontactdata[i].Email + "'>" + uscontactdata[i].Email + "</a>";
+
+                           uscontact[i][7] = uscontactdata[i].City;
+                           uscontact[i][8] = uscontactdata[i].Phone;
+                           uscontact[i][9] = uscontactdata[i].Fax;
+                           uscontact[i][10] = uscontactdata[i].Extension;
+                           uscontact[i][11] = uscontactdata[i].Mobile;
+
+
+
+
+
+
+                           uscontact[i][12] = uscontactdata[i].IsActive;
+                           //uscontact[i][10] = uscontactdata[i].Email;
+                           //uscontact[i][11] = uscontactdata[i].IsHidden;
+                           //uscontact[i][12] = uscontactdata[i].IsSystemUser;
+                           //uscontact[i][13] = uscontactdata[i].IsVendorLoginSent;
+                           //uscontact[i][14] = uscontactdata[i].Username;
+                       }
+                       $('#ContactsUnderParentVndr').dataTable({
+                           "processing": true,
+                           "data": uscontact
+                           , "columns": [
+
+                               { "title": "Vendor_ID", "class": "leftposition" },
+                               { "title": "Active", "class": "leftposition" },
+                               { "title": "Hidden", "class": "leftposition" },
+                               { "title": "Vendor", "class": "displaynone" },
+                               { "title": "Contact", "class": "leftposition" },
+                               { "title": "Title", "class": "leftposition" },
+                                { "title": "E-mail", "class": "leftposition" },
+
+                               { "title": "City", "class": "leftposition" },
+                               { "title": "Phone", "class": "leftposition" },
+                               { "title": "Fax", "class": "displaynone" },
+                               { "title": "Ext", "class": "leftposition" },
+                               { "title": "Mobile", "class": "leftposition" },
+
+
+                               { "title": "", "class": "displaynone" },
+                           ]
+                           ,
+                           "initComplete": function () {
+
+                               if (uscontact.length > 0) {
+                                   RowHtmlRenderfrContcts();
+                               }
+                               if (canedit != "1") {
+                                   $('.delrow').addClass('displaynone');
+                               }
+                           },
+                           "aoColumnDefs": [
+                               { 'bSortable': false, 'aTargets': [0] }
+                           ]
+                       });
+                       var html = "";
+                       html = "<tr>"
+                             + "<th class='' rowspan='1' colspan='1'>"
+                             + "<a><input type='button' value='Reset' onclick='ResetContactSearch();' style='margin-bottom:6px;max-width:50px;' /></a>"
+                             + "</th>"
+                             + "<th rowspan='1' colspan='1'><select class='srch' style='max-width:50px;padding: 2px 2%;' data-indx='12'>"
+                             + "<option value=''>All</option><option value='1'>Active</option><option value='0'>InActive</option></select></th>"
+                             + "<th rowspan='1' colspan='1'><select class='srch' style='max-width:50px;padding: 2px 2%;' data-indx='2'>"
+                             + "<option value=''>All</option><option value='Y'>Yes</option><option value='N'>No</option></select></th>"
+
+                             + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%; padding: 2px 2%; font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;' data-indx='4'></th>"
+                             + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%; padding: 2px 2%; font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;' data-indx='5'></th>"
+                             + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%; padding: 2px 2%; font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;' data-indx='6'></th>"
+                             + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%; padding: 2px 2%; font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;' data-indx='7'></th>"
+                             + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%; padding: 2px 2%; font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;' data-indx='8'></th>"
+                             + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%; padding: 2px 2%; font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;' data-indx='10'></th>"
+                             + "<th rowspan='1' colspan='1'><input class='srch' style='width:100%; padding: 2px 2%; font-family:Arial, FontAwesome' type='text' placeholder=' &#xF002;' data-indx='11'></th>"
+
+
+                             + "</tr>";
+                       // html = "";
+                       $('#ContactsUnderParentVndr thead').append(html);
+                       var table = $('#ContactsUnderParentVndr').DataTable();
+                       $('.srch').on('keyup change', function () {
+                           var indx = $(this).attr('data-indx');
+
+                           var txt = this.value;
+
+                           table
+                                  .column(indx)
+                                  .search(txt)
+                                  .draw();
+                           if (indx == '12') {
+                               if (txt != '') {
+                                   $('#ContactsUnderParentVndr tbody tr').each(function (index, item) {
+
+                                       if ($(this).find("td:eq(1)").html() == '') {
+                                           $(this).hide();
+                                       }
+
+                                   });
+                               }
+                               else {
+                                   $('#ContactsUnderParentVndr tbody tr').each(function (index, item) {
+                                       $(this).show();
+
+                                   });
+                               }
+                           }
+                           RowHtmlRenderfrContctsNew();
+                       });
+                       $('.delrow').on('click', function () {
+
+                           var canedit = $('#editpermission').val();
+                           if (canedit == "0") {
+                               notify("You cant delete a vendor");
+                               return;
+                           }
+                           var c = confirm('Are you sure you want to delete?');
+                           var chk = false;
+                           if (c) {
+                               var obj = $(this).attr('data-id');
+                               var url = '';//"Vendor/DeleteVendorContact";
+                               if (LOCALORSERVERNEW == 'LOCAL') {
+                                   url = '../DeleteVendorContact/';
+                               }
+                               else if (LOCALORSERVERNEW == 'SERVER') {
+                                   url = 'Vendor/DeleteVendorContact/';
+                               }
+                               $.ajax({
+                                   type: "POST",
+                                   url: url,
+                                   async: false,
+                                   //dataType: "text",
+                                   //contentType: "application/json; charset=utf-8",
+                                   data: { 'VendorContactID': obj },
+                                   success: function (data) {
+                                       if (data == 'FAILED') {
+                                           alert('You cannot delete this Contact before adding one');
+                                           chk = false;
+                                           return;
+                                       }
+                                       if (data == 'FAILED 2') {
+                                           alert('You cannot delete this Contact as the Contact has POs');
+                                           chk = false;
+                                           return;
+                                       }
+                                       else {
+                                           chk = true;
+                                           var table = $('#ContactsUnderParentVndr').DataTable();
+                                           table
+                                           .row($(this).parents('tr'))
+                                           .remove()
+                                           .draw();
+                                           notify("Successfully deleted the contact", "green");
+                                           irrrrr = 0;
+                                           window.setTimeout(function () {
+                                               window.location.reload();
+                                           }, 3000);
+                                           // RowHtmlRenderfrContctsNew();
+                                       }
+                                   },
+                                   error: function () {
+                                       alert('Something went wrong.');
+                                   }
+                               });
+                               if (chk == true) {
+                                   var table = $('#ContactsUnderParentVndr').DataTable();
+                                   table
+                                   .row($(this).parents('tr'))
+                                   .remove()
+                                   .draw();
+                                   RowHtmlRenderfrContctsNew();
+                               }
+                           }
+                       });
+                   });
+
+
+
+            });
+        }
+
+        $(document).ready(function () {
+            clickContactsUnderParentVndr();
+
+            $('.paginate_button').live('click', function () {
+                RowHtmlRenderfrContctsNew();
+            });
+        });
+
+        function RowHtmlRenderfrContctsNew() {
+
+            $('#ContactsUnderParentVndr thead tr').find("th:eq(0)").html('Action').removeClass('sorting_asc');
+            $('#ContactsUnderParentVndr tbody tr').find("td:eq(0)").each(function () {
+                var zz = $(this).html();
+                //var yy = $(this).parent().find("td:eq(0)").html();
+
+
+                if ($(this).find('a').attr('data-id') == undefined) {
+                    zz = $(this).html();
+                }
+                else {
+                    zz = $(this).find('a').attr('data-id');
+                }
+                var deleteUrl = '';
+                var editUrl = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    deleteUrl = '../DeleteVendorContact/';
+                    editUrl = '../EditContact/';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    deleteUrl = 'Vendor/DeleteVendorContact/';
+                    editUrl = 'Vendor/EditContact/';
+                }
+               
+                if (zz != 'No matching records found') {
+                    
+                    var canedit = $('#editpermission').val();
+
+                    
+                    $(this).html('<a class="delrow" data-id="' + zz + '" onclick="event.preventDefault();" href="' + deleteUrl + zz + '"><i title="Delete Contact" class="fa fa-trash-o fa-fw" style="font-size: 1.5em;cursor:pointer;margin-left:5px;"></i></a><a href="' + editUrl + zz + '"><i title="Edit Contact" class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;margin-left:5px;"></i></a>');
+                    if (canedit != "1") {
+                        $('.delrow').addClass('displaynone');
+                    }
+                }
+
+            });
+
+            $('#ContactsUnderParentVndr').find("tr:eq(1)").find("th:eq(0)").html("<a><input type='button' value='Reset' onclick='ResetContactSearch();' style='margin-bottom:6px;' /></a>");
+        }
+        $(function () {
+            $('select[name="ContactsUnderParentVndr_length"]').live('change', function () {
+                // alert('hi');
+                RowHtmlRenderfrContctsNew();
+            });
+        });
+    </script>
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('#Totvals').text(numberWithCommas($('#Totvals').text()));
+
+
+        });
+
+        $(document).ready(function () {
+
+
+            $("#Ddl_Clftion").multiselect({ maxTextWrapSize: 90 }).multiselectfilter();
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-multiselect-menu').css('width', '400px');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+            getselectedlistfirst($("#Ddl_Clftion"));
+
+            var canedit = $('#editpermission').val();
+
+            if (canedit != "1") {
+                setTimeout(function () {
+                    $('.ui-multiselect-menu').remove();
+                }, 500);
+
+               
+            }
+
+
+
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        $("#Ddl_Currency").on("change", function () {
+
+
+            if ($("#Ddl_Currency").val() != '0') {
+                $("#txt_Name").val($("#txt_LegalName").val() + " (" + $("#Ddl_Currency option:selected").attr('data-currencycode') + ")");
+            }
+            else {
+                $("#txt_Name").val($("#txt_LegalName").val());
+            }
+        });
+
+        function buildcommonname() {
+            if ($("#Ddl_Currency").val() != '0') {
+                $("#txt_Name").val($("#txt_LegalName").val() + " (" + $("#Ddl_Currency option:selected").attr('data-currencycode') + ")");
+            }
+            else {
+                $("#txt_Name").val($("#txt_LegalName").val());
+            }
+        }
+
+        function getselectedlistfirst(obj) {
+            var list = $(obj).val();
+            var selected = '';
+            var not_selected = '';
+
+            if (list == null) { return; }
+            $(obj).find('option').each(function () {
+                var vl = $(this).val();
+                var cnt = 0;
+                for (var a = 0; a < list.length; a++) {
+                    if (vl == list[a]) {
+                        cnt++;
+                        continue;
+                    }
+                }
+                //console.log($(this)[0].outerHTML);
+
+
+                if (cnt == '0') {
+                    not_selected += $(this)[0].outerHTML.replace('selected=""', '').replace('selected', '');
+
+                }
+                else {
+                    selected += $(this)[0].outerHTML.replace('<option','<option selected');
+
+                }
+
+            });
+
+            $(obj).html(selected + not_selected);
+            window.setTimeout(function () {
+                $(obj).multiselect('refresh');
+
+                var width = '350px';
+                $('.ui-multiselect').css('width', width);
+                //$('.ui-multiselect-menu').css('width', '39.5%');
+                $('.ui-multiselect-menu').css('width', '400px');
+                $('.ui-state-default').css('color', '#C31001');
+                $('.ui-multiselect').css('height', '34px');
+                $('.ui-multiselect').css('margin-top', '5px');
+
+            }, 0);
+
+           
+
+
+
+        }
+
+        function r_chk(obj) {
+            if ($(obj).is(':checked')) {
+                $('#r_div').show();
+            }
+            else {
+                $('#r_div').hide();
+            }
+        }
+
+
+        $(document).ready(function () {
+            setTimeout(function () {
+                checkphone_global($('#txt_Phone'));
+                checkphone_global($('#txt_Phone2'));
+            },0);
+            
+        });
+    </script>
+
+</body>
+</html>

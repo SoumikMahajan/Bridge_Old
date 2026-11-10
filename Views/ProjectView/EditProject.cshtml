@@ -1,0 +1,2183 @@
+﻿@{    
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>View Project</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+
+    <script src="~/Scripts/jquery.autosize.js"></script>
+
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <script src="~/Scripts/AddUser.js"></script>
+    <script src="~/Scripts/ProjectView.js"></script>
+
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/swfupload.js"></script>
+    <script src="~/Scripts/jquery.swfupload.js"></script>
+
+
+
+
+    <link href="~/css/stylesForFileUpload.css" rel="stylesheet" />
+
+    <link href="~/css/Misc.css" rel="stylesheet" />
+
+
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+
+
+
+
+    <script type="text/javascript">
+        // var formData = new FormData();
+        var filedata = {};
+        var filedatacount = 0;
+        var filedata2 = {};
+        var filedatacount2 = 0;
+        var filedata3 = {};
+        var filedatacount3 = 0;
+        $(function () {
+            var formData = new FormData();
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/UploadFile/UploadWhenEdit';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'UploadFile/UploadWhenEdit';
+            }
+            url1 += "?id=1";
+            url1 = "";
+            $('#fileupload_Edt2').fileupload({
+                url: url1,
+                //redirect: url,
+                //replaceFileInput: false,
+                dataType: 'json',
+                send: function (e, data) {
+                    $('#fileupload_Edt2').parent().find('.filelist').text('Please Wait...');
+                    //$('#files2').text('Please Wait...');
+                },
+                progress: function (e, data) {
+                    //debugger
+                    // Update the progress bar while files are being uploaded
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress2 .bar').css(
+                            'width',
+                            progress + '%'
+                                            );
+                    // //console.log(progress);
+                },
+                done: function (e, data) {
+                    // //console.log(data);
+                    $('#fileupload_Edt2').parent().find('.filelist')
+                    if ($('#fileupload_Edt2').parent().find('.filelist').text() != 'Please Wait...') {
+                        $('#fileupload_Edt2').parent().find('.filelist').text($('#fileupload_Edt2').parent().find('.filelist') + ',' + data.result.name);
+                    }
+                    else {
+                        $('#fileupload_Edt2').parent().find('.filelist').text(data.result.name);
+                    }
+                }
+            });
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/UploadFile/UploadWhenEdit';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'UploadFile/UploadWhenEdit';
+            }
+            url1 += "?id=2";
+            url1 = "";
+            $('#fileupload_Edt').fileupload({
+                url: url1,
+                //redirect: url,
+                //replaceFileInput: false,
+                dataType: 'json',
+                send: function (e, data) {
+                    $('#files').text('Please Wait...');
+                },
+                progress: function (e, data) {
+                    //debugger
+                    // Update the progress bar while files are being uploaded
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .bar').css(
+                            'width',
+                            progress + '%'
+                                            );
+                    // //console.log(progress);
+                },
+                done: function (e, data) {
+                    // //console.log(data);
+                    if ($('#files').text() != 'Please Wait...') {
+                        $('#files').text($('#files').text() + ',' + data.result.name);
+                    }
+                    else {
+                        $('#files').text(data.result.name);
+                    }
+                }
+            });
+            //-------------------------------
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/UploadFile/UploadWhenEdit';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'UploadFile/UploadWhenEdit';
+            }
+            url1 += "?id=3";
+            url1 = "";
+            $('#fileupload_Edt3').fileupload({
+                url: url1,
+                //redirect: url,
+                //replaceFileInput: false,
+                dataType: 'json',
+                send: function (e, data) {
+                    // $('#files').text('Please Wait...');
+                    $('#fileupload_Edt3').parent().find('.filelist').text('Please Wait...');
+                },
+                progress: function (e, data) {
+                    //debugger
+                    // Update the progress bar while files are being uploaded
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .bar').css(
+                            'width',
+                            progress + '%'
+                                            );
+                    // //console.log(progress);
+                },
+                done: function (e, data) {
+                    //  //console.log(data);
+                    $('#fileupload_Edt3').parent().find('.filelist')
+                    if ($('#fileupload_Edt3').parent().find('.filelist').text() != 'Please Wait...') {
+                        $('#fileupload_Edt3').parent().find('.filelist').text($('#fileupload_Edt3').parent().find('.filelist') + ',' + data.result.name);
+                    }
+                    else {
+                        $('#fileupload_Edt3').parent().find('.filelist').text(data.result.name);
+                    }
+                }
+            });
+            //-------------------------------
+        });
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('textarea').autosize();
+
+            $('#txt_GST').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_PST').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_StateTax').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_InstallDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_CompletionDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_WareHouseReqDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            $('#txt_OpeningDate').bind('copy paste cut', function (e) {
+                e.preventDefault();
+            });
+
+            var Pid = $('#ProjectID').val();//1;
+            var url = '';
+            var url1 = '';
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Project/getProjectDetail';
+                url1 = '/Project/ProjectList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Project/getProjectDetail';
+                url1 = 'Project/ProjectList';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'ProjectID': Pid },
+                success: function (data) {
+                    if (data != '') {
+
+                        var val = jQuery.parseJSON(data);
+
+                        $('#txt_ProjectName').val(val.ProjectName);
+                        $('#txt_ProjectName').attr('disabled', 'disabled');
+                        $('#txt_LegalName').val(val.LegalName);
+                        $('#txt_LegalName').attr('disabled', 'disabled');
+                        $('#txt_InvAddr').val(val.InvAddress);
+                        $('#txt_InvAddr').attr('disabled', 'disabled');
+                        $('#Ddl_InvCountry').val(val.InvCountry);
+                        $('#Ddl_InvCountry').attr('disabled', 'disabled');
+
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = '/Project/getAllStateByCntryID';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'Project/getAllStateByCntryID';
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'CountryID': val.InvCountry },
+                            success: function (data) {
+                                if (data != null) {
+                                    $('#Ddl_InvState').html(data);
+                                    $('#Ddl_InvState').val(val.InvState);
+                                }
+                            }
+                        });
+
+                        $('#txt_InvCity').val(val.InvCity);
+                        $('#txt_InvCity').attr('disabled', 'disabled');
+                        $('#txt_InvZipCode').val(val.InvZipCode);
+                        $('#txt_InvZipCode').attr('disabled', 'disabled');
+                        $('#ddl_NoUserAppvBdgt').val(val.NoUserAppvBdgt);
+                        $('#ddl_NoUserAppvBdgt').attr('disabled', 'disabled');
+                        $('#ddl_NoUserAppvPO').val(val.NoUserAppvPO);
+                        $('#ddl_NoUserAppvPO').attr('disabled', 'disabled');
+                        $('#txt_Client').val(val.ClientID);
+                        $('#txt_Client').attr('disabled', 'disabled');
+                        $('#txt_Manager').val(val.ManagerID);
+                        $('#txt_Manager').attr('disabled', 'disabled');
+                        $('#txt_DevInfo').val(val.DevInfo);
+                        $('#txt_DevInfo').attr('disabled', 'disabled');
+                        $('#txt_HotelAddr').val(val.HotelAddr);
+                        $('#txt_HotelAddr').attr('disabled', 'disabled');
+                        $('#Ddl_HotelCountry').val(val.HotelCountry);
+                        $('#Ddl_HotelCountry').attr('disabled', 'disabled');
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'CountryID': val.HotelCountry },
+                            success: function (data) {
+                                if (data != null) {
+                                    $('#Ddl_HotelState').html(data);
+                                    $('#Ddl_HotelState').val(val.HotelState);
+                                }
+                            }
+                        });
+
+                        $('#txt_HotelCity').val(val.HotelCity);
+                        $('#txt_HotelCity').attr('disabled', 'disabled');
+                        $('#txt_HotelZipCode').val(val.HotelZipCode);
+                        $('#txt_HotelZipCode').attr('disabled', 'disabled');
+                        $('#txt_ProjectScope').val(val.ProjectScope);
+                        $('#txt_ProjectScope').attr('disabled', 'disabled');
+                        $('#txt_OwnerName').val(val.OwnerName);
+                        $('#txt_OwnerName').attr('disabled', 'disabled');
+                        $('#txt_OwnerAddr').val(val.OwnerAddr);
+                        $('#txt_OwnerAddr').attr('disabled', 'disabled');
+                        $('#Ddl_OwnerCountry').val(val.OwnerCountry);
+                        $('#Ddl_OwnerCountry').attr('disabled', 'disabled');
+                        $('#Ddl_InvState').attr('disabled', 'disabled');
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'CountryID': val.OwnerCountry },
+                            success: function (data) {
+                                if (data != null) {
+                                    $('#Ddl_OwnerState').html(data);
+                                    $('#Ddl_OwnerState').val(val.OwnerState);
+                                }
+                            }
+                        });
+
+                        $('#txt_OwnerCity').val(val.OwnerCity);
+                        $('#txt_OwnerCity').attr('disabled', 'disabled');
+                        $('#txt_OwnerZipCode').val(val.OwnerZipCode);
+                        $('#txt_OwnerZipCode').attr('disabled', 'disabled');
+                        $('#txt_OwnerContact').val(val.OwnerContact);
+                        $('#txt_OwnerContact').attr('disabled', 'disabled');
+                        $('#txt_OwnerNote').val(val.OwnerNote);
+                        $('#txt_OwnerNote').attr('disabled', 'disabled');
+                        $('#txt_OwnerFax').val(val.OwnerFax);
+                        $('#txt_OwnerFax').attr('disabled', 'disabled');
+                        $('#txt_OwnerEmail').val(val.OwnerEmail);
+                        $('#txt_OwnerEmail').attr('disabled', 'disabled');
+                        $('#txt_OwnerMobile').val(val.OwnerMobile);
+                        $('#txt_OwnerMobile').attr('disabled', 'disabled');
+                        $('#txt_AccountingContact').val(val.AccountingContact);
+                        $('#txt_AccountingContact').attr('disabled', 'disabled');
+                        $('#txt_AccountingPhone').val(val.AccountingPhone);
+                        $('#txt_AccountingPhone').attr('disabled', 'disabled');
+                        $('#txt_AccountingFax').val(val.AccountingFax);
+                        $('#txt_AccountingFax').attr('disabled', 'disabled');
+                        $('#txt_AccountingEmail').val(val.AccountingEmail);
+                        $('#txt_AccountingEmail').attr('disabled', 'disabled');
+                        $('#txt_FederalID').val(val.FederalID);
+                        $('#txt_FederalID').attr('disabled', 'disabled');
+
+                        $('#txt_AccountingPhoneExtension').attr('disabled', 'disabled');
+
+                        $('#txt_GST').val(val.GST.split('^')[0]);
+                        $('#txt_GST').attr('disabled', 'disabled');
+                        $('#txt_GSTLblShw').val(val.GST.split('^')[1]);
+                        $('#txt_GSTLblShw').attr('disabled', 'disabled');
+                        $('#txt_PST').val(val.PST.split('^')[0]);
+                        $('#txt_PST').attr('disabled', 'disabled');
+                        $('#txt_PSTLblShw').val(val.PST.split('^')[1]);
+                        $('#txt_PSTLblShw').attr('disabled', 'disabled');
+                        $('#txt_StateTax').val(val.StateTax.split('^')[0]);
+                        $('#txt_StateTax').attr('disabled', 'disabled');
+                        $('#txt_StateTxLblShw').val(val.StateTax.split('^')[1]);
+                        $('#txt_StateTxLblShw').attr('disabled', 'disabled');
+
+                        $('#ddl_CurrencyCode').val(val.CurrencyCode);
+                        $('#ddl_CurrencyCode').attr('disabled', 'disabled');
+
+
+                        var getDate = val.InstallDate;
+                        var indexCheck = getDate.indexOf('1900');
+
+                        if (indexCheck > 0) {
+                            $('#txt_InstallDate').val('');
+                        }
+                        else {
+                            $('#txt_InstallDate').val(val.InstallDate);
+                        }
+                        $('#txt_InstallDate').attr('disabled', 'disabled');
+                        getDate = val.CompletionDate;
+                        indexCheck = getDate.indexOf('1900');
+
+                        if (indexCheck > 0) {
+                            $('#txt_CompletionDate').val('');
+                        }
+                        else {
+                            $('#txt_CompletionDate').val(val.CompletionDate);
+                        }
+                        $('#txt_CompletionDate').attr('disabled', 'disabled');
+
+                        getDate = val.WareHouseReqDate;
+                        indexCheck = getDate.indexOf('1900');
+                        if (indexCheck > 0) {
+                            $('#txt_WareHouseReqDate').val('');
+                        }
+                        else {
+                            $('#txt_WareHouseReqDate').val(val.WareHouseReqDate);
+                        }
+
+                        $('#txt_WareHouseReqDate').attr('disabled', 'disabled');
+                        getDate = val.OpeningDate;
+                        indexCheck = getDate.indexOf('1900');
+
+                        if (indexCheck > 0) {
+                            $('#txt_OpeningDate').val('');
+                        }
+                        else {
+                            $('#txt_OpeningDate').val(val.OpeningDate);
+                        }
+
+                        $('#txt_OpeningDate').attr('disabled', 'disabled');
+
+                        $('#txt_ProjectCmt').val(val.ProjectCmt);
+                        $('#txt_ProjectCmt').attr('disabled', 'disabled');
+                        $('#txt_OwnerReqmnt').val(val.OwnerReportingRequirement);
+                        $('#txt_OwnerReqmnt').attr('disabled', 'disabled');
+
+                        $('#txt_PrchsOrdrCmmnts').val(val.PurchaseOrderComment);
+                        $('#txt_PrchsOrdrCmmnts').attr('disabled', 'disabled');
+
+
+                        //subham
+
+                        loadUploadedPics(val.InstallationFile, val.TermsFile, val.ProjectFile);
+
+
+                    }
+                    else if (data == '') {
+                        window.location.href = url1;
+                    }
+                }
+            });
+           
+           
+        });
+
+
+        function DelImage(obj) {
+            var confirmSt = confirm('Do You want to delete this file??');
+            if (confirmSt) {
+                $(obj).parent().remove();
+            }
+        }
+
+        function AvoidKeyPress(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            if (keyCode == 8) {
+                return true;
+            }
+            else {
+                alert('Use Calender');
+                return false;
+            }
+        }
+
+        function IsNumber(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            if ((keyCode > 47 && keyCode < 58) || (keyCode == 8) || (keyCode == 46)) {
+                return true;
+            }
+            else {
+                alert('Use Only Numeric value');
+                return false;
+            }
+        }
+
+        $(document).ready(function () {
+            var isseletcted = $('#Isselected').val();
+            if (isseletcted == "0") {
+
+                $("input[type='text']").attr("disabled", "disabled");
+                $("textarea").attr("disabled", "disabled");
+                $("select").attr("disabled", "disabled").css('background', 'rgb(235, 235, 228)');
+                $("#btn_UpdateProject").next("input[type='button']").remove();
+                $("#btn_UpdateProject").next("input[type='button']").remove();
+                $("#btn_UpdateProject").remove();
+                //$(".fileinput-button").remove();
+
+                $('#newcomment').removeAttr('disabled');
+                $('#Ddl_Clftion').removeAttr('disabled');
+
+
+
+
+
+            }
+
+        });
+
+    </script>
+
+    <style>
+        .ui-autocomplete {
+            cursor: pointer;
+            height: 120px;
+            overflow-y: scroll;
+        }
+    </style>
+
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+
+    @*Project comments part*@
+    <script type="text/javascript">
+        var allcomments;
+        var projectcomments;
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(function () {
+
+
+            // $("#Ddl_Clftion").multiselect();
+            loadprojectcomments();
+            //loadallcomments();
+
+            loadprojectaccounts();
+
+            $('#main_container').find('input, textarea, button, select').attr('disabled', 'disabled');
+
+        });
+
+        function loadallcomments() {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/getAllcomments';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/getAllcomments';
+            }
+            var pid = $('#ProjectID').val();
+
+            if (pid == '') {
+                return;
+            }
+
+
+
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'projectID' : '" + '' + "'}",
+                success: function (response) {
+                    ////console.log(response);
+                    response = JSON.parse(response);
+                    allcomments = response.data;
+
+                    createallcommentslist();
+
+                },
+                error: function () {
+                    alert('Something went wrong.');
+                }
+            });
+        }
+        function loadprojectcomments() {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/getAllcommentsproject';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/getAllcommentsproject';
+            }
+            var pid = $('#ProjectID').val();
+
+            if (pid == '') {
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'projectID' : '" + pid + "'}",
+                async: false,
+                success: function (response) {
+                    // //console.log(response);
+                    response = JSON.parse(response);
+                    response = projectcomments = response.data;
+
+                    var html = "";
+                    var Commentid = "";
+                    var Comment = "";
+                    var Createddate = "";
+
+                    for (var i = 0; i < response.length; i++) {
+                        Commentid = response[i].Commentid;
+                        Comment = response[i].Comment;
+                        Createddate = response[i].Createddate;
+                        html += "<span class='remove' data-id='" + Commentid + "' ><span>" + Comment + " ( " + Createddate + " )" + "</span></span>";
+                    }
+
+                    $('#ProjectComments').html(html);
+
+                },
+                error: function () {
+                    alert('Something went wrong.');
+                }
+            });
+        }
+
+
+        function loadprojectaccounts() {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/getAllprojectaccounts';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/getAllprojectaccounts';
+            }
+            var pid = $('#ProjectID').val();
+
+            if (pid == '') {
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                dataType: "text",
+                contentType: "application/json; charset=utf-8",
+                data: "{ 'projectID' : '" + pid + "'}",
+                async: false,
+                success: function (response) {
+                    // //console.log(response);
+                    response = JSON.parse(response);
+                    response = projectaccounts = response.data;
+
+                    var html = "";
+                    var FldID = "";
+                    var ProjectID = "";
+                    var AccountNumber = "";
+                    var IsActive = "";
+
+                    for (var i = 0; i < response.length; i++) {
+                        FldID = response[i].FldID;
+                        ProjectID = response[i].ProjectID;
+                        AccountNumber = response[i].AccountNumber;
+                        IsActive = response[i].IsActive;
+
+                        html += "<span class='remove' data-id='" + FldID + "' ><span>" + AccountNumber  + "</span></span>";
+                    }
+
+                    $('#ProjectAccounts').html(html);
+
+                },
+                error: function () {
+                    alert('Something went wrong.');
+                }
+            });
+        }
+
+
+
+        function createallcommentslist() {
+            var html = "";
+            var Commentid = "";
+            var Comment = "";
+            var Createddate = "";
+            var isactive = 1;
+
+
+            for (var i = 0; i < allcomments.length; i++) {
+                isactive = 1;
+                Commentid = allcomments[i].Commentid;
+                Comment = allcomments[i].Comment;
+                Createddate = allcomments[i].Createddate;
+
+                for (var a = 0; a < projectcomments.length; a++) {
+
+
+                    if (projectcomments[a].Commentid == allcomments[i].Commentid) {
+                        isactive = 0;
+                    }
+
+                }
+
+                if (isactive == 1) {
+                    html += "<option value='" + Commentid + "'>" + Comment + "</option>";
+                }
+                else {
+                    html += "<option disabled value='" + Commentid + "'>" + Comment + "</option>";
+
+                }
+            }
+
+            $("#Ddl_Clftion").html("");
+
+
+            $("#Ddl_Clftion").html(html);
+
+
+
+            //.multiselectfilter({ label: "Search" });
+
+
+            $("#Ddl_Clftion").multiselect("refresh").multiselectfilter();
+
+            $('.ui-multiselect-menu').css('width', '450px');
+            $('.ui-multiselect').css('width', '450px');
+
+
+        }
+
+
+        
+
+
+        
+
+        
+
+        
+
+
+
+        
+    </script>
+    <style>
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+        input[type="file"] {
+            width: 92% !important;
+            height: 80% !important;
+        }
+
+        .totalcurrency {
+            color: #208093;
+        } 
+        
+        .remove {
+            /*width: 450px;*/
+            border: 1px solid #060506;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            display: block;
+            padding: 5px;
+            text-decoration: none;
+            background: #B01000;
+            color: #E2E2E2;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-family: helvetica;
+            font-size: 13px;
+            position: relative;
+        }
+
+            .remove a {
+                /*cursor: pointer;
+                position: absolute;
+                top: -2px;
+                right: -2px;
+                font-size: 1.2em;
+                color:white;
+                background: black;
+                border-radius:100px;
+                padding: 3px;*/
+                cursor: pointer;
+                position: absolute;
+                top: -5px;
+                right: -6px;
+                font-size: 0.9em;
+                color: white;
+                background: black;
+                border-radius: 100px;
+                padding: 7px;
+                line-height: 9px;
+            }
+    </style>
+
+    @*Project comments part end*@
+
+    <style type="text/css">
+        /*.user_panel_container {
+            padding: 0px 0px 0px 0px;
+        }
+            .user_panel_container label {
+                padding: 8px 0px 4px;
+            }
+        .edit_vendor_full {
+            margin-bottom:12px;
+        }*/
+
+        .edit_vendor_full {
+            margin-bottom: 12px;
+        }
+
+        .user_panel_container label, .logo_container_heading {
+            padding: 4px 0px;
+        }
+    </style>
+
+
+    <style type="text/css">
+        .
+    </style>
+
+    <script type="text/javascript">
+        $(function () {
+            var date = new Date();
+            var currentMonth = date.getMonth();
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+
+            currentMonth = currentMonth < 9 ? '0' + currentMonth : currentMonth;
+            currentDate = currentDate < 9 ? '0' + currentDate : currentDate;
+
+            //$('#To_Date').val(date.toDateString());
+            $('#To_Date').val(currentYear + '.' + currentMonth + '.' + currentDate);
+
+
+            //$('#Date_Range').val(new Date(currentYear, 0, 1).toDateString());
+
+            var date = new Date(currentYear, 1, 1);
+            currentMonth = date.getMonth();
+            currentDate = date.getDate();
+            currentYear = date.getFullYear();
+
+            currentMonth = currentMonth < 9 ? '0' + currentMonth : currentMonth;
+            currentDate = currentDate < 9 ? '0' + currentDate : currentDate;
+
+            $('#Date_Range').val(currentYear + '.' + currentMonth + '.' + currentDate);
+
+            $('#Date_Range').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy.mm.dd'
+                , onSelect: function () {
+                    FetchDate();
+                }
+            });
+            $('#To_Date').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy.mm.dd',
+               // minDate: new Date(currentYear, currentMonth, currentDate),
+                onSelect: function () {
+                    FetchDate();
+                }
+            });
+            FetchDate();
+        });
+        function FetchDate() {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Project/GetProject';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Project/GetProject';
+            }
+            var dataTable = "";
+            var dt = "";
+            var us = new Array();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'From': '" + $('#Date_Range').val() + "', 'Todate': '" + $('#To_Date').val() + "','ProjectID':'" + $('#ProjectID').val() + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+                    
+                    if (data != '') {
+                        dt = data.data;
+                        //if (dt.length == 0) {
+                        //    return;
+                        //}
+                        $('#ProjectList').dataTable().fnDestroy();
+                        if (dt.length >= 0) {
+                            for (i = 0; i < dt.length ; i++) {
+                                us[i] = new Array();
+                                
+                                us[i][0] = '<a href="#" onclick=" Click(event,' + dt[i].ParentVendor_ID + ',' + $('#ProjectID').val() + ')" >' + dt[i].ParentVendorName + '</a>';
+                                
+                                us[i][1] = dt[i].Total;
+                               
+                            }
+                            $('#ProjectList').dataTable({
+                                "processing": true,
+                                "data": us,
+                                "columns":
+                                  [
+                                    { "title": "Vendor Common Name" },
+                                
+                                    { "title": "Amount" },
+                                  ],
+                                "initComplete": function () {
+
+                                    
+                                    $('#ProjectList_filter').remove();
+                                    $('#ProjectList_length').remove();
+                                }
+                            });
+                            var html = "";
+                            html = "<tr>"
+                                  
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='0' type='text' placeholder='Vendor Common Name '></th>"
+
+                              + "<th></th>"
+                                  + "</tr>";
+
+                            $('#ProjectList thead').find('tr:eq(1)').remove();
+
+
+                            if (dt.length != 0) {
+                                $('#ProjectList thead').append(html);
+
+                            }
+                            
+
+
+                            var table = $('#ProjectList').DataTable();
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+                                table
+                                       .column(indx)
+                                       .search(txt)
+                                       .draw();
+                                
+                            });
+                        }
+                        else {
+                        }
+                       
+                    }
+                }
+            })
+        }
+        function Click(e, VendorID, ProjectID) {
+
+            e.preventDefault();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/VendorView/SearchPoList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'VendorView/SearchPoList';
+            }
+
+            url += "?ProjectID=" + ProjectID + "&VendorID=" + VendorID + "&Status=ALL";
+            window.location.href = url;
+           
+        }
+        function Popup() {
+            $('#popupforTaxComment2').bPopup({
+                easing: 'easeOutBack', //uses jQuery easing plugin
+                speed: 450,
+                transition: 'slideDown',
+                modalColor: 'rgb(18, 54, 65)'
+            });
+           
+        }
+    </script>
+
+
+    <script type="text/javascript">
+        function saveVendorCODetails(mode, project_code) {
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                urltemp = '/Project/SaveVendorCODetails';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+
+                urltemp = 'Project/SaveVendorCODetails';
+            }
+            //alert(mode);
+            if (mode == "SaveProjectDetail") {
+                $.ajax({
+                    type: "POST",
+                    url: urltemp,
+                    async: false,
+                    data: { 'vedor_details': JSON.stringify(vendorco), 'project_id': project_code },
+                    success: function (data) {
+
+
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+            }
+        }
+    </script>
+
+    <style type="text/css">
+        /** { margin: 0; padding: 0; }
+        body { font: 14px/1.4 Georgia, serif; }
+        #page-wrap { width: 600px; margin: 15px auto; }
+        p { margin: 0 0 15px 0; }
+        p:first-child { background: #fffcde; padding: 10px; }
+        #sidebar ul { background: #eee; padding: 10px; }
+        li { margin: 0 0 0 20px; }
+        #main { width: 390px; float: left; }*/
+        /*#sidebar { width: 190px; float: right; }*/
+        #sidebar {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+            z-index:9999;
+        }
+        /*#sidebar ul { background: #eee; padding: 10px; }*/
+        /*li { margin: 0 0 0 20px; }*/
+    </style>
+</head>
+
+
+
+<body>
+
+    @Html.Partial("CheckSession")
+
+    <input type="hidden" id="ProjectID" value ="@ViewBag.ProjectID" />
+    <input type="hidden" id="Isselected" value ="@ViewBag.Isactive" />
+    <input type="hidden" value="@ViewBag.UserType" id="UserType" />
+
+
+    <div class="main_container" id="angulardiv" ng-app="Project" ng-controller="Project" >
+
+        
+        <div class="logo_container_heading">Edit Project</div>
+
+        <div class="edit_vendor_full">
+            <div class="logo_container_heading" style="width: 34%;">
+                @*<label>Project Number : @ViewBag.getProjectNumber</label>     *@
+                Project Number : @ViewBag.getProjectNumber
+            </div>
+            <div class="user_panel_container" style="width: 33%;">
+                
+            </div>
+            <div class="user_panel_container displaynone" style="width: 33%;" onclick="Popup();" id="tcg_staff">
+                <label>
+                    <u>
+                        YTD Purchase:
+                    </u>    &nbsp;
+                    <span style="border: 1px solid #208093; padding: 5px;">
+
+                        @ViewBag.TotalValues
+                    </span>
+                </label>
+
+                <input type="button" id="btn_YtdPchs" value="Click to get YTD Purchase History" onclick="Popup();" style="display:none;" />
+            </div>
+        </div>
+
+        <div class="edit_vendor_full">
+            <div class="edit_vendor_half">
+            </div>
+
+
+            <div class="edit_vendor_half">
+            </div>
+
+        </div>
+
+
+        <div class="edit_vendor_full">
+            <div class="user_panel_container" style="width: 10%;">
+            </div>
+            <div class="user_panel_container" style="width: 90%;">
+                <div class="user_panel_container req" style="width: 32%;">
+                    <label>Project Name</label>
+                    <input type="text" id="txt_ProjectName" ng-model="User.ProjectName"  tabindex=1/>
+                </div>
+                <div class="user_panel_container" style="width: 32%; margin-left: 2%;">
+                    <label>Legal Name</label>
+                    <input type="text" id="txt_LegalName" ng-model="User.LegalName"  tabindex=2/>
+                </div>
+                
+            </div>
+        </div>
+
+        <hr align="left" width="100%">
+
+        <div class="edit_vendor_full">
+            <div class="user_panel_container" style="width: 10%;">
+                <label>Invoice : </label>
+            </div>
+            <div class="user_panel_container" style="width: 90%;">
+                <div class="user_panel_container">
+                    <label>Address(Press Enter for multiple lines)</label>
+                    <textarea id="txt_InvAddr" ng-model="User.InvAddr" tabindex=5></textarea>
+                </div>
+                <div class="user_panel_container">
+                    <div class="user_panel_container policy-items" style="width: 23.5%;">
+                        <label>Invoice Country</label>
+                        <select id="Ddl_InvCountry" name="Ddl_InvState" onchange="GetCtryIDForProject(this);" style="height: 33px;" tabindex=6>
+                            @Html.Raw(ViewData["GetAllCountry"])
+                        </select>
+                    </div>
+                    <div class="user_panel_container policy-items" style="width: 23.5%; margin-left: 2%;">
+                        <label>Invoice State</label>
+                        <select id="Ddl_InvState" style="height: 33px;" tabindex=7>
+                            <option value="0">--Select State--</option>
+                        </select>
+                    </div>
+                    <div class="user_panel_container" style="width: 23.5%; margin-left: 2%;">
+                        <label>Invoice City</label>
+                        <input type="text" id="txt_InvCity" ng-model="User.InvCity"  tabindex=8/>
+                    </div>
+                    <div class="user_panel_container" style="width: 23.5%; margin-left: 2%;">
+                        <label>Invoice Postal Code</label>
+                        <input type="text" id="txt_InvZipCode" class="postalcode" ng-model="User.InvZipCode"  tabindex=9/>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <hr align="left" width="100%">
+
+
+        <div class="edit_vendor_full">
+
+            <div class="user_panel_container" style="width: 10%;">
+                <label>Hotel : </label>
+            </div>
+            <div class="user_panel_container" style="width: 90%;">
+                <div class="user_panel_container">
+                    <label>Address(Press Enter for multiple lines)</label>
+                    <input type="text" id="txt_HotelAddr" ng-model="User.HotelAddr"  tabindex=10/>
+                </div>
+                <div class="user_panel_container">
+
+
+                    <div class="user_panel_container policy-items" style="width: 23.5%;">
+                        <label>Hotel Country</label>
+                        <select id="Ddl_HotelCountry" name="Ddl_HotelState" onchange="GetCtryIDForProject(this);" style="height: 33px;" tabindex=11>
+                            @Html.Raw(ViewData["GetAllCountry"])
+                        </select>
+                    </div>
+
+                    <div class="user_panel_container policy-items" style="width: 23.5%; margin-left: 2%;">
+                        <label>Hotel State</label>
+                        <select id="Ddl_HotelState" style="height: 33px;" tabindex=12>
+                            <option value="0">--Select State--</option>
+                        </select>
+                    </div>
+
+                    <div class="user_panel_container" style="width: 23.5%; margin-left: 2%;">
+                        <label>Hotel City</label>
+                        <input type="text" id="txt_HotelCity" ng-model="User.HotelCity"  tabindex=13/>
+                    </div>
+
+                    <div class="user_panel_container" style="width: 23.5%; margin-left: 2%;">
+                        <label>Hotel Postal Code</label>
+                        <input type="text" id="txt_HotelZipCode" class="postalcode" ng-model="User.HotelZipCode"  tabindex=14/>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <hr align="left" width="100%">
+
+
+        <div class="edit_vendor_full">
+            <div class="user_panel_container" style="width: 10%;">
+                <label>Owner : </label>
+            </div>
+            <div class="user_panel_container" style="width: 90%;">
+                <div class="user_panel_container">
+                    <div class="user_panel_container" style="width: 50%;">
+                        <label>Owner Address</label>
+                        <input type="text" id="txt_OwnerAddr" ng-model="User.OwnerAddr"  tabindex=15/>
+                    </div>
+                    <div class="user_panel_container" style="width: 48%; margin-left: 2%;">
+                        <label>Owner Reporting Requirements</label>
+                        <textarea id="txt_OwnerReqmnt" ng-model="User.ProjectCmt" tabindex=16></textarea>
+                    </div>
+                </div>
+                <div class="user_panel_container">
+
+                    <div class="user_panel_container policy-items" style="width: 23.5%;">
+                        <label>Owner Country</label>
+                        <select id="Ddl_OwnerCountry" name="Ddl_OwnerState" onchange="GetCtryIDForProject(this);" style="height: 33px;" tabindex=17>
+                            @Html.Raw(ViewData["GetAllCountry"])
+                        </select>
+                    </div>
+
+                    <div class="user_panel_container policy-items" style="width: 23.5%; margin-left: 2%;">
+                        <label>Owner State</label>
+                        <select id="Ddl_OwnerState" onchange="GetStateID(this);" style="height: 33px;" tabindex=18>
+                            <option value="0">--Select State--</option>
+                        </select>
+                    </div>
+
+                    <div class="user_panel_container" style="width: 23.5%; margin-left: 2%;">
+                        <label>Owner City</label>
+                        <input type="text" id="txt_OwnerCity" ng-model="User.OwnerCity"  tabindex=19/>
+                    </div>
+
+                    <div class="user_panel_container" style="width: 23.5%; margin-left: 2%;">
+                        <label>Owner Postal Code</label>
+                        <input type="text" id="txt_OwnerZipCode" ng-model="User.OwnerZipCode"  tabindex=20/>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+        <hr align="left" width="100%">
+
+
+        <div class="edit_vendor_full">
+
+            <div class="user_panel_container" style="width: 10%;">
+                <label>Accounting : </label>
+            </div>
+            <div class="user_panel_container" style="width: 90%;">
+
+                <div class="user_panel_container">
+                    <div class="user_panel_container" style="width: 50%;">
+                        <label>Owner Accounting Contact</label>
+                        <input type="text" id="txt_AccountingContact" ng-model="User.AccountingContact" tabindex=21/>
+                    </div>
+                    <div class="user_panel_container" style="width: 48%; margin-left: 2%;">
+                        <label>Accounting Email</label>
+                        <input type="text" id="txt_AccountingEmail" ng-model="User.AccountingEmail" tabindex=22/>
+                    </div>
+                </div>
+                <div class="user_panel_container">
+                    <div class="user_panel_container" style="width: 34%;">
+                        <label>Accounting Telephone</label>
+                        <input type="text" id="txt_AccountingPhone" ng-model="User.AccountingPhone" tabindex=23/>
+                    </div>
+                    <div class="user_panel_container" style="width: 30%; margin-left: 2%;">
+                        <label>Accounting Telephone Extension</label>
+                        <input type="text" id="txt_AccountingPhoneExtension" ng-model="User.AccountingPhoneExtension" tabindex=24/>
+                    </div>
+                    <div class="user_panel_container" style="width: 32%; margin-left: 2%;">
+                        <label>Accounting Fax</label>
+                        <input type="text" id="txt_AccountingFax" ng-model="User.AccountingFax" tabindex=25/>
+                    </div>
+
+                </div>
+                <div class="user_panel_container">
+
+                    <div class="user_panel_container" style="width: 50%;">
+                        <label>Federal ID</label>
+                        <input type="text" id="txt_FederalID" ng-model="User.FederalID" tabindex=26/>
+                    </div>
+                    <div class="user_panel_container" style="width: 48%; margin-left: 2%;">
+                        <label>Currency Code</label>
+                        <select id="ddl_CurrencyCode"tabindex=27>
+                            @Html.Raw(ViewData["GetAllCurency"])
+                        </select>
+                    </div>
+
+                </div>
+                <div class="user_panel_container">
+
+                    <div class="user_panel_container" style="width: 32%;">
+                        <label>
+                            Tax1---------Label to be shown :
+                            <input type="text" id="txt_GSTLblShw" value="GST/HST" style="width: 267px; float: right; height: 9px;" tabindex=28/>
+                        </label>
+                        <input type="text" id="txt_GST" ng-model="User.GST" onkeypress="return IsNumber(event);" style="width:85%;" class="floatonly" tabindex=29/><input type="image" src="~/Images/percentage-.png" style="width: 6%;margin-top: 4%;" />
+                    </div>
+                    <div class="user_panel_container" style="width: 32%; margin-left: 2%;">
+                        <label>
+                            Tax2---------Label to be shown :
+                            <input type="text" id="txt_PSTLblShw" value="PST" style="width: 267px; float: right; height: 9px;" tabindex=30/>
+                        </label>
+                        <input type="text" id="txt_PST" ng-model="User.PST" onkeypress="return IsNumber(event);" style="width:85%;" class="floatonly" tabindex=31/> <input type="image" src="~/Images/percentage-.png" style="width: 6%;margin-top: 4%;" />
+                    </div>
+
+                    <div class="user_panel_container" style="width: 32%; margin-left: 2%;">
+                        <label>
+                            Tax3---------Label to be shown :
+                            <input type="text" id="txt_StateTxLblShw" value="State Tax" style="width: 267px; float: right; height: 9px;" tabindex=32/></label>
+                        <input type="text" id="txt_StateTax" ng-model="User.StateTax" onkeypress="return IsNumber(event);" style="width:85%;" class="floatonly" tabindex=33/> <input type="image" src="~/Images/percentage-.png" style="width: 6%;margin-top: 4%;" />
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <hr align="left" width="100%">
+
+
+        <div class="edit_vendor_full">
+
+            <div class="user_panel_container" style="width: 10%;">
+                <label>Key Dates : </label>
+            </div>
+            <div class="user_panel_container" style="width: 90%;">
+
+                <div class="user_panel_container" style="width: 23.5%;">
+                    <label>Install Date</label>
+                    <input type="text" id="txt_InstallDate" ng-model="User.InstallDate" placeholder="MM DD YYYY" onkeypress="return AvoidKeyPress(event);" tabindex=34/>
+                </div>
+                <div class="user_panel_container" style="width: 23.5%; margin-left: 2%;">
+                    <label>Completion Date</label>
+                    <input type="text" id="txt_CompletionDate" ng-model="User.CompletionDate" placeholder="MM DD YYYY" onkeypress="return AvoidKeyPress(event);" tabindex=35/>
+                </div>
+                <div class="user_panel_container" style="width: 23.5%; margin-left: 2%;">
+                    <label>Warehouse Required Date</label>
+                    <input type="text" id="txt_WareHouseReqDate" ng-model="User.WareHouseReqDate" placeholder="MM DD YYYY" onkeypress="return AvoidKeyPress(event);" tabindex=36/>
+                </div>
+                <div class="user_panel_container" style="width: 23.5%; margin-left: 2%;">
+                    <label>Opening Date</label>
+                    <input type="text" id="txt_OpeningDate" ng-model="User.OpeningDate" placeholder="MM DD YYYY" onkeypress="return AvoidKeyPress(event);" tabindex=37/>
+                </div>
+
+            </div>
+        </div>
+
+
+        <hr align="left" width="100%">
+
+
+        <div class="edit_vendor_full">
+
+            <div class="user_panel_container" style="width: 10%;">
+                <label>Purchase Order Comments : </label>
+            </div>
+            <div class="user_panel_container" style="width: 90%;">
+
+
+                <textarea id="txt_PrchsOrdrCmmnts" placeholder="Purchase Order Comments" rows="4" tabindex=38></textarea>
+
+            </div>
+        </div>
+
+       
+
+        <div class="edit_vendor_full">
+             <div style="display:none;">
+
+            <div class="user_panel_container">
+                <label>Number of User Approve Budget</label>
+                <select id="ddl_NoUserAppvBdgt">
+                    <option value="1">01</option>
+                    <option value="2">02</option>
+                    <option value="3">03</option>
+                    <option value="4">04</option>
+                    <option value="5">05</option>
+                    <option value="6">06</option>
+                    <option value="7">07</option>
+                    <option value="8">08</option>
+                    <option value="9">09</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+
+            <div class="user_panel_container">
+                <label>Number of User Approve PO</label>
+                <select id="ddl_NoUserAppvPO">
+                    <option value="1">01</option>
+                    <option value="2">02</option>
+                    <option value="3">03</option>
+                    <option value="4">04</option>
+                    <option value="5">05</option>
+                    <option value="6">06</option>
+                    <option value="7">07</option>
+                    <option value="8">08</option>
+                    <option value="9">09</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+
+
+            <div class="user_panel_container">
+                <label>Client</label>
+                <select id="txt_Client">
+                    @*result = "<option value="0" name="txt_Client_0">--Select Client/Operator--</option>";*@
+                    <option value="0" name="txt_Client_0">--Select Client/Operator--</option>
+                    @Html.Raw(ViewData["getClientOpt"])
+                </select>
+            </div>
+
+            <div class="user_panel_container">
+                <label>Manager</label>
+                <select id="txt_Manager">
+                    @*result = "<option value="0" name="txt_Client_0">--Select PC Staff--</option>";*@
+                    <option value="0" name="txt_Client_0">--Select PC Staff--</option>
+                    @Html.Raw(ViewData["getPCStaff"])
+                </select>
+            </div>
+
+            <div class="user_panel_container">
+                <label>Development Information</label>
+                <input type="text" id="txt_DevInfo" ng-model="User.DevInfo" />
+            </div>
+
+
+
+            <div class="user_panel_container">
+                <label>Project Scope</label>
+                <textarea id="txt_ProjectScope" ng-model="User.ProjectScope"></textarea>
+            </div>
+
+            <div class="user_panel_container">
+                <label>Owner Name</label>
+                <input type="text" id="txt_OwnerName" ng-model="User.OwnerName" />
+            </div>
+
+
+
+            <div class="user_panel_container">
+                <label>Owner Contact</label>
+                <input type="text" id="txt_OwnerContact" ng-model="User.OwnerContact" />
+            </div>
+
+            <div class="user_panel_container">
+                <label>Owner Notes</label>
+                <textarea id="txt_OwnerNote" ng-model="User.OwnerNote"></textarea>
+            </div>
+
+            <div class="user_panel_container">
+                <label>Owner Fax</label>
+                <input type="text" id="txt_OwnerFax" ng-model="User.OwnerFax" />
+            </div>
+
+            <div class="user_panel_container">
+                <label>Owner Email</label>
+                <input type="text" id="txt_OwnerEmail" ng-model="User.OwnerEmail" />
+            </div>
+
+            <div class="user_panel_container">
+                <label>Owner Mobile</label>
+                <input type="text" id="txt_OwnerMobile" ng-model="User.OwnerMobile" />
+            </div>
+
+            </div>
+
+
+            <div class="user_panel_container">
+                <label>Project Comment</label>
+                <textarea id="txt_ProjectCmt" ng-model="User.ProjectCmt" tabindex=39></textarea>
+            </div>
+
+
+          
+
+            
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="logo_container_heading" style="margin-top: 50px;">Project Contact List</div>
+
+
+
+
+        <table id="projectcontacts" class="display  compact" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+
+
+
+
+        </table>
+
+
+
+
+        <div class="logo_container_heading" style="margin-top: 50px;">Project Comments</div>
+
+
+        <div class="user_panel_container">
+            <table border="1" style="width: 100%;">
+                <tr style="width: 100%;">
+                    
+                    <td style="width: 100%;">
+                        <fieldset>
+                            <legend align="left">Project Comments</legend>
+                            <div id="ProjectComments"></div>
+
+                            @*</div>  *@
+                        </fieldset>
+
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+
+
+
+
+        <div class="logo_container_heading" style="margin-top: 50px;">Project Accounts</div>
+
+
+        <div class="user_panel_container">
+            <table border="1" style="width: 100%;">
+                <tr style="width: 100%;">
+                    
+                    <td style="width: 100%;">
+
+                        <fieldset>
+
+                            <legend align="left">Project Accounts</legend>
+                            <div id="ProjectAccounts"></div>
+
+                            @*</div>  *@
+                        </fieldset>
+
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+
+
+
+
+
+    </div>
+
+    <div  id="popupforTaxComment2" class="displaynone" style="  width: 593px;transform: scale(0.70);
+   background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+        <span class="button b-close"><span>X</span></span>
+
+        <span style="position: absolute; margin-left: 35%; font-size: 1.5em; color: #62A6B3; top: 5px; ">YTD Breakdown</span>
+
+        <div class="main_container" >
+            <div class="logo_container_heading"></div>
+            <div class="edit_vendor_full">
+                <div class="edit_vendor_half">
+                    <div class="user_panel_container req">
+                              <div  style="float:left"> <label>Date Range</label> </div><div  style="float:left;width:187px" > 
+                            <input type="text" id="Date_Range"  style="width: 157px"   />
+                                                              </div> <div  style="float:left;width:17px"  ><label>To</label> </div>
+                    <div  style="float:left " >  <input type="text" id="To_Date"    style="width: 150px;" /></div>
+                    </div>
+            <div class="user_panel_container">
+                <fieldset>
+                    <legend>Project List</legend>
+                    <div>
+                   @*     <table cellpadding="0"  cellspacing="0" border="0" class="display" id="ProjectList" style="text-align: center;">
+                        </table>*@
+                             <table cellpadding="0" cellspacing="0" border="0" class="display" id="ProjectList" style="text-align: center;">
+                            <thead>
+                                <tr>
+                                    <th>Vendor Common Name</th>
+                                  @*  <th>Project Name</th>*@
+                                    <th>Amount (Currency)</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var utype = $('#UserType').val();
+        if (utype != "3") {
+            $('#tcg_staff').remove();
+        }
+        else {
+
+            $('#tcg_staff').show();
+        }
+
+
+
+        clicknew();
+        $('.paginate_button').live('click', function () {
+            RowHtmlRender();
+        });
+    });
+    function clicknew() {
+        $(document).ready(function () {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Project/GetProjectContactDetailJSON';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/GetProjectContactDetailJSON';
+            }
+            var pid = $('#ProjectID').val();
+
+            if (pid == '') {
+                return;
+            }
+
+            url1 += "?ProjectContactID=" + pid;
+            var totdata;
+            $.get(url1)
+                .success(function (response) {
+                    var project;
+                    totdata = JSON.parse(response);
+                    // //console.log(totdata);
+                    var project = new Array();
+                    for (i = 0; i < totdata.length ; i++) {
+                        project[i] = new Array();
+                        project[i][0] = totdata[i].ProjectContact_ID;// Convert.ToString(dr["ProjectContact_ID"]);
+                        project[i][1] = "";
+                        project[i][2] = totdata[i].ContactName;// Convert.ToString(dr["ContactName"]);
+                        project[i][3] = totdata[i].Address;// Convert.ToString(dr["Address"]);
+                        project[i][4] = totdata[i].City;// Convert.ToString(dr["City"]);
+                        project[i][5] = totdata[i].State;// Convert.ToString(dr["State"]);
+                        project[i][6] = totdata[i].Country;// Convert.ToString(dr["Country"]);
+                        project[i][7] = totdata[i].Telephone;// Convert.ToString(dr["Telephone"]);
+                        project[i][8] = totdata[i].MobilePhone;// Convert.ToString(dr["MobilePhone"]);
+                        project[i][9] = totdata[i].Fax;// Convert.ToString(dr["Fax"]);
+                        project[i][10] = totdata[i].Email;// Convert.ToString(dr["Email"]);
+                        project[i][11] = totdata[i].DateCreate;// Convert.ToString(dr["DateCreate"]);
+                        project[i][12] = totdata[i].ContactType_ID;// Convert.ToString(dr["ContactType_ID"]);
+                        project[i][13] = totdata[i].ProjectID;// Convert.ToString(dr["ProjectID"]);
+                        project[i][14] = totdata[i].Status;// Convert.ToString(dr["Status"]);
+                    }
+                    $('#projectcontacts').dataTable({
+                        "processing": true,
+                        "data": project,
+                        "columns": [
+                            { "title": "ProjectContact_ID", "class": "displaynone" },
+                            { "title": "Action" },
+                            { "title": "ContactName" },
+                            { "title": "Address" },
+                            { "title": "City" },
+                            { "title": "State" },
+                            { "title": "Country" },
+                            { "title": "Telephone" },
+                            { "title": "MobilePhone" },
+                            { "title": "Fax" },
+                            { "title": "Email" },
+                            { "title": "DateCreate", "class": "displaynone" },
+                            { "title": "ContactType" },
+                            { "title": "ProjectID", "class": "displaynone" },
+                            { "title": "Status", "class": "displaynone" }
+                        ]
+                        ,
+                        "initComplete": function () {
+                            RowHtmlRender();
+                        },
+                        "aoColumnDefs": [
+                            { 'bSortable': false, 'aTargets': [0, 1] }
+                        ]
+                    });
+                    var html = "";
+
+                    //$('#projectcontacts tfoot th').each(function () {
+                    //    var title = $('#example thead th').eq($(this).index()).text();
+                    //    $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+                    //});
+
+                    html = "<tr>"
+                    + "<th  rowspan='1' colspan='1'><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px;' /></th>"
+                    + "<th  rowspan='1' colspan='1'><input class='srch' data-indx='2' type='text' placeholder='Search '></th>"
+                    + "<th  rowspan='1' colspan='1'><input class='srch' data-indx='3' type='text' placeholder='Search '></th>"
+                    + "<th  rowspan='1' colspan='1'><input class='srch' data-indx='4' type='text' placeholder='Search '></th>"
+                    + "<th rowspan='1' colspan='1'><input class='srch' data-indx='5'  type='text' placeholder='Search '></th>"
+                    + "<th rowspan='1' colspan='1'><input class='srch' data-indx='6'  type='text' placeholder='Search '></th>"
+                    + "<th rowspan='1' colspan='1'><input class='srch' data-indx='7'  type='text' placeholder='Search '></th>"
+                    + "<th rowspan='1' colspan='1'><input class='srch' data-indx='8'  type='text' placeholder='Search '></th>"
+                    + "<th rowspan='1' colspan='1'><input class='srch' data-indx='9'  type='text' placeholder='Search '></th>"
+                    + "<th rowspan='1' colspan='1'><input class='srch' data-indx='10'  type='text' placeholder='Search '></th>"
+                    + "<th rowspan='1' colspan='1'><input class='srch' data-indx='11'  type='text' placeholder='Search '></th>"
+
+                    + "</tr>";
+
+                    // $('#projectcontacts').find("tr:eq(1)").find("th:eq(1)").html("<a><input type='button' value='Reset' onclick='ResetContactSearch();' style='margin-bottom:6px;' /></a>");
+                    //
+
+                    $('#projectcontacts').on('draw.dt', function () {
+
+                        RowHtmlRender();
+                    });
+                    $('#projectcontacts thead').append(html);
+                    var table = $('#projectcontacts').DataTable();
+                    $('.srch').on('keyup change', function () {
+                        var indx = $(this).attr('data-indx');
+                        var txt = this.value;
+                        table
+                               .column(indx)
+                               .search(txt)
+                               .draw();
+                        RowHtmlRender();
+                    });
+                });
+
+
+        });
+    }
+    function RowHtmlRender() {
+        // $('#project thead tr').find("th:eq(1)").html('Action').removeClass('sorting_asc');
+        $('#projectcontacts_filter').css('display', 'none');
+        $('#projectcontacts tbody tr').find("td:eq(1)").each(function () {
+            var pid = $(this).prev("td").html();
+            //var zz = $(this).html();
+            var html = '';
+            var isseletcted = $('#Isselected').val();
+            if (isseletcted != "0") {
+                
+                html = '<i class="fa fa-ban"" ></i>';
+                $(this).html(html);
+            }
+        });
+
+
+
+    }
+    function ResetSearch() {
+
+        var table = $('#projectcontacts').DataTable();
+        $('.srch').each(function () {
+            this.value = '';
+            var indx = $(this).attr('data-indx');
+            var txt = this.value;
+            table
+                   .column(indx)
+                   .search(txt)
+                   .draw();
+        });
+
+        RowHtmlRender();
+
+    }
+    $(function () {
+        $('select[name="projectcontacts_length"]').live('change', function () {
+            RowHtmlRender();
+        });
+    });
+    function EditProjectContact(obj, pid) {
+        var prid = $('#ProjectID').val();
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/Project/EditProjectContact/' + pid;
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'Project/EditProjectContact/' + pid;
+        }
+        window.location.href = url1 + "?Projectid=" + prid;
+    }
+
+
+    function DeleteProjectContact(obj, pid) {
+        var rw = $(obj).parent().parent();
+        // //console.log(rw);
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/Project/DeleteProjectContact';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'Project/DeleteProjectContact';
+        }
+
+
+        $.ajax({
+            type: "POST",
+            url: url1,
+            async: false,
+            dataType: "text",
+            contentType: "application/json; charset=utf-8",
+            data: "{ 'ProjectID' : '" + pid + "'}",
+            success: function (data) {
+                if (data == 'SUCCESS') {
+                    var table = $('#projectcontacts').DataTable();
+                    table
+                    .row(rw)
+                    .remove()
+                    .draw();
+                    RowHtmlRender();
+                }
+            },
+            error: function () {
+                alert('Something went wrong.');
+            }
+        });
+
+
+
+    }
+
+
+
+</script>
+
+<script type="text/javascript">
+
+    function delobject1(val, obj) {
+        delete filedata[val];
+        $(obj).parent().remove();
+    }
+    function delobject2(val, obj) {
+        delete filedata2[val];
+        $(obj).parent().remove();
+    }
+    function delobject3(val, obj) {
+        delete filedata3[val];
+        $(obj).parent().remove();
+    }
+
+
+    function prevdelobject1(val, obj) {
+
+        var filename = $(obj).parent().text();
+        var a = confirm("You really want to delete the file " + filename + "?");
+
+        if (!a) {
+            return;
+        }
+
+        //alert($(obj).parent().text());
+        var filename = $(obj).parent().text();
+        var url1 = '';
+        var ProjectID = $('#ProjectID').val();
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/UploadFile/DeleteFile';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'UploadFile/DeleteFile';
+        }
+        mode = "PF";
+        //url1 += "?FileName=" + projectid + "&ProjectID=";
+        $.ajax({
+            type: "POST",
+            url: url1,
+            data: "{'FileName':'" + filename + "','ProjectID':'" + ProjectID + "','mode':'" + mode + "'}",
+            dataType: 'text',
+            contentType: "application/json; charset=utf-8",
+
+            success: function (data) {
+                // //console.log(data);
+                if (data == "SUCCESS") {
+                    $(obj).parent().remove();
+
+                }
+                else {
+                    alert("Error!!!");
+                }
+            },
+            error: function (error) {
+                //alert("errror");
+            }
+        });
+
+
+
+
+
+
+    }
+    function prevdelobject2(val, obj) {
+
+
+
+        var filename = $(obj).parent().text();
+        var a = confirm("You really want to delete the file " + filename + "?");
+
+        if (!a) {
+            return;
+        }
+        var url1 = '';
+        var ProjectID = $('#ProjectID').val();
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/UploadFile/DeleteFile';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'UploadFile/DeleteFile';
+        }
+        mode = "TC";
+        //url1 += "?FileName=" + projectid + "&ProjectID=";
+        $.ajax({
+            type: "POST",
+            url: url1,
+            data: "{'FileName':'" + filename + "','ProjectID':'" + ProjectID + "','mode':'" + mode + "'}",
+            dataType: 'text',
+            contentType: "application/json; charset=utf-8",
+
+            success: function (data) {
+                // //console.log(data);
+                if (data == "SUCCESS") {
+                    $(obj).parent().remove();
+
+                }
+                else {
+                    alert("Error!!!");
+                }
+            },
+            error: function (error) {
+                //alert("errror");
+            }
+        });
+
+
+    }
+    function prevdelobject3(val, obj) {
+
+        var filename = $(obj).parent().text();
+        var a = confirm("You really want to delete the file " + filename + "?");
+
+        if (!a) {
+            return;
+        }
+
+        var url1 = '';
+        var ProjectID = $('#ProjectID').val();
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/UploadFile/DeleteFile';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'UploadFile/DeleteFile';
+        }
+        mode = "ISF";
+        //url1 += "?FileName=" + projectid + "&ProjectID=";
+        $.ajax({
+            type: "POST",
+            url: url1,
+            data: "{'FileName':'" + filename + "','ProjectID':'" + ProjectID + "','mode':'" + mode + "'}",
+            dataType: 'text',
+            contentType: "application/json; charset=utf-8",
+
+            success: function (data) {
+                ////console.log(data);
+                if (data == "SUCCESS") {
+                    $(obj).parent().remove();
+
+                }
+                else {
+                    alert("Error!!!");
+                }
+            },
+            error: function (error) {
+                //alert("errror");
+            }
+        });
+    }
+
+    function uploadfiles(projectid, mode) {
+        //projectid = 1;
+        //mode = "TC";
+        // alert(projectid);
+        var formData = new FormData();
+        if (mode == "TC") {
+            for (var key in filedata2) {
+                formData.append(key, filedata2[key]);
+            }
+        }
+        else if (mode == "PF") {
+            for (var key in filedata) {
+                formData.append(key, filedata[key]);
+            }
+        }
+        else if (mode == "ISF") {
+            for (var key in filedata3) {
+                formData.append(key, filedata3[key]);
+            }
+        }
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/UploadFile/UploadWhenEdit';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = 'UploadFile/UploadWhenEdit';
+        }
+        url1 += "?projectid=" + projectid + "&mode=" + mode + "&InstallationScheduleFilecount=" + InstallationScheduleFilecount + "&TermsFilecount=" + TermsFilecount + "&ProjectFilecount=" + ProjectFilecount;
+        $.ajax({
+            type: "POST",
+            url: url1,
+            data: formData,
+            //async:false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                // alert('success!!');
+            },
+            error: function (error) {
+                //alert("errror");
+            }
+        });
+    }
+
+    var InstallationScheduleFilecount = 0, TermsFilecount = 0, ProjectFilecount = 0;
+    var temp = 0;
+    function loadUploadedPics(InstallationScheduleFile, TermsFile, ProjectFile) {
+        // alert(InstallationScheduleFile +'--------------'+ TermsFile+'-------'+ ProjectFile);
+        // return;
+        var html = "";
+        var allids = "";
+        //allids = "fileupload2^fileupload^fileupload3";
+        allids = "fileupload_Edt2^fileupload_Edt^fileupload_Edt3";
+        //allids += "^" + allids;
+
+        for (var i = 0; i < allids.split('^').length; i++) {
+
+            var id = '';
+            id = allids.split('^')[i];
+            var baseurl = '';
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                baseurl = '../../Assets/';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                baseurl = 'Assets/';
+            }
+
+            //alert(id);
+            switch (id) {
+
+                case 'fileupload_Edt2':
+
+                    temp = 0;
+                    //TermsFile
+                    if (TermsFile != '' && TermsFile != null && TermsFile != 'undefined') {
+                        //alert(1);
+                        html = "";
+                        for (var edt = 0; edt < TermsFile.split(',').length; edt++) {
+                            html = "";
+                            //filedata2["fileupload" + filedatacount2] = "aaaaaa.jpg";//data.files[0];
+                            html += "<ul class='filesul'>";
+                            html += "<a target='_blank' href ='" + baseurl + "TermsConditionFiles/" + TermsFile.split(',')[edt] + "'>" + TermsFile.split(',')[edt] + "</a>";//data.files[0].name;
+
+                            // html += TermsFile.split(',')[edt];//data.files[0].name;
+                            html += "<input type='button' class='delfile' onclick='prevdelobject2(\"" + "fileupload" + filedatacount2 + "\",this)' /></ul>";
+                            filedatacount2++;
+
+
+                            if (parseInt(TermsFile.split(',')[edt].split('_')[2]) > temp) {
+                                temp = parseInt(TermsFile.split(',')[edt].split('_')[2]);
+                            }
+
+                            $('#' + id).parent().parent().find('.previousfilelist').append(html);
+
+                        }
+
+
+                    }
+
+                    TermsFilecount = temp;
+                    break;
+
+                case 'fileupload_Edt':
+
+                    temp = 0;
+                    //ProjectFile
+                    if (ProjectFile != '' && ProjectFile != null && ProjectFile != 'undefined') {
+                        //alert(2);
+
+                        for (var edt = 0; edt < ProjectFile.split(',').length; edt++) {
+                            // filedata["fileupload" + filedatacount] = "aaaaaa.jpg";//data.files[0];
+                            html = "";
+                            html += "<ul class='filesul'>";
+                            html += "<a target='_blank' href ='" + baseurl + "ProjectFiles/" + ProjectFile.split(',')[edt] + "'>" + ProjectFile.split(',')[edt] + "</a>";//data.files[0].name;
+                            html += "<input type='button' class='delfile' onclick='prevdelobject1(\"" + "fileupload" + filedatacount + "\",this)' /></ul>";
+                            filedatacount++;
+
+                            if (parseInt(ProjectFile.split(',')[edt].split('_')[2]) > temp) {
+                                temp = parseInt(ProjectFile.split(',')[edt].split('_')[2]);
+                            }
+                            $('#' + id).parent().parent().find('.previousfilelist').append(html);
+
+                        }
+
+
+                    }
+                    ProjectFilecount = temp;
+                    break;
+
+                case 'fileupload_Edt3':
+
+                    temp = 0;
+
+                    //InstallationScheduleFile
+                    if (InstallationScheduleFile != '' && InstallationScheduleFile != null && InstallationScheduleFile != 'undefined') {
+                        //alert(3);
+                        html = "";
+                        for (var edt = 0; edt < InstallationScheduleFile.split(',').length; edt++) {
+                            html = "";
+                            //filedata3["fileupload" + filedatacount3] = "aaaaaa.jpg";//data.files[0];
+                            html = "<ul class='filesul'>";
+                            html += "<a target='_blank' href ='" + baseurl + "InstallationScheduleFiles/" + InstallationScheduleFile.split(',')[edt] + "'>" + InstallationScheduleFile.split(',')[edt] + "</a>";//data.files[0].name;
+
+                            //html += InstallationScheduleFile.split(',')[edt];//data.files[0].name;
+                            html += "<input type='button' class='delfile' onclick='prevdelobject3(\"" + "fileupload" + filedatacount3 + "\",this)' /></ul>";
+                            filedatacount3++;
+
+
+                            if (parseInt(InstallationScheduleFile.split(',')[edt].split('_')[2]) > temp) {
+                                temp = parseInt(InstallationScheduleFile.split(',')[edt].split('_')[2]);
+                            }
+                            $('#' + id).parent().parent().find('.previousfilelist').append(html);
+                        }
+
+
+                    }
+                    InstallationScheduleFilecount = temp;
+                    break;
+            }
+
+            //alert('#' + id);
+            //$('#' + id).parent().parent().find('.previousfilelist').append(html);
+
+        }
+
+    }
+
+</script>
+
+</html>

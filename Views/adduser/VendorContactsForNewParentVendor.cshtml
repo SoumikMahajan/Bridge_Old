@@ -1,0 +1,671 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddVendor</title>
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/angular.min.js"></script>
+    @*<script src="~/Scripts/User.js"></script>*@
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <script src="~/Scripts/AddUser.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <style type="text/css">
+        .display_none {
+            display: none;
+        }
+    </style>
+    <style type="text/css">
+        .user_panel_container {
+            padding: 0px 0px 0px 0px;
+        }
+            .user_panel_container label {
+                padding: 8px 0px 4px;
+            }
+        .edit_vendor_full {
+            margin-bottom: 12px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //    BindControls();
+            $('textarea').autosize();
+        });
+    </script>
+    <script type="text/javascript">
+        function ChkIsHiddnChange(obj) {
+            if ($(obj).is(":checked")) {
+                $('#Ddl_IsHiddn').val("1");
+            } else {
+                $('#Ddl_IsHiddn').val("0");
+            }
+        }
+        function ChkIsSystemUser(obj) {
+            if ($(obj).is(":checked")) {
+                $('#txt_Email').removeAttr('disabled');
+                $('#txt_Email').css('background-color', '#FFFFFF');
+                $('#txt_Email').parent().addClass('req');
+                $('#Ddl_IsSystemUser').val("1");
+                $('.showHide').removeClass('displaynone');
+            } else {
+                $('#txt_Email').parent().removeClass('req');
+                $('.showHide').addClass('displaynone');
+                $('#Ddl_IsSystemUser').val("0");
+            }
+        }
+    </script>
+    <style type="text/css">
+        #sidebar {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+        }
+    </style>
+
+    <style>
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        #popupforvendorlist .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 6px 0px;
+            width: 96%;
+            height: 20px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+
+        .nav-tabs > li > a {
+            background-color: rgba(238, 238, 238, 0.43);
+            border-color: #eee #eee #ddd;
+            text-transform: uppercase;
+        }
+
+            .nav-tabs > li > a:hover {
+                background-color: #ddd;
+            }
+    </style>
+
+    <style>
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+
+        label {
+            color: #333333;
+            font-weight: 500;
+            margin-bottom: 1px;
+        }
+
+        .section-header {
+            padding: 2px 4px;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .nav > li > a {
+            position: relative !important;
+            display: block !important;
+            padding: 4px 15px !important;
+        }
+
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+            color: rgb(246, 251, 252) !important;
+            cursor: default;
+            background-color: #7792a8;
+            border: 1px solid #ddd;
+            border-bottom-color: transparent;
+            color: #7792a8;
+            font-size: 16.5px;
+        }
+    </style>
+
+
+</head>
+<body>
+    <input type="hidden" id="prevcountry" value="@ViewData["Country"]" />
+    <input type="hidden" id="prevstate" value="@ViewData["State"]"/>
+    <input type="hidden" id="prevzipcode" value="@ViewData["ZipCode"]"/>
+    <input type="hidden" id="prevcity" value="@ViewData["City"]"/>
+    <input type="hidden" id="prevaddress" value="@ViewData["Address1"]"/>
+    <div class="container-fluid" id="angulardiv" ng-app="customer" ng-controller="customer" style="zoom:0.95;">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header">Add Vendor Contacts</h3>
+            </div>
+
+            <div class="col-sm-5">
+                <div class="col-sm-3">
+                    <label>Parent Vendor</label>
+                    <input type="text" disabled="disabled" Value="@ViewBag.ParentVendorName" class="form-control" />
+                </div>
+
+                <div class="col-sm-3">
+                    <label>Contact Title</label>
+                    <input type="text" id="txt_ContactTitle" ng-model="User.ContactTitle"  class="form-control"/>
+                </div>
+
+                <div class="col-sm-6" style="text-align: right;margin-top: 22px;margin-bottom: 2px;">
+                    <label for="Chk_IsHiddn">Hidden</label>
+                    <input type="checkbox" id="Chk_IsHiddn" onchange="ChkIsHiddnChange(this);" />
+                    <select id="Ddl_IsHiddn" style="display: none;">
+                        <option value="1">Yes</option>
+                        <option value="0" selected="selected">No</option>
+                    </select>
+                    <label class="mrg10L" for="Chk_IsSystemUser">System User </label>
+                    <input type="checkbox" id="Chk_IsSystemUser" onchange="ChkIsSystemUser(this);" checked />
+                    <select id="Ddl_IsSystemUser" style="display: none;">
+                        <option value="1">Yes</option>
+                        <option value="0" selected="selected">No</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-3 req">
+                    <label>First Name</label>
+                    <input type="text" id="txt_ContactFname" ng-model="User.ContactFname" class="form-control text-uppercase" />
+                </div>
+                <div class="col-sm-3">
+                    <label>Last Name</label>
+                    <input type="text" id="txt_ContactLname" ng-model="User.ContactLname" class="form-control text-uppercase" />
+                </div>
+
+                <div class="col-sm-3">
+                    <label>Email address</label>
+                    <input type="text" class="form-control" id="txt_Email" ng-model="User.Email" />
+                    @*onblur="CheckAvailEmail(this);"*@
+                </div>
+                <div class="col-sm-3">
+                    <label>Website</label>
+                    <input type="text" id="txt_Website" ng-model="User.Website" class="form-control" />
+                </div>
+
+                <div class="col-sm-3">
+                    <label>Phone</label>
+                    <input type="text" id="txt_Phone" ng-model="User.Phone" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <label>Ext</label>
+                    <input type="text" id="txt_Extension" ng-model="User.Extension" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <label>Fax</label>
+                    <input type="text" id="txt_Fax" ng-model="User.Fax" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <label>Mobile</label>
+                    <input type="text" id="txt_Mobile" ng-model="User.Mobile" class="form-control" />
+                </div>
+
+                <div class="col-sm-6">
+                    <label>Address(Press Enter for multiple lines)</label>
+                    <textarea id="txt_Add1" ng-model="User.Address1" class="form-control no-resize" style="height:70px;"></textarea>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Country</label>
+                        <select id="Ddl_Country" onchange="GetCtryID(this);" class="form-control">
+                            @Html.Raw(ViewData["GetAllCountry"])
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>State/Prov</label>
+                        <select id="Ddl_State" onchange="GetStateID(this);" class="form-control">
+                            <option value="0">select</option>
+                            @Html.Raw(ViewData["GetAllStateByCntryID"])
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-6">
+                    <label>City</label>
+                    <input type="text" id="Ddl_City" ng-model="User.City" class="form-control" />
+                </div>
+                <div class="col-sm-6">
+                    <label>Postal Code/Zip Code</label>
+                    <input type="text" class="postalcode form-control" id="txt_ZipCode" ng-model="User.ZipCode" />
+                </div>
+
+                
+
+
+
+
+
+            </div>
+
+
+            <div class="col-sm-7 showHide displaynone" style="margin-top: 21px !important;">
+
+                <div class="col-sm-12">
+                    <h3 class="section-header">Permissions</h3>
+                </div>
+
+
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-poms mrg5B uncheckallbtn" data-uncheckclass="chkScrty">Uncheck All</button>
+                    <button type="button" class="btn btn-poms mrg5B checkallbtn" data-checkclass="chkScrty">Check All</button>
+                    <table border="1" class="logo_container_table table" cellspacing="0" cellpadding="0" style="width: 100%;" id="priority_checkbox"></table>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        
+       
+        
+       
+        <div class="user_panel_container displaynone">
+            <label>Address2</label>
+            <input type="text" id="txt_Add2" ng-model="User.Address2" />
+        </div>
+        <div class="user_panel_container" style="display: none;">
+            <label>Contact</label>
+            <input type="text" id="txt_Contact" ng-model="User.Contact" />
+        </div>
+        <div class="user_panel_container" style="display: none;">
+            
+        </div>
+        <div class="user_panel_container" style="display: none;">
+            <label>Password</label>
+            <input type="password" id="txt_Password" ng-model="User.Password" />
+        </div>
+        <div class="user_panel_container" style="display: none;">
+            <label>Confirm password</label>
+            <input type="password" id="txt_ConfrmPswrd" ng-model="User.ConfrmPswrd" />
+        </div>
+        
+        <div class="user_panel_container policy-items showHide">
+            <div class="security-detail">
+            </div>
+        </div>
+        @*<div class="user_panel_container" style="margin-bottom:22px;">
+            <input type="button" value="Create User" id="btn_CrtVendorContact">
+            <img id="loader_CrtVendorContact" style="display: none;" src="~/Images/load.gif" />
+        </div>*@
+    </div>
+    <div class="float-panel-container">
+        <ul>
+            <li id="btn_CrtVendorContact"><a href="javascript:void(0);"><i class="fa fa-save mrg5R" title="Create Contact" data-toggle="tooltip"></i><span class="tooltip-toggle">Create Contact</span></a></li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+        angular.module("customer", [])
+            .controller("customer", function ($http, $scope) {
+                var url1 = "";
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = "/adduser/return_priorities_new";
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'adduser/return_priorities_new';        //'adduser/return_priorities';
+                }
+                $http.get(url1 + "?usertypeid=6")
+                               .success(function (response) {
+                                   //$scope.prioritylist = response;
+                                   $('#UserTypeSecurityDiv').css('display', 'block');
+                                   // $scope.prioritylist = response;
+                                   var grouptype = "";
+                                   var currg = "";
+                                   var html = "<tr>"
+                                       + "<th>Security Item</th>"
+                                       + "<th>Assigned</th>"
+                                       + "</tr>";
+                                   var plist = response.data;
+                                   var html = "";
+                                   for (var i = 0; i < plist.length; i++) {
+                                       currg = plist[i].GroupType;
+
+                                       if (currg.toUpperCase() != "PROJECT" && currg.toUpperCase() != "USER" && currg.toUpperCase() != "VENDOR") {
+
+                                       if (currg == grouptype) {
+                                       }
+                                       else {
+                                           grouptype = currg;
+                                           html += "<tr><td style='color:white;background:black;' colspan='2'>" + grouptype + "</td></tr>";
+                                       }
+                                       html += "<tr><td><label style='padding:0px;width:100%;' for='prioritychk_" + plist[i].security_id + "'>" + plist[i].priority_name + "</label></td>";
+                                       if (plist[i].is_selected == "1") {
+                                           //if (plist[i].security_id == 16 || plist[i].security_id == 6 || plist[i].security_id == 2 || plist[i].security_id == 1 || plist[i].security_id == 17 || plist[i].security_id == 17 || plist[i].security_id == 4) {
+                                           //    html += '<td><input  type="checkbox" checked class="chkScrty" value="1" id="prioritychk_' + plist[i].security_id + '" disabled ></td></tr>';
+                                           //} else {
+                                           //    html += '<td><input  type="checkbox" class="chkScrty" value="1" id="prioritychk_' + plist[i].security_id + '" checked></td></tr>';
+                                           //}
+                                           html += '<td><input  type="checkbox" class="chkScrty" value="1" id="prioritychk_' + plist[i].security_id + '" checked></td></tr>';
+                                       }
+                                       else {
+                                           html += '<td><input type="checkbox" class="chkScrty" value="0" id="prioritychk_' + plist[i].security_id + '"></td></tr>';
+                                       }
+                                   }
+
+
+                               }
+                                   $('#priority_checkbox').html(html);
+
+                                   var tableobj = $('#priority_checkbox');
+                                   rebuiltPriorityintoDivs(tableobj);
+
+                               });
+                $scope.User = {
+                    FName: '',
+                    LName: '',
+                    UName: '',
+                    Password: '',
+                    ConfrmPswrd: '',
+                    Email: '',
+                    selectedUserType: '',
+                    IsByr: '',
+                    selectedDefaultBuyer: '',
+                    priorities_on_list: '',
+                    selectedUserType1: '',
+                    selectedUserType2: ''
+                };
+                //$http.get("return_salesagent")
+                //    .success(function (response) {
+                //$scope.salesagent = response;
+                //$scope.selectedsalesagent = angular.copy($scope.salesagent);
+                //});
+                //$http.get("getUserTypeBYFilter")
+                //    .success(function (response) {
+                //        $scope.UserType = response;
+                //        $scope.selectedUserType = $scope.UserType[0];
+                //    });
+                // $http.get("getAllCountry")
+                //     .success(function (response) {
+                //         $scope.CountryCode = response;
+                //         $scope.selectedUserType1 = $scope.CountryCode[0];
+                //     });
+                $scope.AddVendorContact = function () {
+                    var priorities = "";
+                    var url1 = "";
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url1 = "/adduser/CreateVendorContactForNew";
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url1 = 'adduser/CreateVendorContactForNew';
+                    }
+                    $('.chkScrty').each(function () {
+                        if ($(this).is(":checked")) {
+                            if (priorities == "")
+                            { priorities += $(this).attr('id').split('prioritychk_')[1]; }
+                            else {
+                                priorities += "," + $(this).attr('id').split('prioritychk_')[1];
+                            }
+                        }
+                    });
+                    // $scope.User.ParentVendorID = $('#Vendorid').val();
+                    $scope.User.Address1 = $('#txt_Add1').val();
+                    $scope.User.ZipCode = $('#txt_ZipCode').val();
+
+                    
+                    
+                    $scope.User.priorities_on_list = priorities;
+                    $scope.User.Country = $('#Ddl_Country').val();
+                    $scope.User.State = $('#Ddl_State').val();
+                    $scope.User.City = $('#Ddl_City').val().trim();
+                    $scope.User.IsHiddn = $('#Ddl_IsHiddn').val();
+                    $scope.User.IsSystemUser = $('#Ddl_IsSystemUser').val();
+                    $('#loader_CrtVendorContact').show();
+                    $('#btn_CrtVendorContact').hide();
+                    var obj = JSON.stringify($scope.User);
+                    $.ajax({
+                        url: url1,
+                        type: "POST",
+                        dataType: "text",
+                        contentType: "application/json; charset=utf-8",
+                        data: obj,
+                        error: function () {
+                            alert("failed");
+                            $('#loader_CrtVendorContact').hide();
+                            $('#btn_CrtVendorContact').show();
+                        },
+                        success: function (data) {
+                            if (data == 'INVALID^USERNAME') {
+                                $('#txt_UName').val('');
+                                errorfunc('txt_UName', 'Please enter an unique User name');
+                                alert('Username already exists !! Please give an unique one !!');
+                            }
+                            else if (data == 'INVALID^EMAIL') {
+                                $('#txt_Email').val('');
+                                errorfunc('txt_Email', 'Please enter an unique Email Address');
+                                alert('Email already exists !! Please give an unique one !!');
+                            }
+                            else {
+                                if (data == '1') {
+                                    notify('User Activation mail has been sent to User.', 'green');
+                                }
+                                else if (data == '0') {
+                                    notify('User created.', 'green');
+                                }
+                                else if (data == 'Error') {
+                                    alert('Error sending mail.');
+                                }
+                                //window.location.reload();
+                                var locurl = "";
+                                if (LOCALORSERVERNEW == 'LOCAL') {
+                                    locurl = "/vendor/allcontacts";
+                                }
+                                else if (LOCALORSERVERNEW == 'SERVER') {
+                                    locurl = 'vendor/allcontacts';
+                                }
+                                irrrrr = 0;
+                                window.setTimeout(function () {
+                                    window.location.href = locurl;
+                                }, 2000);
+                            }
+                            $('#loader_CrtVendorContact').hide();
+                            $('#btn_CrtVendorContact').show();
+                        }
+                    });
+                }
+            });
+        function EditPOPUP(obj) {
+            //alert(obj);
+            $('.popup_container').fadeIn(40);
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            irrrrr = 1;
+            $('#Ddl_Country').val($('#prevcountry').val());
+            GetCtryID($('#Ddl_Country'));
+            $('#Ddl_State').val($('#prevstate').val());
+            $('#txt_Add1').val($('#prevaddress').val());
+            $('#Ddl_City').val($('#prevcity').val());
+            $('#txt_ZipCode').val($('#prevzipcode').val());
+        });
+    </script>
+
+    <script>
+
+        function rebuiltPriorityintoDivs(obj) {
+
+            $('.newappendeddivforpermissions').remove();
+
+            var ttt = 0;
+            var cnt = -1;
+            var outerhtml = "<div style='class='row newappendeddivforpermissions'>";
+
+            $(obj).find('tbody tr').each(function () {
+
+                var nowDiv = $(this).find('td:eq(0)').html().toUpperCase();
+
+                //console.log(nowDiv);
+
+                if (nowDiv != "PROJECT" && nowDiv != "USER" && nowDiv != "VENDOR") {
+
+                    if ($(this).find('td').length == 1) {
+
+                        cnt++;
+
+                        if (ttt == 0) {
+
+
+                            outerhtml += '<div class="row" style="margin-left:0px;margin-right:0px;">';
+
+                            outerhtml += '<div class="col-sm-3" style="width:20%;">';
+                        }
+                        else {
+
+
+
+
+                            if (cnt % 7 == 0) {
+                                if (nowDiv != "PROJECT" && nowDiv != "USER" && nowDiv != "VENDOR") {
+                                    outerhtml += '</div></div><div class="row"  style="margin-left:0px;margin-right:0px;"><div class="col-sm-3"  style="width:20%;">';
+                                }
+                                else {
+                                    outerhtml += '</div></div><div class="row"  style="margin-left:0px;margin-right:0px;"><div class="col-sm-3 displaynone"  style="width:20%;">';
+
+
+                                }
+
+
+                            }
+                            else {
+
+                                if (nowDiv != "PROJECT" && nowDiv != "USER" && nowDiv != "VENDOR") {
+                                    outerhtml += '</div><div class="col-sm-3"  style="width:20%;">';
+                                }
+                                else {
+                                    outerhtml += '</div><div class="col-sm-3 displaynone">';
+
+                                }
+
+                            }
+                        }
+                        //outerhtml += '<h3 class="section-header">' + $(this).find('td:eq(0)').html() + '</h3>';
+
+                        outerhtml += '<div class="col-sm-12 section-header"><span style="float: left;width: 76.9%;text-align: left;">' + $(this).find('td:eq(0)').html() + '</span>'
+                  + '<input style="float:left;margin-left:2px;    margin-top: 10px;" type="checkbox" onclick="Checkallinner(this);" /></div> ';
+
+                    }
+
+                    else {
+
+                        if (nowDiv != "PROJECT" && nowDiv != "USER" && nowDiv != "VENDOR") {
+                            outerhtml += '<div class="col-sm-9">';
+                            outerhtml += '<span>' + $(this).find('td:eq(0)').html() + '</span></div>';
+                            outerhtml += '<div class="col-sm-3">' + $(this).find('td:eq(1)').html() + '</div>';
+                        }
+                        else {
+                            outerhtml += '<div class="col-sm-9 displaynone">';
+                            outerhtml += '<span>' + $(this).find('td:eq(0)').html() + '</span></div>';
+                            outerhtml += '<div class="col-sm-3 displaynone">' + $(this).find('td:eq(1)').html() + '</div>';
+
+                        }
+
+
+                    }
+
+                    ttt = 1;
+
+                }
+
+            });
+
+            outerhtml += "</div>";
+            //console.log(outerhtml);
+
+            $(obj).after(outerhtml);
+
+            $(obj).html('');
+
+        }
+
+
+        function Checkallinner(obj) {
+
+            var pdiv = $(obj).parent().parent();
+            if ($(obj).is(':checked')) {
+                $(pdiv).find('.chkScrty').prop('checked', true);
+            }
+            else {
+                $(pdiv).find('.chkScrty').prop('checked', false);
+
+            }
+        }
+    </script>
+</body>
+</html>

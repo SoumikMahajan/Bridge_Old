@@ -1,0 +1,1585 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>BudgetSection</title>
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+   
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/Budget.js"></script>
+    <script src="~/Scripts/jquery.DB_PROC.js"></script>
+    @*<script src="~/Scripts/MenuJS.js"></script>*@
+    <style>
+
+        .headerbar {
+            background : #435869 !important;
+            text-transform : uppercase;
+        }
+
+
+        i {
+            cursor: pointer;
+        }
+
+        .security-title {
+            width: 100%;
+            height: auto;
+            float: left;
+            background: #748FA5;
+            color: #FFF;
+            padding: 12px 0px;
+            text-indent: 12px;
+            margin-top: 8px;
+            /*//cursor: pointer;*/
+        }
+
+        .sectiondiv {
+            cursor: move;
+        }
+        /*.user_panel_container input[type="text"], .user_panel_container input[type="password"], .user_panel_container select {
+            border:#208093 1px solid;
+            color:#208093;
+            margin:6px 0px;
+        }
+        .user_panel_container input[type="button"] {
+            background:#208093;
+        }
+        .user_panel_container label, .logo_container_heading {
+            color:#208093;
+        }
+        .security-title {
+            padding: 12px 2%;
+        }
+        .user_panel_container input[type="button"] {
+            margin-bottom:0px;
+        }
+        .security-title {
+            font-weight:bold;
+        }
+        .user_panel_container input[type="button"]:hover {
+            background:#556A77;
+        }*/
+    </style>
+    <style>
+        .form-control {
+    height: 25px;
+}
+        select {
+    padding: 0px !important;
+}
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 4px;
+    padding-left: 4px;
+}
+
+        .float-panel-container ul li a {
+    background: #61BCD4;
+    border-radius: 20px;
+    width: 40px;
+    height: 40px;
+}
+
+        .float-panel-container ul li a i {
+    font-size: 15px;
+    margin-top: 8px;
+    margin-left: 1px;
+    color: #f5f5f5;
+    font-weight: 400;
+}
+        .container-fluid {
+    padding-right: 22px;
+}
+
+        .ui-multiselect {
+            width: 100%  !important;
+    /*color: rgb(195, 16, 1) !important;*/
+    height: 25px !important;
+     margin-top: 0px !important; 
+        }
+        label {
+    color: #333333;
+    font-weight: 500;
+}
+
+        .ui-multiselect {
+    padding: 2px 0 2px 4px;
+    text-align: left;
+    color: #435869 !important;
+}
+
+    </style>
+    <script>
+        var sortorderglobal = "";
+      
+    </script>
+    <script type="text/javascript">
+        function getpdetails(pid) {
+            var filtered1url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                filtered1url = '/Budget/getProjectDetail';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                //url1 = urlsuffix + "/" + 'Project/getAllProjectList';
+                filtered1url = '/Budget/getProjectDetail';
+            }
+            filtered1url += '?ProjectID=' + pid;
+            $.ajax({
+                type: "POST",
+                url: filtered1url,
+                async: false,
+                data: {},
+                success: function (response) {
+                    var filtered1html = response;
+                    $('#filtered1').html(filtered1html.replace('{', '').replace('}', ''));
+                }
+            });
+        }
+        function numberWithCommas(x) {
+            var parts = x.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
+        $(function () {
+            $(".SectionRangeonly").live('keypress', function (e) {
+                //if the letter is not digit then display error and don't type anything
+                if (e.which != 45 && e.which != 44 && e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    //display error message
+                    // notify("Digits only allowed");
+                    return false;
+                }
+            });
+           // $(document).tooltip();
+            $('#srtngspn').live('click', function () {
+                
+                var orderClause = 'desc';
+                var pid = $("#PrjtDdl option:selected").attr('data-id');
+                if ($(this).hasClass('desc')) {
+                    sortorderglobal = "asc";
+                    $(this).removeClass('desc');
+                    $(this).addClass('asc');
+                    $(this).html("Number " + '<i class="fa fa-sort-asc"></i>');
+                    orderClause = 'asc';
+                   
+                }
+                else {
+                    sortorderglobal = "desc";
+                    $(this).removeClass('asc');
+                    $(this).addClass('desc');
+                    $(this).html("Number " + '<i class="fa fa-sort-desc"></i>');
+                    orderClause = 'desc';
+                   
+                }
+
+
+
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/Budget/sortsectionsall';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = '/Budget/sortsectionsall';
+                }
+                var projectid = $("#PrjtDdl option:selected").attr('data-id');
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    async: false,
+                    dataType: "text",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{ 'sortmode': '" + orderClause + "','projectid' :'" + projectid + "'}",
+                    success: function (data) {
+                        notify('Reordered Successfully ','green');
+                        getsections(projectid, '', '')
+                    },
+                    error: function () {
+                        notify('Something went wrong.');
+                    }
+                });
+
+
+
+
+
+            });
+        });
+        function getsections(pid, sectionnumbersrch, sectionnamesrch) {
+            var url1 = '';
+            var whereClause = '';
+            var srchnumber = $('#txt_srchnumber').val().trim();
+            if (srchnumber.trim() == '') {
+                whereClause = '';
+            }
+            else {
+                if (srchnumber.split(',').length > 1) {
+                    for (var i = 0; i < srchnumber.split(',').length; i++) {
+                        var tempdata = srchnumber.split(',')[i];
+                        if (tempdata.trim() == '') {
+                        }
+                        else {
+                            if (tempdata.split('-').length > 1) {
+                                var firstnmbrrng = tempdata.split('-')[0];
+                                var lastnmbrrng = tempdata.split('-')[1];
+                                if (firstnmbrrng.trim() != '' && lastnmbrrng.trim() != '') {
+                                    if (whereClause.trim() == '') {
+                                        whereClause = ' (convert(bigint,Sectionnumber) between ' + firstnmbrrng + ' and ' + lastnmbrrng + ') ';
+                                    }
+                                    else {
+                                        whereClause += 'or (convert(bigint,Sectionnumber) between ' + firstnmbrrng + ' and ' + lastnmbrrng + ') ';
+                                    }
+                                }
+                            }
+                            else {
+                                if (whereClause.trim() == '') {
+                                    whereClause = ' (convert(bigint,Sectionnumber) = ' + tempdata + ') ';
+                                }
+                                else {
+                                    whereClause += 'or (convert(bigint,Sectionnumber) = ' + tempdata + ') ';
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    var tempdata = srchnumber.split(',')[0];
+                    if (tempdata.trim() == '') {
+                    }
+                    else {
+                        if (tempdata.split('-').length > 1) {
+                            var firstnmbrrng = tempdata.split('-')[0];
+                            var lastnmbrrng = tempdata.split('-')[1];
+                            if (firstnmbrrng.trim() != '' && lastnmbrrng.trim() != '') {
+                                if (whereClause.trim() == '') {
+                                    whereClause = ' (convert(bigint,Sectionnumber) between ' + firstnmbrrng + ' and ' + lastnmbrrng + ') ';
+                                }
+                                else {
+                                    whereClause += 'or (convert(bigint,Sectionnumber) between ' + firstnmbrrng + ' and ' + lastnmbrrng + ') ';
+                                }
+                            }
+                        }
+                        else {
+                            if (whereClause.trim() == '') {
+                                whereClause = ' (convert(bigint,Sectionnumber) = ' + tempdata + ') ';
+                            }
+                            else {
+                                whereClause += 'or (convert(bigint,Sectionnumber) = ' + tempdata + ') ';
+                            }
+                        }
+                    }
+                }
+            }
+            //alert(whereClause);
+            //$("#sortablesection").sortable(
+            //            {
+            //                cancel: ".disable-sort",
+            //return;
+            if ($('#txt_srchnumber').val().trim() != '' || $('#txt_srchname').val().trim() != '') {
+                //alert(1);
+                $("#sortablesection").addClass('disable-sort');
+            }
+            else {
+            }
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Budget/getAllProjectSection';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                //url1 = urlsuffix + "/" + 'Project/getAllProjectList';
+                url1 = '/Budget/getAllProjectSection';
+            }
+            url1 += "?projectid=" + pid;
+            //            url1 += "&sectionnumbersrch=" + $('#txt_srchnumber').val().trim();
+            url1 += "&sectionnumbersrch=" + whereClause;
+            url1 += "&sectionnamesrch=" + $('#txt_srchname').val().trim();
+            // alert(url1);
+            var totdata;
+            var htmlnw = '';
+            htmlnw += "<div class='sectiondiv security-title headerbar'>";
+            htmlnw += "<div style='width:5%;float:left;'>";
+            htmlnw += "<span class='order'>" + "" + "</span>";
+            htmlnw += "</div>";
+            htmlnw += "<div style='width:20%;float:left;margin-left:5%;'>";
+
+            if (sortorderglobal == "") {
+                htmlnw += "<span class='order asc' id='srtngspn' style='cursor:pointer; '>" + "Number " + '<i style="opacity:0.6;" class="fa fa-sort"></i>' + "</span>";
+            }
+
+            else if (sortorderglobal == "asc") {
+                htmlnw += "<span class='order asc' id='srtngspn' style='cursor:pointer;'>" + "Number " + '<i class="fa fa-sort-asc"></i>' + "</span>";
+            }
+            else {
+                htmlnw += "<span class='order desc' id='srtngspn' style='cursor:pointer;'>" + "Number " + '<i class="fa fa-sort-desc"></i>' + "</span>";
+            }
+
+
+
+            htmlnw += "</div>";
+            htmlnw += "<div style='width:40%;float:left;'>";
+            htmlnw += "<span class='name'>" + "Name" + "</span>";
+            htmlnw += "</div>";
+            htmlnw += "<div style='width:15%;float:left;text-align:right;'>";
+            htmlnw += "<span>" + "Line Items" + "</span>";
+            htmlnw += "</div>";
+            htmlnw += "<div style='width:15%;float:left;text-align:right;'>";
+            htmlnw += "<span>" + "Total" + "</span>";
+            htmlnw += "</div>";
+            htmlnw += "</div>";
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: {},
+                success: function (response) {
+                    var totcost = 0;
+                    var html = "<div class='sections'>";
+                    totdata = response;
+                    totdata = JSON.parse(totdata).data;
+                    //html += "Total " + totdata.length + " result(s) found";// under \"" + $('#PrjtDdl').val() + "\"";
+                    html += htmlnw + "<div id='sortablesection'>";
+                    for (var a = 0; a < totdata.length; a++) {
+                        var id = totdata[a].id;
+                        var name = totdata[a].sectionname;
+                        var order = totdata[a].Sectionnumber;
+                        var LineItemCount = totdata[a].LineItemCount
+                        var Cost = totdata[a].Cost;
+                        var SectionOrder = totdata[a].SectionOrder;
+                        html += "<div class='sectiondiv security-title' data-orderindex='" + SectionOrder + "'  id='" + id + "'>";
+                        html += "<div style='width:5%;float:left;'>";
+                        html += "<i onclick='sectionclicked(this);' class='fa fa-pencil-square-o'></i>&nbsp;&nbsp;";
+                        html += "</div>";
+                        html += "<div style='width:20%;float:left;'>";
+                        html += "<span class='order'>" + order + "</span>";
+                        html += "</div>";
+                        html += "<div style='width:40%;float:left;'>";
+                        html += "<span class='name'>" + name + "</span>";
+                        html += "</div>";
+                        html += "<div style='width:15%;float:left;text-align:right;'>";
+                        html += "<span>" + LineItemCount + "</span>";
+                        html += "</div>";
+                        html += "<div style='width:15%;float:left;text-align:right;'>";
+                        html += "<span>" + numberWithCommas(parseFloat(Math.round(Cost * 100) / 100).toFixed(2)) + "</span>";
+                        html += "</div>";
+                        html += "</div>";
+                        totcost += parseFloat(Cost);
+                    }
+                    totcost = numberWithCommas(parseFloat(Math.round(totcost * 100) / 100).toFixed(2));
+                    if (totdata.length == 0) {
+                        html += "No data found";
+                    }
+                    html += "</div>";
+                    html += "</div>";
+                    $('#projectsections').html(html);
+                    $("#sortablesection").sortable(
+                         {
+                             cancel: ".disable-sort",
+                             cursor: "move",
+                             start: function (event, ui) {
+                                 // 0 based array, add one
+                                 var obj = ui.item;
+                                 $(obj).css('background', '#86ABC2');
+                                 // //console.log('start');
+                             },
+                             update: function (event, ui) {
+                                 var obj = ui.item;
+                                 var obj2 = ui.item.prev();
+                                 var st = $(obj).attr('data-orderindex');
+                                 var lt = $(obj2).attr('data-orderindex');
+                                 if (parseInt(lt) < parseInt(st)) {
+                                     obj2 = ui.item.next();
+                                     lt = $(obj2).attr('data-orderindex');
+                                 }
+                                 // alert('Prev: ' + st + ' Final: ' + lt);
+                                 if (lt == undefined) {
+                                     lt = 1;
+                                 }
+                                 var url1 = '';
+                                 if (LOCALORSERVERNEW == 'LOCAL') {
+                                     url1 = '/Budget/sortsections';
+                                 }
+                                 else if (LOCALORSERVERNEW == 'SERVER') {
+                                     url1 = '/Budget/sortsections';
+                                 }
+                                 var projectid = $("#PrjtDdl option:selected").attr('data-id');
+                                 $.ajax({
+                                     type: "POST",
+                                     url: url1,
+                                     async: false,
+                                     dataType: "text",
+                                     contentType: "application/json; charset=utf-8",
+                                     data: "{ 'prev': '" + st + "','current' : '" + lt + "','projectid' : '" + projectid + "'}",
+                                     success: function (data) {
+                                         notify('Reordered Successfully row ' + st + ' has been shifted to row ' + lt,'green');
+                                         getsections(projectid, '', '')
+                                     },
+                                     error: function () {
+                                         notify('Something went wrong.');
+                                     }
+                                 });
+                             },
+                             stop: function (event, ui) {
+                                 var obj = ui.item;
+                                 $(obj).css('background', '');
+                             }
+                             // end of drag
+                         });
+                    $('#filtered2').html(' Filtered Subtotal : ' + totcost)
+                }
+            });
+        }
+        function getsectionsOrderClause(pid, sectionnumbersrch, sectionnamesrch, orderClause) {
+            var url1 = '';
+            var whereClause = '';
+            var srchnumber = $('#txt_srchnumber').val().trim();
+            if (srchnumber.trim() == '') {
+                whereClause = '';
+            }
+            else {
+                if (srchnumber.split(',').length > 1) {
+                    for (var i = 0; i < srchnumber.split(',').length; i++) {
+                        var tempdata = srchnumber.split(',')[i];
+                        if (tempdata.trim() == '') {
+                        }
+                        else {
+                            if (tempdata.split('-').length > 1) {
+                                var firstnmbrrng = tempdata.split('-')[0];
+                                var lastnmbrrng = tempdata.split('-')[1];
+                                if (firstnmbrrng.trim() != '' && lastnmbrrng.trim() != '') {
+                                    if (whereClause.trim() == '') {
+                                        whereClause = ' (convert(bigint,Sectionnumber) between ' + firstnmbrrng + ' and ' + lastnmbrrng + ') ';
+                                    }
+                                    else {
+                                        whereClause += 'or (convert(bigint,Sectionnumber) between ' + firstnmbrrng + ' and ' + lastnmbrrng + ') ';
+                                    }
+                                }
+                            }
+                            else {
+                                if (whereClause.trim() == '') {
+                                    whereClause = ' (convert(bigint,Sectionnumber) = ' + tempdata + ') ';
+                                }
+                                else {
+                                    whereClause += 'or (convert(bigint,Sectionnumber) = ' + tempdata + ') ';
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    var tempdata = srchnumber.split(',')[0];
+                    if (tempdata.trim() == '') {
+                    }
+                    else {
+                        if (tempdata.split('-').length > 1) {
+                            var firstnmbrrng = tempdata.split('-')[0];
+                            var lastnmbrrng = tempdata.split('-')[1];
+                            if (firstnmbrrng.trim() != '' && lastnmbrrng.trim() != '') {
+                                if (whereClause.trim() == '') {
+                                    whereClause = ' (convert(bigint,Sectionnumber) between ' + firstnmbrrng + ' and ' + lastnmbrrng + ') ';
+                                }
+                                else {
+                                    whereClause += 'or (convert(bigint,Sectionnumber) between ' + firstnmbrrng + ' and ' + lastnmbrrng + ') ';
+                                }
+                            }
+                        }
+                        else {
+                            if (whereClause.trim() == '') {
+                                whereClause = ' (convert(bigint,Sectionnumber) = ' + tempdata + ') ';
+                            }
+                            else {
+                                whereClause += 'or (convert(bigint,Sectionnumber) = ' + tempdata + ') ';
+                            }
+                        }
+                    }
+                }
+            }
+            //alert(whereClause);
+            //return;
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Budget/getAllProjectSectionforSorting';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                //url1 = urlsuffix + "/" + 'Project/getAllProjectList';
+                url1 = '/Budget/getAllProjectSectionforSorting';
+            }
+            url1 += "?projectid=" + pid;
+            //            url1 += "&sectionnumbersrch=" + $('#txt_srchnumber').val().trim();
+            url1 += "&sectionnumbersrch=" + whereClause;
+            url1 += "&sectionnamesrch=" + $('#txt_srchname').val().trim();
+            url1 += "&orderClause=" + orderClause;
+            // alert(url1);
+            var totdata;
+            var htmlnw = '';
+            htmlnw += "<div class='sectiondiv security-title'>";
+            htmlnw += "<div style='width:5%;float:left;'>";
+            htmlnw += "<span class='order'>" + "Action" + "</span>";
+            htmlnw += "</div>";
+            htmlnw += "<div style='width:20%;float:left;'>";
+            if (orderClause == 'desc') {
+                htmlnw += "<span class='order desc' id='srtngspn' style='cursor:pointer;'>" + "Number " + '<i class="fa fa-sort-desc"></i>' + "</span>";
+            }
+            else if (orderClause == 'asc') {
+                htmlnw += "<span class='order asc' id='srtngspn' style='cursor:pointer;'>" + "Number " + '<i class="fa fa-sort-asc"></i>' + "</span>";
+            }
+            htmlnw += "</div>";
+            htmlnw += "<div style='width:40%;float:left;'>";
+            htmlnw += "<span class='name'>" + "Name" + "</span>";
+            htmlnw += "</div>";
+            htmlnw += "<div style='width:15%;float:left;'>";
+            htmlnw += "<span>" + "Line Items" + "</span>";
+            htmlnw += "</div>";
+            htmlnw += "<div style='width:15%;float:left;'>";
+            htmlnw += "<span>" + "Total" + "</span>";
+            htmlnw += "</div>";
+            htmlnw += "</div>";
+            $.ajax({
+                type: "POST",
+                url: url1,
+                async: false,
+                data: {},
+                success: function (response) {
+                    var html = "<div class='sections'>";
+                    totdata = response;
+                    totdata = JSON.parse(totdata).data;
+                    html += "Total " + totdata.length + " result(s) found";// under \"" + $('#PrjtDdl').val() + "\"";
+                    html += htmlnw;
+                    for (var a = 0; a < totdata.length; a++) {
+                        var id = totdata[a].id;
+                        var name = totdata[a].sectionname;
+                        var order = totdata[a].Sectionnumber;
+                        var LineItemCount = totdata[a].LineItemCount
+                        var Cost = totdata[a].Cost;
+                        html += "<div class='sectiondiv security-title'  id='" + id + "'>";
+                        html += "<div style='width:5%;float:left;'>";
+                        html += "<i onclick='sectionclicked(this);' class='fa fa-pencil-square-o'></i>&nbsp;&nbsp;";
+                        html += "</div>";
+                        html += "<div style='width:30%;float:left;'>";
+                        html += "<span class='order'>" + order + "</span>";
+                        html += "</div>";
+                        html += "<div style='width:30%;float:left;'>";
+                        html += "<span class='name'>" + name + "</span>";
+                        html += "</div>";
+                        html += "<div style='width:15%;float:left;'>";
+                        html += "<span>" + LineItemCount + "</span>";
+                        html += "</div>";
+                        html += "<div style='width:15%;float:left;'>";
+                        html += "<span>" + Cost + "</span>";
+                        html += "</div>";
+                        html += "</div>";
+                    }
+                    if (totdata.length == 0) {
+                        html += "No data found";
+                    }
+                    html += "</div>";
+                    $('#projectsections').html(html);
+                }
+            });
+        }
+        $(function () {
+            var pid = $("#PrjtDdl option:selected").attr('data-id');
+            getsections(pid, '', '');
+            getpdetails(pid);
+            if ($("#PrjtDdl option:selected").attr('data-id') == "0") {
+                $('#btn_AddSctn').val("Add section");
+            }
+            else {
+                $('#btn_AddSctn').val("Add section for " + $("#PrjtDdl option:selected").text());
+            }
+            $('#PrjtDdl').change(function () {
+                if ($("#PrjtDdl option:selected").attr('data-id') == "0") {
+                    $('#btn_AddSctn').val("Add section");
+                }
+                else {
+                    $('#btn_AddSctn').val("Add section for " + $("#PrjtDdl option:selected").text());
+                }
+                var pid = $("#PrjtDdl option:selected").attr('data-id');
+                getsections(pid, $('#txt_srchnumber').val().trim(), $('#txt_srchname').val().trim());
+                getpdetails(pid);
+            });
+            $('#btn_AddSctn').click(function () {
+                var pid = $('#PrjtDdl').find(":selected").attr('data-id');
+                //if (pid == 0) {
+                //    notify("Please select Project");
+                //    return;
+                //}
+                var sectionname = $('#txt_BudgetDesc').val().trim();
+                var sectionnumber = parseInt($('#txt_BudgetNumber').val().trim());
+                if (isNaN(sectionnumber)) {
+                    errorfunc('txt_BudgetNumber', 'Please enter a valid section number');
+                    notify("Please enter a valid section number");
+                    return;
+                }
+                sectionnumber = parseInt(sectionnumber);
+                if (sectionnumber > 999) {
+                    notify("Please use numbers between 1 - 999");
+                    return;
+                }
+                else if (sectionnumber <= 9) {
+                    sectionnumber = "00" + sectionnumber;
+                }
+                else if (sectionnumber <= 99) {
+                    sectionnumber = "0" + sectionnumber;
+                }
+                if (sectionname == '') {
+                    errorfunc('txt_BudgetDesc', 'Please add section name')
+                    notify('Add section name');
+                    return;
+                }
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/budget/addProjectSection';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'budget/addProjectSection';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'projectid': pid, 'sectionname': sectionname, 'sectionnumber': sectionnumber },
+                    success: function (data) {
+                        if (data == 'SUCCESS') {
+                            notify('Budget section added.', 'green');
+                            window.setTimeout(function () {
+                                window.location.reload();
+                            }, 3000);
+
+                        }
+                        else {
+                            notify("Section not added duplicat exists!!!");
+                        }
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+            });
+        });
+        function hideallexpanded() {
+            $('.sectiondiv').css('background', '#208093');
+            $('.sectiondiv').css('height', 'auto');
+            $('.sectiondiv').find('span').show();
+            $('.sectiondiv').find('div').show();
+            $('.sectiondiv').find('input').remove();
+            $('.sectiondiv').find('.minus').remove();
+            $('.sectiondiv').find('i').show();
+            $('.sectiondiv i').attr('onclick', 'sectionclicked(this);');
+        }
+        function sectionclicked(obj) {
+            var id = $(obj).parent().parent().attr('id');
+            var name = $(obj).parent().parent().find('.name').text();
+            var order = $(obj).parent().parent().find('.order').text();
+            $('#sectioneditorid').val(id);
+            $('#sectioneditorname').val(name);
+            $('#sectioneditornumber').val(order);
+            $('#sectioneditor').modal('show');
+            return;
+            //$('#sectioneditor').modal('toggle');
+            //$('#sectioneditor').modal('hide');
+            $('.sectiondiv').css('background', '#208093');
+            $('.sectiondiv').css('height', 'auto');
+            $('.sectiondiv').find('span').show();
+            $('.sectiondiv').find('input').remove();
+            $('.sectiondiv').find('.minus').remove();
+            $('.sectiondiv').find('i').show();
+            $('.sectiondiv i').attr('onclick', 'sectionclicked(this);');
+            //alert(1);
+            // $(obj).parent().css('background', '#7c97a8');//.css('height', 'auto');
+            $(obj).attr('onclick', '');
+            $(obj).parent().parent().find('span').hide();
+            $(obj).parent().parent().find('div').hide();
+            $(obj).hide();
+            var html = '<i onclick="hideallexpanded();" style="" class="fa fa-minus-circle minus"></i>';
+            html += '<input type="text" style="color: black;margin: 5px;" value="' + name + '">';
+            html += '<input type="text" style="color: black;margin: 5px;" class="numberonly" value="' + order + '"><input type="button" style="color: black;margin: 5px;" value="Save changes" onclick="editsection(this,\'' + id + '\');" />';
+            html += '<input type="button" style="color: black;margin: 5px;" value="Remove section" onclick="removesection(this,\'' + id + '\');" />';
+            $(obj).parent().parent().append(html);
+            //alert(obj);
+        }
+        function removesection(obj, id) {
+            var a = confirm("You really want to delete the section?");
+            if (!a) {
+                return;
+            }
+            else {
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/budget/deleteProjectSection';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'budget/deleteProjectSection';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'sectionid': id },
+                    success: function (data) {
+                        if (data == 'SUCCESS') {
+                            var prnt = $(obj).parent();
+                            $(prnt).remove();
+                            var pid = $("#PrjtDdl option:selected").attr('data-id');
+                            getsections(pid, $('#txt_srchnumber').val().trim(), $('#txt_srchname').val().trim());
+                        }
+                        else if (data == "DATAEXISTS") {
+                            notify("Lineitems exists.Not removed.");
+                        }
+                        else {
+                            notify("Something went wrong.");
+                        }
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+            }
+        }
+        function removesectionnew() {
+            var id = $('#sectioneditorid').val();
+            var a = confirm("You really want to delete the section?");
+            if (!a) {
+                return;
+            }
+            else {
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = '/budget/deleteProjectSection';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'budget/deleteProjectSection';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'sectionid': id },
+                    success: function (data) {
+                        if (data == 'SUCCESS') {
+                            notify("Successfully Deleted.");
+                            $('#sectioneditor').modal("hide");
+                            window.location.reload();
+                        }
+                        else if (data == "DATAEXISTS") {
+                            notify("Lineitems exists.Not removed.");
+                        }
+                        else {
+                            notify("Something went wrong.");
+                        }
+                    },
+                    error: function () { notify('Something went wrong'); }
+                });
+            }
+        }
+        function editsection(obj, id) {
+            var sectionname = '';
+            var sectionnumber = '';
+            var chksctnnm = '0';
+            var a = 0;
+            $(obj).parent().find('input[type="text"]').each(function () {
+                if (a == 0) {
+                    sectionname = $(this).val();
+                    //alert(sectionname);
+                    if (sectionname.trim() == '') {
+                        chksctnnm = '1';
+                        notify("Please add section name");
+                        return;
+                    }
+                    a++;
+                }
+                else {
+                    sectionnumber = parseInt($(this).val());
+                    if (isNaN(sectionnumber)) {
+                        notify("Please enter a valid section number");
+                        return;
+                    }
+                    sectionnumber = parseInt(sectionnumber);
+                    if (sectionnumber > 999) {
+                        notify("Please use numbers between 1 - 999");
+                        return;
+                    }
+                    else if (sectionnumber <= 9) {
+                        sectionnumber = "00" + sectionnumber;
+                    }
+                    else if (sectionnumber <= 99) {
+                        sectionnumber = "0" + sectionnumber;
+                    }
+                }
+            });
+            if (chksctnnm == '1') {
+                return;
+            }
+            if (sectionname.trim() == '') {
+                return;
+            }
+            if (isNaN(sectionnumber) || sectionnumber > 999) {
+                return;
+            }
+            var pid = $('#PrjtDdl').find(":selected").attr('data-id');
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/budget/editProjectSection';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = '/budget/editProjectSection';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'sectionid': id, 'sectionname': sectionname, 'projectid': pid, 'sectionnumber': sectionnumber },
+                success: function (data) {
+                    if (data == 'SUCCESS') {
+                        var prnt = $(obj).parent();
+                        $(obj).parent().find('span').text(sectionnumber + "-" + sectionname);
+                        $('.sectiondiv').css('background', '#208093');
+                        $('.sectiondiv').css('height', 'auto');
+                        $('.sectiondiv').find('span').show();
+                        $('.sectiondiv').find('div').show();
+                        $('.sectiondiv').find('input').remove();
+                        $('.sectiondiv').find('.minus').remove();
+                        $('.sectiondiv').find('i').show();
+                        $('.sectiondiv i').attr('onclick', 'sectionclicked(this);');
+                        var pid = $("#PrjtDdl option:selected").attr('data-id');
+                        getsections(pid, $('#txt_srchnumber').val().trim(), $('#txt_srchname').val().trim());
+                        //$(obj).parent().css('height', 'auto');
+                        //$(obj).parent().find('span').show();
+                        //$(obj).parent().find('input').remove();
+                        //$(obj).parent().find('.minus').remove();
+                        //$(obj).remove();
+                        //window.setTimeout(function () {
+                        //    $(prnt).attr('onclick', 'sectionclicked(this);');
+                        //}, 1000);
+                    }
+                    else if (data == "DATAEXISTS") {
+                        notify("Lineitems exists Not updated.");
+                    }
+                    else if (data == "DUPLICATE") {
+                        notify("Duplicate Exists Not updated.");
+                    }
+                    else {
+                        notify("Not updated.");
+                    }
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+        function editsectionnew() {
+            var id = $('#sectioneditorid').val();
+            var sectionname = $('#sectioneditorname').val();
+            if (sectionname.trim() == '') {
+                chksctnnm = '1';
+                notify("Please add section name");
+                return;
+            }
+            var sectionnumber = $('#sectioneditornumber').val();
+            if (isNaN(sectionnumber)) {
+                notify("Please enter a valid section number");
+                return;
+            }
+            sectionnumber = parseInt(sectionnumber);
+            if (sectionnumber > 999) {
+                notify("Please use numbers between 1 - 999");
+                return;
+            }
+            else if (sectionnumber <= 9) {
+                sectionnumber = "00" + sectionnumber;
+            }
+            else if (sectionnumber <= 99) {
+                sectionnumber = "0" + sectionnumber;
+            }
+            var chksctnnm = '0';
+            var pid = $('#PrjtDdl').find(":selected").attr('data-id');
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/budget/editProjectSection';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = '/budget/editProjectSection';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'sectionid': id, 'sectionname': sectionname, 'projectid': pid, 'sectionnumber': sectionnumber },
+                success: function (data) {
+                    if (data == 'SUCCESS') {
+                        notify("Successfully Edited.",'green');
+                      //  $('#sectioneditor').modal("hide");
+
+                        window.setTimeout(function () {
+                            window.location.reload();
+                        }, 3000);
+
+
+
+                    }
+                    else if (data == "DATAEXISTS") {
+                        notify("Lineitems exists Not updated.");
+                    }
+                    else if (data == "DUPLICATE") {
+                        notify("Duplicate Exists Not updated.");
+                    }
+                    else {
+                        notify("Not updated.");
+                    }
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+        function srch(e) {
+            var key = e.which;
+            if (key != 13) {
+                return;
+
+            }
+            var pid = $("#PrjtDdl option:selected").attr('data-id');
+            getsections(pid, $('#txt_srchnumber').val().trim(), $('#txt_srchname').val().trim());
+        }
+    </script>
+    <style>
+        .srch {
+            width: 45%;
+            margin-left: 1%;
+            /* float: left; */
+            margin-top: 20px;
+        }
+    </style>
+    <style>
+        .sectiondiv {
+                height: 30px;
+    padding: 5px;
+        margin-top: 5px;
+        }
+    </style>
+    <script type="text/javascript">
+        function getgroup() {
+            var pid = $("#PrjtDdl option:selected").attr('data-id');
+            console.log("Project id = " + pid);
+
+            var obj = new Object();
+            obj.ProjectID = pid;
+            obj.Mode = 'GETGROUP';
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_BudgetGroupProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            console.log(o);
+            console.log("All data");
+            var html = '';
+            var gname = '';
+            for (var i = 0 ; i < o.length; i++) {
+                var tgname = o[i].Groupname;
+                console.log(tgname + ">>> " + gname);
+                var h = "<a href='javascript:void(0);' onclick='editgroup(this);' style='cursor:pointer;    color: #f7f5f5;'><i  class='mrg5R fa fa-pencil-square-o'></i></a>";
+                if (gname == '' || tgname != gname) {
+                    html += '<div class="groupheader" style="height: 35px;background: #748fa5;padding: 10px;color: white;" data-groupid="' + o[i].GroupID + '">' + h + tgname + '</div>';
+                }
+
+                html += '<div class="groupsubheader">' + o[i].Sectionnumber + " - " + o[i].Name + "</div>";
+                gname = o[i].Groupname;
+            }
+
+            
+
+           // console.log(html);
+           
+            $('#appgroup').html(html);
+
+        }
+
+        function editgroup(obj) {
+            var GroupId = $(obj).parent().attr('data-groupid');
+
+            var obj = new Object();
+            obj.GroupID = GroupId;
+            obj.Mode = 'GETGROUPDATA';
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_BudgetGroupProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            var htm = '';
+
+
+            for (var i = 0; i < o.length; i++) {
+
+                var BudgetSectionID = o[i].BudgetSectionID;
+                var Groupname = o[i].Groupname;
+                var Name = o[i].Name;
+                var Sectionnumber = o[i].Sectionnumber;
+                var isAssigned = o[i].isAssigned;
+                var tbox = '';
+                if (i == 0) {
+                    htm += '<div class="col-sm-12"><label>Group Name</label><input type="text" data-id="'+ o[0].FldID + '" value="' + o[0].Groupname + '" class="form-control"/></div>';
+                }
+                if (isAssigned == '0') {
+                    htm += '<p style="margin-left: 10px;"><input onchange="chk_unchk(this);" class="chk_gid" data-secid="' + BudgetSectionID + '" type="checkbox" />&nbsp;&nbsp;';
+                    htm += '' + Sectionnumber + ' - ' + Name + '</p>';
+                }
+                else 
+                    {
+                    htm += '<p  style="margin-left: 10px;"><input onchange="chk_unchk(this);" disabled checked class="chk_gid" data-secid="' + BudgetSectionID + '" type="checkbox" />&nbsp;&nbsp;';
+                    htm += '' + Sectionnumber + ' - ' + Name + '</p>';
+                    }
+                
+            }
+
+
+
+            $('#allgdata').html(htm);
+
+
+
+
+            $('#addgroupdetails').modal('show');
+            //console.log(o);
+            //console.log(o.length);
+
+            
+
+        }
+        function chk_unchk(obj) {
+            //console.log(1);
+
+            //var c = $(obj).is(':checked');
+            //console.log(c);
+
+            //if (!c) {
+            //    notify('Can not un check');
+            //    $(obj).prop('checked', true);
+
+            //}
+        }
+
+
+
+        function editGroupData() {
+
+            var gName = $('#allgdata').find('div input').val(); //get the groupname
+            var gId = $('#allgdata').find('div input').attr('data-id'); //get the group ID
+            var sectionIds = ''; //get all checked ids in comma seperated format
+
+            $('.chk_gid').each(function () {
+                if ($(this).is(':checked')) {
+                    sectionIds += sectionIds == '' ? $(this).attr('data-secid') : ',' + $(this).attr('data-secid');
+                }
+            });
+
+            //console.log(gName + ">>>" + gId);
+
+            //console.log(sectionIds);
+
+            var obj = new Object();
+
+            obj.GroupID = gId;
+            obj.GroupName = gName;
+            obj.SectionIDs = sectionIds;
+            obj.Mode = 'ASSIGNGROUP';
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_BudgetGroupProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+
+            getgroup();
+
+
+            $('#addgroupdetails').modal('hide');
+            notify('Sucessfully updated.', 'GREEN');
+
+
+           // console.log(gName);
+
+        }
+
+        function DeleteGroupData() {
+
+            var gName = $('#allgdata').find('div input').val(); //get the groupname
+            var gId = $('#allgdata').find('div input').attr('data-id'); //get the group ID
+            var sectionIds = ''; //get all checked ids in comma seperated format
+
+            $('.chk_gid').each(function () {
+                if ($(this).is(':checked')) {
+                    sectionIds += sectionIds == '' ? $(this).attr('data-secid') : ',' + $(this).attr('data-secid');
+                }
+            });
+
+            //console.log(gName + ">>>" + gId);
+
+            //console.log(sectionIds);
+
+            var obj = new Object();
+
+            obj.GroupID = gId;
+            obj.GroupName = gName;
+            obj.SectionIDs = sectionIds;
+            obj.Mode = 'DELETEGROUP';
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_BudgetGroupProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+
+            getgroup();
+
+
+            $('#addgroupdetails').modal('hide');
+            if (o[0].Result == "success") {
+                notify('Sucessfully deleted.', 'GREEN');
+            }
+            else {
+                notify('Not deleted, This is default group', 'GREEN');
+            }
+            
+
+
+            //console.log(gName);
+
+        }
+
+
+        function CreateApprovalGroup() {
+            
+
+            
+            var pid = $("#PrjtDdl option:selected").attr('data-id');
+            var obj = new Object();
+            obj.ProjectID = pid;
+
+            obj.Mode = 'GETSECTION';
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_BudgetGroupProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+            var htm = '';
+
+
+            for (var i = 0; i < o.length; i++) {
+
+                var BudgetSectionID = o[i].BudgetSectionID;
+                
+                var Sectionnumber = o[i].Sectionnumber;
+                var isAssigned = 0;
+                var tbox = '';
+                
+                    htm += '<p style="margin-left: 10px;"><input class="chk_addgid" data-secid="' + BudgetSectionID + '" type="checkbox" />&nbsp;&nbsp;';
+                    htm += '' + Sectionnumber + ' - ' + o[i].Name + '</p>';
+               
+               
+
+            }
+
+
+
+            $('#addgroupcheck').html(htm);
+
+
+
+
+            //$('#addgroupdetails').modal('show');
+            //console.log(o);
+            //console.log(o.length);
+
+
+
+
+            $('#addnewgroup').modal('show');
+
+        }
+
+        function addnewGroupDB() {
+            var groupName = $('#txt_GroupName').val();
+            var isDefault = $('#chk_IsGroupDefault').is(':checked') ? '1' : '0';
+            if (groupName.trim() == '') {
+                notify('Please enter Group Name');
+                return;
+            }
+
+            var pid = $("#PrjtDdl option:selected").attr('data-id');
+            console.log("Project id = " + pid);
+
+            var obj = new Object();
+            obj.ProjectID = pid;
+            obj.GroupName = groupName;
+            
+            obj.IsDefault = isDefault;
+            obj.Mode = 'CREATEGROUP';
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_BudgetGroupProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+
+            var gId = o[0].ID;
+
+            var sectionIds = ''; //get all checked ids in comma seperated format
+            
+
+
+            $('.chk_addgid').each(function () {
+                if ($(this).is(':checked')) {
+                    sectionIds += sectionIds == '' ? $(this).attr('data-secid') : ',' + $(this).attr('data-secid');
+                }
+            });
+
+            console.log(sectionIds + ">>>" + gId + ">>>");
+
+            //return;
+
+            var obj = new Object();
+
+            obj.GroupID = gId;
+            
+            obj.SectionIDs = sectionIds;
+            obj.Mode = 'EDITASSIGNGROUP';
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_BudgetGroupProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o = DBSP.call_DB_Procedure();
+            o = o.data;
+
+
+
+
+            notify('Successfully created group.', 'GREEN');
+
+
+
+            getgroup();
+
+            $('#addnewgroup').modal('hide');
+
+            
+            console.log(groupName + ">>>" + isDefault);
+            $('#txt_GroupName').val('');
+            $('#chk_IsGroupDefault').prop('checked',false)
+        }
+
+
+        $(document).ready(function () {
+
+            window.setTimeout(function () {
+                getgroup();
+            }, 1000);
+            
+
+            $("#PrjtDdl").multiselect({
+                multiple: false
+                //,header: "Select an option"
+                , noneSelectedText: "Select a Project"
+                //,selectedList: 1
+            }).multiselectfilter();
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+           
+
+        });
+        function ProjectNameAtLabel(obj) {
+            var Projectval = $(obj).find("option:selected").attr('data-id');
+            getgroup();
+            Projectval = Projectval == null ? "" : Projectval.toString();
+            var ProjectText = $(obj).find('option:selected').text();
+            ProjectText = ProjectText == null ? "" : ProjectText.toString();
+            if (Projectval.toString() == null || Projectval.toString() == undefined || Projectval.toString() == 'undefined') {
+                $('#lbl_ProjectName').html('No project has been selected.');
+                return;
+            }
+            if (Projectval.toString() == '0') {
+                $('#lbl_ProjectName').html('No project has been selected.');
+            }
+            else {
+                $('#lbl_ProjectName').html('Selected Project : ' + $(obj).find('option:selected').text());
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container-fluid" style="zoom: 0.95;">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="col-sm-12">
+                <h3 class="section-header" style="margin-top:-20px;">Budget section</h3>
+                    </div>
+
+                <div class="col-sm-12 req">
+                
+                <select id="PrjtDdl" onchange="ProjectNameAtLabel(this);" class="form-control">
+                    <option data-id='0'>---Select Project---</option>
+                    @Html.Raw(ViewData["getAllProjectName"])
+                </select>
+            </div>
+
+            </div>
+
+          
+
+
+            <div class="col-sm-6">
+
+                  <div class="col-sm-12">
+                <h3 class="section-header" style="margin-top:-20px;">Advanced Search</h3>
+                    </div>
+
+
+                 <div class="col-sm-6">
+                <input placeholder="Search By Number eg. 1-5, 7, 10-12" type="text" onkeyup="srch(event);" id="txt_srchnumber" class="SectionRangeonly form-control" />
+                @*class="numberonly"*@
+            </div>
+            <div class="col-sm-6">
+                <input placeholder="Search By Name" type="text" onkeyup="srch(event);" id="txt_srchname" class="form-control" />
+            </div>
+
+            </div>
+        </div>
+        <div class="row">
+            
+        </div>
+        <div class="row">
+            
+        </div>
+       
+        <div class="row mrg10T">
+           
+        </div>
+     
+
+
+        <div class="row">
+        <div class="col-sm-6">
+                <div id="filtered1" style="overflow-y: auto; color: #7792A8; font-size: 16px; font-weight: bold;">
+                </div>
+            </div>
+           
+            
+
+
+            </div>
+
+        <div class="row mrg10T">
+            <div class="col-sm-6" style="text-align:right;">
+                <div id="filtered2" style="overflow-y: auto; color: #748FA5; font-size: 16px; font-weight: bold;">
+                </div>
+            </div>
+
+        </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div id="projectsections">
+                    </div>
+                </div>
+
+                 <div class="col-sm-6">
+                    <div id="approvalgroup" class="row" style="margin-left:0px;">
+                        <div class="security-title" onclick="CreateApprovalGroup();">
+                           <span style="text-align: center;width: 100%;position: absolute;">Approval groups</span> 
+                            <i onclick="CreateApprovalGroup();" style="cursor:pointer;" class="fa fa-plus"></i>
+                            
+                            
+                        </div>
+                        
+
+                    </div>
+                     <div id="appgroup" style="margin-top: 15px;"></div>
+
+                </div>
+
+
+            </div>
+        </div>
+    <!-- Modal -->
+    <div id="sectioneditor" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit Section</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <input type="hidden" id="sectioneditorid" />
+                        
+                        <div class="col-sm-6 req">
+                            <label>Number</label>
+                            <input type="text" class="form-control" id="sectioneditornumber" />
+                        </div>
+
+                        <div class="col-sm-6 req">
+                            <label>Name</label>
+                            <input type="text" class="form-control alltoupper" id="sectioneditorname" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-poms" onclick="removesectionnew();">Remove Data</button>
+                    <button type="button" class="btn btn-poms" onclick="editsectionnew();">Save Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addgroupdetails" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+    
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit Approval Group</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="allgdata">
+                       
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-poms" onclick="DeleteGroupData();">Delete Group</button>
+                    <button type="button" class="btn btn-poms" onclick="editGroupData();">Edit Group</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="addnewgroup" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add New Approval Group</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 req">
+                            <label>Name</label>
+                            <input type="text" class="form-control alltoupper" id="txt_GroupName" />
+                        </div>
+                       <div class="col-sm-12 mrg10T">
+                            <label for="chk_IsGroupDefault">Default?</label>
+                            <input type="checkbox" id="chk_IsGroupDefault" />
+                       </div>
+                        <div class="col-sm-12" id="addgroupcheck">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-poms" id="btn_addGroup" onclick="addnewGroupDB();">Add Group</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div id="addnewsection" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Section</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6 req">
+                            <label>Number</label>
+                            <input type="text" class="numberonly form-control" id="txt_BudgetNumber" />
+                        </div>
+                        <div class="col-sm-6 req">
+                            <label>Section Name</label>
+                            <input type="text" id="txt_BudgetDesc" class="form-control alltoupper" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-poms" id="btn_AddSctn">Add Section</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="float-panel-container">
+        <ul>
+            <li onclick="openaddsectionpopup();" title="Add New Section"><a href="javascript:void(0);"><i class="fa fa-plus mrg5R" ></i><span class="tooltip-toggle">Add New Section</span></a></li>
+        </ul>
+    </div>
+    <script>
+        function openaddsectionpopup() {
+            $('#addnewsection').modal('show');
+        }
+        var ProjectDdlForPage = $('#PrjtDdl'); //The project dropdown ID
+        $(document).ready(function () {
+          
+            var selectedpreferredpid = getProjectPreference();
+            console.log(selectedpreferredpid + "  >>>>>>>>>>>>>>>>>>>>>>>>");
+
+
+            if (selectedpreferredpid.split(',').length > 0) {
+                selectedpreferredpid = selectedpreferredpid.split(',')[0];
+            }
+            $(ProjectDdlForPage).find('option').each(function () {
+                if ($(this).attr('data-id') == selectedpreferredpid) {
+                    $(this).attr("selected", "true");
+                }
+            });
+            $(ProjectDdlForPage).multiselect('refresh');
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+            //To call page specific dropdown change event
+            ProjectNameAtLabel(ProjectDdlForPage);
+            var pid = selectedpreferredpid;
+            getsections(pid, '', '');
+            getpdetails(pid);
+            if (selectedpreferredpid == "0") {
+                $('#btn_AddSctn').val("Add section");
+            }
+            else {
+                $('#btn_AddSctn').val("Add section for " + $("#PrjtDdl option:selected").text());
+            }
+        });
+        $(document).on('change', ProjectDdlForPage, function () {
+            setProjectPreferenceBS(ProjectDdlForPage);
+        });
+    </script>
+</body>
+</html>

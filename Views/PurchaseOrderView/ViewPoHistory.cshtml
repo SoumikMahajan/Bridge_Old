@@ -1,0 +1,445 @@
+﻿@{    
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PO History</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">     
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" /> 
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>    
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>    
+    <link href="~/css/Misc.css" rel="stylesheet" /> 
+
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+     <script src="~/Scripts/jquery.bpopup.min.js"></script>
+      <script type="text/javascript">
+
+          
+
+          $(document).ready(function () {
+
+
+         
+              $('#breadcrumb').remove();
+
+
+              var url = '';
+              if (LOCALORSERVERNEW == 'LOCAL') {
+                  url = '/PurchaseOrderView/getPOHistory?poid=' + $('#hiddn_poid').val().trim();
+              }
+              else if (LOCALORSERVERNEW == 'SERVER') {
+                  url = 'PurchaseOrderView/getPOHistory?poid=' + $('#hiddn_poid').val().trim();
+              }
+
+              var dataTable = "";
+              var dt = "";
+              var po = new Array();
+
+
+              $.ajax({
+                  type: "POST",
+                  url: url,
+                  //data: { 'poid': $('#hiddn_poid').val().trim() },
+                  contentType: "application/json; charset=utf-8",
+                  dataType: "JSON",
+                  success: function (data) {
+                     
+                      
+                          dt = data.data;
+
+                          $('#POHistory').dataTable().fnDestroy();
+
+                         
+
+                              for (i = 0; i < dt.length ; i++) {
+
+                                  po[i] = new Array();
+                                  //Subhabartata Mondal
+
+                                  var POID = dt[i].PurchaseOrderID.toString();
+                                  POID = POID.substring(POID.length - 4, POID.length);
+
+                                  po[i][0] = '<i class="fa fa-list" onclick="openlineitems(\'' + dt[i].FldID + '\');"></i>'
+                                              + '<i style="margin-left:10px;" class="fa fa-history" onclick="openpohistory(\'' + parseInt(POID) + '\',\'' + dt[i].Version + '\');"></i>';
+                                  po[i][1] = dt[i].PurchaseOrderID;
+                                  po[i][2] = dt[i].VendorName;
+                                  po[i][3] = dt[i].BuyerName;
+                                  po[i][4] = dt[i].ArrivalDate;
+                                  po[i][5] = dt[i].CheckBackDate;
+                                  po[i][6] = dt[i].VendorCOName;
+                                  po[i][7] = dt[i].InsertDate;
+                                  po[i][8] = dt[i].Version;
+                                  po[i][9] = dt[i].AddedByName;
+                              }
+
+                              $('#POHistory').dataTable({
+                                  "processing": true,
+                                  "data": po,
+                                  "columns":
+                                    [
+                                      { "title": "Action" },
+                                      { "title": "PO #" },
+                                      { "title": "Vendor Name" },
+                                      { "title": "Buyer Name" },
+                                      { "title": "Ship Date" },
+                                      { "title": "CheckBack Date" },
+                                      { "title": "VendorCOName" },
+                                      { "title": "Created Date" },
+                                    { "title": "Version" },
+                                    { "title": "Added By" }
+
+                                    ],
+                                  "initComplete": function () {
+                                      //$('#UnCommittedPODetail tr').each(function () {
+                                      //    var id = $(this).find("td:eq(0)").html();
+                                      //    if (id != null) {
+                                      //        var html = $(this).html();
+                                      //        alert(html);
+                                      //    }
+                                      //});
+                                  }
+                              });
+
+
+                         
+                     
+                  }
+
+
+              });
+
+
+
+
+
+
+
+
+
+
+          });
+
+          function openpohistory(POID, Version) {
+
+              var url = '';
+              if (LOCALORSERVERNEW == 'LOCAL') {
+                  url = '/PurchaseOrderView/getPOApprovalsBackup';
+              }
+              else if (LOCALORSERVERNEW == 'SERVER') {
+                  url = 'PurchaseOrderView/getPOApprovalsBackup';
+              }
+
+
+              $.ajax({
+                  type: "POST",
+                  url: url,
+                  data: "{ 'POID' : '" + POID + "','Version' : '" + Version + "'}",
+                  contentType: "application/json; charset=utf-8",
+                  dataType: "JSON",
+                  success: function (data) {
+                      var html = "<div><table border='1' class='display no-footer dataTable'><thead><th>Action</th><th>Comment</th></thead>";
+                      data = data.data;
+                      
+                      for (var i = 0; i < data.length; i++) {
+                          html += "";
+                          var Approved = data[i].Approved;
+                          var Rejected = data[i].Rejected;
+                          var InsertDate = data[i].InsertDate;
+                          var Comment = data[i].Comment;
+                          var Version = data[i].Version;
+                          var UserName = data[i].UserName;
+                          var ManagerName = data[i].ManagerName;
+
+                          html += "<tr><td>";
+
+                          if (Approved == "1") {
+                              html += "Approved ";
+                          }
+                          else {
+                              html += "Rejected ";
+                          }
+
+                          var tmpstr = "";
+
+                          if (ManagerName == "") {
+                              tmpstr = "By " + UserName;
+                          }
+                          else {
+                              tmpstr = "By " + ManagerName + " on behalf of " + UserName;
+
+                          }
+                          html += tmpstr + " on " + InsertDate + "</td>";
+                          html += "<td>" + Comment + "</td></tr>";
+
+                      }
+                      html += "</table></div>";
+
+                      // alert(html);
+                      if(data.length == 0){
+                          html = "<span>No History found<span>";
+                      }
+
+                      $('#pohistory').html(html);
+
+                      $('#popuppohistory').bPopup({
+                          easing: 'easeOutBack', //uses jQuery easing plugin
+                          speed: 450,
+                          transition: 'slideDown',
+                          modalColor: 'rgb(18, 54, 65)'
+
+                      });
+
+                  }
+
+
+              });
+
+
+          }
+
+          function openlineitems(poid) {
+
+              var url = '';
+              if (LOCALORSERVERNEW == 'LOCAL') {
+                  url = '/PurchaseOrderView/getPOBackupLineItems?poid=' + poid;
+              }
+              else if (LOCALORSERVERNEW == 'SERVER') {
+                  url = 'PurchaseOrderView/getPOBackupLineItems?poid=' + poid;
+              }
+
+            
+
+              $.ajax({
+                  type: "POST",
+                  url: url,
+                  //data: { 'poid': $('#hiddn_poid').val().trim() },
+                  contentType: "application/json; charset=utf-8",
+                  dataType: "JSON",
+                  success: function (data) {
+
+                      
+                      var dataTable = "";
+                      var dt = "";
+                      var lineitems = new Array();
+
+                     // //console.log(data.data);
+
+
+                      dt = data.data;
+
+                      $('#polineitems').dataTable().fnDestroy();
+
+
+
+                      for (i = 0; i < dt.length ; i++) {
+
+                          lineitems[i] = new Array();
+
+                          lineitems[i][0] = dt[i].ItemDescription;
+                          lineitems[i][1] = dt[i].SpecNum;
+                          lineitems[i][2] = dt[i].Vendor;
+                          lineitems[i][3] = dt[i].Quantity;
+                          lineitems[i][4] = dt[i].UOM;
+                          lineitems[i][5] = dt[i].Cost;
+                          lineitems[i][6] = dt[i].Cost * dt[i].Quantity;
+                         
+                      }
+
+                      $('#polineitems').dataTable({
+                          "processing": true,
+                          "data": lineitems,
+                          "columns":
+                            [
+                              { "title": "ItemDescription" },
+                              { "title": "SpecNum" },
+                              { "title": "Vendor" },
+                              { "title": "Quantity" },
+                              { "title": "UOM  " },
+                              { "title": "Cost" },
+                               { "title": "Total" }
+
+                            ],
+                          "initComplete": function () {
+                              //$('#UnCommittedPODetail tr').each(function () {
+                              //    var id = $(this).find("td:eq(0)").html();
+                              //    if (id != null) {
+                              //        var html = $(this).html();
+                              //        alert(html);
+                              //    }
+                              //});
+                          }
+                      });
+
+
+
+                      $('#popuplineitems').bPopup({
+                          easing: 'easeOutBack', //uses jQuery easing plugin
+                          speed: 450,
+                          transition: 'slideDown',
+                          modalColor: 'rgb(18, 54, 65)'
+
+                      });
+
+                  }
+
+              });
+
+          }
+
+      </script>
+    <style>
+        table,
+        tr,
+        th,
+        td {
+            border : 1px;
+        }
+        #popuplineitems .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 6px 0px;
+            width: 96%;
+            height: 20px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+    </style>
+            
+</head>
+<body>
+    <input type="hidden" id="hiddn_poid" value="@ViewBag.POID" />
+
+    
+     <div id="popuplineitems" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+
+        <span class="button b-close"><span>X</span></span>
+
+
+         <table cellpadding="0" cellspacing="0" border="0" class="display" id="polineitems" style="text-align: center;">
+               <thead>
+                <tr>
+                 <th></th>           
+                 <th></th>           
+                 <th></th>           
+                 <th></th>           
+                 <th></th>           
+                 <th></th>           
+                 <th></th>           
+                     
+               </tr>
+             </thead>  
+         </table>
+
+
+
+
+
+
+
+         </div>
+
+    <div id="popuppohistory" class="displaynone" style="text-align: center; min-height:150px; min-width:300px; background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+
+        <span class="button b-close"><span>X</span></span>
+        <div id="pohistory">
+
+
+        </div>
+        </div>
+
+    <div class="main_container" id="angulardiv" ng-app="Project" ng-controller="PO">
+       
+      
+        <div class="logo_container_heading">Purchase Order History</div>      
+
+        
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="POHistory" style="text-align: center;">
+               <thead>
+                <tr>
+                 <th></th>           
+                 <th></th>           
+                 <th></th>           
+                 <th></th>           
+                 <th></th>           
+                 <th></th>           
+                 <th></th>           
+                 <th></th>           
+                 <th></th>           
+                 <th></th>           
+               </tr>
+             </thead>  
+         </table>
+
+
+
+
+
+
+
+    
+    </div>
+    
+   
+</body>     
+    
+
+</html>

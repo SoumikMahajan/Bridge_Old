@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://appcenter.intuit.com/Content/IA/intuit.ipp.anywhere.js"></script>
+    <script type="text/javascript">
+            $(document).ready(function () {
+
+                intuit.ipp.anywhere.setup({
+                    grantUrl: 'https://www.thebridgebytcg.com/Quickbook/Authentication?connect=true',
+                    datasources: {
+                        quickbooks: true,
+                        payments: false
+                    }
+                });
+
+
+            });
+    </script>
+
+</head>
+<body>
+    <div>
+
+        <ipp:connectToIntuit></ipp:connectToIntuit><br />
+
+    </div>
+</body>
+</html>

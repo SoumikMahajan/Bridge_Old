@@ -1,0 +1,593 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>InvoiceEntryEdit</title>
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    @* <script src="~/Scripts/angular.min.js"></script>*@
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    @*<script src="~/Scripts/AddUser.js"></script>*@
+    <script src="~/Scripts/Project.js"></script>
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/swfupload.js"></script>
+    <script src="~/Scripts/jquery.swfupload.js"></script>
+    <link href="~/css/stylesForFileUpload.css" rel="stylesheet" />
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>
+
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <style>
+        .selectedrow {
+            background-color: rgb(239, 255, 144);
+        }
+        .singledown
+        {
+            background: url('../Images/Arrow-Down-s.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+        }
+
+        .doubledown {
+            background: url('../Images/Arrow-Down-d.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+        }
+
+        .singleup {
+            margin-left:20px;
+            background: url('../Images/Arrow-Down-s.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+            -webkit-transform: rotate(180deg);
+        }
+
+        .doubleup {
+            background: url('../Images/Arrow-Down-d.png') no-repeat;
+            background-size: 25px;
+            height: 30px;
+            width: 30px;
+            -webkit-transform: rotate(180deg);
+        }
+        
+    </style>
+     <script type="text/javascript">
+         $(function () {
+
+             var table = $('#tblPOItemSelector').DataTable();
+
+             table
+                 .clear()
+                 .draw();
+             $('#tblPOItemSelector_filter').hide();
+             $('#tblPOItemSelector_length').hide();
+
+             
+             var date = new Date();
+             var currentMonth = date.getMonth();
+             var currentDate = date.getDate();
+             var currentYear = date.getFullYear();
+
+             $('#txt_InvoiceDate').datepicker({
+                 changeMonth: true,
+                 changeYear: true,
+                 dateFormat: 'MM dd yy'
+                 //,minDate: new Date(currentYear, currentMonth, currentDate)
+             });
+             $('#txt_InvoiceDate').datepicker("setDate", date);
+
+
+             $('#txt_InvoiceNumber').keypress(function (event) {
+                 var keycode = (event.keyCode ? event.keyCode : event.which);
+                 if (keycode == '13') {
+                     if ($('#txt_InvoiceNumber').val() == '') {
+                         alert('Please enter Invoice Number');
+                     }                     
+                     else {
+                         getInvoiceDetails($('#txt_InvoiceNumber').val());
+                     }
+                 }
+             });
+         });
+    </script>
+    <script type="text/javascript">
+
+        //Worked For 3_11_2015
+        function getInvoiceDetails(InvoiceNumber) {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/GetInvoice';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/GetInvoice';
+            }
+
+            url += "?InvoiceNumberVendor=" + InvoiceNumber;
+           // url += "&PONumber=" + PONumber;           
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                success: function (data) {
+                    //Added By Subhabrata Mondal 3_11_2015
+                    select_Invoive_Details(InvoiceNumber);
+                    selectpo(data);
+                    
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+
+
+        function select_Invoive_Details(InvoiceNumber)
+        {
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/GetInvoiceDetails';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/GetInvoiceDetails';
+            }
+
+            url += "?InvoiceNumberVendor=" + InvoiceNumber;
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                success: function (data) {
+                    //Added By Subhabrata Mondal 3_11_2015
+                    var invoice = JSON.parse(data);
+                    setInvoiceDetails(invoice);
+                    getProjectAccount1(invoice.ProjectAccount, $('#Ddl_ProjectAccount'));
+                    //alert(invoice.ProjectAccount);
+                    //$('#Ddl_ProjectAccount').val(invoice.ProjectAccount);
+                    ShowInvoiceTable(invoice);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+
+        function setInvoiceDetails(invoice)
+        {
+            //alert(invoice.TotalInvoice);
+            $("#txt_TotalInvoiceAmount").val(invoice.InvoiceAmount);
+            $("#txt_InvoiceMemo").val(invoice.Memo);
+            $("#txt_Terms").val(invoice.Terms);
+            $("#txt_SubtotalInvoice").val(invoice.Subtotal);
+            $("#txt_TotalTax1").val(invoice.Tax1);
+            $("#txt_TotalTax2").val(invoice.Tax2);
+            $("#txt_TotalTax3").val(invoice.Tax3);
+            $("#txt_TotalInvoice").val(invoice.TotalInvoice);
+            $('#txt_InvoiceDate').datepicker("setDate", new Date(invoice.InvoiceDate));
+            
+            
+        }
+
+        function getProjectAccount1(ProjectAccount, $Ddl_ProjectAccount) {
+            //
+            // var ProjectID = $('#Hdn_ProjectID').val();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/GetAllProjectAccount';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/GetAllProjectAccount';
+            }
+            url += "?ProjectAccount=" + ProjectAccount;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                success: function (data) {
+                    var html = '<option value="0">--Select Project Account--</option>';
+                    html += data;
+                    $('#Ddl_ProjectAccount').html(html);
+                    
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+
+        }
+
+        function ShowInvoiceTable(invoice) {
+
+            var Ddlhtml = "<select>" + $('#Ddl_ProjectAccount').clone().html() + "<select>";
+            var html2 = '';
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/GetInvoiceItemDetails';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/GetInvoiceItemDetails';
+            }
+            url += "?InvoiveID=" + invoice.InvoiceNumber;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "",
+                success: function (data) {
+
+                    var invoice_items = JSON.parse(data);
+                    var html="";
+                    $.each(invoice_items,function(index)
+                    {
+                       
+                        
+                            url = '';
+                            if (LOCALORSERVERNEW == 'LOCAL') {
+                                url = '/Invoice/GetAllProjectAccount';
+                            }
+                            else if (LOCALORSERVERNEW == 'SERVER') {
+                                url = 'Invoice/GetAllProjectAccount';
+                            }
+                            url += "?ProjectAccount=" + invoice.ProjectAccount;
+
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                datatype: "json",
+                                contentType: "application/json; charset=utf-8",
+                                data: "",
+                                async:false,
+                                success: function (data) {
+                                    html2 = '<option value="0">--Select Project Account--</option>';
+                                    
+                                    html2 += data;
+                                    
+
+                                },
+                                error: function () { notify('Something went wrong'); }
+                            });
+                        
+                            
+                       
+                        var innerhtml = "";
+                        //var total = parseFloat(data[i].Tax1) + parseFloat(data[i].Tax2) + parseFloat(data[i].Tax3) + parseFloat(data[i].Total);
+                        innerhtml = "<tr >"
+                                  + ">"
+                                  + "<td>" + "<input type='text' value='" + invoice_items[index].Percent + "' class='percentclass' onkeyup='calculatepercent(this);' />" + "</td>"
+                                  + "<td>" + invoice_items[index].PurchaseOrderNumber + "</td>"
+                                  + "<td>" + invoice_items[index].POLineItemNumber + "</td>"
+                                  + "<td>" + invoice_items[index].Spec + "</td>"
+                                  + "<td>" + "<input type='text' value='" + invoice_items[index].Description + "' />" + "</td>"
+                                  + "<td>" + invoice_items[index].Note + "</td>"
+                                  + "<td>" + invoice_items[index].Quantity + "</td>"
+                                  + "<td>" + invoice_items[index].Amount + "</td>"
+                                  + "<td>" + "Tax" + "</td>"
+                                  + "<td>" + invoice_items[index].LineItemTotal + "</td>"
+                                  //+ "<td>" + "Account" + "</td>"
+                                  //+ "<td>" + Ddlhtml + "</td>"
+                        +"<td><select>"+
+                        html2
+                               +"</select></td>"   
+
+                                  + "</tr>";
+                        
+
+                        ////console.log($('#Ddl_ProjectAccount').clone().html());
+                        html += innerhtml;
+
+                    })
+                    $('#tblInvoiceItems').find("tr:gt(0)").remove();
+                    $('#tblInvoiceItems tbody').append(html);
+
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+           
+
+            SyncAll();
+        }
+
+        //Worked For 3_11_2015
+
+        function selectpo(obj) {
+            var poid = obj;// $(obj).find('td:eq(0)').text();
+            //var ProjectID = $(obj).find('td:eq(6)').text();
+            //$('#Hdn_ProjectID').val(ProjectID);
+            //getProjectAccount(ProjectID);
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getPOLineItemSelectorBasedOnPO';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getPOLineItemSelectorBasedOnPO';
+            }
+            url += "?POID=" + poid;
+            $.get(url)
+            .success(function (response) {
+                totdata = JSON.parse(response);
+                totdata = totdata.data;
+                // //console.log(totdata);
+                if (totdata.length == 0) {
+                    var table = $('#tblPOItemSelector').DataTable();
+                    table
+                        .clear()
+                        .draw();
+                    return;
+                };
+                POLineItemSelector = [];
+                for (i = 0; i < totdata.length ; i++) {
+                    POLineItemSelector[i] = new Array();
+                    POLineItemSelector[i][0] = totdata[i].POLineItemID;
+                    POLineItemSelector[i][1] = "<input type='button' value='Select' />";
+                    POLineItemSelector[i][2] = totdata[i].TotalID;
+                    POLineItemSelector[i][3] = totdata[i].SpecNum;
+                    POLineItemSelector[i][4] = totdata[i].ItemDescription;
+                    POLineItemSelector[i][5] = totdata[i].Quantity;
+                    POLineItemSelector[i][6] = totdata[i].Amount;
+                    POLineItemSelector[i][7] = totdata[i].AmountRemaining;
+                    POLineItemSelector[i][8] = (i + 1);
+                    POLineItemSelector[i][9] = totdata[i].Amount;
+                }
+                $('#tblPOItemSelector').dataTable().fnDestroy();
+                $('#tblPOItemSelector').dataTable({
+                    "processing": true,
+                    "data": POLineItemSelector,
+                    "columns": [
+                        { "title": "POLineItemID", "class": "displaynone" },
+                        { "title": "Action", "class": "displaynone" },
+                        { "title": "Item #", "class": "selectpo" },
+                        { "title": "Spec" },
+                        { "title": "Description" },
+                        { "title": "QTY" },
+                        { "title": "Amount" },
+                        { "title": "Remaining" },
+                        { "title": "RowIndex", "class": "displaynone" },
+                        { "title": "Total", "class": "displaynone" }
+                    ],
+                    paging: false,
+                    "initComplete": function () {
+                        $('#tblPOItemSelector_filter').hide();
+                    },
+                    "order": [[2, "asc"]],
+                    "aoColumnDefs": [
+                       // { 'bSortable': false, 'aTargets': [0, 1, 2, 3, 4, 5,6,7] }
+                    ]
+                });
+                var i = 1;
+                $('#tblPOItemSelector tbody tr').each(function () {
+                    $(this).find("td:eq(8)").html(i++);
+                });
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function fetch(obj) {
+            var percent = $('#percentage').val();
+            var poidall = '';
+            if (obj == "onlyselected") {
+                $('.selectedrow').each(function () {
+                    if (!$(this).hasClass('noselect')) {
+                        $(this).addClass('noselect');
+                        var poid = $(this).find('td:eq(0)').html();
+                        poidall += poidall == "" ? poid : "^" + poid;
+                    }
+                });
+            }
+            else {
+                $('#tblPOItemSelector tbody tr').each(function () {
+                    if (!$(this).hasClass('noselect')) {
+                        $(this).addClass('noselect');
+                        var poid = $(this).find('td:eq(0)').html();
+                        poidall += poidall == "" ? poid : "^" + poid;
+                    }
+                });
+            }
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/Invoice/getInvoiceDataAfterSelecting';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Invoice/getInvoiceDataAfterSelecting';
+            }
+            cancelselections();
+            $.ajax({
+                type: "POST",
+                url: url,
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: "{ \"PoidAll\" : \"" + poidall + "\", \"percent\" : \"" + percent + "\"}",
+                success: function (data) {
+                    data = JSON.parse(data).data;
+                    BuildInvoiceTable(data);
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+    </script>
+</head>
+<body>
+    <input type="hidden" id="Hdn_ProjectID" value="0" />
+    <div class="main_container" id="angulardiv">
+      
+        <div class="logo_container_heading">Invoice Edit</div>
+        <div class="edit_vendor_full">
+            <div class="edit_vendor_half">
+                <div class="user_panel_container">
+                    <label>PO Items</label>
+                    <fieldset style=" min-height:230px;">
+                        <legend>Items</legend>
+                        <div>
+                            <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblPOItemSelector" style="text-align: center;">
+                                <thead>
+                                    <tr class="theader">
+                                        <th class="displaynone">POLineItemID</th>
+                                        <th class="displaynone" style="width: 200px;">Action</th>
+                                        <th>Item #</th>
+                                        <th>Spec</th>
+                                        <th>Description</th>
+                                        <th>QTY</th>
+                                        <th>Amount</th>
+                                        <th>Remaining</th>
+                                        <th class="displaynone">RowIndex</th>
+                                        <th class="displaynone">Total</th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="edit_vendor_half" style=" padding-top: 45px;">
+                
+                    <div style="position:relative;width:38%; float:left;">
+                        <div class="user_panel_container">
+                            <label style=" padding: 0px 0px;">Invoice Date</label>
+                            <input type="text" id="txt_InvoiceDate" />
+                        </div>
+                        <div class="user_panel_container">
+                            <label style=" padding: 0px 0px;">Invoice Number</label>
+                            <input type="text" id="txt_InvoiceNumber" />
+                        </div>
+                        <div class="user_panel_container">
+                            <label style=" padding: 0px 0px;">Total Invoice Amount</label>
+                            <input type="text" id="txt_TotalInvoiceAmount" />
+                        </div>
+                    </div>
+                <div style="position: relative; width: 58%; float: left; margin-left:4%;">
+                    <div class="user_panel_container" style="width: 48%;">
+                        <label style=" padding: 0px 0px;">Terms</label>
+                        <select id="txt_Terms">
+                            <option value="0">--Select Terms--</option>
+                            @Html.Raw(ViewData["getAllTerms"])
+                        </select>
+                    </div>
+                    <div class="user_panel_container" style="width: 48%; margin-left:4%;">
+                        <label style=" padding: 0px 0px;">Project Account</label>
+                        @*<input type="text" id="txt_ProjectAccount" />*@
+                        <select id="Ddl_ProjectAccount">
+                            <option value="0">--Select Project Account--</option>
+                            @Html.Raw(ViewData["getProjectAccount"])
+                        </select>
+                    </div>
+                    <div class="user_panel_container">
+                        <label style=" padding: 0px 0px;">Invoice Memo</label>
+                        <textarea id="txt_InvoiceMemo" style="height: 97px;" ></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <label style="height: 25px;top: -7px;position: relative;">Apply %</label>
+        <input type="text" value="100" id="percentage" class="floatonly" style="height: 25px;top: -7px;position: relative;" />
+        <input type="button" class="singledown" onclick="fetch('onlyselected');" />
+        <input type="button" class="doubledown" onclick="fetch('all');" />
+
+        <input type="button" class="singleup" />
+        <input type="button" class="doubleup" />
+        
+
+
+        <div class="user_panel_container">
+           
+            <fieldset style="min-height:230px;">
+                <legend>Invoice</legend>
+                <div>
+                    <table cellpadding="0" cellspacing="0" border="0" class="display no-footer dataTable" id="tblInvoiceItems" style="text-align: center;">
+                        <thead>
+                            <tr class="theader">
+                           
+                                <th>Percent</th>
+                                <th>PO #</th>
+                                <th>Item #</th>
+                                <th>Spec</th>
+                                <th>Description</th>
+                                <th>Note</th>
+                                <th>Qty</th>
+                                <th>Amount</th>
+                                <th>Taxes</th>
+                                <th>Line Item Total</th>
+                                <th>Project Account</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                    
+                    </table>
+                </div>
+            </fieldset>
+        </div>
+
+                
+        <div class="edit_vendor_full">
+            <div class="edit-vendor-half">
+
+            </div>
+            <div class="edit-vendor-half">
+                <div class="user_panel_container">
+                    <label>Subtotal Invoice</label>
+                    <input type="text" id="txt_SubtotalInvoice" />
+                </div>
+                <div class="user_panel_container">
+                    <label>Total Tax 1</label>
+                    <input type="text" id="txt_TotalTax1" />
+                </div>
+                <div class="user_panel_container">
+                    <label>Total Tax 2</label>
+                    <input type="text" id="txt_TotalTax2" />
+                </div>
+                <div class="user_panel_container">
+                    <label>Total Tax 3</label>
+                    <input type="text" id="txt_TotalTax3" />
+                </div>
+                <div class="user_panel_container">
+                    <label>Total Invoice</label>
+                    <input type="text" id="txt_TotalInvoice" />
+                </div>
+            </div>
+        </div>
+
+        <div class="edit_vendor_full">
+            <input type="button" id="btn_Save" value="Save" onclick="SaveInvoice();"/>
+        </div>
+    </div>
+</body>
+</html>

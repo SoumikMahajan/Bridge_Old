@@ -1,0 +1,310 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Status By Vendor</title>
+
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/Misc.css" rel="stylesheet" />
+
+
+
+
+
+
+  
+    <script type="text/javascript">
+
+        
+
+        function ExpeditNoteReportGeneration() {
+            var ProjectID = $('#Ddl_SelPro').val();
+            var SectionID = '';//$('#Ddl_SelProSec').val();
+            var PurchaseOrder = '';//$('#Txt_PurchaseOrder').val();
+            if (ProjectID == null || ProjectID == undefined || ProjectID == 'null' || ProjectID == 'undefined' || ProjectID == '0') {
+                ProjectID = '';
+                notify('Select a Project');
+                $('#Ddl_SelPro').focus();
+                return;
+            }
+            //if (SectionID == null || SectionID == undefined || SectionID == 'null' || SectionID == 'undefined') {
+            //    SectionID = '';
+            //}
+            //if (PurchaseOrder == null || PurchaseOrder == undefined || PurchaseOrder == 'null' || PurchaseOrder == 'undefined') {
+            //    PurchaseOrder = '';
+            //}
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/Reports/StatusByVendorGeneration';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Reports/StatusByVendorGeneration';
+            }
+            url1 += "?ProjectID=" + ProjectID;
+            url1 += "&SectionID=" + SectionID;
+            url1 += "&PurchaseOrder=" + PurchaseOrder;
+            var totdata = '';
+            $.get(url1)
+               .success(function (response) {
+                   var html = "";
+
+                   var url2 = '';
+                   if (LOCALORSERVERNEW == 'LOCAL') {
+                       totdata = response;
+                   }
+                   else if (LOCALORSERVERNEW == 'SERVER') {
+                       totdata = "POMS/" + response;
+                   }
+
+
+                   setTimeout(function () {
+                       window.open(totdata, '_blank');
+                   }, 1000);
+               });
+        }
+
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $('#Btn_Excel').click(function () {
+                var AllProjectID = $('#txt_Project').val();
+                var OrderPattern = "";
+                var Status = $("#ddl_ItemStatus").val();
+
+                var From_Date;
+                var To_date;
+
+                if (AllProjectID == null) {
+                    notify('Please Select Project');
+                    return;
+                }
+
+                if ($("#txt_FromDate").val() != '')
+                    From_Date = ($("#txt_FromDate").val());
+                else
+                    From_Date = null;
+                if ($("#txt_ToDate").val() != '')
+                    To_date = ($("#txt_ToDate").val());
+                else
+                    To_date = null;
+
+                $(".sort_div").find("span").each(function (index, item) {
+
+                    var orderIndex = $(this).attr("data-id");
+
+                    if (typeof (orderIndex) != 'undefined') {
+
+                        if (orderIndex == "1")
+                            OrderPattern += '1' + ",";
+                        if (orderIndex == "2")
+                            OrderPattern += '2' + ",";
+                        if (orderIndex == "3")
+                            OrderPattern += '3' + ",";
+
+                    }
+
+                });
+
+                if (OrderPattern == "") {
+                    OrderPattern = "0";
+                }
+                else {
+
+                    OrderPattern = OrderPattern.substr(0, (OrderPattern.length - 1));
+                }
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/Reports/StatusByVendorExportFile';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'Reports/StatusByVendorExportFile';
+                }
+                url1 += "?AllProjectID=" + AllProjectID;
+                url1 += "&Status=" + Status;
+                url1 += "&StartDate=" + From_Date;
+                url1 += "&EndDate=" + To_date;
+                url1 += "&order=" + OrderPattern;
+
+
+                var totdata = '';
+                $.get(url1)
+                   .success(function (response) {
+                       var html = "";
+                       var url2 = '';
+                       if (response == '0') {
+                           notify('No records found!!!');
+                           return;
+                       }
+                       if (LOCALORSERVERNEW == 'LOCAL') {
+                           totdata = response;
+                       }
+                       else if (LOCALORSERVERNEW == 'SERVER') {
+                           totdata = "POMS/" + response;
+                       }
+
+
+                       setTimeout(function () {
+                           window.open(totdata, '_blank');
+                       }, 1000);
+                   });
+            });
+        });
+
+    </script>
+</head>
+<body>
+
+    <div class="main_container" id="angulardiv" ng-app="Reports" ng-controller="Reports">
+
+        <div class="logo_container_heading"> Status By Vendor </div>
+
+        @*------------------------------------------Design Modified By Subhabrata Mondal 13_11_2015 Start----------------------------------------*@
+
+        @*Reason to change: As per Reporting Specification Mentioned in Test Plan 151105 file Line No 2*@
+
+        <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+        <script src="~/Scripts/jquery.multiselect.js"></script>
+        <script type="text/javascript" src="~/Scripts/ReportFilter.js"></script>
+        <div class="user_panel_container policy-items">
+
+            <div class="user_panel_container policy-items">
+                <label>Select Project</label>
+                @*------------------------------------------------Previously Begin---------------------------------------------------*@
+
+                @*<select id="Ddl_SelPro">
+            <option data-id="0" value="0">--Select Project--</option>
+            @Html.Raw(ViewData["getAllProjectName"])
+        </select>*@
+
+                @*------------------------------------------------Previously End---------------------------------------------------*@
+
+
+                @*-------------------------------------------After Modification Start----------------------------------------------*@
+
+                <select id="txt_Project" multiple="multiple" onchange="ShowProjectsAtLabel(this);">
+                    @*<option value="0">--Select Project--</option>*@
+                    @Html.Raw(ViewData["getAllProjectNameNumber"])
+                </select>
+                <label id="LabelForProject"></label>
+                @*-------------------------------------------After Modification End----------------------------------------------*@
+            </div>
+            <div id="section_panel">
+                
+
+                @*------------------------------------------------------Newly Added--------------------------------------------------*@
+                
+
+                <div class="edit_vendor_full">
+                    <div class="user_panel_container" style="width:23.5%;">
+                        <label>From Date</label>
+                        <input type="text" id="txt_FromDate" onkeypress="return IsNumber(event);" placeholder="Select From Date" class="makedisable" />
+                    </div>
+
+
+                    <div class="user_panel_container" style="width:23.5%;margin-left:2%;">
+                        <label>To Date</label>
+                        <input type="text" id="txt_ToDate" onkeypress="return IsNumber(event);" placeholder="Select To Date" class="makedisable" />
+                    </div>
+                    <div class="user_panel_container" style="width:23.5%;margin-left:2%;">
+                        <label>Item Status</label>
+                        <select id="ddl_ItemStatus">
+                            <option value="0">--Select Status--</option>
+                            @Html.Raw(ViewData["getItemStatus"])
+                        </select>
+                    </div>
+                </div>
+
+                <div class="edit_vendor_full">
+                    <div class="user_panel_container" style="width:23.5%;">
+                        <label>Sorting</label>
+                        <select id="DDl_Sort2" multiple="multiple">
+                            <option value="1" data-id="1">Vendor</option>
+                            <option value="2" data-id="2">PO</option>
+                            <option value="3" data-id="3">Item</option>
+
+                        </select>
+                    </div>
+                    <div class="user_panel_container" style="width:23.5%; margin-left:2%;">
+                        <label>Sorting Order</label>
+                        <div class="sort_div user_panel_container">
+
+
+                        </div>
+                    </div>
+
+                </div>
+                @*------------------------------------------------------Newly Added--------------------------------------------------*@
+
+            </div>
+
+            @*------------------------------------------Design Modified By Subhabrata Mondal 13_11_2015 End----------------------------------------5*@
+            @*<div class="user_panel_container policy-items">
+                <label>Purchase Order</label>
+                <input type="text" id="Txt_PurchaseOrder" />
+            </div>*@
+            <div class="user_panel_container policy-items">
+                <input type="button" id="Btn_Report" value="Export to PDF" onclick="ExpeditNoteReportGenerationFilter();" />
+                <input type="button" id="Btn_Excel" value="Export to Excel" />
+            </div>
+            <div class="user_panel_container policy-items" id="RPTLink">
+
+            </div>
+        </div>
+
+</body>
+</html>
+
+@*------------------------------------------CSS Modified By Subhabrata Mondal 13_11_2015 Start----------------------------------------5*@
+<style type="text/css">
+    .remove { /* width: 450px; */
+        border: 1px solid #060506;
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        display: block;
+        padding: 5px;
+        text-decoration: none;
+        background: #B01000;
+        color: #E2E2E2;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        font-family: helvetica;
+        font-size: 13px;
+        position: relative;
+    }
+
+        .remove a {
+            cursor: pointer;
+            position: absolute;
+            top: -5px;
+            right: -6px;
+            font-size: 0.9em;
+            color: white;
+            background: black;
+            border-radius: 100px;
+            padding: 7px;
+            line-height: 9px;
+        }
+</style>
+
+@*------------------------------------------CSS Modified By Subhabrata Mondal 13_11_2015 End----------------------------------------5*@

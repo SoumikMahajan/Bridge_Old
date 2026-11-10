@@ -1,0 +1,442 @@
+﻿@{    
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Purchase Order</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/Misc.css" rel="stylesheet" />
+
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+
+
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+
+    <script type="text/javascript">
+
+        function getValForNew() {
+            
+            $('#UnCommittedPODetail thead').html('');
+
+            var table1 = $('#UnCommittedPODetail').DataTable();
+            table1.clear().draw();
+            var poid = $('#prev_poid').val();
+            
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrderView/getAllPONew_PO';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrderView/getAllPONew_PO';
+            }
+            var dataTable = "";
+            var dt = "";
+            var us = new Array();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'POID': '" + poid + "' }",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+                    if (data != '') {
+                        dt = data.data;
+                        if (dt.length == 0) {
+                            return;
+                        }
+                        $('#UnCommittedPODetail').dataTable().fnDestroy();
+                        if (dt.length > 0) {
+                            for (i = 0; i < dt.length ; i++) {
+                                us[i] = new Array();
+                                us[i][0] = '<i class="fa fa-history"style="font-size: 1.5em;cursor:pointer;" onclick="ViewPurchaseOrderHistory(\'' + dt[i].PurchaseOrderID + '\');"></i><i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="ViewpurchaseOrder(\'' + dt[i].PurchaseOrderID + '\');"></i><i class="fa fa-trash-o fa-fw" style="font-size: 1.3em;cursor:pointer;" onclick="deletepurchaseOrder(\'' + dt[i].PurchaseOrderID + '\');"></i>';//<i class="fa fa-pencil-square-o" style="font-size: 1.5em;cursor:pointer;" onclick="editpo(\'' + dt[i].PurchaseOrderID + '\');">
+                                us[i][1] = dt[i].PurchaseOrderID;
+                                us[i][2] = dt[i].ProjectNumber;
+                                us[i][3] = dt[i].VendorName;
+                                us[i][4] = dt[i].BuyerName;
+                                us[i][5] = dt[i].ShipDate;
+                                us[i][6] = dt[i].CheckBackDate;
+                                us[i][7] = dt[i].IsCommited;
+                                // us[i][8] = dt[i].IsDeleted;
+                            }
+                            $('#UnCommittedPODetail').dataTable({
+                                "processing": true,
+                                "data": us,
+                                "columns":
+                                  [
+                                    { "title": "Action" },
+                                    { "title": "PO Number" },
+                                    { "title": "Proj Number" },
+                                    { "title": "Vendor Common" },
+                                    { "title": "Buyer" },
+                                    { "title": "Ship Date" },
+
+                                    { "title": "CheckBack Date" },
+                                    { "title": "Commit" },
+                                    //{ "title": "IsCommitted", "class": "displaynone" },
+                                    //{ "title": "IsDeleted" }
+                                  ],
+                                "initComplete": function () {
+
+                                }
+                            });
+                            var html = "";
+                            html = "<tr>"
+                                  + "<th class='Resetth' rowspan='1' colspan='1'>"
+                                  + "<a><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px;' /></a>"
+                                  + "</th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='1' type='text' placeholder='Search Po'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='2' type='text' placeholder='Proj Name'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='3' type='text' placeholder='vendor Common '></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='4' type='text' placeholder='Buyer '></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='5' type='text' placeholder='shipdate'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='6' type='text' placeholder='Chack Back'></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='7' type='text' placeholder='Commet'></th>"
+
+                                  + "</tr>";
+                            $('#UnCommittedPODetail thead').append(html);
+                            var table = $('#UnCommittedPODetail').DataTable();
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+                                table
+                                       .column(indx)
+                                       .search(txt)
+                                       .draw();
+                                //RowHtmlRendernew();
+                            });
+                        }
+                        else {
+                            var table = $('#UnCommittedPODetail').DataTable();
+                            table.clear().draw();
+                        }
+                        $('#UnCommittedPODetail').show();
+                    }
+                    else {
+                        alert('Wrong');
+                    }
+                }
+            });
+        }
+
+
+        $(document).ready(function () {
+
+            var table = $('#UnCommittedPODetail').DataTable();
+            table.clear().draw();
+
+            var poid = $('#prev_poid').val();
+            if (poid != "") {
+
+                getValForNew();
+            }
+
+        });
+
+        function ResetSearch() {
+            var table = $('#UnCommittedPODetail').DataTable();
+            $('.srch').each(function () {
+                this.value = '';
+                var indx = $(this).attr('data-indx');
+                var txt = this.value;
+                table
+                       .column(indx)
+                       .search(txt)
+                       .draw();
+            });
+        }
+
+        function getVal() {
+            $('#UnCommittedPODetail thead').html('');
+            var table1 = $('#UnCommittedPODetail').DataTable();
+            table1.clear().draw();
+            var ProjectID = $('#txt_Project').val();
+            var txtItrmSpc = $('#txtItrmSpc').val();
+            var VendorID = $('#txt_Project3').val();
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrderView/getAllPONew';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrderView/getAllPONew';
+            }
+            var dataTable = "";
+            var dt = "";
+            var us = new Array();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "{ 'ProjectID': '" + ProjectID + "', 'VendorName': '" + VendorID + "','ItemSpc':'" + txtItrmSpc + "' }",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (data) {
+                    if (data != '') {
+                        dt = data.data;
+                        if (dt.length == 0) {
+                            return;
+                        }
+                        $('#UnCommittedPODetail').dataTable().fnDestroy();
+                        if (dt.length > 0) {
+                            for (i = 0; i < dt.length ; i++) {
+                                var PurchaseOrderID = dt[i].PurchaseOrderID.split('#')[0];
+                                var PurchaseOrderIDShow = dt[i].PurchaseOrderID.split('#')[1];
+                                us[i] = new Array();
+                                us[i][0] = '<i class="fa fa-history"style="font-size: 1.5em;cursor:pointer;padding:2px;"  onclick="ViewPurchaseOrderHistory(\'' + PurchaseOrderID + '\');"></i><i class="fa fa-hand-o-right selectable" style="cursor:pointer;padding:2px;" onclick="ViewpurchaseOrder(\'' + PurchaseOrderID + '\');"></i>'
+                                us[i][1] = PurchaseOrderIDShow;
+                                us[i][2] = dt[i].ProjectNumber;
+                                us[i][3] = dt[i].VendorName;
+                                us[i][4] = dt[i].BuyerName;
+                                us[i][5] = dt[i].ShipDate;
+                                us[i][6] = dt[i].CheckBackDate;
+                                us[i][7] = dt[i].IsCommited;
+                               // us[i][8] = dt[i].IsDeleted;
+                            }
+                            $('#UnCommittedPODetail').dataTable({
+                                "processing": true,
+                                "data": us,
+                                "columns":
+                                  [
+                                    { "title": "Action" },
+                                    { "title": "PO Number" },
+                                    { "title": "Proj Number" },
+                                    { "title": "Vendor Common" },
+                                    { "title": "Buyer" },
+                                    { "title": "Ship Date" },
+
+                                    { "title": "CheckBack Date" },
+                                    { "title": "Commit" },
+                                    //{ "title": "IsCommitted", "class": "displaynone" },
+                                    //{ "title": "IsDeleted" }
+                                  ],
+                                "initComplete": function () {
+
+                                }
+                            });
+                            var html = "";
+                            html = "<tr>"
+                                  + "<th class='Resetth' rowspan='1' colspan='1'>"
+                                  + "<a><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px;' /></a>"
+                                  + "</th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='1' type='text' placeholder='Search Po' tabindex=5></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='2' type='text' placeholder='Project Name' tabindex=6></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='3' type='text' placeholder='Vendor Common ' tabindex=7></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='4' type='text' placeholder='Buyer ' tabindex=8></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='5' type='text' placeholder='Ship Date' tabindex=9></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='6' type='text' placeholder='Chack Back' tabindex=10></th>"
+                                  + "<th rowspan='1' colspan='1'><input class='srch' style='padding: 2px 2%;' data-indx='7' type='text' placeholder='Commit' tabindex=11></th>"
+                                  + "<th></th>"
+                                  + "</tr>";
+                            $('#UnCommittedPODetail thead').append(html);
+                            var table = $('#UnCommittedPODetail').DataTable();
+                            $('.srch').on('keyup change', function () {
+                                var indx = $(this).attr('data-indx');
+                                var txt = this.value;
+                                table
+                                       .column(indx)
+                                       .search(txt)
+                                       .draw();
+                                //RowHtmlRendernew();
+                            });
+                        }
+                        else {
+                            var table = $('#UnCommittedPODetail').DataTable();
+                            table.clear().draw();
+                        }
+                        $('#UnCommittedPODetail').show();
+                    }
+                    else {
+                        alert('Wrong');
+                    }
+                }
+            });
+        }
+
+        
+        function ViewpurchaseOrder(poid) {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrderView/POViewNew/' + poid;
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrderView/POViewNew/' + poid;
+            }
+            // alert(url);
+            window.location.href = url;
+
+        }
+
+        function ViewPurchaseOrderHistory(poid) {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/PurchaseOrderView/ViewPOHistory/' + poid;
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'PurchaseOrderView/ViewPOHistory/' + poid;
+            }
+            // alert(url);
+            window.location.href = url;
+
+        }
+        
+
+        
+
+        function getValcheck(e) {
+            var k = e.which;
+            if (k == 13) {
+                getVal();
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function NvgtToDeletedPO() {
+
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = '/PurchaseOrderView/DeletedPOLIST';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'PurchaseOrderView/DeletedPOLIST';
+            }
+            window.location.href = url1;
+        }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#txt_Project").multiselect(
+                {
+                    header: "Choose One Projects!"
+                }
+                ).multiselectfilter();
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+
+            $("#txt_Project3").multiselect().multiselectfilter();
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            //$('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+
+        });
+    </script>
+
+</head>
+<body>
+    <input type="hidden" id="prev_poid" value="@ViewData["poidprev"]" />
+    <div class="main_container" id="angulardiv" ng-app="Project" ng-controller="PO">
+
+        <div class="logo_container_heading">Purchase Orders</div>
+
+        
+
+        <div class="edit_vendor_full">
+            <div class="user_panel_container">
+                <input type="button" id="btn_NvgtToDeletedPO" value="Show Deleted Purchase Orders" onclick="NvgtToDeletedPO();">
+            </div>
+
+            <div class="user_panel_container">
+                <fieldset>
+                    <legend>Search</legend>
+                
+                        <div class="user_panel_container policy-items">
+                            <label>Project Number</label>
+                            <select id="txt_Project" multiple="multiple" tabindex=1>
+                            @*<option value="0">--Select Project--</option>*@
+                            @Html.Raw(ViewData["getAllProjectNameNumber"])
+                            </select>
+                        </div>
+                    
+                        <div class="user_panel_container policy-items">
+                            <label>Vendor</label>
+                            <select id="txt_Project3" multiple="multiple" tabindex=2>
+                            @*<option value="0">--Select Project--</option>*@
+                            @Html.Raw(ViewData["parentVendor"])
+                            </select>
+                        </div>
+
+
+                        <div class="user_panel_container">
+                            @*<label>Search</label>*@
+                            @*<input type="text" id="txt_SearchPO" ng-model="PO.PO_No" style="width:85%;" placeholder="Search either by PO # or Project Name" onkeyup="getValcheck(event);" />  *@
+                            @*<input type="text" id="txt_Project" ng-model="PO.PO_No" style="width:85%;" placeholder="Search either by PO # or Project Name" onkeyup="getValcheck(event);" />*@
+                          <label>Item/Spec</label>
+                              <input type="text" id="txtItrmSpc" ng-model="PO.PO_No" style="width: 85%;" placeholder="Enter Text" onkeyup="getValcheck(event);"  tabindex=3 />
+                            <input style="margin-left: 1%; width: 8%;" type="button" value="Search" onclick="getVal();" tabindex=4 />
+                        </div>
+                </fieldset>
+            </div>
+
+
+
+
+
+            <div class="user_panel_container">
+                <fieldset>
+                    <legend>Purchase Order</legend>
+                    <div>
+                        <table cellpadding="0" cellspacing="0" border="0" class="display" id="UnCommittedPODetail" style="text-align: center;">
+                            <thead>
+                                <tr>
+
+                                    <th>Action</th>
+                                    <th>PO Number</th>
+                                    <th>Proj Number</th>
+                                    <th>Vendor Name</th>
+                                    <th>Vendor Common</th>
+                                    <th>Buyer</th><th>Ship Date</th>
+                                    <th>CheckBack Date</th>
+                                    <th>Commit</th>
+                                   
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div id="dialog-confirm"></div>
+
+    </div>
+
+
+</body>
+
+
+</html>

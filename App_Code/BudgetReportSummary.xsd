@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="BudgetReportSummary" targetNamespace="http://tempuri.org/BudgetReportSummary.xsd" xmlns:mstns="http://tempuri.org/BudgetReportSummary.xsd" xmlns="http://tempuri.org/BudgetReportSummary.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="BudgetReportSummary" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="BudgetReportSummary" msprop:Generator_UserDSName="BudgetReportSummary">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="BudgetReportSummary" msprop:Generator_TableClassName="BudgetReportSummaryDataTable" msprop:Generator_TableVarName="tableBudgetReportSummary" msprop:Generator_RowChangedName="BudgetReportSummaryRowChanged" msprop:Generator_TablePropName="_BudgetReportSummary" msprop:Generator_RowDeletingName="BudgetReportSummaryRowDeleting" msprop:Generator_RowChangingName="BudgetReportSummaryRowChanging" msprop:Generator_RowEvHandlerName="BudgetReportSummaryRowChangeEventHandler" msprop:Generator_RowDeletedName="BudgetReportSummaryRowDeleted" msprop:Generator_RowClassName="BudgetReportSummaryRow" msprop:Generator_UserTableName="BudgetReportSummary" msprop:Generator_RowEvArgName="BudgetReportSummaryRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Sectionnumber" msprop:Generator_ColumnVarNameInTable="columnSectionnumber" msprop:Generator_ColumnPropNameInRow="Sectionnumber" msprop:Generator_ColumnPropNameInTable="SectionnumberColumn" msprop:Generator_UserColumnName="Sectionnumber" type="xs:string" minOccurs="0" />
+              <xs:element name="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_UserColumnName="Name" type="xs:string" minOccurs="0" />
+              <xs:element name="BudgetCost" msprop:Generator_ColumnVarNameInTable="columnBudgetCost" msprop:Generator_ColumnPropNameInRow="BudgetCost" msprop:Generator_ColumnPropNameInTable="BudgetCostColumn" msprop:Generator_UserColumnName="BudgetCost" type="xs:string" minOccurs="0" />
+              <xs:element name="ProjectNumber" msprop:Generator_ColumnVarNameInTable="columnProjectNumber" msprop:Generator_ColumnPropNameInRow="ProjectNumber" msprop:Generator_ColumnPropNameInTable="ProjectNumberColumn" msprop:Generator_UserColumnName="ProjectNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="GSTHSTTYPE" msprop:Generator_ColumnVarNameInTable="columnGSTHSTTYPE" msprop:Generator_ColumnPropNameInRow="GSTHSTTYPE" msprop:Generator_ColumnPropNameInTable="GSTHSTTYPEColumn" msprop:Generator_UserColumnName="GSTHSTTYPE" type="xs:string" minOccurs="0" />
+              <xs:element name="GSTHST" msprop:Generator_ColumnVarNameInTable="columnGSTHST" msprop:Generator_ColumnPropNameInRow="GSTHST" msprop:Generator_ColumnPropNameInTable="GSTHSTColumn" msprop:Generator_UserColumnName="GSTHST" type="xs:string" minOccurs="0" />
+              <xs:element name="PSTTYPE" msprop:Generator_ColumnVarNameInTable="columnPSTTYPE" msprop:Generator_ColumnPropNameInRow="PSTTYPE" msprop:Generator_ColumnPropNameInTable="PSTTYPEColumn" msprop:Generator_UserColumnName="PSTTYPE" type="xs:string" minOccurs="0" />
+              <xs:element name="PST" msprop:Generator_ColumnVarNameInTable="columnPST" msprop:Generator_ColumnPropNameInRow="PST" msprop:Generator_ColumnPropNameInTable="PSTColumn" msprop:Generator_UserColumnName="PST" type="xs:string" minOccurs="0" />
+              <xs:element name="STATETAXTYPE" msprop:Generator_ColumnVarNameInTable="columnSTATETAXTYPE" msprop:Generator_ColumnPropNameInRow="STATETAXTYPE" msprop:Generator_ColumnPropNameInTable="STATETAXTYPEColumn" msprop:Generator_UserColumnName="STATETAXTYPE" type="xs:string" minOccurs="0" />
+              <xs:element name="StateTax" msprop:Generator_ColumnVarNameInTable="columnStateTax" msprop:Generator_ColumnPropNameInRow="StateTax" msprop:Generator_ColumnPropNameInTable="StateTaxColumn" msprop:Generator_UserColumnName="StateTax" type="xs:string" minOccurs="0" />
+              <xs:element name="CurrencyCode" msprop:Generator_ColumnVarNameInTable="columnCurrencyCode" msprop:Generator_ColumnPropNameInRow="CurrencyCode" msprop:Generator_ColumnPropNameInTable="CurrencyCodeColumn" msprop:Generator_UserColumnName="CurrencyCode" type="xs:string" minOccurs="0" />
+              <xs:element name="ProjectName" msprop:Generator_ColumnVarNameInTable="columnProjectName" msprop:Generator_ColumnPropNameInRow="ProjectName" msprop:Generator_ColumnPropNameInTable="ProjectNameColumn" msprop:Generator_UserColumnName="ProjectName" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

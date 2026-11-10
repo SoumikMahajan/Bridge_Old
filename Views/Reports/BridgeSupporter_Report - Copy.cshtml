@@ -1,0 +1,482 @@
+﻿@{
+    var data = Session["datas"];
+    ViewBag.Title = "BridgeSupporter";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Report</title>
+    @*<script src="~/Scripts/jquery.multiselect.js"></script>
+        <script src="~/Scripts/jquery.multiselect.filter.js"></script>*@
+    @*<link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">*@
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    @*<script src="~/Scripts/jquery-1.7.1.js"></script>*@
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.js"></script>
+
+    <style>
+        .displaynone {
+            display: none !important;
+        }
+    </style>
+    <style>
+        .paddingleft {
+            padding-left: 8px !important;
+        }
+
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        .ui-multiselect-menu {
+            width: 370px !important;
+        }
+
+        .ui-multiselect {
+            width: 100% !important;
+            /*color: rgb(195, 16, 1) !important;*/
+            height: 25px !important;
+            margin-top: 0px !important;
+        }
+
+        label {
+            color: #333333;
+            font-weight: 500;
+        }
+
+        #txt_VendorName, #txt_CurrencyCode, #txt_VendorCO {
+            height: 25px;
+            padding: 2px;
+        }
+    </style>
+</head>
+<h3 class="section-header">
+                        Bridge Supporter Report
+                    </h3>
+<div class="container-fluid" style="zoom: 0.95;">
+    <input type="hidden" id="activeTabID" />
+    <div class="row" >
+        <div class="col-sm-7">
+            <div class="form-group req">
+                <label class="lblHeader">Project</label>
+                <select id="dllProject" multiple="multiple" class="form-control" style="max-width:800px !important;">
+                    @*<option value="0">--Select Project--</option>*@
+                    @{
+                        Session["ProjectDetails"] = ViewData["getAllProjectNameNumber"];
+                        @Html.Raw(ViewData["getAllProjectNameNumber"])
+                    }
+                </select>
+            </div>
+        </div>
+        </div>
+    <div class="row" >
+        <div class="col-sm-12">
+            <div class="col-sm-6">
+                <label class="lblHeader">Filters (Leave blank for all)</label>
+            </div>
+        </div>
+
+            <div class="col-sm-12">
+                <div class="col-sm-3 pad15L">
+                    <label class="lblNormal">Vendor</label>
+                </div>
+                <div class="col-sm-4 mrg5T">
+                    <select class="ddlVendor" multiple="multiple"></select>
+                </div>
+            </div>
+        </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="col-sm-3 pad15L">
+                <label class="lblNormal">Date Range</label>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group" style="width: 40%;position: relative;    float: left;">
+
+                    <select class="datecontrol classselector" style="margin-top:5px;height:25px; width:100%;" data-from="txt_FromDate" data-to="txt_ToDate">
+                        <option value="13" data-val="All">ALL</option>
+                        <option value="1" data-val="custom">Custom</option>
+                        <option value="2" data-val="last365">Last 365 Days</option>
+                        <option value="3" data-val="today">Today</option>
+                        <option value="4" data-val="yesterday">Yesterday</option>
+                        <option value="5" data-val="thisweek">This Week</option>
+                        <option value="6" data-val="thismonth">This Month</option>
+                        <option value="7" data-val="thisquarter">This Quarter</option>
+                        <option value="8" data-val="thisyear">This Year</option>
+
+                        <option value="9" data-val="lastweek">Last Week</option>
+                        <option value="10" data-val="lastmonth">Last Month</option>
+                        <option value="11" data-val="lastquarter">Last Quarter</option>
+                        <option value="12" data-val="lastyear">Last Year</option>
+
+                    </select>
+                </div>
+
+                <div class="mrg5T" style="width: 29%;position: relative;float: left;margin-left: 1%;">
+                    <input type="text" onkeypress="return IsNumber(event);" placeholder="From Date" class="makedisable form-control txt_FromDate" />
+                </div>
+                <div class="mrg5T" style="width: 29%;position: relative;float: left;margin-left: 1%;">
+                    <input type="text" onkeypress="return IsNumber(event);" placeholder="To Date" class="makedisable form-control txt_ToDate" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="col-sm-3">
+                <label class="lblHeader">Send Type</label>
+            </div>
+            <div class="col-sm-4 mrg5T">
+                <select class="ddlIsSend" multiple="multiple" style="display: none;">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="col-sm-3">
+                <label class="lblHeader">Paid Type</label>
+            </div>
+            <div class="col-sm-4 mrg5T">
+                <select class="ddlIsPaid" multiple="multiple" style="display: none;">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="col-sm-3">
+                <label class="lblHeader">Supporter Amount</label>
+            </div>
+            <div class="col-sm-4 mrg5T">
+                <select class="ddlSuptrAmt" >
+                    @{
+                        for (int i = 0; i < 100; i++)
+                        {
+                            if (i==3)
+                            {
+                    <option value="@i" selected>@i %</option>
+                                
+                            }
+                            else
+                            {
+                    <option value="@i">@i %</option>
+                                
+                            }
+                            
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+    </div>
+<div class="float-panel-container">
+    <ul>
+        @*<li onclick="ExportToPdf('false');"><a href="javascript:void(0);"><i class="fa fa-file-pdf-o" title="Export to PDF" data-toggle="tooltip" id="pdfBtn"></i><span class="tooltip-toggle"></span></a></li>
+            <li onclick="ExportToExcel();"><a href="javascript:void(0);"><i class="fa fa-file-excel-o" title="Export to Excel" data-toggle="tooltip" id="excelBtn"></i><span class="tooltip-toggle"></span></a></li>
+        *@
+        <li onclick="ExportToPdf('SSRS_PDF');"><a href="javascript:void(0);"><i class="fa fa-file-pdf-o" title="Export To PDF Report" data-toggle="tooltip" id="ssrsbtnPDF"></i><span class="tooltip-toggle"></span></a></li>
+        <li onclick="ExportToPdf('SSRS_RPT');"><a href="javascript:void(0);"><i class="fa fa-book" title="Export To Other Formats" data-toggle="tooltip" id="ssrsbtn"></i><span class="tooltip-toggle"></span></a></li>
+
+    </ul>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".ddlIsSend").multiselect({
+            close: function () {
+            },
+            header: 'Select Type',
+            multiple: false
+        });
+        $(".ddlSuptrAmt").multiselect({
+            close: function () {
+            },
+            header: 'Select Type',
+            multiple: false
+        });
+        $(".ddlIsPaid").multiselect({
+            close: function () {
+            },
+            header: 'Select Type',
+            multiple: false
+        });
+
+        $('.txt_FromDate').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy.mm.dd',
+        });
+        $('.txt_ToDate').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy.mm.dd',
+        });
+        $(".ddlVendor").multiselect(
+                   {
+                       //header: "Select Vendors!",
+                       click: function (e) {
+                           //if ($(this).multiselect("widget").find("input:checked").length > 3) {
+                           //    e.preventDefault();
+                           //    notify("Select maximum three vendors!")
+                           //    return false;
+                           //}
+                       }
+                   });
+
+        $("#dllProject").multiselect(
+   {              
+       close: function () {
+           var project_id = $("#dllProject").val();           
+           bindVendor(project_id);           
+           firstload = true;
+           window.setTimeout(function () {
+               $("#dllProject").next().each(function () {
+                   this.style.setProperty('width', '800px', 'important');
+               });
+           }, 3);
+       },
+       //click: function (e) {
+       //    if ($(this).multiselect("widget").find("input:checked").length > 3) {
+       //        e.preventDefault();
+       //        notify("Select maximum three projects!")
+       //        return false;
+       //    }
+       //    else {
+       //        window.setTimeout(function () {
+       //            $("#dllProject").next().each(function () {
+       //                this.style.setProperty('width', '800px', 'important');
+       //            });
+       //        }, 3);
+       //    }
+       //},
+       maxTextWrapSize: 90
+   }).multiselectfilter();
+    });
+    function bindVendor(project_id) {
+        var url1 = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url1 = '/Reports/getAllVendorByProjectIDForBrdgSprt';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url1 = '/Reports/getAllVendorByProjectIDForBrdgSprt';
+        }
+        $.ajax({
+            type: "POST",
+            url: url1,
+            async: false,
+            dataType: "text",
+            contentType: "application/json; charset=utf-8",
+            data: "{ 'projectid': '" + project_id + "'}",
+            success: function (data) {
+                console.log(data);
+                if (data == '') {
+                    $(".ddlVendor").multiselect(
+                   {
+                       //header: "Select Vendors!",
+                       click: function (e) {
+                           if ($(this).multiselect("widget").find("input:checked").length > 5) {
+                               e.preventDefault();
+                               notify("Select maximum three vendors!")
+                               return false;
+                           }
+                       }
+                   }).multiselectfilter();
+                    return;
+                }
+                var vendors = JSON.parse(data);
+                var total_vendor = vendors.data.length;
+                //if (count > 1) {
+                //    //$("#ddlVendor").multiselect('destroy')
+                //}
+                //else if (count == 1) {
+                //    count++;
+                //}
+                var html = '';
+                for (i = 0; i < total_vendor; i++) {
+                    //var option = '<option value="' + vendors.data[i].id + '" data-id="' + vendors.data[i].id + '">' + vendors.data[i].vendorname + '( ' + vendors.data[i].parentvendor + ' )' + '</option>';
+                    var option = '<option value="' + vendors.data[i].id + '" data-id="' + vendors.data[i].id + '">' + vendors.data[i].parentvendor + '</option>';
+                    html += option;
+                }
+                $(".ddlVendor").html(html);
+                $(".ddlVendor").multiselect(
+                    {
+                        //header: "Select Vendors!",
+                        click: function (e) {
+                            //if ($(this).multiselect("widget").find("input:checked").length > 3) {
+                            //    e.preventDefault();
+                            //    notify("Select maximum three vendors!")
+                            //    return false;
+                            //}
+                        }
+                    }).multiselectfilter();
+                $(".ddlVendor").multiselect("refresh");
+
+                var width = '100%';
+                $('.ui-multiselect').css('width', width);
+                //$('.ui-multiselect-menu').css('width', '39.5%');
+                $('.ui-multiselect-menu').css('width', '39.5%');
+                $('.ui-state-default').css('color', '#C31001');
+                $('.ui-multiselect').css('height', '34px');
+                $('.ui-multiselect').css('margin-top', '50px');
+            },
+            error: function () {
+                notify('Something went wrong.');
+            }
+        });
+    }
+
+
+
+    function ExportToPdf(isSSRSCall) {
+        if ($("#dllProject").val() == null) {
+            notify('Please select project!!');
+            return false;
+        }
+
+        BridgeSupporterReportGenerationFilter(isSSRSCall);
+
+    }
+    function BridgeSupporterReportGenerationFilter(isSSRSCall) {
+        var AllProjectID = $('#dllProject').val();
+        var AllVendorID = $('.ddlVendor').val();
+        var SuprtAmt = $(".ddlSuptrAmt").val();
+        var SendType = $(".ddlIsSend").val();
+        var PaidType = $(".ddlIsPaid").val();
+        //var AllSectionID = $('#invoice .txt_Section').val();        
+
+        var From_Date;
+        var To_date;
+        var url1;
+        if (AllProjectID == null) {
+            notify("Please Select Project!!!", "Red");
+            return;
+        }
+        if (SuprtAmt==null) {
+            notify("Please Select Supporter Amount!!!", "Red");
+            return;
+        }
+        if ($(".txt_FromDate").val() != '')
+            From_Date = ($(".txt_FromDate").val());
+        else
+            From_Date = null;
+        if ($(".txt_ToDate").val() != '')
+            To_date = ($(".txt_ToDate").val());
+        else
+            To_date = null;
+        if (isSSRSCall == "SSRS_PDF") {
+            $("#ssrsbtnPDF").removeClass("fa fa-file-pdf-o");
+            $("#ssrsbtnPDF").addClass("fa fa-spin fa-spinner");
+        } else if (isSSRSCall == "SSRS_RPT") {
+            $("#ssrsbtn").removeClass("fa fa-book");
+            $("#ssrsbtn").addClass("fa fa-spin fa-spinner");
+        }
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                
+                url1 = '/Reports/BridgeSupporterReports';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {               
+                url1 = '/Reports/BridgeSupporterReports';
+            }
+            url1 += "?AllProjectID=" + AllProjectID;
+            url1 += "&SupporterAmt=" + SuprtAmt;
+            //url1 += "&GroupTye=" + GroupTye;
+            url1 += "&AllVendorID=" + AllVendorID;
+            url1 += "&From_Date=" + From_Date;
+            url1 += "&To_date=" + To_date;
+            url1 += "&SendType=" + SendType;
+            //url1 += "&OrderPattern=" + OrderPattern;
+            url1 += "&PaidType=" + PaidType;
+            //url1 += "&SectionID=" + AllSectionID;
+            url1 += "&isSSRSCall=" + isSSRSCall;
+        
+        var totdata = '';
+        $.get(url1)
+            .success(function (response) {
+                debugger;
+                var name = '@data';
+                console.log(name);
+               //var html = "";
+               //var url2 = '';
+               if (response == "isSSRSCall") {
+                   window.open("../../SSRSRptViewer/ReportTemplate.aspx");
+                   if (isSSRSCall == "SSRS_PDF") {
+                       $("#ssrsbtnPDF").removeClass("fa fa-spin fa-spinner");
+                       $("#ssrsbtnPDF").addClass("fa fa-file-pdf-o");
+                   }
+                   else {
+                       $("#ssrsbtn").removeClass("fa fa-spin fa-spinner");
+                       $("#ssrsbtn").addClass("fa fa-book");
+                   }
+                   return;
+               }
+               if (response == '0') {
+                   notify('No records found!!!');
+                   return;
+               }
+               if (LOCALORSERVERNEW == 'LOCAL') {
+                   totdata = response;
+               }
+               else if (LOCALORSERVERNEW == 'SERVER') {
+                   totdata = "POMS/" + response;
+               }
+               setTimeout(function () {
+                   window.open(urlchanger(totdata), '_blank', 'toolbar=0,location=0,menubar=0');
+                   
+                       $("#pdfBtn").removeClass("fa fa-spin fa-spinner");
+                       $("#pdfBtn").addClass("fa fa-file-pdf-o");
+                   
+               }, 1000);
+           });
+    }
+</script>

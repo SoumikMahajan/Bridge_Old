@@ -1,0 +1,355 @@
+﻿@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Budget Report</title>
+    @*<script src="~/Scripts/jquery.multiselect.js"></script>
+        <script src="~/Scripts/jquery.multiselect.filter.js"></script>*@
+    @*<link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">*@
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+
+
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    @*<script src="~/Scripts/jquery-1.7.1.js"></script>*@
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script type="text/javascript" src="~/Scripts/ReportFilter.js"></script>
+
+    <script>
+        $(function () {
+            $('#Btn_Excel2').click(function () {
+                var AllProjectID = $('#txt_Project').val();
+                var AllSectionID = $('#txt_Section').val();
+                var OrderPattern = "";
+
+                if (AllProjectID == null) {
+                    notify('Please Select Project');
+                    return;
+                }
+
+                if (AllSectionID == null) {
+                    AllSectionID = "0";
+                }
+
+                $(".sort_div").find("span").each(function (index, item) {
+
+                    var orderIndex = $(this).attr("data-id");
+
+                    if (typeof (orderIndex) != 'undefined') {
+
+                        if (orderIndex == "1")
+                            OrderPattern += '1' + ",";
+                    }
+
+                });
+
+                if (OrderPattern == "") {
+                    OrderPattern = "0";
+                }
+                else {
+
+                    OrderPattern = OrderPattern.substr(0, (OrderPattern.length - 1));
+                }
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = '/Reports/CommittedCostReportExportFile';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'Reports/CommittedCostReportExportFile';
+                }
+                url1 += "?ProjectID=" + AllProjectID;
+                url1 += "&SectionID=" + AllSectionID;
+                url1 += "&order=" + OrderPattern;
+                var totdata = '';
+                $.get(url1)
+                   .success(function (response) {
+                       var html = "";
+
+                       var url2 = '';
+
+                       if (response == '0') {
+                           notify('No records found!!!');
+                           return;
+                       }
+                       if (LOCALORSERVERNEW == 'LOCAL') {
+                           totdata = response;
+                       }
+                       else if (LOCALORSERVERNEW == 'SERVER') {
+                           totdata = "/POMS/" + response;
+                       }
+
+
+                       //totdata = response;                   
+                       window.location = totdata;
+                   });
+            });
+        });
+
+    </script>
+
+    <style type="text/css">
+        .remove { /* width: 450px; */
+            border: 1px solid #060506;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            display: block;
+            padding: 5px;
+            text-decoration: none;
+            background: rgba(82, 103, 121, 0.75);
+            color: #E2E2E2;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-family: helvetica;
+            font-size: 13px;
+            position: relative;
+        }
+
+            .remove a {
+                cursor: pointer;
+                position: absolute;
+                top: -5px;
+                right: -6px;
+                font-size: 0.9em;
+                color: white;
+                background: black;
+                border-radius: 100px;
+                padding: 7px;
+                line-height: 9px;
+            }
+
+        .ui-widget-header {
+            background: grey;
+        }
+
+        .ui-widget-overlay {
+            position: fixed;
+        }
+
+        .ui-dialog .ui-dialog-titlebar-close span {
+            margin: -8px;
+        }
+
+        #popupforvendorlist .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 0px 0px;
+            width: 100%;
+            height: 35px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid" id="angulardiv" ng-app="Reports" ng-controller="Reports">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="section-header">Purchase Commitment Report</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6 req">
+                <div class="form-group">
+                    <label>Select Project</label>
+                    <select id="txt_Project" multiple="multiple" onchange="ShowProjectsAtLabel(this);">
+                        @*<option value="0">--Select Project--</option>*@
+                        @Html.Raw(ViewData["getAllProjectNameNumber"])
+                    </select>
+
+                </div>
+
+                <div>
+                    <label id="LabelForProject"></label>
+                </div>
+
+            </div>
+
+            <div class="col-sm-6 req">
+                <div class="form-group">
+                    <label>Select Category</label>
+                    <select id="txtPurchaseCommitmentReportCategory" multiple="multiple">
+                        @*<option value="0">---Select Category---</option>*@
+                        <option value="1" >Commited Cost Details</option>
+                        <option value="2">Commited Cost Summery</option>
+                        <option value="3" >Purchase Commitment</option>
+
+                    </select>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div id="section_panel">
+            <div id="CommitedCostSummery">
+                <div class="row">
+                    <div class="col-sm-4 req">
+                        <div class="form-group">
+                            <label>Select Section</label>
+                            <select class="sec" multiple="multiple" onchange="ShowSectionsAtLabel(this);"></select>
+
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Sorting</label>
+                            <select id="DDl_Sort4" multiple="multiple">
+                                <option value="1" data-id="1">Item</option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Sorting Order</label>
+                            <div class="sort_div user_panel_container">
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="lbl"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <button type="submit" id="Btn_Report" onclick="CommittedCostReportGenerationFilter();" class="btn btn-block btn-primary mrg10T"><i class="fa fa-file-pdf-o"></i> Export to PDF</button>
+                            @*<input type="button" id="Btn_Report" value="Export to PDF" onclick="BudgetReportByItemReportGenerationFilter();" />*@
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <button type="submit" id="Btn_Excel2" class="btn btn-block btn-primary mrg10T"><i class="fa fa-file-excel-o"></i> Export to Excel</button>
+                            @*<input type="button" id="Btn_Report" value="Export to PDF" onclick="BudgetReportByItemReportGenerationFilter();" />*@
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+
+        var ProjectDdlForPage = $('#txt_Project'); //The project dropdown ID
+
+
+        $(document).ready(function () {
+
+            var selectedpreferredpid = getProjectPreferencemulti();
+
+            if (selectedpreferredpid.split(',').length == 0) {
+                $(ProjectDdlForPage).find('option[value="' + selectedpreferredpid[i] + '"]').attr("selected", "true");
+            }
+
+            else {
+                for (var i = 0; i < 3; i++) {
+
+                    $(ProjectDdlForPage).find('option[value="' + selectedpreferredpid.split(',')[i] + '"]').attr("selected", "true");
+
+                }
+            }
+
+
+
+
+            $(ProjectDdlForPage).multiselect('refresh');
+
+            var width = '100%';
+            $('.ui-multiselect').css('width', width);
+            $('.ui-multiselect-menu').css('width', '39.5%');
+            $('.ui-state-default').css('color', '#C31001');
+            $('.ui-multiselect').css('height', '34px');
+            $('.ui-multiselect').css('margin-top', '5px');
+
+
+
+            //To call page specific dropdown change event
+            ShowProjectsAtLabel(ProjectDdlForPage);
+            close_project_dropdown(selectedpreferredpid);
+
+
+
+
+        });
+
+
+
+        $(document).on('change', ProjectDdlForPage, function () {
+
+            setProjectPreference(ProjectDdlForPage);
+
+        });
+
+
+    </script>
+</body>
+</html>

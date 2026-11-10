@@ -1,0 +1,79 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Vendor</title>
+
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <script src="~/Scripts/VendorView.js"></script>
+
+    <style type="text/css">
+        .display_none {
+            display: none;
+        }
+        #example .re_activate_new {
+            width: auto;
+            height: auto;
+            float: left;
+            color: #FFF;
+            background: #000000;
+            padding: 8px 18px;
+            margin-top: 6px;
+            border: 0;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 12px;
+            margin-bottom: 44px;
+        }
+    </style>
+
+
+</head>
+<body>
+    <div class="main_container" id="angulardiv">
+
+
+        <div class="logo_container_heading">Vendor Contacts</div>
+
+
+        <div class="user_panel_container">
+            <table id="example" class="display  compact" cellspacing="0" width="100%" align="center">
+                <thead>
+                    <tr>
+                        <th align="center"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

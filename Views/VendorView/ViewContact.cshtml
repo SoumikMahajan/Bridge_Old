@@ -1,0 +1,825 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditContact</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+
+    <link href="~/css/hover.css" rel="stylesheet" media="all">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+
+    <style type="text/css">
+        .display_none {
+            display: none;
+        }
+    </style>
+
+    <style type="text/css">
+       
+        .user_panel_container {
+            padding: 0px 0px 0px 0px;
+        }
+            .user_panel_container label {
+                padding: 8px 0px 4px;
+            }
+        .edit_vendor_full {
+            margin-bottom:12px;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            //    BindControls();
+            $('textarea').autosize();
+            $('.makedisable').attr('disabled', 'disabled');
+        });
+
+
+        function GetCtryID(obj) {
+
+            var Cnrty = $(obj).find('option:selected').attr("name").split("_")[1];
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/adduser/getAllStateByCntryID';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'adduser/getAllStateByCntryID';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'CountryID': Cnrty },
+                success: GetSuccessDetail,
+                error: failed
+            });
+        }
+        function GetStateID(obj) {
+            var State = $(obj).find('option:selected').val();
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/adduser/GetAllCityByStateID';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'adduser/GetAllCityByStateID';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'StateID': State },
+                success: GetSuccessDetailState,
+                error: failed
+            });
+        }
+
+        function GetSuccessDetailState(data) {
+            //$('#Ddl_City').html(data);
+            //$('#txt_City').html(data);
+        }
+
+        function GetSuccessDetail(data) {
+            $('#Ddl_State').html(data);
+        }
+
+        function failed(data) {
+            alert('Failed');
+        }
+
+
+    </script>
+
+
+    <style type="text/css">
+       #Chk_IsHiddn {
+            /* Double-sized Checkboxes */
+            -ms-transform: scale(2); /* IE */
+            -moz-transform: scale(2); /* FF */
+            -webkit-transform: scale(2); /* Safari and Chrome */
+            -o-transform: scale(2); /* Opera */
+            padding: 10px;
+            margin-top:10%;
+            margin-left:10%;
+        }
+       #Chk_IsSystemUser {
+            /* Double-sized Checkboxes */
+            -ms-transform: scale(2); /* IE */
+            -moz-transform: scale(2); /* FF */
+            -webkit-transform: scale(2); /* Safari and Chrome */
+            -o-transform: scale(2); /* Opera */
+            padding: 10px;
+            margin-top:10%;
+            margin-left:10%;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        function ChkIsHiddnChange(obj) {
+            if ($(obj).is(":checked")) {
+                $('#Ddl_IsHiddn').val("1");
+            } else {
+                $('#Ddl_IsHiddn').val("0");
+            }
+        }
+        function ChkIsSystemUser(obj) {
+            if ($(obj).is(":checked")) {
+                $('#Ddl_IsSystemUser').val("1");
+            } else {
+                $('#Ddl_IsSystemUser').val("0");
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            if ($('#UserType').val() == '6') {
+                $('.NotForVendors').hide();
+            }
+        });
+
+    </script>
+
+    <style type="text/css">
+        /** { margin: 0; padding: 0; }
+        body { font: 14px/1.4 Georgia, serif; }
+        #page-wrap { width: 600px; margin: 15px auto; }
+        p { margin: 0 0 15px 0; }
+        p:first-child { background: #fffcde; padding: 10px; }
+        #sidebar ul { background: #eee; padding: 10px; }
+        li { margin: 0 0 0 20px; }
+        #main { width: 390px; float: left; }*/
+        /*#sidebar { width: 190px; float: right; }*/
+        #sidebar {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+        }
+        /*#sidebar ul { background: #eee; padding: 10px; }*/
+        /*li { margin: 0 0 0 20px; }*/
+    </style>
+
+</head>
+<body>
+
+    <div class="main_container" id="angulardiv" ng-app="customer" ng-controller="customer">
+
+        
+        <div class="logo_container_heading">View Contact</div>
+
+        <input type="hidden" value="@ViewBag.Vendorid" id="Vendorid"  />
+        <input type="hidden" value="@ViewBag.UserType" id="UserType" />
+
+        <div class="user_panel_container">
+            <a href="VendorView/ViewVendor/{{User.ParentVendorID}}">
+            
+                <input type="button" value="Go back to Edit vendor page" />
+            </a>
+        </div>
+
+        <div class="edit_vendor_full">
+
+            <div class="user_panel_container req" style="width: 23.5%">
+                <label>First Name</label>
+                <input type="text" id="txt_ContactFname" ng-model="User.ContactFname" class="makedisable" />
+            </div>
+
+
+            <div class="user_panel_container req" style="width: 23.5%; margin-left: 2%;">
+                <label>Last Name</label>
+                <input type="text" id="txt_ContactLname" ng-model="User.ContactLname" class="makedisable" />
+            </div>
+
+            <div class="user_panel_container policy-items" style="width: 47%; margin-left: 4%;">
+
+
+                <div class="user_panel_container policy-items NotForVendors" style="width: 24%;">
+                    <label>Hidden</label>
+                    <input type="checkbox" id="Chk_IsHiddn" class="makedisable" />
+                    <select id="Ddl_IsHiddn" style="display: none;" class="makedisable">
+                        <option value="1">Yes</option>
+                        <option value="0" selected="selected">No</option>
+                    </select>
+                </div>
+                <div class="user_panel_container policy-items NotForVendors" style="width: 24%; margin-left: 2%;">
+                    <label>System User </label>
+
+                    <input type="checkbox" id="Chk_IsSystemUser" ng-if="User.IsSystemUser =='1'" checked="checked" class="makedisable" />
+                    <input type="checkbox" id="Chk_IsSystemUser" ng-if="User.IsSystemUser !='1'" class="makedisable" />
+
+
+
+
+                    <select id="Ddl_IsSystemUser" style="display: none;" class="makedisable">
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+                <div class="user_panel_container policy-items" style="width: 48%; margin-left: 2%;">
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="edit_vendor_full">
+            <div class="user_panel_container">
+                <label>Address</label>
+                <textarea id="txt_Add1" ng-model="User.Address1" class="makedisable"></textarea>
+            </div>
+        </div>
+
+
+        <div class="edit_vendor_full">
+            <div class="user_panel_container policy-items" style="width: 23.5%;">
+                <label>Country</label>
+                <select id="Ddl_Country" style="height:33px;" class="makedisable">
+                    @Html.Raw(ViewData["GetAllCountry"])
+                </select>
+            </div>
+            <div class="user_panel_container policy-items" style="width: 23.5%; margin-left: 2%;">
+                <label>State</label>
+                <select id="Ddl_State" style="height:33px;" class="makedisable">
+                    <option value="0">select</option>
+                    @Html.Raw(ViewData["GetAllStateByCntryID"])
+                </select>
+            </div>
+            <div class="user_panel_container" style="width: 23.5%; margin-left: 2%;" >
+                <label>City</label>
+                <input type="text" id="Ddl_City" ng-model="User.City" class="makedisable" />
+            </div>
+            <div class="user_panel_container" style="width: 23.5%; margin-left: 2%;">
+                <label>Postal/Zip Code</label>
+                <input type="text" id="txt_ZipCode" ng-model="User.ZipCode" class="makedisable" />
+            </div>
+        </div>
+
+
+        <div class="edit_vendor_full">
+
+            <div class="user_panel_container" style="width: 24%;">
+                <label>Phone</label>
+                <input type="text" id="txt_Phone" ng-model="User.Phone" class="makedisable" />
+            </div>
+
+            <div class="user_panel_container" style="width: 24%;margin-left: 1%;">
+                <label>Phone Extension</label>
+                <input type="text" id="txt_Extension" ng-model="User.Extension" class="makedisable" />
+            </div>
+
+            <div class="user_panel_container" style="width: 24%;margin-left: 1%;">
+                <label>Fax</label>
+                <input type="text" id="txt_Fax" ng-model="User.Fax" class="makedisable" />
+            </div>
+            <div class="user_panel_container" style="width: 25%;margin-left: 1%;">
+                <label>Mobile</label>
+                <input type="text" id="txt_Mobile" ng-model="User.Mobile" class="makedisable" />
+            </div>
+
+        </div>
+
+
+        <div class="edit_vendor_full">
+            <div class="user_panel_container" style="width: 49%;">
+                <label>Email address</label>
+                <input type="text" id="txt_Email" ng-model="User.Email" class="makedisable" />                
+            </div>
+            <div class="user_panel_container" style="width: 49%; margin-left: 2%;">
+                <label>Website</label>
+                <input type="text" id="txt_Website" ng-model="User.Website" class="makedisable" />
+            </div>
+        </div>
+
+
+
+
+
+        <div class="user_panel_container displaynone">
+            <label>Address2</label>
+            <input type="text" id="txt_Add2" ng-model="User.Address2" class="makedisable" />
+        </div>
+
+         
+        <div class="user_panel_container" style="display: none;">
+            <label>Contact</label>
+            <input type="text" id="txt_Contact" ng-model="User.Contact" class="makedisable" />
+        </div>
+         
+        
+        <div class="user_panel_container" style="display: none;">
+            <label>Contact Title</label>
+            <input type="text" id="txt_ContactTitle" ng-model="User.ContactTitle" class="makedisable" />
+        </div>
+        
+
+
+        <div class="user_panel_container" style="display: none;">
+            <label>Password</label>
+            <input type="password" id="txt_Password" ng-model="User.Password" class="makedisable" />
+        </div>
+
+        <div class="user_panel_container" style="display: none;">
+            <label>Confirm password</label>
+            <input type="password" id="txt_ConfrmPswrd" ng-model="User.ConfrmPswrd" class="makedisable" />
+        </div>
+
+
+        <div class="user_panel_container policy-items showHide NotForVendors">
+            @*style="display: none;"*@
+
+            <div class="security-title" style="display: none;">Permissions</div>
+            <div class="security-detail" style="display: none;">
+
+
+                <table border="1" class="logo_container_table" cellspacing="0" cellpadding="0" id="priority_checkbox"></table>
+
+
+
+                @*<table border="1" class="logo_container_table" cellspacing="0" cellpadding="0">
+                <tr>
+                    <th>Security Item</th>
+                    <th>Assigned</th>
+                </tr>
+
+                <tr ng-repeat="priority in prioritylist">
+                    <td>{{priority.priority_name}}</td>
+                    <td>
+                        <div class='switch-wrapper'>
+
+                            <input ng-if="priority.is_selected == 1" type='checkbox' class='chkScrty' value="{{priority.is_selected}}" id="prioritychk_{{priority.security_id}}" checked>
+                            <input ng-if="priority.is_selected == 0" type='checkbox' class='chkScrty' value="{{priority.is_selected}}" id="prioritychk_{{priority.security_id}}">
+                        </div>
+                    </td>
+                </tr>
+            </table>*@
+            </div>
+
+        </div>
+
+
+
+        @*<div class="user_panel_container" style="margin-bottom:22px;">
+            <input type="button" value="Edit User" id="btn_EdtVendorContact">
+            <img id="loader_EdtVendorContact" style="display: none;" src="~/Images/load.gif" />
+        </div>*@
+
+
+        
+
+
+    </div>
+
+
+
+
+
+
+
+
+    <script type="text/javascript">
+
+        angular.module("customer", [])
+            .controller("customer", function ($http, $scope) {
+
+                var url1 = "";
+
+
+
+                var vendorID = $('#Vendorid').val();
+
+                if (vendorID == '' || vendorID == null || vendorID == 0) {
+
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        window.location.href = "/VendorView/Allcontacts";
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        window.location.href = urlsuffix + '/VendorView/Allcontacts';
+                    }
+                }
+
+
+
+
+
+                var selectedid = vendorID;//$scope.User.FldID;
+                //alert(selectedid);
+                $('.showHide').show();
+
+               
+                var url2 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url2 = '../getprioritiesbyID_new';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url2 = 'VendorView/getprioritiesbyID_new';   // 'project/return_priorities_user_new';
+                }
+                $http.get(url2 + "?vendorid=" + selectedid)
+                .success(function (response) {
+                    $scope.prioritylist = response;
+                    //alert(response);
+
+
+                    // $scope.prioritylist = response;
+                    var grouptype = "";
+                    var currg = "";
+                    var html = "<tr>"
+                        + "<th>Security Item</th>"
+                        + "<th>Assigned</th>"
+                        + "</tr>";
+                    //console.log(response.data);
+                    var plist = response.data;
+                    var html = "";
+                    for (var i = 0; i < plist.length; i++) {
+                        currg = plist[i].GroupType;
+                        if (currg == grouptype) {
+                        }
+                        else {
+                            grouptype = currg;
+                            html += "<tr><td style='color:white;background:black;' colspan='2'>" + grouptype + "</td></tr>";
+                        }
+                        html += "<tr><td><label style='padding:0px;width:100%;' for='prioritychk_" + plist[i].security_id + "'>" + plist[i].priority_name + "</label></td>";
+                        if (plist[i].is_selected == "1") {
+                            html += '<td><input  type="checkbox" class="chkScrty" value="1" id="prioritychk_' + plist[i].security_id + '" checked></td></tr>';
+                        }
+                        else {
+                            html += '<td><input type="checkbox" class="chkScrty" value="0" id="prioritychk_' + plist[i].security_id + '"></td></tr>';
+                        }
+                    }
+                    $('#priority_checkbox').html(html);
+
+
+
+
+                });
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = "/VendorView/getVendorContactData";
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'VendorView/getVendorContactData';
+                }
+                $http.get(url1 + "?id=" + vendorID)
+                   .success(function (response) {
+                       $scope.User = response;
+                       $('#Ddl_Country').val($scope.User.Country);
+                       var url = '';
+                       if (LOCALORSERVERNEW == 'LOCAL') {
+                           url = '/adduser/getAllStateByCntryID';
+                       }
+                       else if (LOCALORSERVERNEW == 'SERVER') {
+                           url = 'adduser/getAllStateByCntryID';
+                       }
+                       $.ajax({
+                           type: "POST",
+                           url: url,
+                           async: false,
+                           data: { 'CountryID': $scope.User.Country },
+                           success: function (data) {
+                               $('#Ddl_State').html(data);
+                               $('#Ddl_State').val($scope.User.State);
+                           },
+                           error: function () {
+                               alert('Failed');
+                           }
+                       });
+                       if (LOCALORSERVERNEW == 'LOCAL') {
+                           url = '/adduser/GetAllCityByStateID';
+                       }
+                       else if (LOCALORSERVERNEW == 'SERVER') {
+                           url = 'adduser/GetAllCityByStateID';
+                       }
+                       //$.ajax({
+                       //    type: "POST",
+                       //    url: url,
+                       //    async: false,
+                       //    data: { 'StateID': $scope.User.State },
+                       //    success: function (data) {
+                       //        $('#Ddl_City').html(data);
+
+                       //        //  $('#txt_City').html(data);
+                       //    },
+                       //    error: function () {
+                       //        alert('Failed!!!');
+                       //    }
+                       //});
+
+
+                       $('#Ddl_City').val($scope.User.City);
+
+
+                       //$('#Ddl_Country').val($scope.User.Country);
+                       //$('#Ddl_Country').change();
+
+                       //setTimeout(function () {
+                       //    //alert($scope.User.State);
+                       //    $('#Ddl_State').val($scope.User.State);
+                       //    $('#Ddl_State').change();
+                       //}, 200);
+
+                       //setTimeout(function () {
+                       //    $('#Ddl_City').val($scope.User.City);
+                       //    $('#Ddl_City').change();
+                       //}, 500);
+
+
+
+                       setTimeout(function () {
+                           $('#Ddl_IsHiddn').val($scope.User.IsHiddn);
+                       }, 500);
+
+                       setTimeout(function () {
+                           $('#Ddl_IsSystemUser').val($scope.User.IsSystemUser);
+
+                           if ($scope.User.IsSystemUser == '1') {
+                               $('#Ddl_IsSystemUser').attr('disabled', 'disabled');
+                           }
+                           else {
+                               $('#Ddl_IsSystemUser').removeAttr('disabled');
+                           }
+                       }, 500);
+
+                       //console.log($scope.User);
+
+                   });
+
+
+                $scope.EditVendorContact = function () {
+
+
+                    var priorities = "";
+
+                    var url1 = "";
+
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url1 = "/VendorView/UpdateVendorContactData";
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url1 = 'VendorView/UpdateVendorContactData';
+                    }
+
+
+                    $('.chkScrty').each(function () {
+
+                        if ($(this).is(":checked")) {
+
+
+                            if (priorities == "")
+                            { priorities += $(this).attr('id').split('prioritychk_')[1]; }
+                            else {
+                                priorities += "," + $(this).attr('id').split('prioritychk_')[1];
+                            }
+                        }
+                    });
+
+                    $scope.User.ParentVendorID = $('#Vendorid').val();
+
+                    $scope.User.priorities_on_list = priorities;
+
+                    $scope.User.Country = $('#Ddl_Country').val();
+                    $scope.User.State = $('#Ddl_State').val();
+                    $scope.User.City = $('#Ddl_City').val();
+
+
+
+                    $scope.User.IsHiddn = $('#Ddl_IsHiddn').val();
+
+
+                    var IsSystemUser = $('#Ddl_IsSystemUser').val();
+
+                    if (IsSystemUser == '1' && $('#txt_Email').val().trim() == "") {
+                        notify('Please enter E-mail ID');
+                        return;
+                    }
+                    
+                    if ($('#txt_Email').val().trim() == "") {
+                        IsSystemUser = '0';
+                    }
+                    else {
+                        IsSystemUser = '1';
+                    }
+                   
+
+
+                    $scope.User.IsSystemUser = IsSystemUser;//$('#Ddl_IsSystemUser').val();
+
+                    $('#loader_EdtVendorContact').show();
+                    $('#btn_EdtVendorContact').hide();
+
+                    var obj = JSON.stringify($scope.User);
+
+                    $.ajax({
+                        url: url1,
+                        type: "POST",
+                        dataType: "text",
+                        contentType: "application/json; charset=utf-8",
+                        data: obj,
+
+
+                        error: function () {
+                            alert("failed");
+                            $('#loader_EdtVendorContact').hide();
+                            $('#btn_EdtVendorContact').show();
+                        },
+                        success: function (data) {
+                            if (data == 'INVALID^USERNAME') {
+
+                                $('#txt_UName').val('');
+                                errorfunc('txt_UName', 'Please enter an unique User name');
+                                alert('Username already exists !! Please give an unique one !!');
+                            }
+                            else if (data == 'INVALID^EMAIL') {
+
+                                $('#txt_Email').val('');
+                                errorfunc('txt_Email', 'Please enter an unique Email Address');
+                                alert('Email already exists !! Please give an unique one !!');
+                            }
+                            else {
+                                if (data == '1') {
+                                    notify('User Activation mail has been sent to User.','green');
+                                }
+                                else if (data == '0') {
+                                    alert('User created.');
+                                }
+
+                                window.location.reload();
+                            }
+
+                            $('#loader_EdtVendorContact').hide();
+                            $('#btn_EdtVendorContact').show();
+                        }
+                    });
+
+                }
+
+            });
+
+        function EditPOPUP(obj) {
+            alert(obj);
+            $('.popup_container').fadeIn(40);
+        }
+
+        function errorfunc(obj, message) {
+
+            $('#' + obj).val($('#' + obj).val().trim());
+            $('#' + obj).attr('placeholder', message);
+
+            $('#' + obj).effect("shake", { times: 2 }, 700);
+
+            //window.setInterval(function () { $('#' + obj).attr('placeholder', ''); }, 5000);
+
+
+            $('#' + obj).focus();
+
+        }
+        function isValidUSPhoneFormat(elementValue) {
+            var phoneNumberPattern = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s.]{0,1}[0-9]{3}[-\s.]{0,1}[0-9]{4}$/;
+            if (phoneNumberPattern.test(elementValue) == false) {
+                var phoneNumberPattern = /^(\()?\d{3}(\))?(.|\s)?\d{3}(.|\s)\d{4}$/;
+                return phoneNumberPattern.test(elementValue);
+            }
+            return phoneNumberPattern.test(elementValue);
+        }
+
+
+
+        $(function () {
+            $('#btn_EdtVendorContact').click(function () {
+
+                if ($('#txt_ContactFname').val().trim() == '') {
+                    //alert('You must enter a Vendor Name before continue');
+                    errorfunc('txt_ContactFname', 'You must enter a Contact First Name before continue');
+                    return false;
+                }
+
+
+                if ($('#txt_ContactLname').val().trim() == '') {
+                    //alert('You must enter a Vendor Name before continue');
+                    errorfunc('txt_ContactLname', 'You must enter a Contact Last Name before continue');
+                    return false;
+                }
+
+                //if ($('#txt_Add1').val().trim() == '') {
+                //    errorfunc('txt_Add1', 'You must enter Address before continue');
+                //    return false;
+                //}
+
+
+
+
+                //if ($('#Ddl_Country').val()  == 0) {
+                //    alert('You must select Country before continue');
+                //    $('#Ddl_Country').focus();
+                //    return false;
+                //}
+
+                //if ($('#Ddl_State').val() == 0) {
+                //    alert('You must select State before continue');
+                //    $('#Ddl_State').focus();
+                //    return false;
+                //}
+
+                //if ($('#Ddl_City').val() == '') {
+                //    //alert('You must select State before continue');
+                //    errorfunc('Ddl_City', 'You must enter a city before continue');
+                //    //$('#Ddl_City').focus();
+                //    return false;
+                //}
+
+
+                //if ($('#txt_ZipCode').val().trim() == '') {
+                //    //alert('You must enter a Vendor Name before continue');
+                //    errorfunc('txt_ZipCode', 'You must enter a Zip code before continue');
+                //    return false;
+                //}
+
+                //if ($('#txt_Phone').val().trim() == '') {
+                //    //alert('You must enter a Vendor Name before continue');
+                //    errorfunc('txt_Phone', 'You must enter a Phone number before continue');
+                //    return false;
+                //}
+
+                var isok = isValidUSPhoneFormat($('#txt_Phone').val());
+
+                //if (!isok) {
+                //    errorfunc('txt_Phone', 'You must enter Phone before continue');
+                //    return false;
+                //}
+
+                //if ($('#txt_Fax').val().trim() == '') {
+                //    //alert('You must enter a Vendor Name before continue');
+                //    errorfunc('txt_Fax', 'You must enter a Fax before continue');
+                //    return false;
+                //}
+
+
+                //if ($('#txt_ContactTitle').val().trim() == '') {
+                //    //alert('You must enter a Vendor Name before continue');
+                //    errorfunc('txt_ContactTitle', 'You must enter a Contact tilte before continue');
+                //    return false;
+                //}
+
+
+                var Email = $('#txt_Email').val();
+                //if (Email.trim() == "") {
+                //    errorfunc('txt_Email', 'You must enter an Email Address before continuing');
+                //    return;
+                //}
+
+
+                var Email = $('#txt_Email').val();
+                //if (Email.trim() == "") {
+                //    errorfunc('txt_Email', 'Please enter Email');
+                //    return;
+                //}
+                if (Email != '') {
+                    var reg = /^[^@@\s]+@@[^@@\s]+\.[^@@\s]{2,}$/;
+                    var eaddress = Email;
+                    if (Email != '' && reg.test(eaddress) == false) {
+                        $('#txt_Email').val('');
+                        errorfunc('txt_Email', 'Please enter valid Email');
+                        return false;
+                    }
+                }
+
+
+
+
+
+
+                //if ($('#txt_Website').val().trim() == '') {
+                //    //alert('You must enter a Vendor Name before continue');
+                //    errorfunc('txt_Website', 'You must enter a Website before continue');
+                //    return false;
+                //}
+
+
+                var scope = angular.element($("#angulardiv")).scope().EditVendorContact();
+
+
+            });
+
+
+        });
+
+    </script>
+</body>
+</html>

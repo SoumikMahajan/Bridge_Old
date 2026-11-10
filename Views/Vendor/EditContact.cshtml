@@ -1,0 +1,1553 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit Contact</title>
+
+     <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+
+  
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+
+   
+
+
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    
+    <script src="~/Scripts/jquery.autosize.js"></script>
+
+        <script src="~/Scripts/jquery.DB_PROC.js"></script>
+
+
+    <style type="text/css">
+        .display_none {
+            display: none;
+        }
+    </style>
+
+    <style type="text/css">
+        .user_panel_container {
+            padding: 0px 0px 0px 0px;
+        }
+
+            .user_panel_container label {
+                padding: 8px 0px 4px;
+            }
+
+        .edit_vendor_full {
+            margin-bottom: 12px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        function addnewaddress(o) {
+
+            var innerhtml = $('#tocopytab').html();
+
+
+            $('#addressmodal').modal('show');
+            $('#newaddress').html(innerhtml);
+            $('#newaddress').find('div:eq(8)').remove();
+            $('#newaddress').find('div:eq(8)').remove();
+
+        }
+
+
+        function savenewaddress() {
+
+            var o = $('#newaddress');
+
+            
+            var Tabheader = $(o).find('.cnheader').val().trim();
+            var Address = $(o).find('.cnaddress').val().trim();
+            var CountryID = $(o).find('.cncountry').val();
+            var StateID = $(o).find('.cnstate').val();
+            var PinCode = $(o).find('.cnzip').val();
+            var City = $(o).find('.cncity').val();
+            var Isdefault = $(o).find('.cndefault').is(':checked') == true ? 'True' : 'False';
+
+            if (Tabheader == '') {
+                notify("Address title can not be blank.");
+                return;
+            }
+            if (Address == '') {
+                notify("Address can not be blank.");
+                return;
+            }
+
+            var vendorid = $('#Vendorid').val();
+
+            var obj = new Object();
+            obj.Mode = 'CREATE';
+            obj.VendorID = vendorid;
+
+            obj.Tabheader = Tabheader;
+            obj.Address = Address;
+            obj.CountryID = CountryID;
+            obj.StateID = StateID;
+            obj.Pincode = PinCode;
+            obj.City = City;
+            obj.Isdefault = Isdefault;
+            
+
+            console.log(obj);
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_ContactAddressesProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o1 = DBSP.call_DB_Procedure();
+            //o1 = o1.data;
+            irrrrr = 0;
+            notify("Added new address","GREEN");
+            loadaddresses();
+            $('#addressmodal').modal('hide');
+
+        }
+
+        function deleteaddress(obj) {
+
+
+            var c = confirm("Do you really waht to delete the address?");
+            if (!c) {
+                return;
+            }
+
+            var o = $(obj).parent().parent();
+
+            var Fldid = $(o).attr('id').split('addrtab_')[1];
+            
+            var obj = new Object();
+            obj.Mode = 'DELETE';
+            obj.FldID = Fldid
+
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_ContactAddressesProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o1 = DBSP.call_DB_Procedure();
+            o1 = o1.data;
+
+            console.log(o1);
+
+            if (o1[0].Result == 'SUCCESS') {
+                irrrrr = 0;
+                notify("Deleted the address", "GREEN");
+                loadaddresses();
+            }
+            else {
+                notify("Cannot delete the default address");
+            }
+            //loadaddresses();
+
+
+
+
+
+
+        }
+
+
+
+
+
+        function updateaddress(obj) {
+
+            var o = $(obj).parent().parent();
+
+            var Fldid = $(o).attr('id').split('addrtab_')[1];
+            var Tabheader = $(o).find('.cnheader').val().trim();
+            var Address = $(o).find('.cnaddress').val().trim();
+            var CountryID = $(o).find('.cncountry').val();          
+            var StateID = $(o).find('.cnstate').val();
+            var PinCode = $(o).find('.cnzip').val();
+            var City = $(o).find('.cncity').val();
+            var Isdefault = $(o).find('.cndefault').is(':checked') == true ? 'True' : 'False';
+            
+            if (Tabheader == '') {
+                notify("Address title can not be blank.");
+                return;
+            }
+            if (Address == '') {
+                notify("Address can not be blank.");
+                return;
+            }
+
+
+            var vendorid = $('#Vendorid').val();
+
+            var obj = new Object();
+            obj.Mode = 'UPDATE';
+            obj.VendorID = vendorid;
+
+            obj.Tabheader = Tabheader;
+            obj.Address = Address;
+            obj.CountryID = CountryID;
+            obj.StateID = StateID;
+            obj.Pincode = PinCode;
+            obj.City = City;
+            obj.Isdefault = Isdefault;
+            obj.FldID = Fldid
+
+            console.log(obj);
+
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_ContactAddressesProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o1 = DBSP.call_DB_Procedure();
+            //o1 = o1.data;
+
+            irrrrr = 0;
+            notify("Updated the address", "GREEN");
+            loadaddresses();
+
+
+
+
+
+
+        }
+        function loadaddresses() {
+
+
+            
+            var innerhtml = $('#tocopytab').html();
+           
+          
+
+
+
+            var vendorid = $('#Vendorid').val();
+
+            var obj = new Object();
+            obj.Mode = 'GET';
+            obj.VendorID = vendorid;
+
+
+            var DBSP = new DB_SP_CONNECT();
+            DBSP.ProcedureName = "POMS_ContactAddressesProc";
+            DBSP.obj = obj;
+            DBSP.isasync = false;
+            var o1 = DBSP.call_DB_Procedure();
+            o1 = o1.data;
+
+            console.log(o1);
+            var nvhtml = '';
+
+            var adhtml = '';
+
+            $('#nvbar').html('');
+
+            $('#areaholder').html('');
+
+            for (var a = 0; a < o1.length; a++) {
+
+                var Address = o1[a].Address;
+                var City = o1[a].City;
+                var CountryID = o1[a].CountryID;
+                var FldID = o1[a].FldID;
+                var IsDefault = o1[a].IsDefault;
+                var PinCode = o1[a].PinCode;
+                var StateID = o1[a].StateID;
+                var Tabheader = o1[a].Tabheader;
+
+                if (IsDefault == 'True') {
+                    nvhtml = '<li  class="active"><a data-toggle="tab" href="#addrtab_' + FldID + '">' + Tabheader
+                        + '<i class="fa fa-check mrg5L" aria-hidden="true"></i>'
+                        + '</a></li>';
+
+                }
+                else{
+                    nvhtml = '<li><a data-toggle="tab" href="#addrtab_' + FldID + '">' + Tabheader + '</a></li>';
+                }
+               
+               
+                if (IsDefault == 'True') {
+                    adhtml = '<div id="addrtab_' + FldID + '" class="tab-pane fade in active">' + innerhtml + '</div>';
+                }
+                else {
+                    adhtml = '<div id="addrtab_' + FldID + '" class="tab-pane fade in">' + innerhtml + '</div>';
+
+                }
+
+
+                $('#nvbar').append(nvhtml);
+
+                $('#areaholder').append(adhtml);
+
+
+                console.log(nvhtml);
+                console.log(adhtml);
+
+                var o = $('#addrtab_' + FldID);
+
+                console.log($(o).find('.cnaddress'));
+
+                $(o).find('.cnheader').val(Tabheader);
+
+
+                $(o).find('.cnaddress').val(Address);
+                $(o).find('.cncountry').val(CountryID);
+                $(o).find('.cncountry').change();
+
+                $(o).find('.cnstate').val(StateID);
+                $(o).find('.cnzip').val(PinCode);
+                $(o).find('.cncity').val(City);
+
+                if (IsDefault == 'True') {
+                    $(o).find('.cndefault').prop('checked', 'checked');
+                    $(o).find('.cndefault').prop('disabled', 'disabled');
+                }
+                else {
+                    $(o).find('.cndefault').removeAttr('checked');
+
+                }
+                
+            }
+
+            $('#nvbar').append('<li><i title="Add new address." class="fa fa-plus" onclick="addnewaddress(this);" style="cursor:pointer;    color: #7792a8;  padding-top: 6px;margin-left: 13px;"></i></li>');
+            
+
+        }
+
+
+
+
+        $(document).ready(function () {
+          
+            loadaddresses();
+
+            //    BindControls();
+            var canedit = $('#editpermission').val();
+
+            if (canedit != "1") {
+
+                setTimeout(function () {
+
+                    $('input').each(
+                   function () {
+
+                       $(this).attr('disabled', 'disabled');
+                       $(this).removeAttr('onclick');
+
+                   }
+                   );
+                    $('textarea').attr('disabled', 'disabled');
+                    $('select').attr('disabled', 'disabled');
+                    $('.foreditonly').remove();
+
+
+                },700);
+
+               
+
+            }
+
+
+            $('textarea').autosize();
+        });
+
+
+        function GetCtryID(obj) {
+
+            var Cnrty = $(obj).find('option:selected').attr("name").split("_")[1];
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/adduser/getAllStateByCntryID';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'adduser/getAllStateByCntryID';
+            }
+            var o = $(obj).parent().next('div').find('select');
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                data: { 'CountryID': Cnrty },
+                success: 
+                    function (data) {
+                        
+                        console.log(o);
+                        $(o).html(data);
+                    },
+                error: failed
+            });
+        }
+        function GetStateID(obj) {
+            var State = $(obj).find('option:selected').val();
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = '/adduser/GetAllCityByStateID';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'adduser/GetAllCityByStateID';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'StateID': State },
+                success: GetSuccessDetailState,
+                error: failed
+            });
+        }
+
+        function GetSuccessDetailState(data) {
+            //$('#Ddl_City').html(data);
+            //$('#txt_City').html(data);
+        }
+
+        function GetSuccessDetail(data) {
+            
+            $('#Ddl_State').html(data);
+        }
+
+        function failed(data) {
+            alert('Failed');
+        }
+
+
+    </script>
+
+
+    <style type="text/css">
+        
+    </style>
+
+    <script type="text/javascript">
+
+        function ChkIsHiddnChange(obj) {
+
+            if ($(obj).is(":checked")) {
+
+
+
+
+                $('#Ddl_IsHiddn').val("1");
+            } else {
+
+
+
+                $('#Ddl_IsHiddn').val("0");
+            }
+        }
+        function ChkIsSystemUser(obj) {
+            if ($(obj).is(":checked")) {
+                //$('#txt_Email').removeAttr('disabled');
+                //$('#txt_Email').css('background-color', '#FFFFFF');
+                $('#txt_Email').parent().addClass('req');
+                $('#Ddl_IsSystemUser').val("1");
+                $('#systemuserdiv').show();
+            } else {
+                //$('#txt_Email').attr('disabled', 'disabled');
+                //$('#txt_Email').css('background-color', '#EBEBE4');
+
+                $('#txt_Email').parent().removeClass('req');
+                $('#Ddl_IsSystemUser').val("0");
+                $('#systemuserdiv').hide();
+
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            if ($('#UserType').val() == '6') {
+                $('.NotForVendors').hide();
+            }
+        });
+
+    </script>
+
+    <style type="text/css">
+        /** { margin: 0; padding: 0; }
+        body { font: 14px/1.4 Georgia, serif; }
+        #page-wrap { width: 600px; margin: 15px auto; }
+        p { margin: 0 0 15px 0; }
+        p:first-child { background: #fffcde; padding: 10px; }
+        #sidebar ul { background: #eee; padding: 10px; }
+        li { margin: 0 0 0 20px; }
+        #main { width: 390px; float: left; }*/
+        /*#sidebar { width: 190px; float: right; }*/
+        #sidebar {
+            width: 100px;
+            position: fixed;
+            left: 50%;
+            top: 210px;
+            margin: 0 0 0 570px;
+            padding: 10px;
+        }
+        /*#sidebar ul { background: #eee; padding: 10px; }*/
+        /*li { margin: 0 0 0 20px; }*/
+    </style>
+
+
+    <style>
+        .container-fluid {
+            padding-right: 22px;
+        }
+
+        #popupforvendorlist .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                z-index: 9999;
+            }
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 6px 0px;
+            width: 96%;
+            height: 20px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+
+        .nav-tabs > li > a {
+            background-color: rgba(238, 238, 238, 0.43);
+            border-color: #eee #eee #ddd;
+            text-transform: uppercase;
+        }
+
+            .nav-tabs > li > a:hover {
+                background-color: #ddd;
+            }
+    </style>
+
+    <style>
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+
+
+        label {
+            color: #333333;
+            font-weight: 500;
+            margin-bottom: 1px;
+        }
+
+        .section-header {
+            padding: 2px 4px;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            height: 25px;
+        }
+
+        select {
+            padding: 0px !important;
+        }
+
+        .float-panel-container ul li a {
+            background: #61BCD4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+        }
+
+
+            .float-panel-container ul li a i {
+                font-size: 15px;
+                margin-top: 8px;
+                margin-left: 1px;
+                color: #f5f5f5;
+                font-weight: 400;
+            }
+
+        .nav > li > a {
+            position: relative !important;
+            display: block !important;
+            padding: 4px 15px !important;
+        }
+
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+            color: rgb(246, 251, 252) !important;
+            cursor: default;
+            background-color: #7792a8;
+            border: 1px solid #ddd;
+            border-bottom-color: transparent;
+            color: #7792a8;
+            font-size: 16.5px;
+        }
+    </style>
+
+
+    <script>
+       
+       
+
+        function goback(obj) {
+
+            var o = $(obj).attr('data-parentid');
+
+            var url1 = "";
+
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = "/Vendor/EditVendor/";
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Vendor/EditVendor/';
+            }
+            url1 += o;
+
+            window.location.href = url1;
+
+        }
+    </script>
+</head>
+<body>
+
+    <input type="hidden" value="@ViewBag.VendorEditPermission" id="editpermission" />
+    <input type="hidden" value="@ViewBag.Vendorid" id="Vendorid" />
+    <input type="hidden" value="@ViewBag.UserType" id="UserType" />
+
+
+
+    <div id="addressmodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add New address</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="newaddress">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="savenewaddress();">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div class="container-fluid" id="angulardiv" ng-app="customer" ng-controller="customer" style="zoom:0.95;">
+
+        <div>
+
+            <span ng-hide="User.CreatedBy == ''">Created By:- {{User.CreatedBy}}</span>
+
+        </div>
+
+
+
+
+
+
+
+        <div class="row">
+
+            <div class="col-sm-5">
+
+
+                <div class="col-sm-12">
+                    <h3 class="section-header">Edit Contact <strong>→</strong> @ViewBag.Parentvendorname </h3>
+                </div>
+
+
+                <div class="col-sm-3">
+                    <button class="btn btn-block btn-primary" data-parentid="{{User.ParentVendorID}}" style="height:25px;padding:2px;" onclick="goback(this);">Go back</button>
+                </div>
+
+                <div class="col-sm-3">
+                    <button class="btn btn-block btn-primary" onclick="generateVcard();" style="height:25px;padding:2px;">Create VCard</button>
+                </div>
+
+                <div class="col-sm-6" style="margin-top: 4px; min-height: 20px;margin-bottom: 3px;" id="vcardlink">
+                </div>
+
+
+
+
+                <div class="col-sm-3 req">
+                    <label>First Name</label>
+                    <input type="text" id="txt_ContactFname" ng-model="User.ContactFname" class="form-control text-uppercase" />
+
+                </div>
+                <div class="col-sm-3">
+                    <label>Last Name</label>
+                    <input type="text" id="txt_ContactLname" ng-model="User.ContactLname" class="form-control text-uppercase" />
+                </div>
+                <div class="col-sm-3">
+                    <label>Email address</label>
+                    <input type="text" id="txt_Email" ng-model="User.Email" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <label>Website</label>
+                    <input type="text" id="txt_Website" ng-model="User.Website" class="form-control" />
+                </div>
+
+                <div class="col-sm-3">
+                    <label>Contact Title</label>
+                    <input type="text" class="form-control" id="txt_ContactTitle" ng-model="User.ContactTitle" />
+                </div>
+
+                <div class="col-sm-2">
+                    <label>Phone</label>
+                    <input type="text" id="txt_Phone" ng-model="User.Phone" class="form-control" />
+                </div>
+                <div class="col-sm-1">
+                    <label>Ext</label>
+                    <input type="text" id="txt_Extension" ng-model="User.Extension" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+
+                    <label>Fax</label>
+                    <input type="text" id="txt_Fax" ng-model="User.Fax" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <label>Mobile</label>
+                    <input type="text" id="txt_Mobile" ng-model="User.Mobile" class="form-control phonenumber" />
+                </div>
+
+                <div class="NotForVendors">
+
+
+                    <div class="col-sm-3" style="text-align: left;margin-top: 22px !important;">
+                        <label for="Chk_IsHiddn">Hidden</label>
+                        <input type="checkbox" id="Chk_IsHiddn" ng-if="User.IsHiddn !='1'" onchange="ChkIsHiddnChange(this);" />
+                        <input type="checkbox" id="Chk_IsHiddn" checked="checked" ng-if="User.IsHiddn =='1'" onchange="ChkIsHiddnChange(this);" />
+                        <select id="Ddl_IsHiddn" style="display: none;">
+                            <option value="1">Yes</option>
+                            <option value="0" selected="selected">No</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3" style="text-align: left;margin-top: 22px !important;">
+                        <label for="Chk_IsSystemUser">System User </label>
+                        <input type="checkbox" id="Chk_IsSystemUser" onchange="ChkIsSystemUser(this);" ng-if="User.IsSystemUser =='1'" checked="checked" />
+                        <input type="checkbox" id="Chk_IsSystemUser" style="background-color: #EBEBE4;" onchange="ChkIsSystemUser(this);" ng-if="User.IsSystemUser !='1'" />
+                        <select id="Ddl_IsSystemUser" style="display: none;">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-12">
+                    <h3 class="section-header">Addresses</h3>
+                </div>
+
+
+                <div class="col-sm-12">
+
+                    <ul class="nav nav-tabs mrg15T" id="nvbar"></ul>
+
+                    <div class="tab-content" id="areaholder">
+                        <div id="projectaccnttab" class="tab-pane fade in active">
+
+
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+
+
+
+            </div>
+
+
+            <div id="tocopytab" class="displaynone">
+                <div class="col-sm-12">
+                    <label>Address Title</label>
+                    <input type="text" class="cnheader form-control" />
+                </div>
+                <div class="col-sm-6">
+                    <label>Address(Press Enter for multiple lines)</label>
+                    <textarea ng-model="User.Address1" style="max-height:70px !important;height:70px;" class="form-control no-resize cnaddress"></textarea>
+                </div>
+
+                <div class="col-sm-6 mrg5B">
+                    <div class="form-group">
+                        <label>Country</label>
+                        <select onchange="GetCtryID(this);" class="form-control cncountry">
+                            @Html.Raw(ViewData["GetAllCountry"])
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>State/Prov</label>
+                        <select onchange="GetStateID(this);" class="form-control cnstate">
+                            <option value="0">select</option>
+                            @Html.Raw(ViewData["GetAllStateByCntryID"])
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <label>City</label>
+                    <input type="text" ng-model="User.City" class="form-control cncity" />
+                </div>
+
+                <div class="col-sm-6">
+                    <label>Postal/Zip Code</label>
+                    <input type="text" class="postalcode form-control cnzip" ng-model="User.ZipCode" />
+                </div>
+
+                <div class="col-sm-4 mrg5T">
+                    <label><input type="checkbox" class="cndefault" />&nbsp;Is Default Address?</label>
+                </div>
+
+
+                <div class="col-sm-2 mrg5T">
+                    <input class="btn btn-poms" type="button" onclick="deleteaddress(this);" value="Delete" />
+                </div>
+                <div class="col-sm-2 mrg5T">
+                    <input class="btn btn-poms" type="button" onclick="updateaddress(this);" value="Update" />
+                </div>
+
+
+            </div>
+
+
+
+
+
+            <div class="displaynone">
+                <div class="col-sm-6">
+                    <label>Address(Press Enter for multiple lines)</label>
+                    <textarea id="txt_Add1" ng-model="User.Address1" style="max-height:70px !important;height:70px;" class="form-control no-resize"></textarea>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Country</label>
+                        <select id="Ddl_Country" onchange="GetCtryID(this);" class="form-control">
+                            @Html.Raw(ViewData["GetAllCountry"])
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>State/Prov</label>
+                        <select id="Ddl_State" onchange="GetStateID(this);" class="form-control">
+                            <option value="0">select</option>
+                            @Html.Raw(ViewData["GetAllStateByCntryID"])
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <label>City</label>
+                    <input type="text" id="Ddl_City" ng-model="User.City" class="form-control" />
+                </div>
+
+                <div class="col-sm-6">
+                    <label>Postal/Zip Code</label>
+                    <input type="text" class="postalcode form-control" id="txt_ZipCode" ng-model="User.ZipCode" />
+                </div>
+
+            </div>
+
+
+
+            <div class="col-sm-7" id="systemuserdiv" style="padding:12px;">
+
+
+
+                <div class="col-sm-12" style="margin-top:-12px !important;">
+                    <h3 class="section-header">Permissions</h3>
+                </div>
+
+
+
+                <div class="col-sm-12">
+
+
+                    <button type="button" class="btn btn-poms  uncheckallbtn foreditonly" data-uncheckclass="chkScrty">Uncheck All</button>
+                    <button type="button" class="btn btn-poms  checkallbtn foreditonly" data-checkclass="chkScrty">Check All</button>
+
+                    <table border="1" style="width:100%; margin-bottom:0px !important;" class="table" cellspacing="0" cellpadding="0" id="priority_checkbox"></table>
+
+                </div>
+
+
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="row policy-items showHide NotForVendors">
+
+
+
+
+        </div>
+
+
+        <div class="user_panel_container displaynone">
+            <label>Address2</label>
+            <input type="text" id="txt_Add2" ng-model="User.Address2" />
+        </div>
+
+
+        <div class="user_panel_container" style="display: none;">
+            <label>Contact</label>
+            <input type="text" id="txt_Contact" ng-model="User.Contact" />
+        </div>
+
+
+        <div class="user_panel_container" style="display: none;">
+
+        </div>
+
+
+
+        <div class="user_panel_container" style="display: none;">
+            <label>Password</label>
+            <input type="password" id="txt_Password" ng-model="User.Password" />
+        </div>
+
+        <div class="user_panel_container" style="display: none;">
+            <label>Confirm password</label>
+            <input type="password" id="txt_ConfrmPswrd" ng-model="User.ConfrmPswrd" />
+        </div>
+
+
+
+
+
+    </div>
+
+
+
+    <div class="float-panel-container foreditonly">
+        <ul>
+            <li id="btn_EdtVendorContact"><a href="javascript:void(0);"><i class="fa fa-save mrg5R" title="Update" data-toggle="tooltip"></i><span class="tooltip-toggle">Update</span></a></li>
+        </ul>
+    </div>
+
+
+
+
+
+
+    <script type="text/javascript">
+
+        angular.module("customer", [])
+            .controller("customer", function ($http, $scope) {
+
+                var url1 = "";
+
+
+
+                var vendorID = $('#Vendorid').val();
+
+                if (vendorID == '' || vendorID == null || vendorID == 0) {
+
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        window.location.href = "/vendor/Allcontacts";
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        window.location.href = urlsuffix + '/vendor/Allcontacts';
+                    }
+                }
+
+
+
+
+
+                var selectedid = vendorID;//$scope.User.FldID;
+                //alert(selectedid);
+                $('.showHide').show();
+
+
+                var url2 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url2 = '../getprioritiesbyID_new';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url2 = '/Vendor/getprioritiesbyID_new';   // 'project/return_priorities_user_new';
+                }
+                url2 = url2;
+                $http.get(url2 + "?vendorid=" + selectedid)
+                    .success(function (response) {
+                        $scope.prioritylist = response;
+                        //alert(response);
+
+
+                        // $scope.prioritylist = response;
+                        var grouptype = "";
+                        var currg = "";
+                        var html = "<tr>"
+                            + "<th>Security Item</th>"
+                            + "<th>Assigned</th>"
+                            + "</tr>";
+                        //console.log(response.data);
+                        var plist = response.data;
+                        var html = "";
+                        for (var i = 0; i < plist.length; i++) {
+                            currg = plist[i].GroupType;
+
+                            if (currg.toUpperCase() != "PROJECT" && currg.toUpperCase() != "USER" && currg.toUpperCase() != "VENDOR") {
+
+                                if (currg == grouptype) {
+                                }
+                                else {
+                                    grouptype = currg;
+                                    html += "<tr><td style='color:white;background:black;' colspan='2'>" + grouptype + "</td></tr>";
+                                }
+                                html += "<tr><td><label style='padding:0px;width:100%;' for='prioritychk_" + plist[i].security_id + "'>" + plist[i].priority_name + "</label></td>";
+                                if (plist[i].is_selected == "1") {
+                                    html += '<td><input  type="checkbox" class="chkScrty" value="1" id="prioritychk_' + plist[i].security_id + '" checked></td></tr>';
+                                }
+                                else {
+                                    html += '<td><input type="checkbox" class="chkScrty" value="0" id="prioritychk_' + plist[i].security_id + '"></td></tr>';
+                                }
+                            }
+                        }
+                        $('#priority_checkbox').html(html);
+
+                        var tableobj = $('#priority_checkbox');
+                        rebuiltPriorityintoDivs(tableobj);
+
+
+                    });
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = "/vendor/getVendorContactData";
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = '/vendor/getVendorContactData';
+                }
+                url1 = url1;
+
+                $http.get(url1 + "?id=" + vendorID)
+                    .success(function (response) {
+                        $scope.User = response;
+
+                        $('#Ddl_Country').val($scope.User.Country);
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = '/adduser/getAllStateByCntryID';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'adduser/getAllStateByCntryID';
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            async: false,
+                            data: { 'CountryID': $scope.User.Country },
+                            success: function (data) {
+                                $('#Ddl_State').html(data);
+                                $('#Ddl_State').val($scope.User.State);
+                                setTimeout(function () {
+                                    checkphone_global($('#txt_Mobile'));
+                                }, 2000);
+
+                            },
+                            error: function () {
+                                alert('Failed');
+                            }
+                        });
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = '/adduser/GetAllCityByStateID';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'adduser/GetAllCityByStateID';
+                        }
+                        //$.ajax({
+                        //    type: "POST",
+                        //    url: url,
+                        //    async: false,
+                        //    data: { 'StateID': $scope.User.State },
+                        //    success: function (data) {
+                        //        $('#Ddl_City').html(data);
+
+                        //        //  $('#txt_City').html(data);
+                        //    },
+                        //    error: function () {
+                        //        alert('Failed!!!');
+                        //    }
+                        //});
+
+
+                        $('#Ddl_City').val($scope.User.City);
+
+
+                        //$('#Ddl_Country').val($scope.User.Country);
+                        //$('#Ddl_Country').change();
+
+                        //setTimeout(function () {
+                        //    //alert($scope.User.State);
+                        //    $('#Ddl_State').val($scope.User.State);
+                        //    $('#Ddl_State').change();
+                        //}, 200);
+
+                        //setTimeout(function () {
+                        //    $('#Ddl_City').val($scope.User.City);
+                        //    $('#Ddl_City').change();
+                        //}, 500);
+
+
+
+                        setTimeout(function () {
+                            $('#Ddl_IsHiddn').val($scope.User.IsHiddn);
+                        }, 500);
+
+                        setTimeout(function () {
+                            $('#Ddl_IsSystemUser').val($scope.User.IsSystemUser);
+
+                            //console.log('&&&');
+                            if ($scope.User.IsSystemUser == '1') {
+                                $('#systemuserdiv').show();
+                                // $('#Ddl_IsSystemUser').attr('disabled', 'disabled');
+                            }
+                            else {
+                                $('#systemuserdiv').hide();
+                                var canedit = $('#editpermission').val();
+
+                                if (canedit == "1") {
+                                    $('#Ddl_IsSystemUser').removeAttr('disabled');
+                                }
+
+
+                            }
+                        }, 500);
+
+
+
+                    });
+
+
+                $scope.EditVendorContact = function () {
+
+
+                    var priorities = "";
+
+                    var url1 = "";
+
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        url1 = "/vendor/UpdateVendorContactData";
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        url1 = 'vendor/UpdateVendorContactData';
+                    }
+
+
+                    $('.chkScrty').each(function () {
+
+                        if ($(this).is(":checked")) {
+
+
+                            if (priorities == "") { priorities += $(this).attr('id').split('prioritychk_')[1]; }
+                            else {
+                                priorities += "," + $(this).attr('id').split('prioritychk_')[1];
+                            }
+                        }
+                    });
+
+                    $scope.User.ParentVendorID = $('#Vendorid').val();
+
+                    $scope.User.priorities_on_list = priorities;
+
+                    $scope.User.Country = $('#Ddl_Country').val();
+                    $scope.User.State = $('#Ddl_State').val();
+                    $scope.User.City = $('#Ddl_City').val();
+
+
+
+                    $scope.User.IsHiddn = $('#Ddl_IsHiddn').val();
+
+
+                    var IsSystemUser = $('#Ddl_IsSystemUser').val();
+
+                    if (IsSystemUser == '1' && $('#txt_Email').val().trim() == "") {
+                        notify('Please enter E-mail ID');
+                        return;
+                    }
+
+                    //if ($('#txt_Email').val().trim() == "") {
+                    //    IsSystemUser = '0';
+                    //}
+                    //else {
+                    //    IsSystemUser = '1';
+                    //}
+
+
+
+                    $scope.User.IsSystemUser = IsSystemUser;//$('#Ddl_IsSystemUser').val();
+
+                    $('#loader_EdtVendorContact').show();
+                    $('#btn_EdtVendorContact').hide();
+
+                    var obj = JSON.stringify($scope.User);
+                    console.log(obj);
+                    //return;
+
+                    $.ajax({
+                        url: url1,
+                        type: "POST",
+                        dataType: "text",
+                        contentType: "application/json; charset=utf-8",
+                        data: obj,
+
+
+                        error: function () {
+                            alert("failed");
+                            $('#loader_EdtVendorContact').hide();
+                            $('#btn_EdtVendorContact').show();
+                        },
+                        success: function (data) {
+                            if (data == 'INVALID^USERNAME') {
+
+                                $('#txt_UName').val('');
+                                errorfunc('txt_UName', 'Please enter an unique User name');
+                                alert('Username already exists !! Please give an unique one !!');
+                            }
+                            else if (data == 'INVALID^EMAIL') {
+
+                                //$('#txt_Email').val('');
+                                $scope.User.Email = '';
+                                errorfunc('txt_Email', 'Please enter an unique Email Address');
+                                alert('Email already exists !! Please give an unique one !!');
+                            }
+                            else {
+                                if (data == '1') {
+                                    notify('User Activation mail has been sent to User.', 'green');
+                                }
+                                else if (data == '0') {
+                                    notify('User created.', 'green');
+                                }
+                                else {
+                                    notify('Successfully updated.', 'green');
+                                }
+                                irrrrr = 0;
+                                window.location.reload();
+                            }
+
+                            $('#loader_EdtVendorContact').hide();
+                            $('#btn_EdtVendorContact').show();
+                        }
+                    });
+
+                }
+
+            });
+
+        function EditPOPUP(obj) {
+            alert(obj);
+            $('.popup_container').fadeIn(40);
+        }
+
+        function errorfunc(obj, message) {
+
+            $('#' + obj).val($('#' + obj).val().trim());
+            $('#' + obj).attr('placeholder', message);
+
+            $('#' + obj).effect("shake", { times: 2 }, 700);
+
+            //window.setInterval(function () { $('#' + obj).attr('placeholder', ''); }, 5000);
+
+
+            $('#' + obj).focus();
+
+        }
+        function isValidUSPhoneFormat(elementValue) {
+            var phoneNumberPattern = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s.]{0,1}[0-9]{3}[-\s.]{0,1}[0-9]{4}$/;
+            if (phoneNumberPattern.test(elementValue) == false) {
+                var phoneNumberPattern = /^(\()?\d{3}(\))?(.|\s)?\d{3}(.|\s)\d{4}$/;
+                return phoneNumberPattern.test(elementValue);
+            }
+            return phoneNumberPattern.test(elementValue);
+        }
+
+
+
+        $(function () {
+            $('#btn_EdtVendorContact').click(function () {
+
+                if ($('#txt_ContactFname').val().trim() == '') {
+                    //alert('You must enter a Vendor Name before continue');
+                    errorfunc('txt_ContactFname', 'You must enter a Contact First Name before continue');
+                    return false;
+                }
+
+
+                if ($('#txt_ContactLname').val().trim() == '') {
+                    //alert('You must enter a Vendor Name before continue');
+                    //errorfunc('txt_ContactLname', 'You must enter a Contact Last Name before continue');
+                    //return false;
+                }
+
+                var isok = isValidUSPhoneFormat($('#txt_Phone').val());
+
+
+
+                var Email = $('#txt_Email').val();
+
+                if (Email != '') {
+                    var reg = /^[^@@\s]+@@[^@@\s]+\.[^@@\s]{2,}$/;
+                    var eaddress = Email;
+                    if (Email != '' && reg.test(eaddress) == false) {
+                        $('#txt_Email').val('');
+                        errorfunc('txt_Email', 'Please enter valid Email');
+                        return false;
+                    }
+                }
+
+                var scope = angular.element($("#angulardiv")).scope().EditVendorContact();
+
+
+            });
+
+
+        });
+
+    </script>
+
+    <script>
+
+        function generateVcard() {
+
+            var urltemp = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                urltemp = '/Vendor/generateVcard';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                urltemp = 'Vendor/generateVcard';
+            }
+            var obj = {};
+
+            obj.FN = $('#txt_ContactFname').val();
+            obj.LN = $('#txt_ContactLname').val();
+            obj.TITLE = "Contact";
+            obj.ORG = $('#txt_ContactFname').val();
+            obj.EMAIL = $('#txt_Email').val();
+            obj.COUNTRY = $('#Ddl_Country option:selected').text();
+            obj.ADR = $('#txt_Add1').val();
+            obj.STATE = $('#Ddl_State option:selected').text();
+            obj.CITY = $('#Ddl_City').val();
+            obj.POSTALCODE = $('#txt_ZipCode').val();
+            obj.PHONE = $('#txt_Phone').val();
+            obj.EXT = $('#txt_Extension').val();
+            obj.Cell = $('#txt_Mobile').val();
+            obj.FAX = $('#txt_Fax').val();
+
+            $.ajax({
+                type: "POST",
+                url: urltemp,
+                async: false,
+                data: obj,
+                success: function (data) {
+
+                    if (LOCALORSERVERNEW == 'LOCAL') {
+                        urltemp = '/Assets/VendorFiles/';
+                    }
+                    else if (LOCALORSERVERNEW == 'SERVER') {
+                        urltemp = 'Assets/VendorFiles/';
+                    }
+
+                    urltemp += data;
+
+                    var html = "<a target='_blank' href='" + urltemp + "'><i class='fa fa-download mrg5R' aria-hidden='true'></i>"
+                        + "Download Contact for " + $('#txt_ContactFname').val() + " " + $('#txt_ContactLname').val() + "</u></a>";
+                    $('#vcardlink').html(html);
+
+                }
+            });
+
+        }
+
+    </script>
+
+    <script>
+
+        function rebuiltPriorityintoDivs(obj) {
+
+            $('.newappendeddivforpermissions').remove();
+
+            var ttt = 0;
+            var cnt = -1;
+            var outerhtml = "<div class='row newappendeddivforpermissions mrg5T'>";
+
+            $(obj).find('tbody tr').each(function () {
+
+                var nowDiv = $(this).find('td:eq(0)').html().toUpperCase();
+
+                if (nowDiv != "PROJECT" && nowDiv != "USER" && nowDiv != "VENDOR") {
+
+                    if ($(this).find('td').length == 1) {
+
+                        cnt++;
+
+                        if (ttt == 0) {
+
+
+                            outerhtml += '<div class="row" style="margin-left:16px;margin-right:9px;">';
+
+                            outerhtml += '<div class="col-sm-3" style="width:20%;">';
+                        }
+                        else {
+
+
+
+
+                            if (cnt % 7 == 0) {
+                                if (nowDiv != "PROJECT" && nowDiv != "USER" && nowDiv != "VENDOR") {
+                                    outerhtml += '</div></div><div class="row"  style="margin-left:16px;margin-right:9px;"><div class="col-sm-3"  style="width:20%;">';
+                                }
+                                else {
+                                    outerhtml += '</div></div><div class="row"  style="margin-left:16px;margin-right:9px;"><div class="col-sm-3 displaynone"  style="width:20%;">';
+
+
+                                }
+
+
+                            }
+                            else {
+
+                                if (nowDiv != "PROJECT" && nowDiv != "USER" && nowDiv != "VENDOR") {
+                                    outerhtml += '</div><div class="col-sm-3"  style="width:20%;">';
+                                }
+                                else {
+                                    outerhtml += '</div><div class="col-sm-3 displaynone">';
+
+                                }
+
+                            }
+                        }
+                        //outerhtml += '<h3 class="section-header">' + $(this).find('td:eq(0)').html() + '</h3>';
+
+                        outerhtml += '<div class="col-sm-12 section-header"><span style="float: left;width: 76.9%;text-align: left;font-size:16px;">' + $(this).find('td:eq(0)').html() + '</span>'
+                            + '<input style="float:left;margin-left:2px;    margin-top: 10px;" type="checkbox" onclick="Checkallinner(this);" /></div> ';
+
+                    }
+
+                    else {
+
+                        if (nowDiv != "PROJECT" && nowDiv != "USER" && nowDiv != "VENDOR") {
+                            outerhtml += '<div class="col-sm-9">';
+                            outerhtml += '<span>' + $(this).find('td:eq(0)').html() + '</span></div>';
+                            outerhtml += '<div class="col-sm-3">' + $(this).find('td:eq(1)').html() + '</div>';
+                        }
+                        else {
+                            outerhtml += '<div class="col-sm-9 displaynone">';
+                            outerhtml += '<span>' + $(this).find('td:eq(0)').html() + '</span></div>';
+                            outerhtml += '<div class="col-sm-3 displaynone">' + $(this).find('td:eq(1)').html() + '</div>';
+
+                        }
+
+
+                    }
+
+                    ttt = 1;
+
+                }
+
+            });
+
+            outerhtml += "</div>";
+            //console.log(outerhtml);
+
+            $(obj).after(outerhtml);
+
+            $(obj).html('');
+
+        }
+
+
+        function Checkallinner(obj) {
+
+            var pdiv = $(obj).parent().parent();
+            if ($(obj).is(':checked')) {
+                $(pdiv).find('.chkScrty').prop('checked', true);
+            }
+            else {
+                $(pdiv).find('.chkScrty').prop('checked', false);
+
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('input[type="text"]').hover(function () {
+                $('#txt_Email').removeAttr('readonly');
+            });
+        });
+    </script>
+
+</body>
+</html>

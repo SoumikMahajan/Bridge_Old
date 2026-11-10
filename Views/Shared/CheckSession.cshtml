@@ -1,0 +1,12 @@
+﻿@{ 
+         
+        if (Session["UserID"] == null)
+        {
+           <script>alert("Session Timeout");</script>
+            Response.Redirect("~/Home/Login");
+            //Response.Redirect("http://www.ets-dev.com/aspdemo/POMS");
+            //Response.Redirect("http://www.thebridgebytcg.com/poms");
+        
+        }
+         
+ }

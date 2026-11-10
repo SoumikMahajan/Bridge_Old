@@ -1,0 +1,110 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Generate Password</title>
+    <link href="@Url.Content("~/design/css/bootstrap.min.css")" rel="stylesheet" />
+    <script src="@Url.Content("~/design/js/jquery.1.11.3.min.js")"></script>
+    <style>
+        .ui-loader-default {
+            background: rgba(0, 0, 0, 0.40);
+            width: 100% !important;
+            height: 100% !important;
+            margin-left: -113px;
+        }
+        .ui-loader {
+            display: block;
+            z-index: 9999999;
+            position: fixed;
+            top: 0%;
+            border: 0;
+            border-radius: 0;
+        }
+        .hide {
+            display: none !important;
+        }
+        .ui-loader .ui-icon {
+            position: fixed;
+            top: 0px;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            margin: auto;
+            padding: 8px;
+            text-align: center;
+            vertical-align: middle;
+            width: 85px;
+            height: 85px;
+            z-index: 1000;
+            border-radius: 4px;
+            display: block;
+        }
+        .ui-icon-loading {
+            background: url(/Images/loader.gif) no-repeat;
+            background-size: 64px 64px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="ui-loader ui-loader-default hide" id="ui_lodaer">
+            <div class="ui-icon ui-icon-loading">
+                <div style="text-align:center;margin-top:5px;">
+                    <img id="Pageloader" class="hide" src="@Url.Content("~/Images/loader.gif")" alt="loader" style="width:30px;" />
+                </div>
+            </div>
+        </div>
+
+            <div class="panel-group" style="margin-top: 100px;">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Reset all users password and an they get an automatic email response with their new password.</div>
+
+                    <div class="panel-body">
+                        <button type="button" style="float:left;" class="btn btn-success btn-small btn-mail" name="submit" id="submit">Send Mail</button>
+                    </div>
+                </div>
+            </div>
+            <div class="alert alert-success" role="alert" hidden="hidden">
+            </div>
+        </div>
+</body>
+</html>
+
+<script>
+    $(document).ready(function () {
+
+        $('.btn-mail').on('click', function () {
+            $("#ui_lodaer").removeClass("hide");
+            $.ajax({
+                url: '@Url.Content("~/Home/GetRandomPassFetchToAllUser")',
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json;charset="UTF-8"',
+                success: function (result) {
+                    if (result.split('!')[0] == 'Success') {
+                        $("#ui_lodaer").addClass("hide");
+                    }
+
+                    $('.alert-success').text('');
+                    $('.alert-success').prop('hidden', false);
+                    $('.alert-success').text(result.split('!')[1]);
+
+                    setTimeout(function () {
+                        $('.alert-success').text('');
+                        $('.alert-success').prop('hidden', true);
+
+                    }, 5000);
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            });
+        });
+    });
+</script>

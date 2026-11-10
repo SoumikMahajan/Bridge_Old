@@ -1,0 +1,534 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+     <title>Bridge Supporter</title>
+    <link href='https://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <link href="~/css/ui-lightness/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/jquery.autosize.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/Misc.css" rel="stylesheet" />
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+    <link href="~/css/jquery.multiselect.filter.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.filter.js"></script>
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+    <script src="~/Scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+    @*<script src="~/Scripts/editor_plugin.js"></script>*@
+    <script src="~/Scripts/tinymce/js/tinymce/plugins/textcolor/plugin.min.js"></script>
+
+    <script src="~/Scripts/jquery.DB_PROC.js"></script>
+
+
+    <script src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
+    <style>
+        table.fixedHeader-floating {
+            top: 43px !important;
+            position: fixed !important;
+            background-color: white;
+        }
+
+            table.fixedHeader-floating.no-footer {
+                border-bottom-width: 0;
+            }
+
+        table.fixedHeader-locked {
+            position: absolute !important;
+            background-color: white;
+        }
+
+
+        .leftaligned {
+            text-align: left;
+        }
+
+        .widercolumn {
+            width: 110px !important;
+        }
+
+        table.dataTable thead th, table.dataTable thead td {
+            padding: 2px !important;
+        }
+
+        .checked {
+            cursor: pointer;
+            font-size: 0.9em !important;
+            border: 5px solid #0a4e02;
+            border-radius: 16px;
+            height: 22px;
+            width: 22px;
+            text-align: center;
+            background: #0a4e02;
+            color: white;
+            padding: 1px;
+        }
+    </style>
+
+
+<script>
+    function getHistory(id) {
+        var obj = new Object();
+        //obj.curr = curr;
+        obj.Mode = 'GETHISTORY';
+        obj.FldID = id;
+
+        obj.SESSIONUSERBACKEND = 'UserID';
+
+        var DBSP = new DB_SP_CONNECT();
+        DBSP.ProcedureName = "POMS_BridgeSupporterAll";
+        DBSP.obj = obj;
+        DBSP.isasync = false;
+        var o = DBSP.call_DB_Procedure();
+        o = o.data;
+        console.log(o);
+
+        $('#historymodal').modal('show');
+        $('#tblhistory').dataTable().fnDestroy();
+
+        var ob = new Array();
+
+        for (var a = 0; a < o.length; a++) {
+
+            ob[a] = new Array();
+            ob[a][0] = o[a].Username;
+            ob[a][1] = o[a].Event;
+            ob[a][2] = o[a].Date + ' at ' + o[a].Time;
+
+        }
+        console.log(ob);
+
+        //$('#tblhistory')
+        $('#tblhistory').dataTable({
+            "processing": true,
+            fixedHeader: true,
+            "data": ob,
+            //"autoWidth": false,
+            "columns":
+              [
+                { "title": "User" },
+                { "title": "Event", },
+                 { "title": "Time"}
+
+              ],
+            
+            "initComplete": function () {
+
+            },
+            "aoColumnDefs": [
+                { 'bSortable': false, 'aTargets': [0] }
+            ]
+        });
+
+
+
+    }
+
+    function issent(status, id) {
+        var obj = new Object();
+        //obj.curr = curr;
+        obj.Mode = 'ISSENT';
+        obj.Status = status;
+        obj.FldID = id;
+        obj.SESSIONUSERBACKEND = 'UserID';
+
+        var DBSP = new DB_SP_CONNECT();
+        DBSP.ProcedureName = "POMS_BridgeSupporterAll";
+        DBSP.obj = obj;
+        DBSP.isasync = false;
+        var o = DBSP.call_DB_Procedure();
+        o = o.data;
+        notify("Updated. Table is refreshing...", "GREEN");
+
+        getInvoices();
+    }
+
+    function ispaid(status, id) {
+        var obj = new Object();
+        //obj.curr = curr;
+        obj.Mode = 'ISPAID';
+        obj.Status = status;
+        obj.FldID = id;
+        obj.SESSIONUSERBACKEND = 'UserID';
+
+        var DBSP = new DB_SP_CONNECT();
+        DBSP.ProcedureName = "POMS_BridgeSupporterAll";
+        DBSP.obj = obj;
+        DBSP.isasync = false;
+        var o = DBSP.call_DB_Procedure();
+        o = o.data;
+        notify("Updated. Table is refreshing...", "GREEN");
+
+        getInvoices();
+    }
+
+
+
+    function cansend(status,id) {
+        var obj = new Object();
+        //obj.curr = curr;
+        obj.Mode = 'CANSEND';
+        obj.Status = status;
+        obj.FldID = id;
+        obj.SESSIONUSERBACKEND = 'UserID';
+
+        var DBSP = new DB_SP_CONNECT();
+        DBSP.ProcedureName = "POMS_BridgeSupporterAll";
+        DBSP.obj = obj;
+        DBSP.isasync = false;
+        var o = DBSP.call_DB_Procedure();
+        o = o.data;
+        notify("Updated. Table is refreshing...","GREEN");
+
+        getInvoices();
+    }
+
+    function getInvoices() {
+        var vendorID = $('#txt_Project3').val() + '';
+        var projectID = $('#txt_Project').val() + '';
+        
+        var obj = new Object();
+        //obj.curr = curr;
+        obj.Mode = 'GETINVOICES';
+        obj.VendorID = vendorID == 'null' ? '' : vendorID;
+        obj.ProjectID = projectID == 'null' ? '' : projectID;
+            
+
+        var DBSP = new DB_SP_CONNECT();
+        DBSP.ProcedureName = "POMS_BridgeSupporterAll";
+        DBSP.obj = obj;
+        DBSP.isasync = false;
+        var o = DBSP.call_DB_Procedure();
+        o = o.data;
+        var ob = new Array();
+
+        for (var a = 0; a < o.length; a++) {
+
+            var htm = '';
+            var id = o[a].fldid;
+
+            ob[a] = new Array();
+            ob[a][0] = htm = '<i style="cursor:pointer;font-size: 1.3em;" onclick="getHistory(' + id + ');" class="fa fa-eye" aria-hidden="true"></i>';
+
+            ob[a][1] = o[a].GeneratedPONumber;
+
+            ob[a][2] = o[a].LegalName;
+            
+            ob[a][3] = o[a].InvoiceNumberVendor;
+
+            ob[a][4] = o[a].FullyInvoicedDate;
+            ob[a][5] = formatNumber(o[a].TotalInvoice);
+
+            if (o[a].Cansend == "True") {
+                htm = '<i style="cursor:pointer;color:#5abf26;font-size: 1.3em;" onclick="cansend(\'0\',' + id + ');" class="fa fa-check" aria-hidden="true"></i>'
+                ob[a][6] = htm;
+
+                if (o[a].IsSent == "True") {
+                    htm = '<i style="cursor:pointer;color:#5abf26;font-size: 1.3em;" onclick="issent(\'0\',' + id + ');" class="fa fa-check" aria-hidden="true"></i>'
+                }
+                else {
+                    htm = '<i style="cursor:pointer;color:#fb3939;font-size: 1.3em;" onclick="issent(\'1\',' + id + ');" class="fa fa-times" aria-hidden="true"></i>'
+
+                }
+                ob[a][7] = htm;
+
+            }
+            else {
+                htm = '<i style="cursor:pointer;color:#fb3939;font-size: 1.3em;" onclick="cansend(\'1\',' + id + ');" class="fa fa-times" aria-hidden="true"></i>'
+                ob[a][6] = htm;
+
+                
+                htm = '<i style="cursor:not-allowed;color:#d2c8c8;font-size: 1.3em;" class="fa fa-times" aria-hidden="true"></i>'
+
+                
+                ob[a][7] = htm;
+
+
+            }
+           
+
+            
+
+
+
+
+
+            if (o[a].IsPaid == "True") {
+                htm = '<i style="cursor:pointer;color:#5abf26;font-size: 1.3em;" onclick="ispaid(\'0\',' + id + ');" class="fa fa-check" aria-hidden="true"></i>'
+            }
+            else {
+                htm = '<i style="cursor:pointer;color:#fb3939;font-size: 1.3em;" onclick="ispaid(\'1\',' + id + ');" class="fa fa-times" aria-hidden="true"></i>'
+
+            }
+            ob[a][8] = htm;
+
+
+           
+            
+            
+        }
+
+        $('#invtable').dataTable().fnDestroy();
+
+        $('#invtable').dataTable({
+            "processing": true,
+            fixedHeader: true,
+            "data": ob,
+            //"autoWidth": false,
+            "columns":
+              [
+                { "title": "History" },
+                { "title": "PO Number" },
+                { "title": "Vendor" },
+                { "title": "Inv Number", "class": "leftposition" },
+                 { "title": "Fully Inv Date", "class": "leftposition" },
+                { "title": "Total", "class": "rightposition" },
+                { "title": "Can send", "class": "leftposition" },
+                { "title": "Sent", "class": "leftposition" },
+                { "title": "Paid", "class": "leftposition" },
+             
+                
+              ],
+            "order": [1, "asc"],
+            "initComplete": function () {
+                
+            },
+            "aoColumnDefs": [
+                { 'bSortable': false, 'aTargets': [0] }
+            ]
+        });
+
+
+
+
+        console.log(o);
+        
+
+    }
+
+
+
+
+
+    function projectddlchange() {
+        setProjectPreference($("#txt_Project"));
+        var project_id = $("#txt_Project").val();
+        console.log("working");
+        if (project_id == null) {
+            project_id = '';
+        }
+        if (project_id == '')
+            return;
+        var url = '';
+        if (LOCALORSERVERNEW == 'LOCAL') {
+            url = '/Home/getAllParentVendorsByProject';
+        }
+        else if (LOCALORSERVERNEW == 'SERVER') {
+            url = 'Home/getAllParentVendorsByProject';
+        }
+        $.ajax({
+            type: "POST",
+            url: url,
+            async: true,
+            dataType: "text",
+            contentType: "application/json; charset=utf-8",
+            data: "{ 'ProjectID': '" + project_id + "'}",
+            success: function (data) {
+                //return;
+                var html = data;
+
+                $("#txt_Project3").html(html);
+                $("#txt_Project3").multiselect('refresh');//.multiselectfilter();
+                var width = '100%';
+                $('.ui-multiselect').css('width', width);
+                //$('.ui-multiselect-menu').css('width', '39.5%');
+                $('.ui-multiselect-menu').css('width', '39.5%');
+                $('.ui-state-default').css('color', '#C31001');
+                $('.ui-multiselect').css('height', '34px');
+                $('.ui-multiselect').css('margin-top', '5px');
+            },
+            error: function () {
+                notify('Something went wrong.');
+            }
+        });
+
+       
+    }
+
+    $(document).ready(function () {
+
+        $('#invtable').dataTable();
+       
+        $('#tblhistory').dataTable();
+        var ProjectDdlForPage = $('#txt_Project'); //The project dropdown ID
+
+        $("#txt_Project3").multiselect({ header: true }).multiselectfilter();
+        $("#txt_Project").multiselect(
+       {
+           header: "Select all",
+           maxTextWrapSize: 50
+           //,close: projectddlchange()
+       }).multiselectfilter();
+
+        var selectedpreferredpid = getProjectPreferencemulti();
+        if (selectedpreferredpid.split(',').length == 0) {
+            $(ProjectDdlForPage).find('option[value="' + selectedpreferredpid[i] + '"]').attr("selected", "true");
+        }
+        else {
+            for (var i = 0; i <= selectedpreferredpid.split(',').length + 1; i++) {
+                $(ProjectDdlForPage).find('option[value="' + selectedpreferredpid.split(',')[i] + '"]').attr("selected", "true");
+            }
+        }
+        $(ProjectDdlForPage).multiselect('refresh');
+        var width = '100%';
+        $('.ui-multiselect').css('width', width);
+        $('.ui-multiselect-menu').css('width', '39.5%');
+        $('.ui-state-default').css('color', '#C31001');
+        $('.ui-multiselect').css('height', '34px');
+        $('.ui-multiselect').css('margin-top', '5px');
+
+
+    });
+
+
+    function formatNumber(number) {
+        number = parseFloat(number);
+        var number = number.toFixed(2) + '';
+        var x = number.split('.');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+
+</script>
+
+    </head>
+
+<body>
+
+
+    <!-- Modal -->
+<div id="historymodal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">History</h4>
+      </div>
+      <div class="modal-body" style="overflow:auto;max-height:450px;">
+        <table id="tblhistory">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Event</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-poms" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="container-fluid" id="angulardiv" ng-app="Project" ng-controller="PO">
+
+    <div class="row">
+         <div class="form-group">
+                    <h3 class="section-header">
+                        Bridge supporter control
+                    </h3>
+                </div>
+
+ <div class="form-group col-md-4 col-xs-12">
+                    <label>Project Number</label>
+                    <select id="txt_Project" multiple="multiple" class="form-control" onchange="projectddlchange();">
+                        @*<option value="0">--Select Project--</option>*@
+                        @Html.Raw(ViewData["getAllProjectNameNumber"])
+                    </select>
+                </div>
+
+
+         <div class="form-group col-md-2 col-xs-12">
+                    <label>Vendor</label>
+                    <select id="txt_Project3" multiple="multiple" class="form-control" >
+                        @*<option value="0">--Select Project--</option>*@
+                        @Html.Raw(ViewData["parentVendor"])
+                    </select>
+                </div>
+
+
+
+        </div>
+    <div class="row">
+    <div class="col-sm-12">
+         <input type="button" class="btn btn-poms mrg10T" onclick="getInvoices();" value="Search" />
+         <a href="/Reports/BridgeSupporter_Report"> <input type="button" class="btn btn-poms mrg10T"  value="Report" /></a>
+    </div>
+        </div>
+
+    <div class="row mrg5T">
+
+         <div class="form-group">
+                    <h3 class="section-header">
+                       Invoices
+                    </h3>
+                </div>
+
+        <div class="col-sm-12">
+            <table id="invtable">
+                <thead>
+                    <tr>
+                    <th >History</th>
+                    <th >PO Number</th>
+                    <th >Vendor</th>
+                    <th>Inv#</th>
+                    <th>Fully Inv Date</th>
+                    <th>Total</th>
+                    <th>Can send</th>
+                    <th>Sent</th>
+                    <th>Paid</th>
+                   </tr>
+                </thead>
+
+            </table>
+        </div>
+    </div>
+
+    <div>
+
+       
+
+    </div>
+
+
+
+
+
+
+
+    </div>
+
+    </body>
+
+    </html>

@@ -1,0 +1,3317 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Syetem Admin Activity</title>    
+
+    <link href='http://fonts.googleapis.com/css?family=Alegreya+Sans:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">     
+    <link href="~/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+    
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/jquery.switchButton.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.7.1.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.switchButton.js"></script>
+    <script src="~/Scripts/InnerMisc.js"></script>
+    <script src="~/Scripts/User.js"></script>
+    <script src="~/Scripts/GlobalJS.js"></script>
+    <link href="~/css/InnerMisc.css" rel="stylesheet" />
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/jquery.bpopup.min.js"></script>    
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" /> 
+
+
+    <style type="text/css">
+
+        .ui-dialog .ui-dialog-titlebar-close span
+        {
+            margin:-8px;
+        }
+
+        #popupProjectComment .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        #popupClassification .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        #popupState .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+         #popupCountry .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        #popupTermsCondition .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        #popupEditTermsConditions .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        #popupCurrency .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+         #popupItemApproval .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+         #popupShipMethod .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        #popupUOM .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: 400px;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .button.b-close, .button.bClose {
+            border-radius: 7px 7px 7px 7px;
+            box-shadow: none;
+            font: bold 131% sans-serif;
+            padding: 0 6px 2px;
+            position: absolute;
+            right: -7px;
+            top: -7px;
+            z-index: 9999;
+        }
+
+        .spn {
+            border: #208093 1px solid;
+            color: #208093;
+            margin: 6px 0px;
+            width: 96%;
+            height: 20px;
+            float: left;
+            /* color: #b31001; */
+            padding: 5px 2%;
+            background: rgb(235, 235, 228);
+        }
+
+    </style>
+
+    @*------------------------------------------ Confirmation Dialog Box Code Start------------------------*@
+
+    <script type="text/javascript">       
+
+        function  fnOpenNormalDialog(CurrectStatus, obj, ID, url) {
+            $("#dialog-confirm").html("Are you sure want to " + CurrectStatus + " ?");
+
+            // Define the Dialog and its properties.
+            $("#dialog-confirm").dialog({
+                resizable: false,
+                modal: true,
+               // title: "Modal",
+                height: 200,
+                width: 340,                
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog('close');
+                        callback(true, obj, ID, url);
+                    },
+                    "No": function () {
+                        $(this).dialog('close');                       
+                    }
+                }
+            });
+        }
+
+        function callback(value,obj, ID, url) {
+            if (value) {              
+                ActivateDeactivate(obj, ID, url);
+            } else {
+                alert('Else Part');
+            }
+        }
+        
+     </script>
+    
+    @*------------------------------------------ Confirmation Dialog Box Code Start------------------------*@
+    @*--------------------------------------------UOM Part Start-------------------------------------------*@
+            
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('#btn_OpenPopUp1').click(function () {
+                $('#txtUOM').val('');
+                $('#popupUOM').bPopup({
+                    easing: 'easeOutBack', //uses jQuery easing plugin
+                    speed: 450,
+                    transition: 'slideDown',
+                    modalColor: 'rgb(18, 54, 65)'
+                });
+            });
+
+            $('#btn_AddUOM').click(function () {
+                var UOM = $('#txtUOM').val().trim();
+                if (UOM == "") {
+                    errorfunc('txtUOM', 'UOM cannot be empty.');
+                    return false;
+                }
+                else {
+                    if (confirm('Are you sure want to add UOM?')) {
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = 'http://www.thebridgebytcg.com/SystemAdmin/addUOM';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'SystemAdmin/addUOM';
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'UOM': UOM },
+                            success: function (data) {
+                                if (data != "") {
+                                    var row = "<tr role='row'>"
+                                              + "<td class='sorting_1'>"
+                                              + "<input type='button' value='Edit' onclick='EditUOM(this," + data + ");'>"
+                                              + "<input type='button' value='Deactive' data-id='Deactivate' name='0' onclick='ActDeactUOM(this," + data + ");'>"
+                                              + "</td>"
+                                              + "<td>" + UOM + "</td>"
+                                              //+ "<td>" + data + "</td>"
+                                              + "</tr>";
+
+                                    $('#tblUOM > tbody > tr:first').before(row);
+                                    notify('UOM added Successfully');
+                                    $('.b-close').trigger('click');
+                                }
+                                else {
+                                    notify('Unable to add duplicate entry..');
+                                }
+
+                            }  // function block is closed
+                        });
+                    }
+                }  // First else is closed... 
+
+
+            });
+
+        });
+
+        function EditUOM(obj, UOMID) {
+            var btnVal = $(obj).val();
+            var UOMOldVal = $(obj).parent().parent().children().eq(1).text();
+            if (btnVal == 'Edit') {
+                $(obj).val('Update');
+                $(obj).attr('Style', 'background-color: crimson;');
+                $(obj).parent().parent().children().eq(1).html('<input type="text" class="getUOM" value="' + UOMOldVal + '" style="height: 25px;width: 500px;" />');
+            }
+            else if (btnVal == 'Update') {
+                var UOMNew = $(obj).parent().parent().children().find(".getUOM").val().trim();
+                if (UOMNew == "") {
+                    alert('UOM cannot be Blank');
+                    $(obj).parent().parent().children().find(".getUOM").val('');
+                    $(obj).parent().parent().children().find(".getUOM").focus();                    
+                    return false;
+                }
+                $(obj).attr('Style', 'background:#208093;');
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = 'http://www.thebridgebytcg.com/SystemAdmin/UpdateUOM';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'SystemAdmin/UpdateUOM';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'UOM': UOMNew, 'UOMID': UOMID },
+                    success: function (data) {
+                        if (data != "") {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(UOMNew);
+                            notify('UOM is updated Successfully.....');
+                        }
+                        else {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(UOMNew);
+                            notify('You have not updated UOM......');
+                        }
+                    }
+                });
+            }
+        }
+
+        function ActDeactUOM(obj, UOMID) {
+            var CurrectStatus = $(obj).attr("data-id"); 
+            fnOpenNormalDialog(CurrectStatus, obj, UOMID, 'ActivateDeActivateUOM');
+        }
+        
+        @*------------------------------ Global Function for All Activate Deacticate Start----------------------------*@
+
+        function ActivateDeactivate(obj, ID, url) {               
+                var Status = $(obj).attr("name");
+                
+              
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = 'http://www.thebridgebytcg.com/SystemAdmin/'+url;
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'SystemAdmin/' + url;
+                }                
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'ID': ID, 'Status': Status },
+                    success: function (data) {
+                        if (data != "") {
+                            if (data == "Failed") {
+                                notify('Make the UOM as not default before making it disabled.');
+                            }
+                            else {
+                                if (Status == 0) {
+                                    $(obj).val('Active');
+                                    $(obj).attr('Style', 'background-color: crimson;width:96px;');
+                                    $(obj).attr("data-id", 'Activate');
+                                    $(obj).attr("name", '1');
+                                }
+                                else {
+                                    $(obj).val('Deactive');
+                                    $(obj).attr('Style', 'background: #208093;crimson;width:96px;');
+                                    $(obj).attr("data-id", 'Deactivate');
+                                    $(obj).attr("name", '0');
+                                }
+                                notify('Information updated successfully.....');
+                            }
+                                                     
+                        }
+                        else {
+                            notify('Problem to Perform Operation.....');
+                        }
+                    }
+                });
+        }
+
+        @*------------------------------ Global Function for All Activate Deacticate Closed----------------------------*@
+        
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var table = $('#tblUOM').DataTable();
+            table.clear().draw();
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/SystemAdmin/getAllUOM';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'SystemAdmin/getAllUOM';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+                    data = JSON.parse(data);
+                    var dt = "";
+                    var lineitems = new Array();
+                    dt = data.data;
+                    $('#tblUOM').dataTable().fnDestroy();
+                    for (i = 0; i < dt.length ; i++) {
+                        lineitems[i] = new Array();
+                        if (dt[i].Status == 1) {
+                            if (dt[i].IsDefault == 1) {
+                                lineitems[i][0] = '<input type="button" value="Edit" onclick="EditUOM(this,\'' + dt[i].UOM_ID + '\');"><input type="button" value="Deactive" data-id="Deactivate" name="0"  onclick="ActDeactUOM(this,\'' + dt[i].UOM_ID + '\');"><input type="button" value="Cancel Default" data-id="remove it as Default" name="remove it as Default"  onclick="ActDeactDefault(0,this,\'' + dt[i].UOM_ID + '\');">';
+                            }
+                            else {
+                                lineitems[i][0] = '<input type="button" value="Edit" onclick="EditUOM(this,\'' + dt[i].UOM_ID + '\');"><input type="button" value="Deactive" data-id="Deactivate" name="0"  onclick="ActDeactUOM(this,\'' + dt[i].UOM_ID + '\');"><input type="button" value="Make Default" data-id="make it Default" name="make it Default"  onclick="ActDeactDefault(1,this,\'' + dt[i].UOM_ID + '\');">';
+                            }
+                        }
+                        else {
+                            if (dt[i].IsDefault == 1) {
+                                lineitems[i][0] = '<input type="button" value="Edit" onclick="EditUOM(this,\'' + dt[i].UOM_ID + '\');"><input type="button" value="Active" data-id="Activate" name="1" style="width:95px;background-color: crimson;" onclick="ActDeactUOM(this,\'' + dt[i].UOM_ID + '\');">';//<input type="button" value="Cancel Default" data-id="remove it as Default" name="remove it as Default"  onclick="ActDeactDefault(0,this,\'' + dt[i].UOM_ID + '\');">
+                            }
+                            else {
+                                lineitems[i][0] = '<input type="button" value="Edit" onclick="EditUOM(this,\'' + dt[i].UOM_ID + '\');"><input type="button" value="Active" data-id="Activate" name="1" style="width:95px;background-color: crimson;" onclick="ActDeactUOM(this,\'' + dt[i].UOM_ID + '\');">';//<input type="button" value="Make Default" data-id="make it Default" name="make it Default"  onclick="ActDeactDefault(1,this,\'' + dt[i].UOM_ID + '\');">
+                            }                            
+                        }
+                        lineitems[i][1] = dt[i].UOM;
+                        //lineitems[i][2] = dt[i].UOM_ID;
+                    }
+                    $('#tblUOM').dataTable({
+                        "processing": true,                       
+                        "data": lineitems,
+                        "columns":
+                          [
+                            { "title": "Action"},
+                            { "title": "Unit Of Measurement" }
+                           // { "title": "UOMID" }
+
+                          ],
+                        "initComplete": function () {
+                        },
+                        "columnDefs": [ { "targets": 0, "orderable": false } ]
+                    });
+                }
+            });
+
+        });
+
+        function ActDeactDefault(WantToDefault,obj,UOM_ID)
+        {
+            $("#dialog-confirm").html("Do you sure want to " + $(obj).attr('data-id') + " ?");
+
+            // Define the Dialog and its properties.
+            $("#dialog-confirm").dialog({
+                resizable: false,
+                modal: true,
+                // title: "Modal",
+                height: 200,
+                width: 340,
+                buttons: {
+                    "Yes": function () {
+                        $(this).dialog('close');
+                        ActivateDeactivateDefaultFinal(WantToDefault, obj, UOM_ID);
+                    },
+                    "No": function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+
+
+            
+
+        }
+        function ActivateDeactivateDefaultFinal(WantToDefault, obj, UOM_ID) {
+
+            
+
+            if (WantToDefault == 0) {
+                //alert(WantToDefault);
+                $(obj).val('Make Default');
+                //$(obj).attr('Style', 'background: #208093;crimson;width:96px;');
+                $(obj).attr("data-id", 'make it Default');
+                $(obj).attr("name", 'make it Default');
+                $(obj).prop("onclick", null);
+                $(obj).click(function () {
+                    ActDeactDefault(1, this, UOM_ID);
+                });
+                //$(document).ready(function () {
+                //    $(obj).prop("onclick", null);
+                //    $(obj).click(function () {
+                //        ActDeactDefault(1, this, UOM_ID);
+                //    });
+                //});
+
+                //$("h2").on("click", "p.test", function () {
+                //    alert($(this).text());
+                //});
+
+
+                //$(obj).html('<input type="button" value="Make Default" data-id="make it Default" name="make it Default"  onclick="ActDeactDefault(1,this,\'' + UOM_ID + '\');">');
+            }
+            else {
+                //alert(WantToDefault);
+                $(obj).val('Cancel Default');
+                //$(obj).attr('Style', 'background-color: crimson;width:96px;');
+                $(obj).attr("data-id", 'remove it as Default');
+                $(obj).attr("name", 'remove it as Default');
+                $(obj).prop("onclick", null);
+                $(obj).click(function () {
+                    ActDeactDefault(0, this, UOM_ID);
+                });
+                //$(document).ready(function () {
+                //    $(obj).prop("onclick", null);
+                //    $(obj).click(function () {
+                //         ActDeactDefault(0, this, UOM_ID);
+                //    });
+                //});
+
+                //$(obj).html('<input type="button" value="Cancel Default" data-id="remove it as Default" name="remove it as Default"  onclick="ActDeactDefault(0,this,\'' + UOM_ID + '\');">');
+            }
+
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/SystemAdmin/ActivateDeActivateDefault';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'SystemAdmin/ActivateDeActivateDefault';
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { 'WantToDefault': WantToDefault, 'UOM_ID': UOM_ID },
+                success: function (data) {
+                    if (data != "") {
+                        notify('Information updated successfully.....');
+
+                    }
+                    else {
+                        notify('Problem to Perform Operation.....');
+                    }
+                },
+                error: function () { notify('Something went wrong'); }
+            });
+        }
+    </script>
+
+    @*--------------------------------------------UOM Part End------------------------------------*@
+
+
+
+
+    @*--------------------------------------------Added by Subhabrata Mondal 6_11_2015-------------------------------------------*@
+    @*--------------------------------------------Session Management Part Start-------------------------------------------*@
+
+    <script type="text/javascript">
+        function IsNumber(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            if ((keyCode > 47 && keyCode < 58) || (keyCode == 8)) {
+                return true;
+            }
+            else {
+                alert('Use Only Numeric value');
+                return false;
+            }
+        }
+        $(function () {
+
+            $(document).ready(function () {
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = 'http://www.thebridgebytcg.com/SystemAdmin/CheckSessionTimeExists';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'SystemAdmin/CheckSessionTimeExists';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {},
+                    asyn: false,
+                    success: function (data) {
+                        if (data == "Exists") {
+                            $('#btn_OpenSessionPopUp').hide();
+                        }
+                        else {
+                            $('#btn_OpenSessionPopUp').show();
+                        }
+
+                    }  // function block is closed
+                });
+
+                GetSessionData();
+            });
+
+            $('#btn_OpenSessionPopUp').click(function () {
+                $('#txtSession').val('');
+                $('#popupSession').bPopup({
+                    easing: 'easeOutBack', //uses jQuery easing plugin
+                    speed: 450,
+                    transition: 'slideDown',
+                    modalColor: 'rgb(18, 54, 65)'
+                });
+            });
+
+            $('#btn_AddSession').click(function () {
+                var Session = $('#txtSession').val().trim();
+                if (Session == "") {
+                    errorfunc('txtSession', 'Session Time cannot be empty.');
+                    return false;
+                }
+                if (Session == "0") {
+                    errorfunc('txtSession', 'Session Time cannot be zero.');
+                    $('#txtSession').val('');
+                    $("#txtSession").focus();
+                    return false;
+                }
+                else {
+                    if (confirm('Are you sure want to add session time?')) {
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = 'http://www.thebridgebytcg.com/SystemAdmin/InsertSessionTime';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'SystemAdmin/InsertSessionTime';
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'time': Session },
+                            success: function (data) {
+                                if (data == "Success") {
+                                    AppendSesstion(Session);
+                                    notify('Sesstion added Successfully');
+                                    $('.b-close').trigger('click');
+                                    $('#btn_OpenSessionPopUp').hide();
+                                }
+
+
+                            }  // function block is closed
+                        });
+                    }
+                }  // First else is closed...
+
+
+            });
+
+        });
+
+        function GetSessionData() {
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/SystemAdmin/SelectSessionTime';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'SystemAdmin/SelectSessionTime';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {},
+                success: function (data) {
+                    if (data != "") {
+                        AppendSesstion(data);
+                    }
+
+
+                }  // function block is closed
+            });
+
+        }
+
+        function AppendSesstion(Session) {
+
+            var row = "<tr role='row' >"
+                                              + "<td class='sorting_1' >"
+                                              + "<input type='button' value='Edit' onclick='EditSession(this);' />"
+                                              + "</td>"
+                                              + "<td id='session_value'>" + Session + "</td>"
+                                              //+ "<td>" + data + "</td>"
+                                              + "</tr>";
+
+            $('#tblSession tbody').append(row);
+        }
+
+        function EditSession(obj) {
+
+            var btnVal = $(obj).val();
+            var OldSessionValue = $(obj).parent().parent().find("#session_value").html();
+            if (btnVal == 'Edit') {
+                $(obj).val('Update');
+                $(obj).attr('Style', 'background-color: crimson;');
+                $(obj).parent().parent().children().eq(1).html('<input type="text" id="txtSession1" value="' + OldSessionValue + '" onkeypress="return IsNumber(event);" style="height: 25px;width: 500px;" />');
+            }
+            else if (btnVal == 'Update') {
+                var NewSessionValue = $(obj).parent().parent().children().find("#txtSession1").val().trim();
+                if (NewSessionValue == "") {
+                    errorfunc('txtSession1', 'Session Time cannot be empty.');
+                    $(obj).parent().parent().children().find("#txtSession1").val('');
+                    $(obj).parent().parent().children().find("#txtSession1").focus();
+                    return false;
+                }
+                if (NewSessionValue == "0") {
+                    $(obj).parent().parent().children().find("#txtSession1").val('');
+                    $(obj).parent().parent().children().find("#txtSession1").focus();
+                    errorfunc('txtSession1', 'Session Time cannot be zero.');
+                    return false;
+                }
+                $(obj).attr('Style', 'background:#208093;');
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = 'http://www.thebridgebytcg.com/SystemAdmin/UpdateSessionTime';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'SystemAdmin/UpdateSessionTime';
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'time': NewSessionValue },
+                    success: function (data) {
+                        if (data == "Success") {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(NewSessionValue);
+                            notify('Session time is updated Successfully.....');
+                        }
+
+                    }
+                });
+            }
+        }
+
+
+
+    </script>
+
+    @*--------------------------------------------Added by Subhabrata Mondal 6_11_2015-------------------------------------------*@
+    @*--------------------------------------------Session Management Part End------------------------------------*@
+
+
+
+
+    @*----------------------------------------Shipment Part Start---------------------------------*@
+
+    <script type="text/javascript">
+
+        $(function () {
+            $('#btn_OpenPopUp2').click(function () {
+                $('#txtShipMethod').val('');
+                $('#popupShipMethod').bPopup({
+                    easing: 'easeOutBack', //uses jQuery easing plugin
+                    speed: 450,
+                    transition: 'slideDown',
+                    modalColor: 'rgb(18, 54, 65)'
+                });
+            });
+
+            $('#btn_AddShipMethod').click(function () {
+                var ShipMethod = $('#txtShipMethod').val().trim();
+                if (ShipMethod == "") {
+                    errorfunc('txtShipMethod', 'Shipment name cannot be empty.');
+                    return false;
+                }
+                else {
+                    if (confirm('Are you sure want to add Shipment Method?')) {
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = 'http://www.thebridgebytcg.com/SystemAdmin/addShipmentMethod';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'SystemAdmin/addShipmentMethod';
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'ShipMethod': ShipMethod },
+                            success: function (data) {
+                                if (data != "") {
+                                    var row = "<tr role='row'>"
+                                              + "<td class='sorting_1'>"
+                                              + "<input type='button' value='Edit' onclick='EditShipMethod(this," + data + ");'>"
+                                              + "<input type='button' value='Deactive' data-id='Deactivate' name='0' onclick='ActDeactShipMethod(this," + data + ");'>"
+                                              + "</td>"
+                                              + "<td>" + ShipMethod + "</td>"
+                                              //+ "<td>" + data + "</td>"
+                                              + "</tr>";
+
+                                    $('#tblShipmentMethod > tbody > tr:first').before(row);
+                                    notify('Shipment Method added Successfully');
+                                    $('.b-close').trigger('click');
+                                }
+                                else {
+                                    notify('Unable to add duplicate entry..');
+                                }
+                            }  // function block is closed
+                        });
+                    }
+                }  // First else is closed...                 
+            });
+
+        });
+
+        function EditShipMethod(obj, ShipMethodID) {
+
+            var btnVal = $(obj).val();
+
+            var ShipMethodOldVal = $(obj).parent().parent().children().eq(1).text();
+
+            if (btnVal == 'Edit') {
+                $(obj).val('Update');
+                $(obj).attr('Style', 'background-color: crimson;');
+                $(obj).parent().parent().children().eq(1).html('<input type="text" class="getShipMethod" value="' + ShipMethodOldVal + '" style="height: 25px;width: 500px;" />');
+            }
+            else if (btnVal == 'Update') {
+
+                var ShipMethodNew = $(obj).parent().parent().children().find(".getShipMethod").val().trim();
+
+                if (ShipMethodNew == "") {
+                    alert('Shipment Method cannot be Blank');
+                    $(obj).parent().parent().children().find(".getShipMethod").val('');
+                    $(obj).parent().parent().children().find(".getShipMethod").focus();
+                    return false;
+                }
+
+                $(obj).attr('Style', 'background:#208093;');
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = 'http://www.thebridgebytcg.com/SystemAdmin/UpdateShipMethod';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'SystemAdmin/UpdateShipMethod';
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'ShipMethod': ShipMethodNew, 'ShipMethodID': ShipMethodID },
+                    success: function (data) {
+                        if (data != "") {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(ShipMethodNew);
+                            notify('Shipment Method is updated Successfully');
+                        }
+                        else {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(ShipMethodNew);
+                            notify('You have not updated shipmet method.');
+                        }
+                    }
+                });
+            }
+        }
+
+        function ActDeactShipMethod(obj, ShipMethodID) {
+            var CurrectStatus = $(obj).attr("data-id");
+            fnOpenNormalDialog(CurrectStatus, obj, ShipMethodID, 'ActivateDeActivateShipMethod');
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var table = $('#tblShipmentMethod').DataTable();
+            table.clear().draw();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/SystemAdmin/getAllShipmentMethod';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'SystemAdmin/getAllShipmentMethod';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+
+                    data = JSON.parse(data);
+
+                    var dt = "";
+                    var lineitems = new Array();
+
+                    dt = data.data;
+
+                    $('#tblShipmentMethod').dataTable().fnDestroy();
+
+                    for (i = 0; i < dt.length ; i++) {
+
+                        lineitems[i] = new Array();
+
+                        if (dt[i].Status == 1) {
+                            lineitems[i][0] = '<input type="button" value="Edit" onclick="EditShipMethod(this,\'' + dt[i].ShipID + '\');"><input type="button" value="Deactive" data-id="Deactivate" name="0"  onclick="ActDeactShipMethod(this,\'' + dt[i].ShipID + '\');">';
+                        }
+                        else {
+                            lineitems[i][0] = '<input type="button" value="Edit" onclick="EditShipMethod(this,\'' + dt[i].ShipID + '\');"><input type="button" value="Active" data-id="Activate" name="1" style="width:95px;background-color: crimson;" onclick="ActDeactShipMethod(this,\'' + dt[i].ShipID + '\');">';
+                        }
+                        lineitems[i][1] = dt[i].ShipMethod;
+                        //lineitems[i][2] = dt[i].ShipID;
+                    }
+
+                    $('#tblShipmentMethod').dataTable({
+                        "processing": true,
+                        "data": lineitems,
+                        "columns":
+                          [
+                            { "title": "Action" },
+                            { "title": "Shipment Method" }
+                           // { "title": "ShipID" }
+
+                          ],
+                        "initComplete": function () {
+                        },
+                        "columnDefs": [{ "targets": 0, "orderable": false }]
+                    });
+                }
+            });
+
+        });
+
+    </script>
+
+   @*--------------------------------------------Shipment Part End--------------------------------*@
+   @*--------------------------------------------Item Approval Part Start-------------------------*@
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('#btn_OpenPopUp3').click(function () {
+
+                $('#txtItemApproval').val('');
+
+                $('#popupItemApproval').bPopup({
+                    easing: 'easeOutBack', //uses jQuery easing plugin
+                    speed: 450,
+                    transition: 'slideDown',
+                    modalColor: 'rgb(18, 54, 65)'
+                });
+            });
+
+            $('#btn_AddItemApproval').click(function () {
+
+                var ItemApproval = $('#txtItemApproval').val().trim();
+                if (ItemApproval == "") {
+                    errorfunc('txtItemApproval', 'ItemApproval cannot be empty.');
+                    return false;
+                }
+                else {
+
+                    if (confirm('Are you sure want to add ItemApproval type?')) {
+
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = 'http://www.thebridgebytcg.com/SystemAdmin/addItemApproval';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'SystemAdmin/addItemApproval';
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'ItemApproval': ItemApproval },
+                            success: function (data) {
+                                if (data != "") {
+                                    var row = "<tr role='row'>"
+                                              + "<td class='sorting_1'>"
+                                              + "<input type='button' value='Edit' onclick='EditItemApproval(this," + data + ");'>"
+                                              + "<input type='button' value='Deactive' data-id='Deactivate' name='0' onclick='ActDeactItemApproval(this," + data + ");'>"
+                                              + "</td>"
+                                              + "<td>" + ItemApproval + "</td>"
+                                              //+ "<td>" + data + "</td>"
+                                              + "</tr>";
+
+                                    $('#tblItemApproval > tbody > tr:first').before(row);
+                                    notify('ItemApproval type added Successfully');
+                                    $('.b-close').trigger('click');
+                                }
+                                else {
+                                    notify('Unable to add duplicate entry..');
+                                }
+
+                            }  // function block is closed
+                        });
+                    }
+                }  // First else is closed... 
+
+
+            });
+
+        });
+
+        function EditItemApproval(obj, ItemApprovalID) {
+
+            var btnVal = $(obj).val();
+
+            var ItemApprovalOldVal = $(obj).parent().parent().children().eq(1).text();
+
+            if (btnVal == 'Edit') {
+                $(obj).val('Update');
+                $(obj).attr('Style', 'background-color: crimson;');
+                $(obj).parent().parent().children().eq(1).html('<input type="text" class="getItemApproval" value="' + ItemApprovalOldVal + '" style="height: 25px;width: 500px;" />');
+            }
+            else if (btnVal == 'Update') {
+
+                var ItemApprovalNew = $(obj).parent().parent().children().find(".getItemApproval").val().trim();
+
+                if (ItemApprovalNew == "") {
+                    alert('Item Approval type cannot be Blank');
+                    $(obj).parent().parent().children().find(".getItemApproval").val('');
+                    $(obj).parent().parent().children().find(".getItemApproval").focus();
+                    return false;
+                }
+
+                $(obj).attr('Style', 'background:#208093;');
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = 'http://www.thebridgebytcg.com/SystemAdmin/UpdateItemApproval';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'SystemAdmin/UpdateItemApproval';
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'ItemApproval': ItemApprovalNew, 'ItemApprovalID': ItemApprovalID },
+                    success: function (data) {
+                        if (data != "") {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(ItemApprovalNew);
+                            notify('Item Approval Type is updated Successfully.....');
+                        }
+                        else {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(ItemApprovalNew);
+                            notify('You have not updated Item Approval Type......');
+                        }
+                    }
+                });
+            }
+
+        }
+
+        function ActDeactItemApproval(obj, ItemApprovalID) {
+            var CurrectStatus = $(obj).attr("data-id");
+            fnOpenNormalDialog(CurrectStatus, obj, ItemApprovalID, 'ActivateDeActivateItemApproval');            
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var table = $('#tblItemApproval').DataTable();
+            table.clear().draw();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/SystemAdmin/getAllItemApproval';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'SystemAdmin/getAllItemApproval';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+
+                    data = JSON.parse(data);
+
+                    var dt = "";
+                    var lineitems = new Array();
+
+                    dt = data.data;
+
+                    $('#tblItemApproval').dataTable().fnDestroy();
+
+                    for (i = 0; i < dt.length ; i++) {
+
+                        lineitems[i] = new Array();
+
+                        if (dt[i].Status == 1) {
+                            lineitems[i][0] = '<input type="button" value="Edit" onclick="EditItemApproval(this,\'' + dt[i].ItemApprovalID + '\');"><input type="button" value="Deactive" data-id="Deactivate" name="0"  onclick="ActDeactItemApproval(this,\'' + dt[i].ItemApprovalID + '\');">';
+                        }
+                        else {
+                            lineitems[i][0] = '<input type="button" value="Edit" onclick="EditItemApproval(this,\'' + dt[i].ItemApprovalID + '\');"><input type="button" value="Active" data-id="Activate" name="1" style="width:95px;background-color: crimson;" onclick="ActDeactItemApproval(this,\'' + dt[i].ItemApprovalID + '\');">';
+                        }
+                        lineitems[i][1] = dt[i].ItemName;
+                        //lineitems[i][2] = dt[i].ItemApprovalID;
+                    }
+
+                    $('#tblItemApproval').dataTable({
+                        "processing": true,
+                        "data": lineitems,
+                        "columns":
+                          [
+                            { "title": "Action" },
+                            { "title": "ItemApproval Name" }
+                           // { "title": "ItemApproval ID" }
+
+                          ],
+                        "initComplete": function () {
+                        },
+                        "columnDefs": [{ "targets": 0, "orderable": false }]
+                    });
+                }
+            });
+
+        });
+
+    </script>
+
+   @*--------------------------------------------Item Approval Part End---------------------------*@
+   @*--------------------------------------------Currency Part Start------------------------------*@
+    
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('#btn_OpenPopUp4').click(function () {
+
+                $('#txtCurrency').val('');
+                $('#txtCurrencyCode').val('');
+
+                $('#popupCurrency').bPopup({
+                    easing: 'easeOutBack', //uses jQuery easing plugin
+                    speed: 450,
+                    transition: 'slideDown',
+                    modalColor: 'rgb(18, 54, 65)'
+                });
+            });
+
+            $('#btn_AddCurrency').click(function () {
+
+                var CurrencyName = $('#txtCurrency').val().trim();
+                if (CurrencyName == "") {
+                    errorfunc('txtCurrency', 'Currency Name cannot be empty.');
+                    return false;
+                }
+
+                var CurrencyCode = $('#txtCurrencyCode').val().trim();
+                if (CurrencyCode == "") {
+                    errorfunc('txtCurrencyCode', 'Currency Code cannot be empty.');
+                    return false;
+                }
+                else {
+
+                    if (confirm('Are you sure want to add Currecny?')) {
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = 'http://www.thebridgebytcg.com/SystemAdmin/addCurrency';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'SystemAdmin/addCurrency';
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'CurrencyName': CurrencyName, 'CurrencyCode': CurrencyCode },
+                            success: function (data) {
+                                if (data != "") {
+                                    var row = "<tr role='row'>"
+                                              + "<td class='sorting_1'>"
+                                              + "<input type='button' value='Edit' onclick='EditCurrency(this," + data + ");'>"
+                                              + "<input type='button' value='Deactive' data-id='Deactivate' name='0' onclick='ActDeactCurrency(this," + data + ");'>"
+                                              + "</td>"
+                                              + "<td>" + CurrencyName + "</td>"
+                                              + "<td>" + CurrencyCode + "</td>"
+                                              //+ "<td>" + data + "</td>"
+                                              + "</tr>";
+
+                                    $('#tblEditCurrency > tbody > tr:first').before(row);
+                                    notify('Currency added Successfully');
+                                    $('.b-close').trigger('click');
+                                }
+                                else {
+                                    notify('Unable to add duplicate entry..');
+                                }
+                            }  // function block is closed
+                        });
+                    }
+                }  // First else is closed... 
+
+            });
+
+        });
+
+        function EditCurrency(obj, CurrencyID) {
+            var btnVal = $(obj).val();
+            var currencyOldVal = $(obj).parent().parent().children().eq(1).text();
+            var CurrencyCodeOldVal = $(obj).parent().parent().children().eq(2).text();
+
+            if (btnVal == 'Edit') {
+                $(obj).val('Update');
+                $(obj).attr('Style', 'background-color: crimson;');
+                $(obj).parent().parent().children().eq(1).html('<input type="text" class="getCurrency" value="' + currencyOldVal + '" style="height: 25px;width: 250px;" />');
+                $(obj).parent().parent().children().eq(2).html('<input type="text" class="getCurrencyCode" value=' + CurrencyCodeOldVal + ' style="height: 25px;width: 250px;" />');
+            }
+            else if (btnVal == 'Update') {
+
+                var CurrencyNew = $(obj).parent().parent().children().find(".getCurrency").val().trim();
+                var CurrencyCodeNew = $(obj).parent().parent().children().find(".getCurrencyCode").val().trim();
+
+                if (CurrencyNew == "") {
+                    alert('Currency cannot be Blank');
+                    $(obj).parent().parent().children().find(".getCurrency").val('');
+                    $(obj).parent().parent().children().find(".getCurrency").focus();
+                    return false;
+                }
+
+                if (CurrencyCodeNew == "") {
+                    alert('Currency Code cannot be Blank');
+                    $(obj).parent().parent().children().find(".getCurrencyCode").val('');
+                    $(obj).parent().parent().children().find(".getCurrencyCode").focus();
+                    return false;
+                }
+
+                $(obj).attr('Style', 'background:#208093;');
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = 'http://www.thebridgebytcg.com/SystemAdmin/UpdateCurrency';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'SystemAdmin/UpdateCurrency';
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'Currency': CurrencyNew, 'CurrencyCode': CurrencyCodeNew, 'CurrencyID': CurrencyID },
+                    success: function (data) {
+                        if (data != "") {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(CurrencyNew);
+                            $(obj).parent().parent().children().eq(2).html(CurrencyCodeNew);
+                            notify('Currency and its Code updated Successfully');
+                        }
+                        else {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(CurrencyNew);
+                            $(obj).parent().parent().children().eq(2).html(CurrencyCodeNew);
+                            notify('Unable to update.');
+                        }
+                    }
+                });
+            }
+
+        }
+
+        function ActDeactCurrency(obj, CurrencyID) {
+            var CurrectStatus = $(obj).attr("data-id");
+            fnOpenNormalDialog(CurrectStatus, obj, CurrencyID, 'ActivateDeActivateCurrency'); 
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var table = $('#tblEditCurrency').DataTable();
+            table.clear().draw();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/SystemAdmin/getAllCurrency';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'SystemAdmin/getAllCurrency';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+
+                    data = JSON.parse(data);
+                    var dt = "";
+                    var lineitems = new Array();
+
+                    dt = data.data;
+
+                    $('#tblEditCurrency').dataTable().fnDestroy();
+
+                    for (i = 0; i < dt.length ; i++) {
+
+                        lineitems[i] = new Array();
+
+                        if (dt[i].Status == 1) {
+                            lineitems[i][0] = '<input type="button" value="Edit" onclick="EditCurrency(this,\'' + dt[i].CurrencyID + '\');"><input type="button" value="Deactive" data-id="Deactivate" name="0"  onclick="ActDeactCurrency(this,\'' + dt[i].CurrencyID + '\');">';
+                        }
+                        else {
+                            lineitems[i][0] = '<input type="button" value="Edit" onclick="EditCurrency(this,\'' + dt[i].CurrencyID + '\');"><input type="button" value="Active" data-id="Activate" name="1" style="width:95px;background-color: crimson;" onclick="ActDeactCurrency(this,\'' + dt[i].CurrencyID + '\');">';
+                        }
+                        lineitems[i][1] = dt[i].Currency;
+                        lineitems[i][2] = dt[i].CurrencyCode;
+                       // lineitems[i][3] = dt[i].CurrencyID;
+                    }
+
+                    $('#tblEditCurrency').dataTable({
+                        "processing": true,
+                        "data": lineitems,
+                        "columns":
+                          [
+                            { "title": "Action" },
+                            { "title": "Currency" },
+                            { "title": "CurrencyCode" }
+                           // { "title": "CurrencyID" }
+
+                          ],
+                        "initComplete": function () {
+                        },
+                        "columnDefs": [{ "targets": 0, "orderable": false }]
+                    });
+                }
+            });
+
+        });
+
+    </script>
+
+   @*--------------------------------------------Currency Part End--------------------------------*@
+   @*------------------------------------------Terms & Condiions Part Start-----------------------*@
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('#btn_OpenPopUp5').click(function () {
+
+                $('#txtTerms').val('');
+
+                $('#popupTermsCondition').bPopup({
+                    easing: 'easeOutBack', //uses jQuery easing plugin
+                    speed: 450,
+                    transition: 'slideDown',
+                    modalColor: 'rgb(18, 54, 65)'
+                });
+            });
+
+            $('#btn_AddTerms').click(function () {
+
+                var Terms = $('#txtTerms').val().trim();
+                if (Terms == "") {
+                    errorfunc('txtTerms', 'Payment terms cannot be empty.');
+                    return false;
+                }
+
+                else {
+
+                    if (confirm('Are you sure want to add Payment terms?')) {
+
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = 'http://www.thebridgebytcg.com/SystemAdmin/addTerms';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'SystemAdmin/addTerms';
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'Terms': Terms },
+                            success: function (data) {
+                                if (data != "") {
+                                    var row = "<tr role='row'>"
+                                              + "<td class='sorting_1'>"
+                                              + "<input type='button' value='Edit' onclick='EditTerms(this," + data + ");'>"
+                                              + "<input type='button' value='Deactive' data-id='Deactivate' name='0' onclick='ActDeactTerms(this," + data + ");'>"
+                                              + "</td>"
+                                              + "<td>" + Terms + "</td>"
+                                              //+ "<td>" + data + "</td>"
+                                              + "</tr>";
+
+                                    $('#tblTerms > tbody > tr:first').before(row);
+                                    notify('Payment Terms added Successfully');
+                                    $('.b-close').trigger('click');
+                                }
+                                else {
+                                    notify('Unable to add duplicate entry..');
+                                }
+
+                            }  // function block is closed
+                        });
+                    }
+                }  // First else is closed... 
+
+
+            });
+
+        });
+
+        function EditTerms(obj, TermsID) {
+            var btnVal = $(obj).val();
+            var TermsOldVal = $(obj).parent().parent().children().eq(1).text();  
+            if (btnVal == 'Edit') {
+                $(obj).val('Update');
+                $(obj).attr('Style', 'background-color: crimson;');
+                $(obj).parent().parent().children().eq(1).html('<input type="text" class="getTerms" value="' + TermsOldVal + '" style="height: 25px;width: 500px;" />');
+            }
+            else if (btnVal == 'Update') {
+                var TermsNew = $(obj).parent().parent().children().find(".getTerms").val().trim();               
+                if (TermsNew == "") {
+                    alert('Payment Terms cannot be Blank');
+                    $(obj).parent().parent().children().find(".getTerms").val('');
+                    $(obj).parent().parent().children().find(".getTerms").focus();
+                    return false;
+                }
+                $(obj).attr('Style', 'background:#208093;');
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = 'http://www.thebridgebytcg.com/SystemAdmin/UpdateTerms';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'SystemAdmin/UpdateTerms';
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'Terms': TermsNew, 'TermsID': TermsID },
+                    success: function (data) {
+                        if (data != "") {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(TermsNew);
+                            notify('Payment Terms is updated Successfully');
+                        }
+                        else {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(TermsNew);
+                            notify('You have not updated shipmet method.');
+                        }
+                    }
+                });
+            }
+
+        }
+
+        function ActDeactTerms(obj, TermsID) {
+            var CurrectStatus = $(obj).attr("data-id");
+            fnOpenNormalDialog(CurrectStatus, obj, TermsID, 'ActivateDeActivateTerms');
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var table = $('#tblTerms').DataTable();
+            table.clear().draw();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/SystemAdmin/getAllTerms';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'SystemAdmin/getAllTerms';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+
+                    data = JSON.parse(data);
+
+                    var dt = "";
+                    var lineitems = new Array();
+
+                    dt = data.data;
+
+                    $('#tblTerms').dataTable().fnDestroy();
+
+                    for (i = 0; i < dt.length ; i++) {
+
+                        lineitems[i] = new Array();
+
+                        if (dt[i].Status == 1) {
+                            lineitems[i][0] = '<input type="button" value="Edit" onclick="EditTerms(this,\'' + dt[i].TermsID + '\');"><input type="button" value="Deactive" data-id="Deactivate" name="0"  onclick="ActDeactTerms(this,\'' + dt[i].TermsID + '\');">';
+                        }
+                        else {
+                            lineitems[i][0] = '<input type="button" value="Edit" onclick="EditTerms(this,\'' + dt[i].TermsID + '\');"><input type="button" value="Active" data-id="Activate" name="1" style="width:95px;background-color: crimson;" onclick="ActDeactTerms(this,\'' + dt[i].TermsID + '\');">';
+                        }
+                        lineitems[i][1] = dt[i].TermsCondition;
+                        //lineitems[i][2] = dt[i].TermsID;
+                    }
+
+                    $('#tblTerms').dataTable({
+                        "processing": true,
+                        "data": lineitems,
+                        "columns":
+                          [
+                            { "title": "Action" },
+                            { "title": "Payment Terms" }
+
+                          ],
+                        "initComplete": function () {
+                        },
+                        "columnDefs": [{ "targets": 0, "orderable": false }]
+                    });
+                }
+            });
+
+        });
+
+    </script>
+
+   @*------------------------------------------Terms & Condiions Part End-----------------------*@
+
+    @*---------------------------------------------Country Part Start----------------------------*@
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('#btn_OpenPopUpCountry').click(function () {
+
+                $('#txtCountry').val('');
+
+                $('#popupCountry').bPopup({
+                    easing: 'easeOutBack', //uses jQuery easing plugin
+                    speed: 450,
+                    transition: 'slideDown',
+                    modalColor: 'rgb(18, 54, 65)'
+                });
+            });
+
+            $('#btn_AddCountry').click(function () {
+
+                var CountryName = $('#txtCountryName').val().trim();
+                if (CountryName == "") {
+                    errorfunc('txtCountryName', 'Country Name cannot be empty.');
+                    return false;
+                }
+
+                var CountryCode = $('#txtCountryCode').val().trim();
+                if (CountryCode == "") {
+                    errorfunc('txtCountryCode', 'Country Code cannot be empty.');
+                    return false;
+                }
+
+                else {
+
+                    if (confirm('Are you sure want to add Country and its Code?')) {
+
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = 'http://www.thebridgebytcg.com/SystemAdmin/addCountry';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'SystemAdmin/addCountry';
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'CountryName': CountryName, 'CountryCode': CountryCode },
+                            success: function (data) {
+                                if (data != "") {
+                                    var row = "<tr role='row'>"
+                                              + "<td class='sorting_1'>"
+                                              + "<input type='button' value='Edit' onclick='EditCountry(this," + data + ");'>"
+                                              + "<input type='button' value='Deactive' data-id='Deactivate' name='0' onclick='ActDeactCountry(this," + data + ");'>"
+                                              + "</td>"
+                                              + "<td>" + CountryName + "</td>"
+                                              + "<td>" + CountryCode + "</td>"
+                                              + "</tr>";
+
+                                    $('#tblCountry > tbody > tr:first').before(row);
+                                    notify('Country added Successfully');
+                                    $('.b-close').trigger('click');
+                                }
+                                else {
+                                    notify('Unable to add duplicate entry..');
+                                }
+
+                            }  // function block is closed
+                        });
+                    }
+                }  // First else is closed... 
+
+
+            });
+
+        });
+
+        function EditCountry(obj, CountryID) {
+
+            var btnVal = $(obj).val();
+
+            var CountryNameOldVal = $(obj).parent().parent().children().eq(1).text();
+            var CountryCodeOldVal = $(obj).parent().parent().children().eq(2).text();
+
+            if (btnVal == 'Edit') {
+                $(obj).val('Update');
+                $(obj).attr('Style', 'background-color: crimson;');
+                $(obj).parent().parent().children().eq(1).html('<input type="text" class="getCountryName" value="' + CountryNameOldVal + '" style="height: 25px;width: 250px;" />');
+                $(obj).parent().parent().children().eq(2).html('<input type="text" class="getCountryCode" value="' + CountryCodeOldVal + '" style="height: 25px;width: 250px;" />');
+            }
+            else if (btnVal == 'Update') {
+
+                var CountryNameNew = $(obj).parent().parent().children().find(".getCountryName").val().trim();
+                var CountryCodeNew = $(obj).parent().parent().children().find(".getCountryCode").val().trim();
+
+                if (CountryNameNew == "") {
+                    alert('Country Name cannot be Blank');
+                    return false;
+                }
+
+                if (CountryCodeNew == "") {
+                    alert('Country Code cannot be Blank');
+                    return false;
+                }
+
+                $(obj).attr('Style', 'background:#208093;');
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = 'http://www.thebridgebytcg.com/SystemAdmin/UpdateCountry';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'SystemAdmin/UpdateCountry';
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'CountryName': CountryNameNew, 'CountryCode': CountryCodeNew, 'CountryID': CountryID },
+                    success: function (data) {
+                        if (data != "") {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(CountryNameNew);
+                            $(obj).parent().parent().children().eq(2).html(CountryCodeNew);
+                            notify('Country Name and its Code is updated Successfully');
+                        }
+                        else {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(CountryNameNew);
+                            $(obj).parent().parent().children().eq(2).html(CountryCodeNew);
+                            notify('You have not updated Country.');
+                        }
+                    }
+                });
+            }
+
+        }
+
+        function ActDeactCountry(obj, CountryID) {
+            var CurrectStatus = $(obj).attr("data-id");
+            fnOpenNormalDialog(CurrectStatus, obj, CountryID, 'ActivateDeActivateCountry');
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function (){
+
+            var table = $('#tblCountry').DataTable();
+            table.clear().draw();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/SystemAdmin/getAllCountry';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'SystemAdmin/getAllCountry';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+
+                    data = JSON.parse(data);
+                    var dt = "";
+                    var lineitems = new Array();
+                    dt = data.data;
+
+                    $('#tblCountry').dataTable().fnDestroy();
+
+                    for (i = 0; i < dt.length ; i++) {
+
+                        lineitems[i] = new Array();
+
+                        if (dt[i].Status == 1) {
+                            lineitems[i][0] = '<input type="button" value="Edit" onclick="EditCountry(this,\'' + dt[i].CountryID + '\');"><input type="button" value="Deactive" data-id="Deactivate" name="0"  onclick="ActDeactCountry(this,\'' + dt[i].CountryID + '\');">';
+                        }
+                        else {
+                            lineitems[i][0] = '<input type="button" value="Edit" onclick="EditCountry(this,\'' + dt[i].CountryID + '\');"><input type="button" value="Active" data-id="Activate" name="1" style="width:95px;background-color: crimson;" onclick="ActDeactCountry(this,\'' + dt[i].CountryID + '\');">';
+                        }
+                        lineitems[i][1] = dt[i].CountryName;
+                        lineitems[i][2] = dt[i].CountryCode;
+                    }
+
+                    $('#tblCountry').dataTable({
+                        "processing": true,
+                        "data": lineitems,
+                        "columns":
+                          [
+                            { "title": "Action" },
+                            { "title": "Country" },
+                            { "title": "Country Code" }
+
+                          ],
+                        "initComplete": function () {
+                        },
+                        "columnDefs": [{ "targets": 0, "orderable": false }]
+                    });
+                }
+            });
+
+        });
+
+    </script>
+
+    @*---------------------------------------------Country Part End----------------------------*@
+    @*---------------------------------------------State Part Start----------------------------*@
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('#btn_OpenPopUpState').click(function () {
+
+                var CountryCode = $('#ddlCountry').val();
+
+                if (CountryCode == 0) {
+                    alert('Select Country first');
+                    return false;
+                }
+
+                $('#txtStateName').val('');
+                $('#txtStateCode').val('');
+
+                $('#popupState').bPopup({
+                    easing: 'easeOutBack', //uses jQuery easing plugin
+                    speed: 450,
+                    transition: 'slideDown',
+                    modalColor: 'rgb(18, 54, 65)'
+                });
+            });
+
+            $('#btn_AddState').click(function () {
+
+                var CountryCode = $('#ddlCountry').val();
+
+                if (CountryCode == 0) {
+                    alert('Select Country first');
+                    return false;
+                }
+
+                var StateName = $('#txtStateName').val().trim();
+                if (StateName == "") {
+                    errorfunc('txtStateName', 'State Name cannot be empty.');
+                    return false;
+                }
+
+                var StateCode = $('#txtStateCode').val().trim();
+                if (StateCode == "") {
+                    errorfunc('txtStateCode', 'State Code cannot be empty.');
+                    return false;
+                }
+
+                else {
+
+                    if (confirm('Are you sure want to add State and its Code?')) {
+
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = 'http://www.thebridgebytcg.com/SystemAdmin/addState';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'SystemAdmin/addState';
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'StateName': StateName, 'StateCode': StateCode, 'CountryCode': CountryCode },
+                            success: function (data) {
+                                if (data != "") {
+                                    var row = "<tr role='row'>"
+                                              + "<td class='sorting_1'>"
+                                              + "<input type='button' value='Edit' onclick='EditState(this," + data + ");'>"
+                                              + "<input type='button' value='Deactive' data-id='Deactivate' name='0' onclick='ActDeactState(this," + data + ");'>"
+                                              + "</td>"
+                                              + "<td>" + StateName + "</td>"
+                                              + "<td>" + StateCode + "</td>"
+                                              + "</tr>";
+
+                                    $('#tblState > tbody > tr:first').before(row);
+                                    notify('Country added Successfully');
+                                    $('.b-close').trigger('click');
+                                }
+                                else {
+                                    notify('Unable to add duplicate entry..');
+                                }
+
+                            }  // function block is closed
+                        });
+                    }
+                }  // First else is closed... 
+
+
+            });
+
+            $('#ddlCountry').change(function () {
+
+                var CountryID = $('#ddlCountry').val();
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = 'http://www.thebridgebytcg.com/SystemAdmin/getAllStateDetail';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'SystemAdmin/getAllStateDetail';
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'CountryID': CountryID },
+                    success: function (data) {
+                        if (data != null) {
+                            data = JSON.parse(data);
+                            var dt = "";
+                            var lineitems = new Array();
+                            dt = data.data;
+
+                            $('#tblState').dataTable().fnDestroy();
+
+                            for (i = 0; i < dt.length ; i++) {
+
+                                lineitems[i] = new Array();
+
+                                if (dt[i].Status == 1) {
+                                    lineitems[i][0] = '<input type="button" value="Edit" onclick="EditState(this,\'' + dt[i].StateID + '\');"><input type="button" value="Deactive" data-id="Deactivate" name="0"  onclick="ActDeactState(this,\'' + dt[i].StateID + '\');">';
+                                }
+                                else {
+                                    lineitems[i][0] = '<input type="button" value="Edit" onclick="EditState(this,\'' + dt[i].StateID + '\');"><input type="button" value="Active" data-id="Activate" name="1" style="width:95px;background-color: crimson;" onclick="ActDeactState(this,\'' + dt[i].StateID + '\');">';
+                                }
+                                lineitems[i][1] = dt[i].StateName;
+                                lineitems[i][2] = dt[i].StateCode;
+                            }
+
+                            $('#tblState').dataTable({
+                                "processing": true,
+                                "data": lineitems,
+                                "columns":
+                                  [
+                                    { "title": "Action" },
+                                    { "title": "State Name" },
+                                    { "title": "State Code" }
+
+                                  ],
+                                "initComplete": function () {
+                                },
+                                "columnDefs": [{ "targets": 0, "orderable": false }]
+                            });
+                        }
+                    }
+
+
+
+                });
+
+            });
+            
+        });
+
+        function EditState(obj, StateID) {
+
+            var btnVal = $(obj).val();
+
+            var StateNameOldVal = $(obj).parent().parent().children().eq(1).text();
+            var StateCodeOldVal = $(obj).parent().parent().children().eq(2).text();
+
+            if (btnVal == 'Edit') {
+                $(obj).val('Update');
+                $(obj).attr('Style', 'background-color: crimson;');
+                $(obj).parent().parent().children().eq(1).html('<input type="text" class="getStateName" value="' + StateNameOldVal + '" style="height: 25px;width: 250px;" />');
+                $(obj).parent().parent().children().eq(2).html('<input type="text" class="getStateCode" value="' + StateCodeOldVal + '" style="height: 25px;width: 250px;" />');
+            }
+            else if (btnVal == 'Update') {
+
+                var StateNameNew = $(obj).parent().parent().children().find(".getStateName").val().trim();
+                var StateCodeNew = $(obj).parent().parent().children().find(".getStateCode").val().trim();
+
+                if (StateNameNew == "") {
+                    alert('State Name cannot be Blank');
+                    return false;
+                }
+
+                if (StateCodeNew == "") {
+                    alert('State Code cannot be Blank');
+                    return false;
+                }
+
+                $(obj).attr('Style', 'background:#208093;');
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = 'http://www.thebridgebytcg.com/SystemAdmin/UpdateState';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'SystemAdmin/UpdateState';
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'StateName': StateNameNew, 'StateCode': StateCodeNew, 'StateID': StateID },
+                    success: function (data) {
+                        if (data != "") {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(StateNameNew);
+                            $(obj).parent().parent().children().eq(2).html(StateCodeNew);
+                            notify('State Name and its Code is updated Successfully');
+                        }
+                        else {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(StateNameNew);
+                            $(obj).parent().parent().children().eq(2).html(StateCodeNew);
+                            notify('You have not updated State.');
+                        }
+                    }
+                });
+            }
+
+        }
+
+        function ActDeactState(obj, StateID) {
+            var CurrectStatus = $(obj).attr("data-id");
+            fnOpenNormalDialog(CurrectStatus, obj, StateID, 'ActivateDeActivateState');
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var table = $('#tblState').DataTable();
+            table.clear().draw();
+
+        });
+
+    </script>
+
+    @*---------------------------------------------State Part End----------------------------*@
+    @*----------------------------------Classification Part End------------------------------*@
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('#btn_OpenPopUpClassification').click(function () {
+
+                $('#txtClassification').val('');
+
+                $('#popupClassification').bPopup({
+                    easing: 'easeOutBack', //uses jQuery easing plugin
+                    speed: 450,
+                    transition: 'slideDown',
+                    modalColor: 'rgb(18, 54, 65)'
+                });
+            });
+
+            $('#btn_AddClassification').click(function () {
+
+                var Classification = $('#txtClassification').val().trim();
+                if (Classification == "") {
+                    errorfunc('txtClassification', 'Classification name cannot be empty.');
+                    return false;
+                }
+
+                else {
+
+                    if (confirm('Are you sure want to add Classification?')) {
+
+                        var url = '';
+                        if (LOCALORSERVERNEW == 'LOCAL') {
+                            url = 'http://www.thebridgebytcg.com/SystemAdmin/addClassification';
+                        }
+                        else if (LOCALORSERVERNEW == 'SERVER') {
+                            url = 'SystemAdmin/addClassification';
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: { 'Classification': Classification },
+                            success: function (data) {
+                                if (data != "") {
+                                    var row = "<tr role='row'>"
+                                              + "<td class='sorting_1'>"
+                                              + "<input type='button' value='Edit' onclick='EditClassification(this," + data + ");'>"
+                                              + "<input type='button' value='Deactive' data-id='Deactivate' name='0' onclick='ActDeactClassification(this," + data + ");'>"
+                                              + "</td>"
+                                              + "<td>" + Classification + "</td>"
+                                              //+ "<td>" + data + "</td>"
+                                              + "</tr>";
+
+                                    $('#tblClassification > tbody > tr:first').before(row);
+                                    notify('Classification added Successfully');
+                                    $('.b-close').trigger('click');
+                                }
+                                else {
+                                    notify('Unable to add duplicate entry..');
+                                }
+
+                            }  // function block is closed
+                        });
+                    }
+                }  // First else is closed... 
+
+
+            });
+
+        });
+
+        function EditClassification(obj, ClassificationID) {
+
+            var btnVal = $(obj).val();
+
+            var ClassificationOldVal = $(obj).parent().parent().children().eq(1).text();
+
+            if (btnVal == 'Edit') {
+                $(obj).val('Update');
+                $(obj).attr('Style', 'background-color: crimson;');
+                $(obj).parent().parent().children().eq(1).html('<input type="text" class="getClassification" value="' + ClassificationOldVal + '" style="height: 25px;width: 500px;" />');
+            }
+            else if (btnVal == 'Update') {
+
+                var ClassificationNew = $(obj).parent().parent().children().find(".getClassification").val().trim();
+
+                if (ClassificationNew == "") {
+                    alert('Classification cannot be Blank');
+                    return false;
+                }
+
+                $(obj).attr('Style', 'background:#208093;');
+
+                var url = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url = 'http://www.thebridgebytcg.com/SystemAdmin/UpdateClassification';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url = 'SystemAdmin/UpdateClassification';
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { 'Classification': ClassificationNew, 'ClassificationID': ClassificationID },
+                    success: function (data) {
+                        if (data != "") {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(ClassificationNew);
+                            notify('Classification is updated Successfully');
+                        }
+                        else {
+                            $(obj).val('Edit');
+                            $(obj).parent().parent().children().eq(1).html(ClassificationNew);
+                            notify('You have not updated Classification.');
+                        }
+                    }
+                });
+            }
+
+        }
+
+        function ActDeactClassification(obj, ClassificationID) {
+            var CurrectStatus = $(obj).attr("data-id");
+            fnOpenNormalDialog(CurrectStatus, obj, ClassificationID, 'ActivateDeActivateClassification');
+
+            //if (confirm('Are you sure want to ' + CurrectStatus + ' it?')) {
+
+            //    var Status = $(obj).attr("name");
+
+            //    if (Status == 0) {
+            //        $(obj).val('Active');
+            //        $(obj).attr('Style', 'background-color: crimson;width:96px;');
+            //        $(obj).attr("data-id", 'Activate');
+            //        $(obj).attr("name", '1');
+            //    }
+            //    else {
+            //        $(obj).val('Deactive');
+            //        $(obj).attr('Style', 'background: #208093;crimson;width:96px;');
+            //        $(obj).attr("data-id", 'Deactivate');
+            //        $(obj).attr("name", '0');
+            //    }
+
+            //    var url = '';
+            //    if (LOCALORSERVERNEW == 'LOCAL') {
+            //        url = 'http://www.thebridgebytcg.com/SystemAdmin/ActivateDeActivateClassification';
+            //    }
+            //    else if (LOCALORSERVERNEW == 'SERVER') {
+            //        url = 'SystemAdmin/ActivateDeActivateClassification';
+            //    }
+
+            //    $.ajax({
+            //        type: "POST",
+            //        url: url,
+            //        data: { 'ClassificationID': ClassificationID, 'Status': Status },
+            //        success: function (data) {
+            //            if (data != "") {
+            //                notify('Information updated successfully.....');
+            //                //$('.fa-times-circle').trigger('click').fadeOut(8000);                            
+            //            }
+            //            else {
+            //                notify('Problem to Perform Operation.....');
+            //            }
+            //        }
+            //    });
+            //}
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var table = $('#tblClassification').DataTable();
+            table.clear().draw();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/SystemAdmin/getAllClassification';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'SystemAdmin/getAllClassification';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+
+                    data = JSON.parse(data);
+                    var dt = "";
+                    var lineitems = new Array();
+                    dt = data.data;
+
+                    $('#tblClassification').dataTable().fnDestroy();
+
+                    for (i = 0; i < dt.length ; i++) {
+
+                        lineitems[i] = new Array();
+
+                        if (dt[i].Status == 1) {
+                            lineitems[i][0] = '<input type="button" value="Edit" onclick="EditClassification(this,\'' + dt[i].ClassificationID + '\');"><input type="button" value="Deactive" data-id="Deactivate" name="0"  onclick="ActDeactClassification(this,\'' + dt[i].ClassificationID + '\');">';
+                        }
+                        else {
+                            lineitems[i][0] = '<input type="button" value="Edit" onclick="EditClassification(this,\'' + dt[i].ClassificationID + '\');"><input type="button" value="Active" data-id="Activate" name="1" style="width:95px;background-color: crimson;" onclick="ActDeactClassification(this,\'' + dt[i].ClassificationID + '\');">';
+                        }
+                        lineitems[i][1] = dt[i].Classification;
+                        //lineitems[i][2] = dt[i].ClassificationID;
+                    }
+
+                    $('#tblClassification').dataTable({
+                        "processing": true,
+                        "data": lineitems,
+                        "columns":
+                          [
+                            { "title": "Action" },
+                            { "title": "Classification" }
+                            //{ "title": "ClassificationID" }
+
+                          ],
+                        "initComplete": function () {
+                        },
+                        "columnDefs": [{ "targets": 0, "orderable": false }]
+                    });
+                }
+            });
+
+        });
+
+    </script>
+
+    @*-------------------------------Classification Part End--------------------------*@
+
+    @*-------------------------------Project Comment Part Start-----------------------*@
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var table = $('#tblProjectList').DataTable();
+            table.clear().draw();
+
+            var url = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url = 'http://www.thebridgebytcg.com/Project/getAllProjectList';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url = 'Project/getAllProjectList';
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+                    data = JSON.parse(data);
+                    var dt = "";
+                    var lineitems = new Array();
+                    dt = data;
+
+                    $('#tblProjectList').dataTable().fnDestroy();
+
+                    for (i = 0; i < dt.length ; i++) {
+                        lineitems[i] = new Array();
+                       
+                        lineitems[i][0] = '<input type="button" value="Add/Edit" onclick="AddEditComment(this,\'' + dt[i].ProjectID + '\');">';
+                        lineitems[i][1] = dt[i].ProjectNumber;
+                        lineitems[i][2] = dt[i].ProjectName;
+                        lineitems[i][3] = dt[i].LegalName;
+                        lineitems[i][4] = dt[i].OwnerName;
+                        lineitems[i][5] = dt[i].OwnerContact;
+                        lineitems[i][6] = dt[i].OwnerMobile;
+                        lineitems[i][7] = dt[i].OwnerEmail;                                      
+                    }
+                    $('#tblProjectList').dataTable({
+                        "processing": true,
+                        "data": lineitems,
+                        "columns":
+                          [                          
+                            { "title": "Action" },
+                            { "title": "Project Number" },
+                            { "title": "Project Name" },
+                            { "title": "Legal Name" },                           
+                            { "title": "Owner Name" },
+                            { "title": "Owner Contact" },
+                            { "title": "Owner Mobile" },
+                            { "title": "Owner Email" }
+                          ],
+                        "initComplete": function () {
+                        },
+                        "columnDefs": [{ "targets": 0, "orderable": false }]
+                    });
+                }
+            });
+        });
+        
+        function AddEditComment(obj, ID) {
+
+            $('#popupProjectComment').bPopup({
+                easing: 'easeOutBack', //uses jQuery easing plugin
+                speed: 450,
+                transition: 'slideDown',
+                modalColor: 'rgb(18, 54, 65)'
+            });
+
+        }
+
+    </script>
+
+    <style type="text/css">
+
+    .remove {  
+    border: 1px solid #060506;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    display: block;
+    padding: 5px;
+    text-decoration: none;
+    background: #B01000;
+    color: #E2E2E2;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    font-family: helvetica;
+    font-size: 13px;
+    position: relative;
+}
+
+   .remove a {
+    cursor: pointer;
+    position: absolute;
+    top: -5px;
+    right: -6px;
+    font-size: 0.9em;
+    color: white;
+    background: black;
+    border-radius: 100px;
+    padding: 7px;
+    line-height: 9px;
+}
+
+    </style>
+    
+    @*-------------------------------Project Comment Part End-------------------------*@
+        
+     @*-------------------------------Project Contact Types Start-------------------------*@
+
+
+     <script type="text/javascript">
+
+         $(function () {
+             $('#btn_OpenContactType').click(function () {
+                 $('#txt_ProjectContactTypeName').val('');
+                 $('#popupContactType').bPopup({
+                     easing: 'easeOutBack', //uses jQuery easing plugin
+                     speed: 450,
+                     transition: 'slideDown',
+                     modalColor: 'rgb(18, 54, 65)'
+                 });
+             });
+
+             //$('#btn_AddShipMethod').click(function () {
+             //    var ShipMethod = $('#txtShipMethod').val().trim();
+             //    if (ShipMethod == "") {
+             //        errorfunc('txtShipMethod', 'Shipment name cannot be empty.');
+             //        return false;
+             //    }
+             //    else {
+             //        if (confirm('Are you sure want to add Shipment Method?')) {
+             //            var url = '';
+             //            if (LOCALORSERVERNEW == 'LOCAL') {
+             //                url = 'http://www.thebridgebytcg.com/SystemAdmin/addShipmentMethod';
+             //            }
+             //            else if (LOCALORSERVERNEW == 'SERVER') {
+             //                url = 'SystemAdmin/addShipmentMethod';
+             //            }
+             //            $.ajax({
+             //                type: "POST",
+             //                url: url,
+             //                data: { 'ShipMethod': ShipMethod },
+             //                success: function (data) {
+             //                    if (data != "") {
+             //                        var row = "<tr role='row'>"
+             //                                  + "<td class='sorting_1'>"
+             //                                  + "<input type='button' value='Edit' onclick='EditShipMethod(this," + data + ");'>"
+             //                                  + "<input type='button' value='Deactive' data-id='Deactivate' name='0' onclick='ActDeactShipMethod(this," + data + ");'>"
+             //                                  + "</td>"
+             //                                  + "<td>" + ShipMethod + "</td>"
+             //                                  //+ "<td>" + data + "</td>"
+             //                                  + "</tr>";
+
+             //                        $('#tblShipmentMethod > tbody > tr:first').before(row);
+             //                        notify('Shipment Method added Successfully');
+             //                        $('.b-close').trigger('click');
+             //                    }
+             //                    else {
+             //                        notify('Unable to add duplicate entry..');
+             //                    }
+             //                }  // function block is closed
+             //            });
+             //        }
+             //    }  // First else is closed...                 
+             //});
+
+         });
+
+         //function EditShipMethod(obj, ShipMethodID) {
+
+         //    var btnVal = $(obj).val();
+
+         //    var ShipMethodOldVal = $(obj).parent().parent().children().eq(1).text();
+
+         //    if (btnVal == 'Edit') {
+         //        $(obj).val('Update');
+         //        $(obj).attr('Style', 'background-color: crimson;');
+         //        $(obj).parent().parent().children().eq(1).html('<input type="text" class="getShipMethod" value="' + ShipMethodOldVal + '" style="height: 25px;width: 500px;" />');
+         //    }
+         //    else if (btnVal == 'Update') {
+
+         //        var ShipMethodNew = $(obj).parent().parent().children().find(".getShipMethod").val().trim();
+
+         //        if (ShipMethodNew == "") {
+         //            alert('Shipment Method cannot be Blank');
+         //            $(obj).parent().parent().children().find(".getShipMethod").val('');
+         //            $(obj).parent().parent().children().find(".getShipMethod").focus();
+         //            return false;
+         //        }
+
+         //        $(obj).attr('Style', 'background:#208093;');
+
+         //        var url = '';
+         //        if (LOCALORSERVERNEW == 'LOCAL') {
+         //            url = 'http://www.thebridgebytcg.com/SystemAdmin/UpdateShipMethod';
+         //        }
+         //        else if (LOCALORSERVERNEW == 'SERVER') {
+         //            url = 'SystemAdmin/UpdateShipMethod';
+         //        }
+
+         //        $.ajax({
+         //            type: "POST",
+         //            url: url,
+         //            data: { 'ShipMethod': ShipMethodNew, 'ShipMethodID': ShipMethodID },
+         //            success: function (data) {
+         //                if (data != "") {
+         //                    $(obj).val('Edit');
+         //                    $(obj).parent().parent().children().eq(1).html(ShipMethodNew);
+         //                    notify('Shipment Method is updated Successfully');
+         //                }
+         //                else {
+         //                    $(obj).val('Edit');
+         //                    $(obj).parent().parent().children().eq(1).html(ShipMethodNew);
+         //                    notify('You have not updated shipmet method.');
+         //                }
+         //            }
+         //        });
+         //    }
+         //}
+
+         //function ActDeactShipMethod(obj, ShipMethodID) {
+         //    var CurrectStatus = $(obj).attr("data-id");
+         //    fnOpenNormalDialog(CurrectStatus, obj, ShipMethodID, 'ActivateDeActivateShipMethod');
+         //}
+
+    </script>
+
+    <script type="text/javascript">
+
+        //$(document).ready(function () {
+
+        //    var table = $('#tblShipmentMethod').DataTable();
+        //    table.clear().draw();
+
+        //    var url = '';
+        //    if (LOCALORSERVERNEW == 'LOCAL') {
+        //        url = 'http://www.thebridgebytcg.com/SystemAdmin/getAllShipmentMethod';
+        //    }
+        //    else if (LOCALORSERVERNEW == 'SERVER') {
+        //        url = 'SystemAdmin/getAllShipmentMethod';
+        //    }
+
+        //    $.ajax({
+        //        type: "POST",
+        //        url: url,
+        //        success: function (data) {
+
+        //            data = JSON.parse(data);
+
+        //            var dt = "";
+        //            var lineitems = new Array();
+
+        //            dt = data.data;
+
+        //            $('#tblShipmentMethod').dataTable().fnDestroy();
+
+        //            for (i = 0; i < dt.length ; i++) {
+
+        //                lineitems[i] = new Array();
+
+        //                if (dt[i].Status == 1) {
+        //                    lineitems[i][0] = '<input type="button" value="Edit" onclick="EditShipMethod(this,\'' + dt[i].ShipID + '\');"><input type="button" value="Deactive" data-id="Deactivate" name="0"  onclick="ActDeactShipMethod(this,\'' + dt[i].ShipID + '\');">';
+        //                }
+        //                else {
+        //                    lineitems[i][0] = '<input type="button" value="Edit" onclick="EditShipMethod(this,\'' + dt[i].ShipID + '\');"><input type="button" value="Active" data-id="Activate" name="1" style="width:95px;background-color: crimson;" onclick="ActDeactShipMethod(this,\'' + dt[i].ShipID + '\');">';
+        //                }
+        //                lineitems[i][1] = dt[i].ShipMethod;
+        //                //lineitems[i][2] = dt[i].ShipID;
+        //            }
+
+        //            $('#tblShipmentMethod').dataTable({
+        //                "processing": true,
+        //                "data": lineitems,
+        //                "columns":
+        //                  [
+        //                    { "title": "Action" },
+        //                    { "title": "Shipment Method" }
+        //                   // { "title": "ShipID" }
+
+        //                  ],
+        //                "initComplete": function () {
+        //                },
+        //                "columnDefs": [{ "targets": 0, "orderable": false }]
+        //            });
+        //        }
+        //    });
+
+        //});
+
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            clicknew();
+            $('.paginate_button').live('click', function () {
+                RowHtmlRender();
+            });
+        });
+        function clicknew() {
+            $(document).ready(function () {
+                var url1 = '';
+                if (LOCALORSERVERNEW == 'LOCAL') {
+                    url1 = 'http://www.thebridgebytcg.com/Project/GetProjectContactTypesJSON';
+                }
+                else if (LOCALORSERVERNEW == 'SERVER') {
+                    url1 = 'Project/GetProjectContactTypesJSON';
+                }
+                var totdata;
+                $.get(url1)
+                    .success(function (response) {
+                        var project;
+                        totdata = JSON.parse(response);
+                        //console.log(totdata);
+                        var project = new Array();
+                        for (i = 0; i < totdata.length ; i++) {
+                            project[i] = new Array();
+                            project[i][0] = "";//totdata[i].ContactTypeID;// Convert.ToString(dr["ProjectContact_ID"]);
+                            project[i][1] = totdata[i].ContactTypeID;
+                            project[i][2] = totdata[i].ContactType;
+                        }
+                        $('#ProjectContactTypes').dataTable({
+                            "processing": true,
+                            "data": project,
+                            "columns": [
+                                { "title": "Action" },
+                                { "title": "ContactTypeID", "class": "displaynone" },//, "class": "displaynone" 
+                                { "title": "ContactType" },
+                            ]
+                            ,
+                            "initComplete": function () {
+                                RowHtmlRender();
+                            }
+                        });
+                        var html = "";
+                        html = "<tr>"
+                        + "<th  rowspan='1' colspan='1'><input type='button' value='Reset' onclick='ResetSearch();' style='margin-bottom:6px;' /></th>"
+                        + "<th  rowspan='1' colspan='1' class='displaynone'></th>"
+                        + "<th  rowspan='1' colspan='1'><input class='srch' data-indx='2' type='text' placeholder='Search '></th>"
+                        + "</tr>";
+                        $('#ProjectContactTypes').on('draw.dt', function () {
+                            RowHtmlRender();
+                        });
+                        $('#ProjectContactTypes thead').append(html);
+                        var table = $('#ProjectContactTypes').DataTable();
+                        $('.srch').on('keyup change', function () {
+                            var indx = $(this).attr('data-indx');
+                            var txt = this.value;
+                            table
+                                   .column(indx)
+                                   .search(txt)
+                                   .draw();
+                            RowHtmlRender();
+                        });
+                    });
+            });
+        }
+        function RowHtmlRender() {
+            $('#ProjectContactTypes tbody tr').find("td:eq(0)").each(function () {
+                var pid = $(this).next().html(); // $(this).html(); //$(this).prev("td").html(); //
+                var html = '';
+                html = '<input type="button" class="buttonedit"  onclick="EditProjectType(this,\'' + pid + '\');" style="margin-bottom:6px;" data-id="' + pid + '" value="Edit" />';
+                
+                $(this).html(html);
+            });
+        }
+        function ResetSearch() {
+            var table = $('#ProjectContactTypes').DataTable();
+            $('.srch').each(function () {
+                this.value = '';
+                var indx = $(this).attr('data-indx');
+                var txt = this.value;
+                table
+                       .column(indx)
+                       .search(txt)
+                       .draw();
+            });
+            RowHtmlRender();
+        }
+        function EditProjectType(obj, ProjectContactTypeId) {
+            $('#txt_ProjectContactTypeNameEdt').val($(obj).parent().next("td").next("td").html());
+            $('#Hdn_ContactTypeID').val(ProjectContactTypeId);
+            $('#popup').bPopup();
+        }
+        function UpdateContactType() {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = 'http://www.thebridgebytcg.com/Project/UpdateContactType';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/UpdateContactType';
+            }
+            var pid = $('#Hdn_ContactTypeID').val();
+            if (pid == '') {
+                return;
+            }
+            var ContactType = $('#txt_ProjectContactTypeNameEdt').val();
+            url1 += "?ProjectContactID=" + pid + "&ContactType=" + ContactType;
+            $.get(url1)
+                    .success(function (response) {
+                        if (response == 'SUCCESS') {
+                            notify('Contact Type Updated successfully !!');
+                            $('#txt_ProjectContactTypeNameEdt').val('');
+                            window.location.reload();
+                        }
+                        else {
+                            notify('Some Error occured !!');
+                        }
+                    });
+        }
+        function CreateContactType() {
+            var url1 = '';
+            if (LOCALORSERVERNEW == 'LOCAL') {
+                url1 = 'http://www.thebridgebytcg.com/Project/CreateContactType';
+            }
+            else if (LOCALORSERVERNEW == 'SERVER') {
+                url1 = 'Project/CreateContactType';
+            }
+            var ContactType = $('#txt_ProjectContactTypeName').val();
+            if (ContactType == '') {
+                return;
+            }
+            url1 += "?ContactType=" + ContactType;
+            $.get(url1)
+                    .success(function (response) {
+                        if (response == 'SUCCESS') {
+                            notify('Contact Type Added successfully !!');
+                            $('#txt_ProjectContactTypeName').val('');
+                            window.location.reload();
+                        }
+                        else {
+                            notify('Some Error occured !!');
+                        }
+                    });
+        }
+</script>
+
+
+    <style type="text/css">
+        #popup, #popup2, .bMulti {
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0 0 25px 5px #999;
+            color: #111;
+            display: none;
+            min-width: 450px;
+            padding: 25px;
+            height: auto;
+        }
+
+        .button {
+            background-color: #2b91af;
+            border-radius: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+            .button.b-close, .button.bClose {
+                border-radius: 7px 7px 7px 7px;
+                box-shadow: none;
+                font: bold 131% sans-serif;
+                padding: 0 6px 2px;
+                position: absolute;
+                right: -7px;
+                top: -7px;
+            }
+    </style>
+
+    @*-------------------------------Project Contact Types End-------------------------*@
+
+</head>
+<body>
+   
+    <div class="logo_container_heading">
+        @*Welcome @ViewBag.FullName*@        
+    </div>
+    <div class="policy-items" style="margin-bottom:40px;">      
+
+<div class="policy-items"> 
+
+     @*----------------Design Added By Subhabrata Mondal 6_11_2015------------------------*@
+
+    <div class="security-title">Session Time out Management</div>
+    <div class="security-detail" style="display: none;">
+        <div class="edit_vendor_full">
+
+            <div id="popupSession" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+                <span class="button b-close"><span>X</span></span>
+
+                <fieldset>
+                    <legend>Add Session Time</legend>
+                    <div class="edit_vendor_half">
+                        <div class="user_panel_container">
+                            <label>Session Time</label>
+                            <input type="text" id="txtSession" style="font-size: 16px;font-weight: 700;" onkeypress="return IsNumber(event);" placeholder="Enter Session Time in Minutes" />
+                        </div>
+                        <div class="user_panel_container">
+                            <input type="button" value="ADD" id="btn_AddSession" />
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="edit_vendor_half">
+                <div class="user_panel_container">
+                    <input type="button" value="ADD Session Time" id="btn_OpenSessionPopUp" />
+                </div>
+            </div>
+
+            <div class="user_panel_container" style="width:111%">
+                <fieldset>
+                    <legend>Session Time</legend>
+                    <div>
+                        <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblSession" style="text-align: center;">
+                            <thead>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Session Time</th>
+                                    @*                <th>UOMID</th>              *@
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
+
+        </div>
+    </div>
+
+    @*----------------Design Added By Subhabrata Mondal 6_11_2015------------------------*@
+
+<div class="security-title">Unit of Measurement</div>
+<div class="security-detail" style="display: none;">        
+<div class="edit_vendor_full">  
+
+    <div id="popupUOM" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+      <span class="button b-close"><span>X</span></span>
+
+        <fieldset>
+            <legend>Add UOM</legend>
+         <div class="edit_vendor_half">             
+             <div class="user_panel_container">
+                    <label>UOM Name</label>
+                <input type="text" id="txtUOM" style="font-size: 16px;font-weight: 700;" placeholder="Enter UOM Name" />
+             </div>        
+             <div class="user_panel_container">      
+              <input type="button" value="ADD" id="btn_AddUOM" />
+            </div>  
+            </div>        
+            </fieldset>
+     </div>
+     
+    <div class="edit_vendor_half">
+      <div class="user_panel_container">      
+        <input type="button" value="ADD UOM" id="btn_OpenPopUp1" />
+      </div>
+    </div>
+
+    <div class="user_panel_container" style="width:111%">                           
+      <fieldset>
+        <legend >UOM</legend>
+          <div> 
+            <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblUOM" style="text-align: center;">
+              <thead>
+              <tr>
+                <th style="width: 200px;">Action</th>                    
+                <th>Unit of Measurement</th>                                                   
+@*                <th>UOMID</th>              *@
+              </tr>
+             </thead>  
+          </table>
+        </div>
+     </fieldset> 
+    </div>
+
+    </div>
+ </div>
+  
+<div class="security-title">Shipment Method</div>
+<div class="security-detail" style="display:none;">
+    
+<div class="edit_vendor_full">  
+
+<div id="popupShipMethod" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+  <span class="button b-close"><span>X</span></span>
+
+    <fieldset>
+        <legend>Add ShipMethod</legend>
+     <div class="edit_vendor_half">             
+         <div class="user_panel_container">
+                <label>Shipment Name</label>
+            <input type="text" id="txtShipMethod" style="font-size: 16px;font-weight: 700;" placeholder="Enter Shipment Name" />
+         </div>        
+         <div class="user_panel_container">      
+          <input type="button" value="ADD" id="btn_AddShipMethod" />
+        </div>  
+        </div>        
+        </fieldset>
+ </div>
+     
+<div class="edit_vendor_half">
+  <div class="user_panel_container">      
+    <input type="button" value="ADD ShipMethod" id="btn_OpenPopUp2" />
+  </div>
+</div>
+
+<div class="user_panel_container" style="width:111%">                              
+  <fieldset>
+    <legend >Shipment Method</legend>
+      <div> 
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblShipmentMethod" style="text-align: center;">
+          <thead>
+          <tr>
+            <th style="width: 200px;">Action</th>                    
+            <th>Shipment Method</th>                                                   
+            @*<th>ShipID</th>    *@          
+          </tr>
+         </thead>  
+      </table>
+    </div>
+ </fieldset> 
+</div>
+
+</div>
+
+</div>
+
+
+
+
+<div class="security-title">Project Contact Type</div>
+<div class="security-detail" style="display:none;">
+    
+<div class="edit_vendor_full">  
+
+<div id="popupContactType" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+  <span class="button b-close"><span>X</span></span>
+    <fieldset>
+        <legend>Add Contact Type</legend>
+     <div class="edit_vendor_half">             
+         <div class="user_panel_container">
+                <label>Contact Type</label>
+            <input type="text" id="txt_ProjectContactTypeName" style="font-size: 16px;font-weight: 700;" placeholder="Enter Contact Type" />
+         </div>        
+         <div class="user_panel_container">      
+          <input type="button" value="ADD" id="btn_AddContactTypeName" onclick="CreateContactType();" />
+         </div>  
+      </div>        
+     </fieldset>
+ </div>
+     
+<div class="edit_vendor_half">
+  <div class="user_panel_container">      
+    <input type="button" value="ADD Contact Type" id="btn_OpenContactType" />
+  </div>
+</div>
+
+<div class="user_panel_container" style="width:111%">                              
+  <fieldset>
+    <legend >Contact Type</legend>
+      <div> 
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="ProjectContactTypes" style="text-align: center;">
+          <thead>
+          <tr>
+            @*<th style="width: 200px;">Action</th>                    
+            <th>ContactType</th>*@
+
+               <th></th>
+               <th></th>
+               <th></th>
+          </tr>
+         </thead>  
+      </table>
+    </div>
+      <div id="popup">
+            <input type="hidden" id="Hdn_ContactTypeID" />
+            <span class="button b-close"><span>X</span></span>
+            @*<div class="user_panel_container">
+                <input type="button" value="Add Contact Type" id="btn_AddContactTypeNamqqe">
+            </div>*@
+            <div class="user_panel_container">
+                <label>Contact Type Name</label>
+                <input type="text" id="txt_ProjectContactTypeNameEdt" />
+            </div>
+            <div class="user_panel_container">
+                <input type="button" value="Update Contact Type" id="btn_UpdtContactTypeName" onclick="UpdateContactType();">
+            </div>
+            
+        </div>
+ </fieldset> 
+</div>
+
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="security-title">Item Approval</div>
+<div class="security-detail" style="display:none;">
+  
+<div class="edit_vendor_full">  
+
+<div id="popupItemApproval" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+<span class="button b-close"><span>X</span></span>
+
+    <fieldset>
+        <legend>Add ItemApproval</legend>
+     <div class="edit_vendor_half">             
+         <div class="user_panel_container">
+                <label>ItemApproval Name</label>
+            <input type="text" id="txtItemApproval" style="font-size: 16px;font-weight: 700;" placeholder="Enter Item Approval Name" />
+         </div>        
+         <div class="user_panel_container">      
+          <input type="button" value="ADD" id="btn_AddItemApproval" />
+        </div>  
+        </div>        
+        </fieldset>
+ </div>
+     
+<div class="edit_vendor_half">
+  <div class="user_panel_container">      
+    <input type="button" value="ADD ItemApproval" id="btn_OpenPopUp3" />
+  </div>
+</div>
+
+<div class="user_panel_container" style="width:111%">                             
+  <fieldset>
+    <legend >Item Approval</legend>
+      <div> 
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblItemApproval" style="text-align: center;">
+          <thead>
+          <tr>
+            <th style="width: 200px;">Action</th>                    
+            <th>ItemApproval Name</th>                                                   
+           @* <th>ItemApproval ID</th>   *@           
+          </tr>
+         </thead>  
+      </table>
+    </div>
+ </fieldset> 
+</div>
+
+</div>
+  
+</div>
+
+<div class="security-title">Currency</div>
+<div class="security-detail" style="display:none;">
+  
+<div class="edit_vendor_full">  
+
+<div id="popupCurrency" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+  <span class="button b-close"><span>X</span></span>
+
+    <fieldset>
+        <legend>Add Currency</legend>
+     <div class="edit_vendor_half">             
+         <div class="user_panel_container">
+                <label>Currency Name</label>
+            <input type="text" id="txtCurrency" style="font-size: 16px;font-weight: 700;" placeholder="Enter Currency Name" />
+         </div>
+         <div class="user_panel_container">
+                <label>Currency Code</label>
+            <input type="text" id="txtCurrencyCode" placeholder="Enter Currency Code" style="font-size: 16px;font-weight: 700;" />
+         </div>
+         <div class="user_panel_container">      
+          <input type="button" value="ADD" id="btn_AddCurrency" />
+        </div>  
+        </div>        
+        </fieldset>
+ </div>
+     
+<div class="edit_vendor_half">
+  <div class="user_panel_container">      
+    <input type="button" value="ADD Currency" id="btn_OpenPopUp4" />
+  </div>
+</div>
+
+<div class="user_panel_container" style="width:111%">                             
+  <fieldset>
+    <legend >Currency</legend>
+      <div> 
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblEditCurrency" style="text-align: center;">
+          <thead>
+          <tr>
+            <th style="width: 200px;">Action</th>                    
+            <th>Currency</th>                                                   
+            <th>Currency Code</th>  
+           @* <th>CurrencyID</th>     *@                 
+          </tr>
+         </thead>  
+      </table>
+    </div>
+ </fieldset> 
+</div>
+
+</div>
+  
+</div>
+
+<div class="security-title">Payment Terms</div>
+<div class="security-detail" style="display:none;">
+  
+<div class="edit_vendor_full">  
+
+<div id="popupTermsCondition" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+  <span class="button b-close"><span>X</span></span>
+
+    <fieldset>
+        <legend>Add Payment Terms</legend>
+     <div class="edit_vendor_half">             
+         <div class="user_panel_container">
+                <label>Payment Terms</label>
+            <input type="text" id="txtTerms" style="font-size: 16px;font-weight: 700;" placeholder="Enter Payment Terms Name" />
+         </div>        
+         <div class="user_panel_container">      
+          <input type="button" value="ADD" id="btn_AddTerms" />
+        </div>  
+        </div>        
+        </fieldset>
+ </div>
+     
+<div class="edit_vendor_half">
+  <div class="user_panel_container">      
+    <input type="button" value="ADD Terms" id="btn_OpenPopUp5" />
+  </div>
+</div>
+
+<div class="user_panel_container" style="width:111%">                              
+  <fieldset>
+    <legend >Payment Terms</legend>
+      <div> 
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblTerms" style="text-align: center;">
+          <thead>
+          <tr>
+            <th style="width: 200px;">Action</th>                    
+            <th>Payment Terms</th>                                                   
+           @* <th>ShipID</th>       *@       
+          </tr>
+         </thead>  
+      </table>
+    </div>
+ </fieldset> 
+</div>
+
+</div>  
+
+</div>
+
+<div class="security-title">Classification</div>
+<div class="security-detail" style="display:none;">  
+
+<div class="edit_vendor_full">  
+
+<div id="popupClassification" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+  <span class="button b-close"><span>X</span></span>
+
+    <fieldset>
+        <legend>Add Classification</legend>
+     <div class="edit_vendor_half">             
+         <div class="user_panel_container">
+                <label>Classification Name</label>
+            <input type="text" id="txtClassification" style="font-size: 16px;font-weight: 700;" placeholder="Enter Classification Name" />
+         </div>        
+         <div class="user_panel_container">      
+          <input type="button" value="ADD" id="btn_AddClassification" />
+        </div>  
+        </div>        
+        </fieldset>
+ </div>
+     
+<div class="edit_vendor_half">
+  <div class="user_panel_container">      
+    <input type="button" value="ADD Classification" id="btn_OpenPopUpClassification" />
+  </div>
+</div>
+
+<div class="user_panel_container" style="width:111%">               
+  <fieldset>
+    <legend >Classification</legend>
+      <div> 
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblClassification" style="text-align: center;">
+          <thead>
+          <tr>
+            <th style="width: 200px;">Action</th>                    
+            <th>Classification</th>                                                   
+           @* <th>ClassificationID</th>              *@
+          </tr>
+         </thead>  
+      </table>
+    </div>
+ </fieldset> 
+</div>
+
+</div>
+ 
+
+</div>
+
+<div class="security-title">Country</div>
+<div class="security-detail" style="display:none;">  
+
+ <div class="edit_vendor_full">  
+
+<div id="popupCountry" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+
+  <span class="button b-close"><span>X</span></span>
+
+    <fieldset>
+        <legend>Add Country</legend>
+     <div class="edit_vendor_half">             
+         <div class="user_panel_container">
+                <label>Country Name</label>
+            <input type="text" id="txtCountryName" style="font-size: 16px;font-weight: 700;" placeholder="Enter Country Name" />
+         </div> 
+          <div class="user_panel_container">
+                <label>Country Name</label>
+            <input type="text" id="txtCountryCode" style="font-size: 16px;font-weight: 700;" placeholder="Enter Country Code" />
+         </div>        
+         <div class="user_panel_container">      
+          <input type="button" value="ADD" id="btn_AddCountry" />
+        </div>  
+        </div>        
+        </fieldset>
+ </div>
+     
+<div class="edit_vendor_half">
+  <div class="user_panel_container">      
+    <input type="button" value="ADD Country" id="btn_OpenPopUpCountry" />
+  </div>
+</div>
+
+<div class="user_panel_container" style="width:111%;">                    
+  <fieldset>
+    <legend >Country</legend>
+      <div> 
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblCountry" style="text-align: center;">
+          <thead>
+          <tr>
+            <th style="width: 200px;">Action</th>                    
+            <th>Country</th>                                                   
+            <th>Country Code</th>              
+          </tr>
+         </thead>  
+      </table>
+    </div>
+ </fieldset> 
+</div>
+
+</div>
+
+</div>
+
+<div class="security-title" style="margin-bottom:20px;">State</div>
+<div class="security-detail" style="display:none;margin-bottom:20px;">  
+
+<div class="edit_vendor_full">  
+<div id="popupState" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+<span class="button b-close"><span>X</span></span>
+<fieldset>
+    <legend>Add State</legend>
+     <div class="edit_vendor_half">             
+         <div class="user_panel_container" >
+                <label>State Name</label>
+            <input type="text" id="txtStateName" style="font-size: 16px;font-weight: 700;" placeholder="Enter State Name" />
+         </div> 
+          <div class="user_panel_container">
+             <label>State Code</label>
+            <input type="text" id="txtStateCode" style="font-size: 16px;font-weight: 700;" placeholder="Enter State Code" />
+         </div>        
+         <div class="user_panel_container">      
+          <input type="button" value="ADD" id="btn_AddState" />
+        </div>  
+        </div>        
+        </fieldset>
+ </div>         
+
+<fieldset style="width:108%;">  
+  <legend>Add New State</legend>
+
+<div class="edit_vendor_full">  
+  <div class="user_panel_container" style="width: 107.5%;">      
+      <label>Select Country</label>  
+    <select id="ddlCountry">        
+        @Html.Raw(ViewData["Country"])
+    </select>
+  </div>
+   
+</div>
+
+<div class="edit_vendor_half">
+  <div class="user_panel_container">      
+    <input type="button" value="ADD State" id="btn_OpenPopUpState" />
+  </div>
+</div>
+
+<div class="user_panel_container" >                          
+  <fieldset>
+    <legend >State</legend>
+      <div> 
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblState" style="text-align: center;">
+          <thead>
+          <tr>
+            <th style="width: 200px;">Action</th>                    
+            <th>State Name</th>                                                   
+            <th>State Code</th>              
+          </tr>
+         </thead>  
+      </table>
+    </div>
+ </fieldset> 
+</div>
+
+</fieldset>
+
+</div>
+    
+</div>
+
+<div class="security-title" style="display:none;" >Project Level Comment</div>
+<div class="security-detail" style="margin-bottom:20px;">  
+
+<div class="edit_vendor_full">  
+<div id="popupProjectComment" class="displaynone" style="transform: scale(0.85); background: white; padding: 20px; border: 4px solid rgb(161, 158, 203); border-radius: 19px;">
+<span class="button b-close"><span>X</span></span>
+<fieldset>
+    <legend>Add New Comment</legend>
+     <div class="edit_vendor_half">             
+         <div class="user_panel_container">
+             <label>Comment</label> 
+             <textarea id="txtComment" style="height:66px;font-size: x-large;color: mediumblue;font-weight: 600;" ></textarea>
+         </div>                
+         <div class="user_panel_container">      
+          <input type="button" value="ADD" id="btn_AddComment" />
+        </div>  
+         <div class="user_panel_container">
+             <label></label> 
+             <fieldset>
+                 <legend>Comment History</legend>
+                  <div id="tblCmtHisporyProjectLevel">
+                      <span class="remove" data-id="29"><a onclick="deleteprojectcomment(this,&quot;29&quot;)" title="Remove this comment">x</a><span>sdgfsdgsdfgsdfgsdgsdf</span></span>
+                      <span class="remove" data-id="29"><a onclick="deleteprojectcomment(this,&quot;29&quot;)" title="Remove this comment">x</a><span>sdgfsdgsdfgsdfgsdgsdf</span></span>
+                      <span class="remove" data-id="29"><a onclick="deleteprojectcomment(this,&quot;29&quot;)" title="Remove this comment">x</a><span>sdgfsdgsdfgsdfgsdgsdf</span></span>
+                      <span class="remove" data-id="29"><a onclick="deleteprojectcomment(this,&quot;29&quot;)" title="Remove this comment">x</a><span>sdgfsdgsdfgsdfgsdgsdf</span></span>
+                      <span class="remove" data-id="29"><a onclick="deleteprojectcomment(this,&quot;29&quot;)" title="Remove this comment">x</a><span>sdgfsdgsdfgsdfgsdgsdf</span></span>
+                  </div>
+             </fieldset>
+             
+         </div>
+
+        </div>    
+  
+    
+        
+</fieldset>
+</div>         
+
+<div class="user_panel_container" style="width:111%;display:none;">               
+  <fieldset>
+    <legend >Project List</legend>
+      <div> 
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="tblProjectList" style="text-align: center;display:none;">
+          <thead>
+          <tr>
+            <th>Action</th>                    
+            <th>Project Number</th>   
+            <th>Project Name</th>   
+            <th>Legal Name</th>   
+            <th>Owner Name</th>  
+            <th>Owner Contact</th>           
+            <th>Owner Mobile</th>  
+            <th>Owner Email</th> 
+          </tr>
+         </thead>  
+      </table>
+    </div>
+ </fieldset> 
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+<div id="dialog-confirm"></div>
+
+</body>
+</html>
